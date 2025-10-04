@@ -12,9 +12,21 @@ The externalization process creates a new GitHub repository and copies your pack
 
 The following secrets must be configured in your repository settings:
 
-1. **`GITHUB_TOKEN`** (automatically provided by GitHub Actions)
+1. **`GH_PAT`** (Personal Access Token - **REQUIRED**)
    - Used to create repositories and set secrets
-   - No manual configuration needed
+   - The default `GITHUB_TOKEN` has limited permissions and **cannot create repositories**
+   - **How to create**:
+     1. Go to: https://github.com/settings/tokens/new?scopes=repo,workflow
+     2. Set description: "Package Builder Externalization"
+     3. Select scopes: `repo` (full control) and `workflow`
+     4. Click "Generate token"
+     5. Copy the token (you won't see it again!)
+   - **How to add**:
+     1. Go to repository: Settings → Secrets and variables → Actions
+     2. Click "New repository secret"
+     3. Name: `GH_PAT`
+     4. Value: Paste your token
+     5. Click "Add secret"
 
 2. **`NPM_TOKEN`** (must be manually configured)
    - Required for npm publishing in the new repository
@@ -23,9 +35,11 @@ The following secrets must be configured in your repository settings:
 
 ### Token Permissions
 
-The `GITHUB_TOKEN` needs the following permissions:
-- `repo` - Full control of repositories
-- `workflow` - Update GitHub Action workflows
+The `GH_PAT` (Personal Access Token) needs the following scopes:
+- `repo` - Full control of repositories (required to create repos)
+- `workflow` - Update GitHub Action workflows (required to add workflow files)
+
+**Important**: The default `GITHUB_TOKEN` provided by GitHub Actions does **not** have permission to create repositories. You **must** use a Personal Access Token.
 
 For organization repositories, ensure the token has organization access.
 

@@ -19,9 +19,22 @@ type Args = {
   dryRun?: boolean;
 };
 
-function sh(cmd: string, opts: {cwd?: string} = {}) {
+function sh(cmd: string, opts: {cwd?: string, captureOutput?: boolean} = {}) {
   console.log(`$ ${cmd}`);
-  return execSync(cmd, { stdio: "inherit", ...opts });
+  try {
+    if (opts.captureOutput) {
+      return execSync(cmd, { encoding: 'utf8', ...opts });
+    }
+    return execSync(cmd, { stdio: "inherit", ...opts });
+  } catch (error: any) {
+    if (error.stderr) {
+      console.error(`Error output: ${error.stderr.toString()}`);
+    }
+    if (error.stdout) {
+      console.error(`Command output: ${error.stdout.toString()}`);
+    }
+    throw error;
+  }
 }
 
 function parseArgs(): Args {
@@ -168,11 +181,31 @@ function main() {
 
   // 1) Create the GitHub repo (idempotent)
   try {
-    sh(`gh repo view ${org}/${newRepo}`);
+    sh(`gh repo view ${org}/${newRepo}`, { captureOutput: true });
     console.log(`✅ Repo exists: ${org}/${newRepo}`);
   } catch {
-    if (dryRun) console.log(`[dryRun] Would create repo ${org}/${newRepo} (${visibility})`);
-    else sh(`gh repo create ${org}/${newRepo} --${visibility} --confirm`);
+    if (dryRun) {
+      console.log(`[dryRun] Would create repo ${org}/${newRepo} (${visibility})`);
+    } else {
+      console.log(`📦 Creating repository ${org}/${newRepo}...`);
+      try {
+        sh(`gh repo create ${org}/${newRepo} --${visibility} --confirm`);
+        console.log(`✅ Repository created successfully`);
+      } catch (error: any) {
+        console.error(`❌ Failed to create repository: ${org}/${newRepo}`);
+        console.error(`Error: ${error.message}`);
+        console.error(`\nPossible causes:`);
+        console.error(`  1. GITHUB_TOKEN doesn't have 'repo' scope`);
+        console.error(`  2. You don't have permission to create repos in '${org}'`);
+        console.error(`  3. Repository name already exists`);
+        console.error(`  4. Organization '${org}' doesn't exist or is not accessible`);
+        console.error(`\nTo fix:`);
+        console.error(`  - Verify GITHUB_TOKEN has 'repo' and 'workflow' scopes`);
+        console.error(`  - Check Settings → Actions → General → Workflow permissions`);
+        console.error(`  - Ensure 'Read and write permissions' is selected`);
+        process.exit(1);
+      }
+    }
   }
 
   // 2) Fresh clone

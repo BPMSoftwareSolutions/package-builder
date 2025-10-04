@@ -30,7 +30,9 @@ on:
         default: false
 
 permissions:
-  contents: read
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   externalize:
@@ -68,14 +70,26 @@ jobs:
           
       - name: Configure GitHub CLI authentication
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
         run: |
-          # GitHub CLI will use GITHUB_TOKEN automatically
+          # GitHub CLI will use GH_TOKEN automatically
+          # Note: GITHUB_TOKEN has limited permissions and cannot create repos
+          # Use GH_PAT (Personal Access Token) for full repository creation access
           gh auth status
+
+          # Check if we have the right token
+          if [ -z "${{ secrets.GH_PAT }}" ]; then
+            echo "⚠️  WARNING: GH_PAT secret not found, using GITHUB_TOKEN"
+            echo "⚠️  GITHUB_TOKEN has limited permissions and may not be able to create repositories"
+            echo "⚠️  To fix: Create a Personal Access Token with 'repo' scope and add it as GH_PAT secret"
+            echo "⚠️  See: https://github.com/settings/tokens/new?scopes=repo,workflow"
+          else
+            echo "✅ Using GH_PAT for authentication"
+          fi
 
       - name: Run externalization script
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           # Build the command
