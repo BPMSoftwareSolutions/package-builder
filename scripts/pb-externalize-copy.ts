@@ -223,7 +223,11 @@ function main() {
   }
   requireCleanPkgPath(pkgPath);
 
-  const remote = `https://github.com/${org}/${newRepo}.git`;
+  // Use authenticated URL with token for cloning and pushing
+  const ghToken = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || '';
+  const remote = ghToken
+    ? `https://x-access-token:${ghToken}@github.com/${org}/${newRepo}.git`
+    : `https://github.com/${org}/${newRepo}.git`;
   const tmp = `.tmp-${newRepo}`;
 
   // 1) Create the GitHub repo (idempotent)
@@ -279,7 +283,9 @@ function main() {
   if (!dryRun) {
     sh(`git clone "${remote}" "${tmp}"`);
   } else {
-    console.log(`[dryRun] Would clone ${remote} to ${tmp}`);
+    // Mask token in dry-run output
+    const safeRemote = ghToken ? remote.replace(ghToken, '***') : remote;
+    console.log(`[dryRun] Would clone ${safeRemote} to ${tmp}`);
     mkdirSync(tmp, { recursive: true });
   }
 
