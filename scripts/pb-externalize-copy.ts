@@ -347,7 +347,13 @@ function main() {
   }
 
   // 7) Output machine-readable result for the LLM runner
-  console.log(JSON.stringify({ repo: remote, method: "copy", ok: true }));
+  console.log(JSON.stringify({ repo: publicRemote, method: "copy", ok: true }));
+  console.log("\n✅ Externalization complete!");
+  console.log(`   Repository: https://github.com/${org}/${newRepo}`);
+  console.log(`   Next steps:`);
+  console.log(`   1. Visit the repository to verify files`);
+  console.log(`   2. Create a release: npm version patch && git push --follow-tags`);
+  console.log(`   3. GitHub Actions will automatically publish to npm`);
 }
 
 main();
