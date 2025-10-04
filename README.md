@@ -95,6 +95,34 @@ npm i "<path-to-tgz>"
 **scripts/pb-guardrails.ts**
 Fast checks (name, files, exports map, types, peerDeps sanity, “no heavy deps”, etc.). Exit non-zero on violations.
 
+**scripts/pb-externalize-copy.ts**
+Externalizes a package from the monorepo to a new GitHub repository (copy mode):
+
+```bash
+# Externalize svg-editor package to a new repository
+node scripts/pb-externalize-copy.ts \
+  pkgPath=packages/svg-editor \
+  newRepo=tiny-svg-editor \
+  org=your-github-org \
+  visibility=public \
+  scopeNameInPkgJson=tiny-svg-editor
+
+# With dry-run to preview changes
+node scripts/pb-externalize-copy.ts \
+  pkgPath=packages/svg-editor \
+  newRepo=tiny-svg-editor \
+  org=your-github-org \
+  dryRun=true
+```
+
+This script:
+- Creates a new GitHub repository (if it doesn't exist)
+- Copies the package content to the new repo
+- Adds a GitHub Actions workflow for automated npm publishing
+- Updates package.json with repository URL and publish config
+- Generates a README.md if missing
+- Sets NPM_TOKEN secret on the new repository (if NPM_TOKEN env var is available)
+
 ---
 
 ## 3) `package.json` template for generated packages
@@ -249,6 +277,19 @@ jobs:
       # Final report (comment on PR)
       - name: Summarize
         run: node scripts/pb-report.js
+
+      # Optional: Externalize package to separate repository
+      - name: Externalize package (if configured)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.externalize == 'true'
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          node scripts/pb-externalize-copy.ts \
+            pkgPath=packages/${{ github.event.inputs.package_name }} \
+            newRepo=${{ github.event.inputs.new_repo_name }} \
+            org=${{ github.event.inputs.target_org }} \
+            visibility=${{ github.event.inputs.visibility || 'public' }} \
+            scopeNameInPkgJson=${{ github.event.inputs.scoped_name }}
 ```
 
 > If you prefer, swap in **Turborepo** or **Nx** to speed repeated runs and parallelize units/E2E.
@@ -335,7 +376,83 @@ Run with `tsx smoke.ts` (or `node --loader ts-node/esm`), exit non-zero on failu
 
 ---
 
-## 9) Day-1 “do this now” checklist
+## 9) Package Externalization
+
+Once a package is mature and ready for independent distribution, you can externalize it to its own GitHub repository using the externalization script.
+
+### Prerequisites
+
+1. **GitHub CLI installed and authenticated**:
+   ```bash
+   gh auth login   # choose GitHub.com, HTTPS, paste token
+   ```
+
+2. **Required token scopes**: `repo`, `workflow`
+
+3. **NPM_TOKEN available**: Set as environment variable for npm publish permissions
+
+### Usage Examples
+
+**Basic externalization**:
+```bash
+node scripts/pb-externalize-copy.ts \
+  pkgPath=packages/svg-editor \
+  newRepo=tiny-svg-editor \
+  org=your-github-org
+```
+
+**With custom package name**:
+```bash
+node scripts/pb-externalize-copy.ts \
+  pkgPath=packages/svg-editor \
+  newRepo=tiny-svg-editor \
+  org=your-github-org \
+  scopeNameInPkgJson=@bpm/tiny-svg-editor
+```
+
+**Private repository**:
+```bash
+node scripts/pb-externalize-copy.ts \
+  pkgPath=packages/svg-editor \
+  newRepo=tiny-svg-editor \
+  org=your-github-org \
+  visibility=private
+```
+
+**Dry run (preview changes)**:
+```bash
+node scripts/pb-externalize-copy.ts \
+  pkgPath=packages/svg-editor \
+  newRepo=tiny-svg-editor \
+  org=your-github-org \
+  dryRun=true
+```
+
+### What the script does
+
+1. **Validates prerequisites**: Checks GitHub CLI installation and authentication
+2. **Creates GitHub repository**: Creates the target repository if it doesn't exist
+3. **Copies package content**: Copies all files from the source package
+4. **Adds CI/CD workflow**: Creates `.github/workflows/release.yml` for automated publishing
+5. **Updates package.json**: Sets repository URL, publish config, and release script
+6. **Generates README**: Creates a basic README.md if one doesn't exist
+7. **Sets NPM_TOKEN secret**: Configures the repository secret for npm publishing
+
+### Publishing releases
+
+In the new repository, create releases using:
+```bash
+npm version patch  # or minor, major
+git push --follow-tags
+```
+
+The GitHub Actions workflow will automatically:
+- Run tests (if present)
+- Build the package (if build script exists)
+- Publish to npm with provenance
+
+---
+## 10) Day-1 “do this now” checklist
 
 1. Scaffold the repo with the folders above.
 2. Add the workflow YAML exactly as shown.
