@@ -188,19 +188,34 @@ function main() {
       console.log(`[dryRun] Would create repo ${org}/${newRepo} (${visibility})`);
     } else {
       console.log(`📦 Creating repository ${org}/${newRepo}...`);
+
+      // Determine if org is the current user or an actual organization
+      let isCurrentUser = false;
       try {
-        sh(`gh repo create ${org}/${newRepo} --${visibility} --confirm`);
+        const currentUser = sh(`gh api user --jq .login`, { captureOutput: true }).toString().trim();
+        isCurrentUser = (currentUser === org);
+      } catch {
+        // If we can't determine, assume it's not the current user
+      }
+
+      try {
+        // For user accounts, use just the repo name
+        // For organizations, use org/repo format
+        const repoArg = isCurrentUser ? newRepo : `${org}/${newRepo}`;
+        sh(`gh repo create ${repoArg} --${visibility}`);
         console.log(`✅ Repository created successfully`);
       } catch (error: any) {
         console.error(`❌ Failed to create repository: ${org}/${newRepo}`);
         console.error(`Error: ${error.message}`);
         console.error(`\nPossible causes:`);
-        console.error(`  1. GITHUB_TOKEN doesn't have 'repo' scope`);
+        console.error(`  1. GH_PAT/GITHUB_TOKEN doesn't have 'repo' scope`);
         console.error(`  2. You don't have permission to create repos in '${org}'`);
         console.error(`  3. Repository name already exists`);
         console.error(`  4. Organization '${org}' doesn't exist or is not accessible`);
+        console.error(`  5. Token needs organization access (if ${org} is an org)`);
         console.error(`\nTo fix:`);
-        console.error(`  - Verify GITHUB_TOKEN has 'repo' and 'workflow' scopes`);
+        console.error(`  - Verify token has 'repo' and 'workflow' scopes`);
+        console.error(`  - For organizations: Enable SSO or grant organization access to token`);
         console.error(`  - Check Settings → Actions → General → Workflow permissions`);
         console.error(`  - Ensure 'Read and write permissions' is selected`);
         process.exit(1);
