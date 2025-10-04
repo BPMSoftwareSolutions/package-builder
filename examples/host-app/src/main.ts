@@ -3,17 +3,10 @@
  * This demonstrates how packages would be used in a real application
  */
 
-// Try to import svg-editor if available
-// In a real scenario, this would be installed as a dependency
-let svgEditor: any = null;
+// Import the svg-editor package
+import { setAttrs, translate } from '@bpm/svg-editor';
 
-try {
-  // This will fail until svg-editor is actually created and linked
-  // svgEditor = await import('@bpm/svg-editor');
-  console.log('SVG Editor package loaded');
-} catch (error) {
-  console.log('SVG Editor package not available yet');
-}
+console.log('✅ SVG Editor package loaded successfully!');
 
 // Setup demo buttons
 const btnSetAttrs = document.getElementById('btn-set-attrs');
@@ -30,53 +23,26 @@ function log(message: string) {
 
 function updatePackageStatus() {
   if (packageStatus) {
-    if (svgEditor) {
-      packageStatus.textContent = '✅ @bpm/svg-editor is loaded and ready';
-    } else {
-      packageStatus.textContent = '⚠️ No packages loaded yet. Create a package first!';
-    }
+    packageStatus.textContent = '✅ @bpm/svg-editor is loaded and ready';
+    packageStatus.style.background = '#e8f5e9';
   }
 }
 
 // Demo: Set attributes
 btnSetAttrs?.addEventListener('click', () => {
-  if (svgEditor && svgEditor.setAttrs) {
-    const rect = document.getElementById('test-rect');
-    const success = svgEditor.setAttrs(rect, {
-      fill: 'red',
-      width: 120,
-      height: 120
-    });
-    log(`✅ setAttrs called: ${success}`);
-  } else {
-    // Fallback implementation for demo purposes
-    const rect = document.getElementById('test-rect') as SVGRectElement;
-    if (rect) {
-      rect.setAttribute('fill', 'red');
-      rect.setAttribute('width', '120');
-      rect.setAttribute('height', '120');
-      log('✅ Attributes set (using fallback)');
-    }
-  }
+  const rect = document.getElementById('test-rect');
+  const success = setAttrs(rect!, {
+    fill: 'red',
+    width: 120,
+    height: 120
+  });
+  log(`✅ setAttrs called: ${success} - Rectangle is now RED and 120x120`);
 });
 
 // Demo: Translate
 btnTranslate?.addEventListener('click', () => {
-  if (svgEditor && svgEditor.translate) {
-    const success = svgEditor.translate('#test-rect', 10, 10);
-    log(`✅ translate called: ${success}`);
-  } else {
-    // Fallback implementation for demo purposes
-    const rect = document.getElementById('test-rect') as SVGRectElement;
-    if (rect) {
-      const currentTransform = rect.getAttribute('transform') || '';
-      const newTransform = currentTransform 
-        ? `${currentTransform} translate(10, 10)` 
-        : 'translate(10, 10)';
-      rect.setAttribute('transform', newTransform);
-      log('✅ Transform applied (using fallback)');
-    }
-  }
+  const success = translate('#test-rect', 10, 10);
+  log(`✅ translate called: ${success} - Rectangle moved by (10, 10)`);
 });
 
 // Initialize

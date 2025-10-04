@@ -38,6 +38,15 @@ jobs:
           echo "In production, this would generate TypeScript code and tests"
           echo "For now, we'll test existing packages"
 
+      # Build packages first (needed for guardrails)
+      - name: Build Packages
+        run: |
+          if [ -d "packages" ] && [ "$(ls -A packages)" ]; then
+            npm run build --workspaces --if-present
+          else
+            echo "⚠️  No packages to build"
+          fi
+
       # Structure/guardrails quick pass
       - name: Guardrails Check
         run: |

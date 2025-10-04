@@ -144,3 +144,6 @@ vite.config.ts.timestamp-*
 
 # Temporary integration test directories
 tmp-integration-*/
+
+# Visual Studio
+.vs/
