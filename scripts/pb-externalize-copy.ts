@@ -158,6 +158,31 @@ function checkGitHubCLI() {
     console.error("Please run: gh auth login");
     process.exit(1);
   }
+
+  // Check token scopes
+  console.log("\n🔍 Checking token scopes...");
+  try {
+    const response = sh("gh api /user -i", { captureOutput: true }).toString();
+    const scopeLine = response.split('\n').find(line => line.toLowerCase().includes('x-oauth-scopes'));
+    if (scopeLine) {
+      const scopes = scopeLine.split(':')[1]?.trim() || 'unknown';
+      console.log(`   Token scopes: ${scopes}`);
+      if (!scopeLine.includes('repo')) {
+        console.error("\n❌ ERROR: Token does not have 'repo' scope!");
+        console.error("   The token needs 'repo' scope to create repositories.");
+        console.error("   Current scopes: " + scopes);
+        console.error("\n   To fix:");
+        console.error("   1. Create a new Personal Access Token:");
+        console.error("      https://github.com/settings/tokens/new?scopes=repo,workflow");
+        console.error("   2. Select 'repo' and 'workflow' scopes");
+        console.error("   3. Add it as GH_PAT secret in repository settings");
+        process.exit(1);
+      }
+      console.log("   ✅ Token has required 'repo' scope");
+    }
+  } catch (err) {
+    console.log("   ⚠️  Could not verify token scopes (this may be okay)");
+  }
 }
 
 function main() {
@@ -191,17 +216,21 @@ function main() {
 
       // Determine if org is the current user or an actual organization
       let isCurrentUser = false;
+      let currentUser = '';
       try {
-        const currentUser = sh(`gh api user --jq .login`, { captureOutput: true }).toString().trim();
+        currentUser = sh(`gh api user -q .login`, { captureOutput: true }).toString().trim();
+        console.log(`🔍 Current authenticated user: ${currentUser}`);
         isCurrentUser = (currentUser === org);
-      } catch {
-        // If we can't determine, assume it's not the current user
+        console.log(`🔍 Is current user: ${isCurrentUser}`);
+      } catch (err) {
+        console.log(`⚠️  Could not determine current user, will try org/repo format`);
       }
 
       try {
         // For user accounts, use just the repo name
         // For organizations, use org/repo format
         const repoArg = isCurrentUser ? newRepo : `${org}/${newRepo}`;
+        console.log(`🔍 Using repo argument: ${repoArg}`);
         sh(`gh repo create ${repoArg} --${visibility}`);
         console.log(`✅ Repository created successfully`);
       } catch (error: any) {
