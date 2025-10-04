@@ -162,10 +162,26 @@ function checkGitHubCLI() {
   // Check token scopes
   console.log("\n🔍 Checking token scopes...");
   try {
+    // First try to get scopes from gh auth status
+    const authStatus = sh("gh auth status 2>&1", { captureOutput: true }).toString();
+    const authScopeLine = authStatus.split('\n').find(line => line.includes('Token scopes:'));
+    
+    if (authScopeLine) {
+      const scopes = authScopeLine.substring(authScopeLine.indexOf(':') + 1).trim().replace(/'/g, '');
+      console.log(`   Token scopes: ${scopes}`);
+      
+      if (scopes.includes('repo')) {
+        console.log("   ✅ Token has required 'repo' scope");
+        return; // Exit early if we found the scope
+      }
+    }
+    
+    // Fallback to API call
     const response = sh("gh api /user -i", { captureOutput: true }).toString();
     const scopeLine = response.split('\n').find(line => line.toLowerCase().startsWith('x-oauth-scopes:'));
     if (scopeLine) {
-      const scopes = scopeLine.split(':').slice(1).join(':').trim();
+      // Extract the actual scopes value after the header name
+      const scopes = scopeLine.substring(scopeLine.indexOf(':') + 1).trim();
       console.log(`   Token scopes: ${scopes || '(none)'}`);
 
       if (!scopes || scopes === '' || !scopes.includes('repo')) {
