@@ -225,9 +225,11 @@ function main() {
 
   // Use authenticated URL with token for cloning and pushing
   const ghToken = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || '';
-  const remote = ghToken
+  const authenticatedRemote = ghToken
     ? `https://x-access-token:${ghToken}@github.com/${org}/${newRepo}.git`
     : `https://github.com/${org}/${newRepo}.git`;
+  // Clean URL without token for package.json
+  const publicRemote = `https://github.com/${org}/${newRepo}.git`;
   const tmp = `.tmp-${newRepo}`;
 
   // 1) Create the GitHub repo (idempotent)
@@ -281,10 +283,10 @@ function main() {
   // 2) Fresh clone
   if (existsSync(tmp)) rmSync(tmp, { recursive: true, force: true });
   if (!dryRun) {
-    sh(`git clone "${remote}" "${tmp}"`);
+    sh(`git clone "${authenticatedRemote}" "${tmp}"`);
   } else {
     // Mask token in dry-run output
-    const safeRemote = ghToken ? remote.replace(ghToken, '***') : remote;
+    const safeRemote = ghToken ? authenticatedRemote.replace(ghToken, '***') : authenticatedRemote;
     console.log(`[dryRun] Would clone ${safeRemote} to ${tmp}`);
     mkdirSync(tmp, { recursive: true });
   }
@@ -300,7 +302,7 @@ function main() {
   // 4) Patch repo metadata
   if (!dryRun) {
     ensureReleaseWorkflow(tmp);
-    patchPackageJson(tmp, scopeNameInPkgJson ?? newRepo, remote);
+    patchPackageJson(tmp, scopeNameInPkgJson ?? newRepo, publicRemote);
     writeReadmeIfMissing(tmp, scopeNameInPkgJson ?? newRepo);
   } else {
     console.log(`[dryRun] Would patch metadata in ${tmp}`);
