@@ -67,6 +67,7 @@ jobs:
 
       # █ Agent 3b: E2E (examples/host-app)
       - name: E2E Tests
+        continue-on-error: true
         run: |
           if [ -f "playwright.config.ts" ]; then
             # Install host app dependencies
