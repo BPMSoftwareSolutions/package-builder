@@ -147,3 +147,4 @@ tmp-integration-*/
 
 # Visual Studio
 .vs/
+/playwright-report
