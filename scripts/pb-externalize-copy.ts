@@ -162,23 +162,45 @@ function checkGitHubCLI() {
   // Check token scopes
   console.log("\n🔍 Checking token scopes...");
   try {
-    const response = sh("gh api /user -i", { captureOutput: true }).toString();
-    const scopeLine = response.split('\n').find(line => line.toLowerCase().includes('x-oauth-scopes'));
-    if (scopeLine) {
-      const scopes = scopeLine.split(':')[1]?.trim() || 'unknown';
+    // First try to get scopes from gh auth status
+    const authStatus = sh("gh auth status 2>&1", { captureOutput: true }).toString();
+    const authScopeLine = authStatus.split('\n').find(line => line.includes('Token scopes:'));
+    
+    if (authScopeLine) {
+      const scopes = authScopeLine.substring(authScopeLine.indexOf(':') + 1).trim().replace(/'/g, '');
       console.log(`   Token scopes: ${scopes}`);
-      if (!scopeLine.includes('repo')) {
+      
+      if (scopes.includes('repo')) {
+        console.log("   ✅ Token has required 'repo' scope");
+        return; // Exit early if we found the scope
+      }
+    }
+    
+    // Fallback to API call
+    const response = sh("gh api /user -i", { captureOutput: true }).toString();
+    const scopeLine = response.split('\n').find(line => line.toLowerCase().startsWith('x-oauth-scopes:'));
+    if (scopeLine) {
+      // Extract the actual scopes value after the header name
+      const scopes = scopeLine.substring(scopeLine.indexOf(':') + 1).trim();
+      console.log(`   Token scopes: ${scopes || '(none)'}`);
+
+      if (!scopes || scopes === '' || !scopes.includes('repo')) {
         console.error("\n❌ ERROR: Token does not have 'repo' scope!");
         console.error("   The token needs 'repo' scope to create repositories.");
-        console.error("   Current scopes: " + scopes);
+        console.error("   Current scopes: " + (scopes || '(none)'));
         console.error("\n   To fix:");
         console.error("   1. Create a new Personal Access Token:");
         console.error("      https://github.com/settings/tokens/new?scopes=repo,workflow");
         console.error("   2. Select 'repo' and 'workflow' scopes");
-        console.error("   3. Add it as GH_PAT secret in repository settings");
+        console.error("   3. In GitHub Actions, add it as GH_PAT secret:");
+        console.error("      Settings → Secrets and variables → Actions → New repository secret");
+        console.error("   4. Name: GH_PAT");
+        console.error("   5. Value: Your new token");
         process.exit(1);
       }
       console.log("   ✅ Token has required 'repo' scope");
+    } else {
+      console.log("   ⚠️  Could not find X-OAuth-Scopes header");
     }
   } catch (err) {
     console.log("   ⚠️  Could not verify token scopes (this may be okay)");
