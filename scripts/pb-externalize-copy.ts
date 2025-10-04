@@ -304,9 +304,17 @@ function main() {
   if (dryRun) {
     console.log("[dryRun] Skipping commit/push");
   } else {
+    // Configure git user identity for the commit
+    sh(`git -C "${tmp}" config user.name "github-actions[bot]"`);
+    sh(`git -C "${tmp}" config user.email "github-actions[bot]@users.noreply.github.com"`);
+
     sh(`git -C "${tmp}" add .`);
     // allow empty commit to be no-op
-    try { sh(`git -C "${tmp}" commit -m "chore: initial import from ${pkgPath}"`); } catch {}
+    try {
+      sh(`git -C "${tmp}" commit -m "chore: initial import from ${pkgPath}"`);
+    } catch (err) {
+      console.log("   ℹ️  No changes to commit (repository may already have content)");
+    }
     sh(`git -C "${tmp}" push origin HEAD:main`);
   }
 
