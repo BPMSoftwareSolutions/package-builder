@@ -137,3 +137,10 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Package builder artifacts
+.artifacts/
+*.tgz
+
+# Temporary integration test directories
+tmp-integration-*/

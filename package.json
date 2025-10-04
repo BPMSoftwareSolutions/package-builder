@@ -1,0 +1,43 @@
+{
+  "name": "@bpm/package-builder",
+  "version": "1.0.0",
+  "description": "An AI-assisted monorepo that turns small ideas into fully tested npm packages",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "npm test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "e2e": "playwright test",
+    "scaffold": "tsx scripts/pb-scaffold.ts",
+    "move": "tsx scripts/pb-move.ts",
+    "pack-all": "tsx scripts/pb-build-tgz.ts",
+    "integration": "tsx scripts/pb-spinup-integration.ts",
+    "guardrails": "tsx scripts/pb-guardrails.ts",
+    "report": "tsx scripts/pb-report.ts"
+  },
+  "keywords": [
+    "monorepo",
+    "package-builder",
+    "llm",
+    "ai-assisted",
+    "typescript"
+  ],
+  "author": "BPM Software Solutions",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^22.7.5",
+    "eslint": "^9.12.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
+

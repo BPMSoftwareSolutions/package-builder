@@ -1,0 +1,128 @@
+name: package-builder
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-test-package:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # █ Agent 1: PLAN
+      # In a real implementation, this would call an LLM to generate a plan
+      - name: LLM Plan
+        run: |
+          echo "🤖 Planner Agent"
+          echo "In production, this would analyze feature requests and generate a plan"
+          echo "For now, we'll use pre-implemented packages"
+
+      # █ Agent 2: IMPLEMENT
+      # In a real implementation, this would call an LLM to write code
+      - name: Implement Feature (LLM)
+        run: |
+          echo "🤖 Implementer Agent"
+          echo "In production, this would generate TypeScript code and tests"
+          echo "For now, we'll test existing packages"
+
+      # Structure/guardrails quick pass
+      - name: Guardrails Check
+        run: |
+          if [ -d "packages" ] && [ "$(ls -A packages)" ]; then
+            npm run guardrails -- --repo .
+          else
+            echo "⚠️  No packages to validate"
+          fi
+
+      # █ Agent 3: TEST (unit)
+      - name: Unit Tests
+        run: |
+          if [ -d "packages" ] && [ "$(ls -A packages)" ]; then
+            npm test --workspaces --if-present
+          else
+            echo "⚠️  No packages to test"
+          fi
+
+      # █ Agent 3b: E2E (examples/host-app)
+      - name: E2E Tests
+        run: |
+          if [ -f "playwright.config.ts" ]; then
+            npx playwright install --with-deps
+            npm run e2e
+          else
+            echo "⚠️  E2E tests not configured yet"
+          fi
+
+      # █ Agent 4: PACK
+      - name: Build Package Tarballs
+        run: |
+          if [ -d "packages" ] && [ "$(ls -A packages)" ]; then
+            npm run pack-all -- --packages "packages/*"
+          else
+            echo "⚠️  No packages to pack"
+          fi
+
+      # █ Agent 5: VERIFY as external dependency
+      - name: External Install Smoke Test
+        run: |
+          if [ -d "packages" ] && [ "$(ls -A packages)" ]; then
+            npm run integration -- --packages "packages/*"
+          else
+            echo "⚠️  No packages to verify"
+          fi
+
+      # Final report (comment on PR)
+      - name: Generate Summary Report
+        run: |
+          if [ -d "packages" ] && [ "$(ls -A packages)" ]; then
+            npm run report
+          else
+            echo "⚠️  No packages to report on"
+          fi
+
+      # Upload artifacts for debugging
+      - name: Upload Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-artifacts
+          path: .artifacts/
+          if-no-files-found: ignore
+
+      # Comment on PR with results (optional)
+      - name: Comment PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const packagesDir = 'packages';
+            
+            let comment = '## 📦 Package Builder Report\n\n';
+            
+            if (!fs.existsSync(packagesDir) || fs.readdirSync(packagesDir).length === 0) {
+              comment += '⚠️ No packages found in this PR.\n';
+            } else {
+              comment += '✅ Pipeline completed. Check the workflow logs for details.\n';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
