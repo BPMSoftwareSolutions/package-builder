@@ -378,55 +378,55 @@ Run with `tsx smoke.ts` (or `node --loader ts-node/esm`), exit non-zero on failu
 
 ## 9) Package Externalization
 
-Once a package is mature and ready for independent distribution, you can externalize it to its own GitHub repository using the externalization script.
+Once a package is mature and ready for independent distribution, you can externalize it to its own GitHub repository.
+
+### Quick Start: Using GitHub Actions (Recommended)
+
+The easiest way to externalize a package is through the GitHub Actions workflow:
+
+1. Go to **Actions** tab in your repository
+2. Select **Externalize Package** workflow
+3. Click **Run workflow**
+4. Fill in the parameters:
+   - Package path: `packages/svg-editor`
+   - New repository name: `tiny-svg-editor`
+   - Visibility: `public`
+   - NPM package name: `tiny-svg-editor` (optional)
+   - Dry run: Check to preview first
+5. Click **Run workflow**
+
+See [docs/EXTERNALIZATION.md](docs/EXTERNALIZATION.md) for detailed documentation.
 
 ### Prerequisites
 
-1. **GitHub CLI installed and authenticated**:
-   ```bash
-   gh auth login   # choose GitHub.com, HTTPS, paste token
-   ```
+1. **`NPM_TOKEN` secret**: Required for npm publishing
+   - Get token from: https://www.npmjs.com/settings/YOUR_USERNAME/tokens
+   - Add to repository secrets: Settings → Secrets → Actions → New repository secret
 
-2. **Required token scopes**: `repo`, `workflow`
+2. **`GITHUB_TOKEN`**: Automatically provided by GitHub Actions
 
-3. **NPM_TOKEN available**: Set as environment variable for npm publish permissions
+### Alternative: Command Line Usage
 
-### Usage Examples
+If you prefer to run the script directly (requires GitHub CLI):
 
 **Basic externalization**:
 ```bash
-node scripts/pb-externalize-copy.ts \
+npx tsx scripts/pb-externalize-copy.ts \
   pkgPath=packages/svg-editor \
   newRepo=tiny-svg-editor \
   org=your-github-org
 ```
 
-**With custom package name**:
-```bash
-node scripts/pb-externalize-copy.ts \
-  pkgPath=packages/svg-editor \
-  newRepo=tiny-svg-editor \
-  org=your-github-org \
-  scopeNameInPkgJson=@bpm/tiny-svg-editor
-```
-
-**Private repository**:
-```bash
-node scripts/pb-externalize-copy.ts \
-  pkgPath=packages/svg-editor \
-  newRepo=tiny-svg-editor \
-  org=your-github-org \
-  visibility=private
-```
-
 **Dry run (preview changes)**:
 ```bash
-node scripts/pb-externalize-copy.ts \
+npx tsx scripts/pb-externalize-copy.ts \
   pkgPath=packages/svg-editor \
   newRepo=tiny-svg-editor \
   org=your-github-org \
   dryRun=true
 ```
+
+For more examples and troubleshooting, see [docs/EXTERNALIZATION.md](docs/EXTERNALIZATION.md).
 
 ### What the script does
 

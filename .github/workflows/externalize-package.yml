@@ -1,0 +1,171 @@
+name: Externalize Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_path:
+        description: 'Package path (e.g., packages/svg-editor)'
+        required: true
+        type: string
+      new_repo_name:
+        description: 'New repository name (e.g., tiny-svg-editor)'
+        required: true
+        type: string
+      visibility:
+        description: 'Repository visibility'
+        required: true
+        type: choice
+        options:
+          - public
+          - private
+        default: public
+      scoped_name:
+        description: 'NPM package name (e.g., tiny-svg-editor or @bpm/tiny-svg-editor)'
+        required: false
+        type: string
+      dry_run:
+        description: 'Dry run (preview changes without creating repo)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  externalize:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate package exists
+        run: |
+          if [ ! -d "${{ inputs.package_path }}" ]; then
+            echo "❌ Error: Package path '${{ inputs.package_path }}' does not exist"
+            exit 1
+          fi
+          if [ ! -f "${{ inputs.package_path }}/package.json" ]; then
+            echo "❌ Error: No package.json found in '${{ inputs.package_path }}'"
+            exit 1
+          fi
+          echo "✅ Package validation passed"
+
+      - name: Setup GitHub CLI
+        run: |
+          # GitHub CLI is pre-installed on GitHub Actions runners
+          gh --version
+          
+      - name: Configure GitHub CLI authentication
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # GitHub CLI will use GITHUB_TOKEN automatically
+          gh auth status
+
+      - name: Run externalization script
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Build the command
+          CMD="npx tsx scripts/pb-externalize-copy.ts"
+          CMD="$CMD pkgPath=${{ inputs.package_path }}"
+          CMD="$CMD newRepo=${{ inputs.new_repo_name }}"
+          CMD="$CMD org=${{ github.repository_owner }}"
+          CMD="$CMD visibility=${{ inputs.visibility }}"
+          
+          # Add optional scoped name if provided
+          if [ -n "${{ inputs.scoped_name }}" ]; then
+            CMD="$CMD scopeNameInPkgJson=${{ inputs.scoped_name }}"
+          fi
+          
+          # Add dry run flag if enabled
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            CMD="$CMD dryRun=true"
+            echo "🔍 Running in DRY RUN mode - no changes will be made"
+          fi
+          
+          echo "Executing: $CMD"
+          eval $CMD
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## 📦 Package Externalization Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Package:** \`${{ inputs.package_path }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**New Repository:** \`${{ github.repository_owner }}/${{ inputs.new_repo_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Visibility:** \`${{ inputs.visibility }}\`" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -n "${{ inputs.scoped_name }}" ]; then
+            echo "**NPM Package Name:** \`${{ inputs.scoped_name }}\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **This was a DRY RUN** - no actual changes were made" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ✅ Repository Created" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "🔗 **Repository URL:** https://github.com/${{ github.repository_owner }}/${{ inputs.new_repo_name }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "1. Visit the new repository: https://github.com/${{ github.repository_owner }}/${{ inputs.new_repo_name }}" >> $GITHUB_STEP_SUMMARY
+            echo "2. Verify the GitHub Actions workflow is present in \`.github/workflows/release.yml\`" >> $GITHUB_STEP_SUMMARY
+            echo "3. Check that NPM_TOKEN secret was set (if NPM_TOKEN was available)" >> $GITHUB_STEP_SUMMARY
+            echo "4. To publish a release:" >> $GITHUB_STEP_SUMMARY
+            echo "   \`\`\`bash" >> $GITHUB_STEP_SUMMARY
+            echo "   cd /path/to/${{ inputs.new_repo_name }}" >> $GITHUB_STEP_SUMMARY
+            echo "   npm version patch  # or minor, major" >> $GITHUB_STEP_SUMMARY
+            echo "   git push --follow-tags" >> $GITHUB_STEP_SUMMARY
+            echo "   \`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Comment on commit (if not dry run)
+        if: ${{ !inputs.dry_run && github.event_name == 'workflow_dispatch' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const repoUrl = `https://github.com/${{ github.repository_owner }}/${{ inputs.new_repo_name }}`;
+            const message = `## 📦 Package Externalized Successfully
+            
+            **Package:** \`${{ inputs.package_path }}\`
+            **New Repository:** [${repoUrl}](${repoUrl})
+            **Visibility:** \`${{ inputs.visibility }}\`
+            
+            The package has been externalized to its own repository with:
+            - ✅ All source files copied
+            - ✅ GitHub Actions workflow for npm publishing
+            - ✅ Updated package.json with repository info
+            - ✅ NPM_TOKEN secret configured (if available)
+            
+            ### Next Steps
+            
+            1. Visit the new repository: ${repoUrl}
+            2. Create a release:
+               \`\`\`bash
+               npm version patch && git push --follow-tags
+               \`\`\`
+            `;
+            
+            // Create a comment on the latest commit
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: message
+            });
+
