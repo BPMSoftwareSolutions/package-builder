@@ -69,7 +69,11 @@ jobs:
       - name: E2E Tests
         run: |
           if [ -f "playwright.config.ts" ]; then
+            # Install host app dependencies
+            cd examples/host-app && npm install && cd ../..
+            # Install Playwright browsers
             npx playwright install --with-deps
+            # Run E2E tests
             npm run e2e
           else
             echo "⚠️  E2E tests not configured yet"
