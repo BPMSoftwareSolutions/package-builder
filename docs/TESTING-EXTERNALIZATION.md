@@ -4,9 +4,29 @@ This guide walks you through testing the package externalization workflow end-to
 
 ## Prerequisites Setup
 
-### 1. Configure NPM_TOKEN Secret
+### 1. Configure GH_PAT Secret (REQUIRED)
 
-Before running the workflow, you need to set up the NPM_TOKEN secret:
+The default `GITHUB_TOKEN` cannot create repositories. You **must** create a Personal Access Token:
+
+1. **Create Personal Access Token**:
+   - Go to: https://github.com/settings/tokens/new?scopes=repo,workflow
+   - Description: "Package Builder Externalization"
+   - Expiration: Choose appropriate duration (90 days recommended)
+   - Select scopes:
+     - ✓ `repo` (Full control of private repositories)
+     - ✓ `workflow` (Update GitHub Action workflows)
+   - Click "Generate token"
+   - **Copy the token immediately** (you won't see it again!)
+
+2. **Add to GitHub repository**:
+   - Go to: https://github.com/BPMSoftwareSolutions/package-builder
+   - Click **Settings** → **Secrets and variables** → **Actions**
+   - Click **New repository secret**
+   - Name: `GH_PAT`
+   - Value: Paste your Personal Access Token
+   - Click **Add secret**
+
+### 2. Configure NPM_TOKEN Secret
 
 1. **Get your npm token**:
    - Go to https://www.npmjs.com/settings/YOUR_USERNAME/tokens
@@ -22,15 +42,17 @@ Before running the workflow, you need to set up the NPM_TOKEN secret:
    - Value: Paste your npm token
    - Click **Add secret**
 
-### 2. Verify Workflow Permissions
+### 3. Verify Workflow Permissions
 
-Ensure the workflow has permission to create repositories:
+Ensure the workflow has proper permissions:
 
 1. Go to **Settings** → **Actions** → **General**
 2. Scroll to **Workflow permissions**
 3. Select **Read and write permissions**
 4. Check **Allow GitHub Actions to create and approve pull requests**
 5. Click **Save**
+
+**Note**: Even with these permissions, the default `GITHUB_TOKEN` still cannot create repositories. This is why the `GH_PAT` secret is required.
 
 ## Test Plan
 
@@ -209,12 +231,30 @@ This test verifies the package can be installed and used.
 
 ## Troubleshooting
 
+### Issue: "gh repo create failed" or "Command failed: gh repo create"
+
+**Cause**: The default `GITHUB_TOKEN` does not have permission to create repositories.
+
+**Solution**:
+1. Create a Personal Access Token (see Prerequisites Setup above)
+2. Add it as `GH_PAT` secret in repository settings
+3. Re-run the workflow
+
+**Verification**:
+```bash
+# Check if GH_PAT secret exists
+gh secret list --repo BPMSoftwareSolutions/package-builder
+# Should show GH_PAT in the list
+```
+
 ### Issue: "GITHUB_TOKEN doesn't have permission"
 
 **Solution**:
-1. Go to Settings → Actions → General → Workflow permissions
-2. Select "Read and write permissions"
-3. Save and re-run workflow
+1. Ensure `GH_PAT` secret is configured (not just `GITHUB_TOKEN`)
+2. Verify the PAT has `repo` and `workflow` scopes
+3. Go to Settings → Actions → General → Workflow permissions
+4. Select "Read and write permissions"
+5. Save and re-run workflow
 
 ### Issue: "NPM_TOKEN secret not found"
 
