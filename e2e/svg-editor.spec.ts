@@ -66,17 +66,18 @@ test.describe('SVG Editor Package', () => {
 
   test('should show output messages', async ({ page }) => {
     await page.goto('/');
-    
+
     const output = page.locator('#output');
-    
+
     // Initially should show ready message
     await expect(output).toContainText('Ready to test');
-    
+
     // Click a button
     await page.click('#btn-set-attrs');
-    
-    // Should show success message
-    await expect(output).toContainText('Attributes set');
+
+    // Should show success message with setAttrs result
+    await expect(output).toContainText('setAttrs called: true');
+    await expect(output).toContainText('Rectangle is now RED');
   });
 });
 
