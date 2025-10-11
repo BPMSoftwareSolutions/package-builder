@@ -1,0 +1,8 @@
+{
+  "name": "library-panel",
+  "version": "0.1.0",
+  "type": "panel",
+  "exports": [
+    "default"
+  ]
+}
