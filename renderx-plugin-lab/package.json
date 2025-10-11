@@ -1,0 +1,36 @@
+{
+  "name": "renderx-plugin-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Experimental lab for RenderX plugins, Host SDK, and Thin Host architecture",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "test": "vitest run",
+    "test:cia": "vitest run --config vitest.cia.config.ts",
+    "test:spa": "vitest run --config vitest.spa.config.ts",
+    "simulate:canvas": "node ./scripts/simulateCanvas.js",
+    "stats": "node ./scripts/showStats.js"
+  },
+  "dependencies": {
+    "musical-conductor": "^1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.2.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0"
+  },
+  "keywords": [
+    "renderx",
+    "plugins",
+    "cia",
+    "spa",
+    "conductor",
+    "thin-host"
+  ]
+}
