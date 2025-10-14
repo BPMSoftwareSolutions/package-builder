@@ -1,0 +1,52 @@
+name: Test Coverage Validation
+
+on:
+  pull_request:
+    paths:
+      - 'packages/python-skill-builder/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/python-skill-builder/**'
+
+jobs:
+  validate-coverage:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          cd packages/python-skill-builder
+          pip install -r requirements.txt
+      
+      - name: Validate test coverage against features.json
+        run: |
+          cd packages/python-skill-builder
+          python tests/validate_coverage.py
+      
+      - name: Run tests with coverage
+        run: |
+          cd packages/python-skill-builder
+          pytest --cov=. --cov-report=term --cov-report=html --cov-report=xml
+      
+      - name: Check coverage threshold
+        run: |
+          cd packages/python-skill-builder
+          pytest --cov=. --cov-fail-under=80
+      
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          file: ./packages/python-skill-builder/coverage.xml
+          flags: python-skill-builder
+          name: python-skill-builder-coverage
+

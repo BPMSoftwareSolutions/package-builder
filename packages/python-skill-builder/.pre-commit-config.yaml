@@ -1,0 +1,19 @@
+repos:
+  - repo: local
+    hooks:
+      - id: validate-test-coverage
+        name: Validate Test Coverage
+        entry: python tests/validate_coverage.py
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+      
+      - id: run-tests
+        name: Run Python Tests
+        entry: pytest
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+
