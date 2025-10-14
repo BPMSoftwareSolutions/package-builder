@@ -376,19 +376,34 @@ function displayFeedback(result) {
 
 // Get saved code for a workshop (with optional approach)
 function getSavedCode(moduleId, workshopId, approachId) {
-    if (!state.progress[moduleId]) return null;
-    if (!state.progress[moduleId].code) return null;
+    console.log('[getSavedCode]', { moduleId, workshopId, approachId });
+
+    if (!state.progress[moduleId]) {
+        console.log('[getSavedCode] No progress for module');
+        return null;
+    }
+    if (!state.progress[moduleId].code) {
+        console.log('[getSavedCode] No code object for module');
+        return null;
+    }
 
     const workshopCode = state.progress[moduleId].code[workshopId];
-    if (!workshopCode) return null;
+    if (!workshopCode) {
+        console.log('[getSavedCode] No code for workshop');
+        return null;
+    }
 
     // If approachId is provided, get code for that specific approach
     if (approachId) {
-        return workshopCode[approachId] || null;
+        const code = workshopCode[approachId] || null;
+        console.log('[getSavedCode] Returning approach code:', code ? code.substring(0, 50) + '...' : 'null');
+        return code;
     }
 
     // Otherwise, return code for single-approach workshop
-    return typeof workshopCode === 'string' ? workshopCode : null;
+    const code = typeof workshopCode === 'string' ? workshopCode : null;
+    console.log('[getSavedCode] Returning single-approach code:', code ? code.substring(0, 50) + '...' : 'null');
+    return code;
 }
 
 // Save code for current workshop
@@ -396,6 +411,8 @@ function saveCode() {
     const moduleId = state.currentModule.id;
     const workshopId = state.currentWorkshop.id;
     const code = document.getElementById('code-editor').value;
+
+    console.log('[saveCode]', { moduleId, workshopId, approachId: state.currentApproachId, codeLength: code.length });
 
     if (!state.progress[moduleId]) {
         state.progress[moduleId] = { completed: 0, scores: {}, code: {}, approaches: {}, lastSeenAt: null };
@@ -411,12 +428,15 @@ function saveCode() {
             state.progress[moduleId].code[workshopId] = {};
         }
         state.progress[moduleId].code[workshopId][state.currentApproachId] = code;
+        console.log('[saveCode] Saved approach code to:', `progress.${moduleId}.code.${workshopId}.${state.currentApproachId}`);
     } else {
         // Save code directly for single-approach workshops
         state.progress[moduleId].code[workshopId] = code;
+        console.log('[saveCode] Saved single-approach code to:', `progress.${moduleId}.code.${workshopId}`);
     }
 
     saveProgress();
+    console.log('[saveCode] Progress saved to localStorage');
 }
 
 // Get saved approach ID for a workshop

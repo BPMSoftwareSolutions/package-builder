@@ -1,0 +1,400 @@
+{
+  "metadata": {
+    "package": "python-skill-builder",
+    "version": "1.0.0",
+    "lastUpdated": "2025-10-14",
+    "purpose": "Feature inventory for test suite generation and regression prevention",
+    "relatedIssues": ["#24", "#26"]
+  },
+  "features": {
+    "backend": {
+      "api": {
+        "endpoints": [
+          {
+            "path": "/api/modules",
+            "method": "GET",
+            "description": "List all training modules",
+            "testCases": [
+              "Returns 200 status",
+              "Returns array of modules",
+              "Each module has id, title, description",
+              "Returns 7 modules total"
+            ]
+          },
+          {
+            "path": "/api/modules/<id>",
+            "method": "GET",
+            "description": "Get specific module with workshops",
+            "testCases": [
+              "Returns 200 for valid module ID",
+              "Returns 404 for invalid module ID",
+              "Returns module with workshops array",
+              "Each workshop has required fields"
+            ]
+          },
+          {
+            "path": "/api/grade",
+            "method": "POST",
+            "description": "Submit and grade user code",
+            "testCases": [
+              "Accepts moduleId, workshopId, code",
+              "Accepts optional approachId for multi-approach workshops",
+              "Returns score, max_score, feedback, execution_time",
+              "Returns 400 for missing required fields",
+              "Returns 404 for invalid module/workshop ID",
+              "Returns 400 for missing approachId when required",
+              "Backward compatible with single-approach format"
+            ]
+          }
+        ]
+      },
+      "sandbox": {
+        "description": "AST-based code execution sandbox",
+        "features": [
+          {
+            "name": "AST validation",
+            "testCases": [
+              "Blocks import statements",
+              "Blocks open() calls",
+              "Blocks eval() and exec() in user code",
+              "Blocks __import__ in user code",
+              "Allows ast.Attribute (method calls)",
+              "Allows ast.Try (exception handling)",
+              "Allows ast.Raise (raising exceptions)"
+            ]
+          },
+          {
+            "name": "Safe builtins",
+            "testCases": [
+              "Provides len, range, sum, min, max, abs",
+              "Provides enumerate, zip, sorted, all, any",
+              "Provides list, dict, set, tuple, str, int, float, bool",
+              "Provides print, isinstance, type",
+              "Provides Exception, ValueError, TypeError",
+              "Provides KeyError, IndexError, AttributeError",
+              "Blocks file I/O functions",
+              "Blocks network functions",
+              "Blocks os module access"
+            ]
+          },
+          {
+            "name": "Namespace isolation",
+            "testCases": [
+              "User namespace has restricted builtins",
+              "User namespace includes __source__ with submitted code",
+              "Test namespace has extended builtins",
+              "Test namespace includes __import__, __name__, __file__",
+              "Test namespace includes inspect module",
+              "User code cannot access test namespace",
+              "Test code can access user namespace via grade(ns)"
+            ]
+          }
+        ]
+      },
+      "grading": {
+        "description": "Code grading and test execution",
+        "features": [
+          {
+            "name": "Single-approach grading",
+            "testCases": [
+              "Executes user code in sandbox",
+              "Executes test harness with grade() function",
+              "Returns normalized result with score, max_score, feedback",
+              "Tracks execution time",
+              "Handles syntax errors gracefully",
+              "Handles runtime errors gracefully"
+            ]
+          },
+          {
+            "name": "Multi-approach grading",
+            "testCases": [
+              "Routes to correct approach based on approachId",
+              "Uses approach-specific test harness",
+              "Returns 400 if approachId missing for multi-approach workshop",
+              "Returns 404 if approachId not found"
+            ]
+          },
+          {
+            "name": "Pattern detection",
+            "testCases": [
+              "Test harness can access __source__ from namespace",
+              "Can detect list comprehension usage",
+              "Can detect for-loop usage",
+              "Can detect string concatenation patterns",
+              "Can provide pattern-specific feedback"
+            ]
+          }
+        ]
+      }
+    },
+    "frontend": {
+      "views": {
+        "dashboard": {
+          "description": "Module selection dashboard",
+          "testCases": [
+            "Displays all 7 modules",
+            "Shows module title and description",
+            "Shows progress bar per module",
+            "Shows completion count (X/Y workshops)",
+            "Shows average score percentage",
+            "Shows time estimate",
+            "Shows last seen timestamp",
+            "Clicking module opens workshop view"
+          ]
+        },
+        "workshop": {
+          "description": "Code editor and workshop interface",
+          "testCases": [
+            "Displays workshop title and prompt",
+            "Shows timer countdown",
+            "Shows workshop progress (1 of 2)",
+            "Shows Previous/Next navigation buttons",
+            "Hides Previous on first workshop",
+            "Hides Next on last workshop",
+            "Shows code editor with monospace font",
+            "Tab key inserts 4 spaces",
+            "Shows Submit button",
+            "Shows Reset button",
+            "Shows Back to Dashboard button",
+            "Shows hints section",
+            "Shows feedback section after submission"
+          ]
+        }
+      },
+      "alternativeImplementations": {
+        "description": "Multi-approach workshop support",
+        "features": [
+          {
+            "name": "Approach selector",
+            "testCases": [
+              "Shows dropdown for multi-approach workshops",
+              "Hides dropdown for single-approach workshops",
+              "Dropdown lists all approach titles",
+              "Shows approach description below dropdown",
+              "Switching approach loads correct starter code",
+              "Switching approach loads correct hints",
+              "Switching approach loads saved code if exists",
+              "Remembers last selected approach per workshop"
+            ]
+          },
+          {
+            "name": "Approach-specific content",
+            "testCases": [
+              "Each approach has unique starter code",
+              "Each approach has unique hints",
+              "Each approach has unique test validation",
+              "Reset button uses correct starter code for selected approach"
+            ]
+          }
+        ]
+      },
+      "codeEditor": {
+        "description": "Code editing functionality",
+        "testCases": [
+          "Loads starter code on workshop open",
+          "Loads saved code if exists",
+          "Tab key inserts 4 spaces (not tab character)",
+          "Auto-saves code 1 second after typing stops",
+          "Submit button sends code to /api/grade",
+          "Reset button restores starter code with confirmation",
+          "Code persists when navigating to different workshop",
+          "Code persists when navigating to dashboard",
+          "Code persists after browser refresh",
+          "Code persists per approach for multi-approach workshops"
+        ]
+      },
+      "hints": {
+        "description": "Progressive hint reveal system",
+        "testCases": [
+          "Shows hint count (e.g., '3 hints available')",
+          "Initially all hints are hidden",
+          "Clicking 'Show Hint' reveals next hint",
+          "Revealed hints stay visible",
+          "Button text changes to 'Show Next Hint'",
+          "Button disabled when all hints revealed",
+          "Hints reset when switching approaches",
+          "Hints are approach-specific"
+        ]
+      },
+      "timer": {
+        "description": "Countdown timer per workshop",
+        "testCases": [
+          "Starts countdown from timeLimitMinutes",
+          "Displays MM:SS format",
+          "Updates every second",
+          "Shows warning animation when < 1 minute",
+          "Stops when workshop completed (score >= 80%)",
+          "Continues running if score < 80%",
+          "Resets when navigating to different workshop"
+        ]
+      },
+      "feedback": {
+        "description": "Grading results display",
+        "testCases": [
+          "Shows score as 'X / Y points'",
+          "Shows percentage",
+          "Shows feedback message from test harness",
+          "Shows execution time in milliseconds",
+          "Shows success indicator (green) for score >= 80%",
+          "Shows partial success (yellow) for 50% <= score < 80%",
+          "Shows error indicator (red) for score < 50%",
+          "Shows error message for syntax errors",
+          "Shows error message for runtime errors",
+          "Shows stack trace for debugging"
+        ]
+      },
+      "progressTracking": {
+        "description": "localStorage-based progress persistence",
+        "features": [
+          {
+            "name": "Progress structure",
+            "schema": {
+              "moduleId": {
+                "completed": "number - count of workshops with score >= 80%",
+                "scores": "object - workshopId: highestScore",
+                "approachScores": "object - workshopId: { approachId: score }",
+                "code": "object - workshopId: code OR workshopId: { approachId: code }",
+                "approaches": "object - workshopId: lastSelectedApproachId",
+                "lastSeenAt": "ISO timestamp"
+              }
+            },
+            "testCases": [
+              "Creates module entry on first interaction",
+              "Updates scores after each submission",
+              "Tracks highest score per workshop",
+              "Tracks scores per approach for multi-approach workshops",
+              "Workshop score = max(all approach scores)",
+              "Increments completed count when score >= 80%",
+              "Decrements completed count when score drops < 80%",
+              "Saves code per workshop",
+              "Saves code per approach for multi-approach workshops",
+              "Saves last selected approach per workshop",
+              "Updates lastSeenAt timestamp",
+              "Persists to localStorage after every change",
+              "Loads from localStorage on page load"
+            ]
+          },
+          {
+            "name": "Completion logic",
+            "testCases": [
+              "Workshop complete when ANY approach scores >= 80%",
+              "Module complete when ALL workshops have >= 80% score",
+              "Progress bar shows completion percentage",
+              "Average score calculated from all workshop scores",
+              "Completion count shows X/Y format"
+            ]
+          }
+        ]
+      },
+      "navigation": {
+        "description": "Workshop and module navigation",
+        "testCases": [
+          "Back to Dashboard returns to module list",
+          "Previous button goes to previous workshop",
+          "Next button goes to next workshop",
+          "Navigation preserves code (auto-save)",
+          "Navigation preserves progress",
+          "Navigation updates lastSeenAt timestamp",
+          "Can navigate between modules",
+          "Can reopen completed workshops",
+          "Reopening workshop loads saved code"
+        ]
+      }
+    },
+    "content": {
+      "modules": [
+        {
+          "id": "python_basics",
+          "workshopCount": 2,
+          "workshops": [
+            {
+              "id": "basics_01",
+              "title": "Even Squares",
+              "approachCount": 2,
+              "approaches": ["comprehension", "loop"]
+            },
+            {
+              "id": "basics_02",
+              "title": "FizzBuzz",
+              "approachCount": 2,
+              "approaches": ["if_elif", "string_concat"]
+            }
+          ]
+        },
+        {
+          "id": "functions_and_syntax",
+          "workshopCount": 2
+        },
+        {
+          "id": "oop_fundamentals",
+          "workshopCount": 2
+        },
+        {
+          "id": "errors_and_debugging",
+          "workshopCount": 2
+        },
+        {
+          "id": "comprehensions_and_generators",
+          "workshopCount": 2
+        },
+        {
+          "id": "numpy_intro",
+          "workshopCount": 2
+        },
+        {
+          "id": "flask_intro",
+          "workshopCount": 2
+        }
+      ]
+    }
+  },
+  "knownIssues": [
+    {
+      "issue": "Code persistence not working after navigation",
+      "status": "OPEN",
+      "description": "After navigating to dashboard and back to workshop, code resets to starter code",
+      "reproSteps": [
+        "1. Open workshop and write code",
+        "2. Navigate to dashboard",
+        "3. Navigate back to same workshop",
+        "4. Code is reset instead of showing saved code"
+      ],
+      "expectedBehavior": "Saved code should be restored",
+      "actualBehavior": "Starter code is shown",
+      "relatedCode": [
+        "static/app.js:openWorkshop()",
+        "static/app.js:selectApproach()",
+        "static/app.js:getSavedCode()",
+        "static/app.js:saveCode()"
+      ]
+    }
+  ],
+  "testPriorities": {
+    "critical": [
+      "Code persistence (save and restore)",
+      "Progress tracking (scores and completion)",
+      "Sandbox security (block dangerous code)",
+      "Grading correctness (test execution)",
+      "API endpoint functionality"
+    ],
+    "high": [
+      "Alternative implementations (approach switching)",
+      "Navigation (between workshops)",
+      "localStorage operations",
+      "Pattern detection in tests",
+      "Error handling"
+    ],
+    "medium": [
+      "Timer functionality",
+      "Hint reveal system",
+      "UI feedback display",
+      "Progress bar calculations"
+    ],
+    "low": [
+      "Keyboard shortcuts",
+      "Visual animations",
+      "Timestamp formatting"
+    ]
+  }
+}
+
