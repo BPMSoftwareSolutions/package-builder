@@ -76,7 +76,10 @@ def run_user_and_tests(user_code: str, tests_code: str):
     validate_source(user_code)
 
     # 2) prepare sandboxes
-    user_ns = {"__builtins__": SAFE_BUILTINS}
+    user_ns = {
+        "__builtins__": SAFE_BUILTINS,
+        "__source__": user_code  # Provide source code for pattern detection
+    }
 
     # Test namespace needs more builtins for inspect module to work
     # Create a copy of safe builtins and add necessary items for inspect
