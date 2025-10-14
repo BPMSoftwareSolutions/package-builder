@@ -13,7 +13,19 @@ Comprehensive test suite for Python Skill Builder application implementing all r
 
 ## Test Suite Structure
 
-### 1. Backend Unit Tests - Sandbox (`test_sandbox.py`)
+### 1. ESLint Plugin - Feature Coverage (`eslint-plugin-feature-coverage/`)
+**Custom ESLint plugin for JavaScript test coverage:**
+- ✅ Validates frontend features in features.json have tests
+- ✅ Runs during linting and CI/CD
+- ✅ Reports missing tests as ESLint errors/warnings
+- ✅ Integrates with validate_coverage.py for full coverage
+
+**Configuration:**
+- `.eslintrc.js` - ESLint configuration
+- `package.json` - npm scripts for linting and validation
+- `static/app.test.js` - Sample JavaScript test file
+
+### 3. Backend Unit Tests - Sandbox (`test_sandbox.py`)
 **27 tests covering:**
 - ✅ AST Validation (10 tests)
   - Blocks dangerous operations (import, with, eval, exec, __import__)
@@ -26,7 +38,7 @@ Comprehensive test suite for Python Skill Builder application implementing all r
   - Test namespace capabilities
   - __source__ availability for pattern detection
 
-### 2. Backend Unit Tests - Grading (`test_grading.py`)
+### 4. Backend Unit Tests - Grading (`test_grading.py`)
 **20 tests covering:**
 - ✅ Single-Approach Grading (6 tests)
   - Code execution in sandbox
@@ -48,7 +60,7 @@ Comprehensive test suite for Python Skill Builder application implementing all r
   - Zero scores
   - Exception handling
 
-### 3. Backend Integration Tests - API (`test_api.py`)
+### 5. Backend Integration Tests - API (`test_api.py`)
 **22 tests covering:**
 - ✅ GET /api/modules (4 tests)
   - Returns 200 status
@@ -78,7 +90,16 @@ Comprehensive test suite for Python Skill Builder application implementing all r
 ## Test Infrastructure
 
 ### Files Created
-1. **Test Directory Structure**
+1. **ESLint Plugin and Configuration**
+   - `eslint-plugin-feature-coverage/index.js` - Custom ESLint plugin
+   - `eslint-plugin-feature-coverage/package.json` - Plugin metadata
+   - `eslint-plugin-feature-coverage/README.md` - Plugin documentation
+   - `.eslintrc.js` - ESLint configuration
+   - `package.json` - npm scripts and dependencies
+   - `static/app.test.js` - Sample JavaScript test file
+   - `ESLINT_SETUP.md` - ESLint setup documentation
+
+2. **Test Directory Structure**
    - `tests/__init__.py` - Package initialization
    - `tests/conftest.py` - Pytest fixtures and configuration
    - `tests/test_sandbox.py` - Sandbox validation tests
@@ -87,13 +108,13 @@ Comprehensive test suite for Python Skill Builder application implementing all r
    - `tests/validate_coverage.py` - Coverage validation script
    - `tests/README.md` - Test documentation
 
-2. **Configuration Files**
+3. **Configuration Files**
    - `pytest.ini` - Pytest configuration
    - `.coveragerc` - Coverage configuration
    - `.pre-commit-config.yaml` - Pre-commit hooks
    - `requirements.txt` - Updated with test dependencies
 
-3. **CI/CD Integration**
+4. **CI/CD Integration**
    - `.github/workflows/test-coverage-validation.yml` - GitHub Actions workflow
    - `.github/PULL_REQUEST_TEMPLATE.md` - PR template with test checklist
 
@@ -128,8 +149,10 @@ Validating grading coverage...
 ## Running Tests
 
 ### Quick Start
+
+**Python Tests:**
 ```bash
-# Install dependencies
+# Install Python dependencies
 pip install -r requirements.txt
 
 # Run all tests
@@ -140,6 +163,24 @@ pytest --cov=. --cov-report=term --cov-report=html
 
 # Validate coverage against features.json
 python tests/validate_coverage.py
+```
+
+**JavaScript Tests and Linting:**
+```bash
+# Install Node dependencies
+npm install
+
+# Run ESLint
+npm run lint
+
+# Run ESLint with auto-fix
+npm run lint:fix
+
+# Validate coverage (runs Python script)
+npm run validate:coverage
+
+# Run full CI pipeline
+npm run ci
 ```
 
 ### CI/CD Integration

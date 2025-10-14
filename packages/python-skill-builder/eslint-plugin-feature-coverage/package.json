@@ -1,0 +1,20 @@
+{
+  "name": "eslint-plugin-feature-coverage",
+  "version": "1.0.0",
+  "description": "ESLint plugin to ensure all features in features.json have corresponding tests",
+  "main": "index.js",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "testing",
+    "coverage",
+    "features"
+  ],
+  "author": "BPM Software Solutions",
+  "license": "MIT",
+  "peerDependencies": {
+    "eslint": ">=7.0.0"
+  }
+}
+

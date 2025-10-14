@@ -1,0 +1,43 @@
+{
+  "name": "python-skill-builder",
+  "version": "1.0.0",
+  "description": "Interactive Python training application with sandboxed code execution and automated grading",
+  "main": "app.py",
+  "scripts": {
+    "test": "pytest",
+    "test:coverage": "pytest --cov=. --cov-report=term --cov-report=html",
+    "test:watch": "pytest --watch",
+    "validate:coverage": "python tests/validate_coverage.py",
+    "pretest": "npm run validate:coverage",
+    "lint": "eslint static/**/*.js",
+    "lint:fix": "eslint static/**/*.js --fix",
+    "lint:tests": "eslint static/**/*.test.js static/**/*.spec.js",
+    "precommit": "npm run validate:coverage && npm run lint",
+    "ci": "npm run validate:coverage && npm run test:coverage && npm run lint"
+  },
+  "keywords": [
+    "python",
+    "training",
+    "education",
+    "flask",
+    "sandbox",
+    "code-execution",
+    "automated-grading"
+  ],
+  "author": "BPM Software Solutions",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-plugin-feature-coverage": "file:./eslint-plugin-feature-coverage"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "python": ">=3.11.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BPMSoftwareSolutions/package-builder.git",
+    "directory": "packages/python-skill-builder"
+  }
+}
+
