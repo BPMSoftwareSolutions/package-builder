@@ -38,8 +38,12 @@ SAFE_BUILTINS = {
     "enumerate": enumerate, "zip": zip, "sorted": sorted, "all": all, "any": any,
     "list": list, "dict": dict, "set": set, "tuple": tuple, "str": str, "int": int,
     "float": float, "bool": bool, "print": print, "isinstance": isinstance, "type": type,
+    "repr": repr, "getattr": getattr, "setattr": setattr, "hasattr": hasattr,  # Object attribute access
     "Exception": Exception, "ValueError": ValueError, "TypeError": TypeError,
-    "KeyError": KeyError, "IndexError": IndexError, "AttributeError": AttributeError
+    "KeyError": KeyError, "IndexError": IndexError, "AttributeError": AttributeError,
+    "__build_class__": __build_class__,  # Required for class definitions
+    "property": property,  # Required for @property decorator
+    "super": super  # Required for super() calls in inheritance
 }
 
 def validate_source(code: str):
@@ -78,7 +82,8 @@ def run_user_and_tests(user_code: str, tests_code: str):
     # 2) prepare sandboxes
     user_ns = {
         "__builtins__": SAFE_BUILTINS,
-        "__source__": user_code  # Provide source code for pattern detection
+        "__source__": user_code,  # Provide source code for pattern detection
+        "__name__": "__main__"  # Required for class definitions
     }
 
     # Test namespace needs more builtins for inspect module to work
