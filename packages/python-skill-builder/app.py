@@ -70,14 +70,23 @@ def run_user_and_tests(user_code: str, tests_code: str):
         dict with score, max_score, and feedback
     """
     import inspect
+    import builtins
 
     # 1) validate user code AST
     validate_source(user_code)
 
     # 2) prepare sandboxes
     user_ns = {"__builtins__": SAFE_BUILTINS}
+
+    # Test namespace needs more builtins for inspect module to work
+    # Create a copy of safe builtins and add necessary items for inspect
+    test_builtins = SAFE_BUILTINS.copy()
+    test_builtins["__import__"] = builtins.__import__  # Needed by inspect
+    test_builtins["__name__"] = "__main__"
+    test_builtins["__file__"] = "<tests>"
+
     test_ns = {
-        "__builtins__": SAFE_BUILTINS,
+        "__builtins__": test_builtins,
         "inspect": inspect  # Allow tests to use inspect module
     }
 
