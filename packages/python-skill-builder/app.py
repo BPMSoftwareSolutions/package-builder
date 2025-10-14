@@ -30,14 +30,14 @@ def get_module(mod_id):
 # ------- Safe execution sandbox -------
 DISALLOWED_NODES = (
     ast.Import, ast.ImportFrom, ast.Global, ast.Nonlocal, ast.With, ast.AsyncWith,
-    ast.Lambda, ast.Try, ast.Raise, ast.Attribute  # keep it simple for MVP
+    ast.Lambda  # Removed Try, Raise, Attribute to allow basic Python operations
 )
 
 SAFE_BUILTINS = {
     "len": len, "range": range, "sum": sum, "min": min, "max": max, "abs": abs,
     "enumerate": enumerate, "zip": zip, "sorted": sorted, "all": all, "any": any,
     "list": list, "dict": dict, "set": set, "tuple": tuple, "str": str, "int": int,
-    "float": float, "bool": bool, "print": print
+    "float": float, "bool": bool, "print": print, "isinstance": isinstance, "type": type
 }
 
 def validate_source(code: str):
