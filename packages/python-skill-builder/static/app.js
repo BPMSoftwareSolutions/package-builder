@@ -9,6 +9,8 @@ const state = {
     currentModule: null,
     currentWorkshop: null,
     currentWorkshopIndex: 0,
+    currentApproach: null,  // For multi-approach workshops
+    currentApproachId: null,
     progress: {},
     timer: null,
     timerSeconds: 0,
@@ -128,10 +130,6 @@ function openWorkshop(workshop, workshopIndex) {
     document.getElementById('module-title').textContent = state.currentModule.title;
     document.getElementById('workshop-prompt').textContent = workshop.prompt;
 
-    // Load saved code or use starter code
-    const savedCode = getSavedCode(state.currentModule.id, workshop.id);
-    document.getElementById('code-editor').value = savedCode || workshop.starterCode;
-
     // Update progress indicator
     const totalWorkshops = state.currentModule.workshops.length;
     document.getElementById('workshop-progress').textContent = `${workshopIndex + 1} of ${totalWorkshops}`;
@@ -139,14 +137,93 @@ function openWorkshop(workshop, workshopIndex) {
     // Update navigation buttons
     updateNavigationButtons();
 
-    // Setup hints
-    renderHints(workshop.hints);
+    // Handle approaches (new format) vs single approach (old format)
+    if (workshop.approaches && workshop.approaches.length > 0) {
+        // Multi-approach workshop
+        setupApproachSelector(workshop);
+
+        // Load saved approach or default to first
+        const savedApproachId = getSavedApproachId(state.currentModule.id, workshop.id);
+        const approachId = savedApproachId || workshop.approaches[0].id;
+        selectApproach(approachId);
+    } else {
+        // Single approach workshop (backward compatibility)
+        hideApproachSelector();
+        state.currentApproach = null;
+        state.currentApproachId = null;
+
+        // Load saved code or use starter code
+        const savedCode = getSavedCode(state.currentModule.id, workshop.id, null);
+        document.getElementById('code-editor').value = savedCode || workshop.starterCode;
+
+        // Setup hints
+        renderHints(workshop.hints);
+    }
 
     // Hide feedback
     document.getElementById('feedback-section').classList.add('hidden');
 
     // Start timer
     startTimer(workshop.timeLimitMinutes);
+}
+
+// Setup approach selector for multi-approach workshops
+function setupApproachSelector(workshop) {
+    const selector = document.getElementById('approach-selector');
+    const select = document.getElementById('approach-select');
+
+    // Clear existing options
+    select.innerHTML = '';
+
+    // Populate options
+    workshop.approaches.forEach(approach => {
+        const option = document.createElement('option');
+        option.value = approach.id;
+        option.textContent = approach.title;
+        select.appendChild(option);
+    });
+
+    // Show selector
+    selector.style.display = 'block';
+
+    // Add change listener
+    select.onchange = () => selectApproach(select.value);
+}
+
+// Hide approach selector for single-approach workshops
+function hideApproachSelector() {
+    document.getElementById('approach-selector').style.display = 'none';
+}
+
+// Select a specific approach
+function selectApproach(approachId) {
+    const workshop = state.currentWorkshop;
+    const approach = workshop.approaches.find(a => a.id === approachId);
+
+    if (!approach) {
+        console.error('Approach not found:', approachId);
+        return;
+    }
+
+    state.currentApproach = approach;
+    state.currentApproachId = approachId;
+
+    // Update UI
+    document.getElementById('approach-select').value = approachId;
+    document.getElementById('approach-description').textContent = approach.description;
+
+    // Load saved code for this approach or use starter code
+    const savedCode = getSavedCode(state.currentModule.id, workshop.id, approachId);
+    document.getElementById('code-editor').value = savedCode || approach.starterCode;
+
+    // Setup hints for this approach
+    renderHints(approach.hints);
+
+    // Save selected approach
+    saveApproachId(state.currentModule.id, workshop.id, approachId);
+
+    // Hide feedback when switching approaches
+    document.getElementById('feedback-section').classList.add('hidden');
 }
 
 // Render hints
@@ -229,24 +306,31 @@ async function submitCode() {
     submitBtn.textContent = '⏳ Grading...';
     
     try {
+        const payload = {
+            moduleId: state.currentModule.id,
+            workshopId: state.currentWorkshop.id,
+            code: code
+        };
+
+        // Include approachId for multi-approach workshops
+        if (state.currentApproachId) {
+            payload.approachId = state.currentApproachId;
+        }
+
         const response = await fetch('/api/grade', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                moduleId: state.currentModule.id,
-                workshopId: state.currentWorkshop.id,
-                code: code
-            })
+            body: JSON.stringify(payload)
         });
-        
+
         const result = await response.json();
         displayFeedback(result);
-        
+
         // Update progress
         if (result.ok) {
             updateProgress(result.score, result.max_score);
         }
-        
+
     } catch (error) {
         console.error('Submission failed:', error);
         alert('Failed to submit code. Please try again.');
@@ -290,11 +374,21 @@ function displayFeedback(result) {
     }
 }
 
-// Get saved code for a workshop
-function getSavedCode(moduleId, workshopId) {
+// Get saved code for a workshop (with optional approach)
+function getSavedCode(moduleId, workshopId, approachId) {
     if (!state.progress[moduleId]) return null;
     if (!state.progress[moduleId].code) return null;
-    return state.progress[moduleId].code[workshopId];
+
+    const workshopCode = state.progress[moduleId].code[workshopId];
+    if (!workshopCode) return null;
+
+    // If approachId is provided, get code for that specific approach
+    if (approachId) {
+        return workshopCode[approachId] || null;
+    }
+
+    // Otherwise, return code for single-approach workshop
+    return typeof workshopCode === 'string' ? workshopCode : null;
 }
 
 // Save code for current workshop
@@ -304,14 +398,45 @@ function saveCode() {
     const code = document.getElementById('code-editor').value;
 
     if (!state.progress[moduleId]) {
-        state.progress[moduleId] = { completed: 0, scores: {}, code: {}, lastSeenAt: null };
+        state.progress[moduleId] = { completed: 0, scores: {}, code: {}, approaches: {}, lastSeenAt: null };
     }
 
     if (!state.progress[moduleId].code) {
         state.progress[moduleId].code = {};
     }
 
-    state.progress[moduleId].code[workshopId] = code;
+    // Save code per approach for multi-approach workshops
+    if (state.currentApproachId) {
+        if (!state.progress[moduleId].code[workshopId]) {
+            state.progress[moduleId].code[workshopId] = {};
+        }
+        state.progress[moduleId].code[workshopId][state.currentApproachId] = code;
+    } else {
+        // Save code directly for single-approach workshops
+        state.progress[moduleId].code[workshopId] = code;
+    }
+
+    saveProgress();
+}
+
+// Get saved approach ID for a workshop
+function getSavedApproachId(moduleId, workshopId) {
+    if (!state.progress[moduleId]) return null;
+    if (!state.progress[moduleId].approaches) return null;
+    return state.progress[moduleId].approaches[workshopId];
+}
+
+// Save selected approach ID
+function saveApproachId(moduleId, workshopId, approachId) {
+    if (!state.progress[moduleId]) {
+        state.progress[moduleId] = { completed: 0, scores: {}, code: {}, approaches: {}, lastSeenAt: null };
+    }
+
+    if (!state.progress[moduleId].approaches) {
+        state.progress[moduleId].approaches = {};
+    }
+
+    state.progress[moduleId].approaches[workshopId] = approachId;
     saveProgress();
 }
 
@@ -319,23 +444,52 @@ function saveCode() {
 function updateProgress(score, maxScore) {
     const moduleId = state.currentModule.id;
     const workshopId = state.currentWorkshop.id;
+    const approachId = state.currentApproachId;
 
     if (!state.progress[moduleId]) {
-        state.progress[moduleId] = { completed: 0, scores: {}, code: {}, lastSeenAt: null };
+        state.progress[moduleId] = { completed: 0, scores: {}, code: {}, approaches: {}, approachScores: {}, lastSeenAt: null };
     }
 
     const moduleProgress = state.progress[moduleId];
     const scorePercent = Math.round((score / maxScore) * 100);
 
-    // Update score
-    const previousScore = moduleProgress.scores[workshopId] || 0;
-    moduleProgress.scores[workshopId] = scorePercent;
+    // For multi-approach workshops, track scores per approach
+    if (approachId) {
+        if (!moduleProgress.approachScores) {
+            moduleProgress.approachScores = {};
+        }
+        if (!moduleProgress.approachScores[workshopId]) {
+            moduleProgress.approachScores[workshopId] = {};
+        }
 
-    // Update completed count (80% threshold)
-    if (scorePercent >= 80 && previousScore < 80) {
-        moduleProgress.completed++;
-    } else if (scorePercent < 80 && previousScore >= 80) {
-        moduleProgress.completed--;
+        const previousApproachScore = moduleProgress.approachScores[workshopId][approachId] || 0;
+        moduleProgress.approachScores[workshopId][approachId] = scorePercent;
+
+        // Workshop is complete if ANY approach scores >= 80%
+        const workshopComplete = Object.values(moduleProgress.approachScores[workshopId]).some(s => s >= 80);
+        const wasComplete = moduleProgress.scores[workshopId] >= 80;
+
+        // Update workshop-level score to highest approach score
+        const maxApproachScore = Math.max(...Object.values(moduleProgress.approachScores[workshopId]));
+        moduleProgress.scores[workshopId] = maxApproachScore;
+
+        // Update completed count
+        if (workshopComplete && !wasComplete) {
+            moduleProgress.completed++;
+        } else if (!workshopComplete && wasComplete) {
+            moduleProgress.completed--;
+        }
+    } else {
+        // Single approach workshop (backward compatibility)
+        const previousScore = moduleProgress.scores[workshopId] || 0;
+        moduleProgress.scores[workshopId] = scorePercent;
+
+        // Update completed count (80% threshold)
+        if (scorePercent >= 80 && previousScore < 80) {
+            moduleProgress.completed++;
+        } else if (scorePercent < 80 && previousScore >= 80) {
+            moduleProgress.completed--;
+        }
     }
 
     moduleProgress.lastSeenAt = new Date().toISOString();
@@ -347,7 +501,10 @@ function updateProgress(score, maxScore) {
 // Reset code to starter
 function resetCode() {
     if (confirm('Reset code to starter template?')) {
-        document.getElementById('code-editor').value = state.currentWorkshop.starterCode;
+        const starterCode = state.currentApproach
+            ? state.currentApproach.starterCode
+            : state.currentWorkshop.starterCode;
+        document.getElementById('code-editor').value = starterCode;
         document.getElementById('feedback-section').classList.add('hidden');
     }
 }

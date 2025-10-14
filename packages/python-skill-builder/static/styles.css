@@ -221,6 +221,51 @@ header h1 {
     font-size: 1.05rem;
 }
 
+/* Approach Selector */
+.approach-selector {
+    margin-top: 20px;
+    padding: 15px;
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.approach-selector label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.approach-select {
+    width: 100%;
+    padding: 10px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.approach-select:hover {
+    border-color: var(--accent-primary);
+}
+
+.approach-select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+}
+
+.approach-description {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
 /* Code Editor */
 #code-editor {
     width: 100%;
