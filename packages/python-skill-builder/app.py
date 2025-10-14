@@ -37,7 +37,9 @@ SAFE_BUILTINS = {
     "len": len, "range": range, "sum": sum, "min": min, "max": max, "abs": abs,
     "enumerate": enumerate, "zip": zip, "sorted": sorted, "all": all, "any": any,
     "list": list, "dict": dict, "set": set, "tuple": tuple, "str": str, "int": int,
-    "float": float, "bool": bool, "print": print, "isinstance": isinstance, "type": type
+    "float": float, "bool": bool, "print": print, "isinstance": isinstance, "type": type,
+    "Exception": Exception, "ValueError": ValueError, "TypeError": TypeError,
+    "KeyError": KeyError, "IndexError": IndexError, "AttributeError": AttributeError
 }
 
 def validate_source(code: str):
@@ -59,30 +61,35 @@ def validate_source(code: str):
 def run_user_and_tests(user_code: str, tests_code: str):
     """
     Execute user code and test harness in sandboxed environment.
-    
+
     Args:
         user_code: User's submitted code
         tests_code: Test harness that defines grade(user_ns) function
-        
+
     Returns:
         dict with score, max_score, and feedback
     """
+    import inspect
+
     # 1) validate user code AST
     validate_source(user_code)
-    
+
     # 2) prepare sandboxes
     user_ns = {"__builtins__": SAFE_BUILTINS}
-    test_ns = {"__builtins__": SAFE_BUILTINS}
-    
+    test_ns = {
+        "__builtins__": SAFE_BUILTINS,
+        "inspect": inspect  # Allow tests to use inspect module
+    }
+
     # 3) exec user code
     exec(compile(user_code, "<user>", "exec"), user_ns, user_ns)
-    
+
     # 4) exec tests (must define grade(user_ns) -> dict(score:int, feedback:str))
     exec(compile(tests_code, "<tests>", "exec"), test_ns, test_ns)
-    
+
     if "grade" not in test_ns or not callable(test_ns["grade"]):
         raise RuntimeError("Test script must define grade(user_ns) -> dict.")
-    
+
     result = test_ns["grade"](user_ns)
     
     # normalize
