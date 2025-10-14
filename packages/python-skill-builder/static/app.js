@@ -8,6 +8,7 @@ const state = {
     modules: [],
     currentModule: null,
     currentWorkshop: null,
+    currentWorkshopIndex: 0,
     progress: {},
     timer: null,
     timerSeconds: 0,
@@ -95,15 +96,16 @@ function calculateAvgScore(scores) {
 }
 
 // Open a module and load its workshops
-async function openModule(moduleId) {
+async function openModule(moduleId, workshopIndex = 0) {
     try {
         const response = await fetch(`/api/modules/${moduleId}`);
         const module = await response.json();
         state.currentModule = module;
-        
-        // Open first workshop
+        state.currentWorkshopIndex = workshopIndex;
+
+        // Open specified workshop (or first one)
         if (module.workshops && module.workshops.length > 0) {
-            openWorkshop(module.workshops[0]);
+            openWorkshop(module.workshops[workshopIndex], workshopIndex);
         }
     } catch (error) {
         console.error('Failed to load module:', error);
@@ -112,26 +114,34 @@ async function openModule(moduleId) {
 }
 
 // Open a workshop
-function openWorkshop(workshop) {
+function openWorkshop(workshop, workshopIndex) {
     state.currentWorkshop = workshop;
+    state.currentWorkshopIndex = workshopIndex;
     state.hintsRevealed = 0;
-    
+
     // Switch views
     document.getElementById('dashboard-view').classList.add('hidden');
     document.getElementById('workshop-view').classList.remove('hidden');
-    
+
     // Populate workshop content
     document.getElementById('workshop-title').textContent = workshop.title;
     document.getElementById('module-title').textContent = state.currentModule.title;
     document.getElementById('workshop-prompt').textContent = workshop.prompt;
     document.getElementById('code-editor').value = workshop.starterCode;
-    
+
+    // Update progress indicator
+    const totalWorkshops = state.currentModule.workshops.length;
+    document.getElementById('workshop-progress').textContent = `${workshopIndex + 1} of ${totalWorkshops}`;
+
+    // Update navigation buttons
+    updateNavigationButtons();
+
     // Setup hints
     renderHints(workshop.hints);
-    
+
     // Hide feedback
     document.getElementById('feedback-section').classList.add('hidden');
-    
+
     // Start timer
     startTimer(workshop.timeLimitMinutes);
 }
@@ -321,12 +331,52 @@ function backToDashboard() {
     renderModules(); // Refresh to show updated progress
 }
 
+// Navigate to previous workshop
+function previousWorkshop() {
+    if (state.currentWorkshopIndex > 0) {
+        const prevIndex = state.currentWorkshopIndex - 1;
+        const prevWorkshop = state.currentModule.workshops[prevIndex];
+        openWorkshop(prevWorkshop, prevIndex);
+    }
+}
+
+// Navigate to next workshop
+function nextWorkshop() {
+    if (state.currentWorkshopIndex < state.currentModule.workshops.length - 1) {
+        const nextIndex = state.currentWorkshopIndex + 1;
+        const nextWorkshop = state.currentModule.workshops[nextIndex];
+        openWorkshop(nextWorkshop, nextIndex);
+    }
+}
+
+// Update navigation button visibility
+function updateNavigationButtons() {
+    const prevBtn = document.getElementById('prev-workshop-btn');
+    const nextBtn = document.getElementById('next-workshop-btn');
+
+    // Show/hide previous button
+    if (state.currentWorkshopIndex > 0) {
+        prevBtn.style.display = 'block';
+    } else {
+        prevBtn.style.display = 'none';
+    }
+
+    // Show/hide next button
+    if (state.currentWorkshopIndex < state.currentModule.workshops.length - 1) {
+        nextBtn.style.display = 'block';
+    } else {
+        nextBtn.style.display = 'none';
+    }
+}
+
 // Setup event listeners
 function setupEventListeners() {
     document.getElementById('back-btn').onclick = backToDashboard;
     document.getElementById('submit-btn').onclick = submitCode;
     document.getElementById('reset-btn').onclick = resetCode;
-    
+    document.getElementById('prev-workshop-btn').onclick = previousWorkshop;
+    document.getElementById('next-workshop-btn').onclick = nextWorkshop;
+
     // Keyboard shortcuts
     document.getElementById('code-editor').addEventListener('keydown', (e) => {
         // Tab key inserts spaces
@@ -337,7 +387,7 @@ function setupEventListeners() {
             e.target.value = e.target.value.substring(0, start) + '    ' + e.target.value.substring(end);
             e.target.selectionStart = e.target.selectionEnd = start + 4;
         }
-        
+
         // Ctrl+Enter to submit
         if (e.ctrlKey && e.key === 'Enter') {
             submitCode();
