@@ -21,12 +21,22 @@ This document serves as the validation checklist for Issue #24 implementation.
 - [x] 7 training modules implemented
 - [x] 14 workshops total (2 per module)
 - [x] **Alternative implementations** - Multiple approaches per workshop
+- [x] **AOP approaches** - 14 Aspect-Oriented Programming approaches teaching decorator patterns
 - [x] Module index with metadata
 - [x] Workshop structure: id, title, prompt, approaches (or legacy single approach)
 - [x] **Approach structure** - id, title, description, starterCode, hints, tests
 - [x] Time limits per workshop
 - [x] Progressive hints (3 per approach)
 - [x] Test cases with scoring logic per approach
+
+### AOP (Aspect-Oriented Programming) Features
+- [x] **14 AOP approaches** - One per workshop teaching decorator patterns
+- [x] **Cross-cutting concerns** - Validation, logging, timing, caching, retry, error handling, etc.
+- [x] **functools.wraps** - All decorators use @wraps to preserve function metadata
+- [x] **Real-world patterns** - Production-ready decorator implementations
+- [x] **Educational progression** - From simple validation to complex retry logic
+- [x] **Test validation** - Tests verify both functionality and decorator usage
+- [x] **Documentation** - Comprehensive AOP_GUIDE.md with examples and best practices
 
 ### Frontend Features - Core
 - [x] Dashboard view with module cards
@@ -288,10 +298,61 @@ Workshops can now offer **multiple approaches** to solving the same problem, all
 
 ---
 
-**Status:** ✅ **COMPLETE** (as of commit 4641dcd + pending code persistence commit)
+## AOP Approaches Summary (Issue #27)
 
-**Next Steps:** 
-- Commit code persistence feature
-- Manual QA testing
+### Overview
+Added 14 Aspect-Oriented Programming (AOP) approaches across all workshops to teach advanced Python decorator patterns and cross-cutting concerns.
+
+### AOP Approaches by Module
+
+#### Module 1: Python Basics
+- **basics_01** - `aop_validation_guard`: Input validation decorator
+- **basics_02** - `aop_logging`: Execution logging decorator
+
+#### Module 2: Functions & Syntax
+- **fx_01** - `aop_timing`: Performance timing decorator
+- **fx_02** - `aop_type_checking`: Runtime type validation decorator
+
+#### Module 3: OOP Fundamentals
+- **oop_01** - `aop_audit`: Method call auditing decorator
+- **oop_02** - `aop_caching`: Memoization decorator
+
+#### Module 4: Errors & Debugging
+- **err_01** - `aop_retry`: Retry with exponential backoff decorator
+- **err_02** - `aop_error_handling`: Centralized error handler decorator
+
+#### Module 5: Comprehensions & Generators
+- **cg_01** - `aop_validation_decorator`: Input/output validation decorator
+- **cg_02** - `aop_generator_logging`: Generator monitoring decorator
+
+#### Module 6: NumPy Intro
+- **np_01** - `aop_shape_validation`: Array shape validation decorator
+- **np_02** - `aop_profiling`: Performance profiling decorator
+
+#### Module 7: Flask Intro
+- **fl_01** - `aop_request_logging`: Request logging decorator
+- **fl_02** - `aop_authentication`: Authentication guard decorator
+
+### Educational Value
+- Teaches advanced Python decorator patterns
+- Demonstrates separation of concerns
+- Real-world skills used in production systems
+- Common interview topic
+- Shows how to write cleaner, more maintainable code
+
+### Implementation Details
+- All decorators use `functools.wraps` to preserve function metadata
+- Each approach includes unique ID, title, description, starter code, 3 hints, and test harness
+- Tests validate both functionality and decorator usage
+- Comprehensive documentation in `docs/AOP_GUIDE.md`
+
+---
+
+**Status:** ✅ **COMPLETE** (as of commit 4641dcd + Issue #27 AOP implementation)
+
+**Next Steps:**
+- Push changes and create PR for Issue #27
+- Manual QA testing of AOP approaches
+- Update test suite to include AOP-specific tests
 - Consider starting Issue #25 (Reflexive AI Education)
 
