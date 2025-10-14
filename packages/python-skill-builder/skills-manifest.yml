@@ -1,0 +1,102 @@
+# skills.yaml
+version: 1
+skills:
+  - id: comprehensions
+    title: List/Dict/Set Comprehensions
+    detectors:
+      - kind: ast
+        node_types: [ListComp, DictComp, SetComp, GeneratorExp]
+    templates:
+      - path: learning_playground/comprehensions_demo.py
+        content: |
+          nums = [1,2,3,4,5]
+          squares = [n*n for n in nums if n % 2 == 0]
+          mapping = {n: n*n for n in nums}
+          assert squares == [4,16]
+  - id: decorators
+    title: Decorators / functools.wraps
+    detectors:
+      - kind: ast
+        match: "FunctionDef.decorator_list"
+    templates:
+      - path: learning_playground/decorators_demo.py
+        content: |
+          from functools import wraps
+          def log_calls(fn):
+              @wraps(fn)
+              def inner(*a, **k):
+                  print("calling", fn.__name__)
+                  return fn(*a, **k)
+              return inner
+          @log_calls
+          def add(x,y): return x+y
+          assert add(2,3) == 5
+  - id: context_managers
+    title: Context Managers / with / contextlib
+    detectors:
+      - kind: ast
+        node_types: [With, AsyncWith]
+    templates:
+      - path: learning_playground/context_demo.py
+        content: |
+          from contextlib import contextmanager
+          @contextmanager
+          def opening(name):
+              f = open(name, 'w'); 
+              try: yield f
+              finally: f.close()
+          with opening('tmp.txt') as f: f.write('ok')
+  - id: oop_basics
+    title: OOP, properties, classmethods, super()
+    detectors:
+      - kind: ast
+        node_types: [ClassDef]
+      - kind: ast-query
+        match: "FunctionDef.name in ['__init__','__repr__'] or Decorator @property/@classmethod/@staticmethod"
+    templates:
+      - path: learning_playground/oop_demo.py
+        content: |
+          class Vehicle:
+              def __init__(self, vin): self._vin = vin
+              @property
+              def vin(self): return self._vin
+          class Truck(Vehicle):
+              def __init__(self, vin, capacity): super().__init__(vin); self.capacity = capacity
+          assert Truck('VIN1', 1000).vin == 'VIN1'
+  - id: error_handling
+    title: Exceptions, try/except/else/finally, custom Exception
+    detectors:
+      - kind: ast-search
+        node_types: [Try, Raise]
+    templates:
+      - path: learning_playground/errors_demo.py
+        content: |
+          class BadInput(Exception): pass
+          def inv(x):
+              if x==0: raise BadInput('zero')
+              try: return 1/x
+              except ZeroDivisionError: raise BadInput('zero')
+  - id: numpy_basics
+    title: NumPy vectorization/broadcasting
+    detectors:
+      - kind: import
+        modules: [numpy]
+    templates:
+      - path: learning_playground/numpy_demo.py
+        content: |
+          import numpy as np
+          a = np.array([1,2,3]); b = np.array([4,5,6])
+          assert (a+b).tolist() == [5,7,9]
+  - id: flask_basics
+    title: Flask routes/json/request handling
+    detectors:
+      - kind: import
+        modules: [flask, Flask]
+    templates:
+      - path: learning_playground/flask_demo/app.py
+        content: |
+          from flask import Flask, jsonify, request
+          app = Flask(__name__)
+          @app.get("/ping")
+          def ping(): return jsonify(ok=True, q=request.args.get('q'))
+          if __name__ == "__main__": app.run()
