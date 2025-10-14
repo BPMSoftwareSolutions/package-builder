@@ -127,7 +127,10 @@ function openWorkshop(workshop, workshopIndex) {
     document.getElementById('workshop-title').textContent = workshop.title;
     document.getElementById('module-title').textContent = state.currentModule.title;
     document.getElementById('workshop-prompt').textContent = workshop.prompt;
-    document.getElementById('code-editor').value = workshop.starterCode;
+
+    // Load saved code or use starter code
+    const savedCode = getSavedCode(state.currentModule.id, workshop.id);
+    document.getElementById('code-editor').value = savedCode || workshop.starterCode;
 
     // Update progress indicator
     const totalWorkshops = state.currentModule.workshops.length;
@@ -287,32 +290,58 @@ function displayFeedback(result) {
     }
 }
 
+// Get saved code for a workshop
+function getSavedCode(moduleId, workshopId) {
+    if (!state.progress[moduleId]) return null;
+    if (!state.progress[moduleId].code) return null;
+    return state.progress[moduleId].code[workshopId];
+}
+
+// Save code for current workshop
+function saveCode() {
+    const moduleId = state.currentModule.id;
+    const workshopId = state.currentWorkshop.id;
+    const code = document.getElementById('code-editor').value;
+
+    if (!state.progress[moduleId]) {
+        state.progress[moduleId] = { completed: 0, scores: {}, code: {}, lastSeenAt: null };
+    }
+
+    if (!state.progress[moduleId].code) {
+        state.progress[moduleId].code = {};
+    }
+
+    state.progress[moduleId].code[workshopId] = code;
+    saveProgress();
+}
+
 // Update progress
 function updateProgress(score, maxScore) {
     const moduleId = state.currentModule.id;
     const workshopId = state.currentWorkshop.id;
-    
+
     if (!state.progress[moduleId]) {
-        state.progress[moduleId] = { completed: 0, scores: {}, lastSeenAt: null };
+        state.progress[moduleId] = { completed: 0, scores: {}, code: {}, lastSeenAt: null };
     }
-    
+
     const moduleProgress = state.progress[moduleId];
     const scorePercent = Math.round((score / maxScore) * 100);
-    
+
     // Update score
     const previousScore = moduleProgress.scores[workshopId] || 0;
     moduleProgress.scores[workshopId] = scorePercent;
-    
+
     // Update completed count (80% threshold)
     if (scorePercent >= 80 && previousScore < 80) {
         moduleProgress.completed++;
     } else if (scorePercent < 80 && previousScore >= 80) {
         moduleProgress.completed--;
     }
-    
+
     moduleProgress.lastSeenAt = new Date().toISOString();
-    
-    saveProgress();
+
+    // Save code as well
+    saveCode();
 }
 
 // Reset code to starter
@@ -376,6 +405,17 @@ function setupEventListeners() {
     document.getElementById('reset-btn').onclick = resetCode;
     document.getElementById('prev-workshop-btn').onclick = previousWorkshop;
     document.getElementById('next-workshop-btn').onclick = nextWorkshop;
+
+    // Auto-save code as user types (debounced)
+    let saveTimeout;
+    document.getElementById('code-editor').addEventListener('input', () => {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+            if (state.currentModule && state.currentWorkshop) {
+                saveCode();
+            }
+        }, 1000); // Save 1 second after user stops typing
+    });
 
     // Keyboard shortcuts
     document.getElementById('code-editor').addEventListener('keydown', (e) => {
