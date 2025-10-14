@@ -1,0 +1,33 @@
+{
+  "id": "errors_and_debugging",
+  "title": "Errors & Debugging",
+  "description": "Use try/except/else/finally and custom exceptions to write robust code.",
+  "workshops": [
+    {
+      "id": "err_01",
+      "title": "Custom Exception",
+      "timeLimitMinutes": 7,
+      "prompt": "Define BadInput(Exception). Implement parse_int(s) that returns int(s) or raises BadInput on failure.",
+      "starterCode": "class BadInput(Exception):\n    pass\n\ndef parse_int(s):\n    # TODO: convert to int, else raise BadInput\n    pass\n",
+      "hints": [
+        "Hint 1: Wrap int(s) in try/except.",
+        "Hint 2: On ValueError, raise BadInput instead."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  if 'parse_int' not in ns: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  f=ns['parse_int']; Bad=ns.get('BadInput')\n  if f('10')!=10: return {'score':60,'max_score':max_score,'feedback':'Should parse valid int'}\n  try:\n    f('x')\n  except Bad:\n    return {'score':100,'max_score':max_score,'feedback':'Correct exception raised'}\n  except Exception:\n    return {'score':80,'max_score':max_score,'feedback':'Wrong exception type'}\n  return {'score':40,'max_score':max_score,'feedback':'Did not raise on invalid input'}\n"
+    },
+    {
+      "id": "err_02",
+      "title": "try/except/else/finally",
+      "timeLimitMinutes": 10,
+      "prompt": "Implement open_and_count(path) that opens a text file, returns number of lines. On FileNotFoundError return -1. Always set a variable 'closed' to True in finally (return both count, closed).",
+      "starterCode": "def open_and_count(path):\n    closed=False\n    # TODO: try to open file, count lines; handle not found; ensure closed=True in finally\n    pass\n",
+      "hints": [
+        "Hint 1: Use try/except FileNotFoundError.",
+        "Hint 2: Use finally to toggle closed=True.",
+        "Hint 3: Return (count, closed)."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  f=ns.get('open_and_count')\n  if not f: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  # create temp file\n  import os, tempfile\n  fd, p = tempfile.mkstemp(text=True)\n  os.write(fd, b'a\\nb\\nc')\n  os.close(fd)\n  c, closed = f(p)\n  if c<2: return {'score':60,'max_score':max_score,'feedback':'Count seems wrong'}\n  if closed is not True: return {'score':80,'max_score':max_score,'feedback':'Must set closed=True in finally'}\n  c2, closed2 = f('no_such_file.txt')\n  if c2!=-1: return {'score':90,'max_score':max_score,'feedback':'Return -1 when missing'}\n  return {'score':100,'max_score':max_score,'feedback':'Great'}\n"
+    }
+  ]
+}
+

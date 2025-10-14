@@ -1,0 +1,33 @@
+{
+  "id": "numpy_intro",
+  "title": "NumPy Intro",
+  "description": "Vector operations, elementwise arithmetic, shapes.",
+  "workshops": [
+    {
+      "id": "np_01",
+      "title": "Elementwise ops",
+      "timeLimitMinutes": 8,
+      "prompt": "Implement vec_add(a,b) using NumPy arrays to return elementwise sum as a Python list.",
+      "starterCode": "def vec_add(a, b):\n    # TODO: import numpy and do elementwise add; return list\n    pass\n",
+      "hints": [
+        "Hint 1: import numpy as np inside function (AST guard limits globals).",
+        "Hint 2: np.array(a) + np.array(b).",
+        "Hint 3: Convert back with .tolist()."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  f=ns.get('vec_add')\n  if not f: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  out=f([1,2,3],[4,5,6])\n  if out!=[5,7,9]: return {'score':60,'max_score':max_score,'feedback':'Elementwise add wrong'}\n  return {'score':100,'max_score':max_score,'feedback':'Vectorized!'}\n"
+    },
+    {
+      "id": "np_02",
+      "title": "Dot product",
+      "timeLimitMinutes": 8,
+      "prompt": "Implement dot(a,b) returning integer dot product using NumPy.",
+      "starterCode": "def dot(a, b):\n    # TODO: use np.dot\n    pass\n",
+      "hints": [
+        "Hint 1: np.dot(np.array(a), np.array(b)).",
+        "Hint 2: Return int() for plain integer result."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  f=ns.get('dot')\n  if not f: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  if f([1,2,3],[4,5,6])!=32: return {'score':60,'max_score':max_score,'feedback':'Expected 32'}\n  return {'score':100,'max_score':max_score,'feedback':'Good dot!'}\n"
+    }
+  ]
+}
+

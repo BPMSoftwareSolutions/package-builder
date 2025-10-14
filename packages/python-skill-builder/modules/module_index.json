@@ -1,0 +1,54 @@
+{
+  "modules": [
+    {
+      "id": "python_basics",
+      "title": "Python Basics",
+      "summary": "Syntax, control flow, functions, comprehensions.",
+      "estimatedMinutes": 25,
+      "workshopCount": 2
+    },
+    {
+      "id": "functions_and_syntax",
+      "title": "Functions & Syntax",
+      "summary": "Arguments, defaults, *args/**kwargs, returns.",
+      "estimatedMinutes": 25,
+      "workshopCount": 2
+    },
+    {
+      "id": "oop_fundamentals",
+      "title": "OOP Fundamentals",
+      "summary": "Classes, inheritance, properties, __repr__.",
+      "estimatedMinutes": 30,
+      "workshopCount": 2
+    },
+    {
+      "id": "errors_and_debugging",
+      "title": "Errors & Debugging",
+      "summary": "try/except/else/finally, custom exceptions, logging mindset.",
+      "estimatedMinutes": 25,
+      "workshopCount": 2
+    },
+    {
+      "id": "comprehensions_and_generators",
+      "title": "Comprehensions & Generators",
+      "summary": "List/dict/set comps and generator expressions.",
+      "estimatedMinutes": 25,
+      "workshopCount": 2
+    },
+    {
+      "id": "numpy_intro",
+      "title": "NumPy Intro",
+      "summary": "Arrays, vectorization, shapes.",
+      "estimatedMinutes": 25,
+      "workshopCount": 2
+    },
+    {
+      "id": "flask_intro",
+      "title": "Flask Intro",
+      "summary": "Routing, parameters, JSON responses.",
+      "estimatedMinutes": 30,
+      "workshopCount": 2
+    }
+  ]
+}
+

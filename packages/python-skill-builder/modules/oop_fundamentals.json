@@ -1,0 +1,34 @@
+{
+  "id": "oop_fundamentals",
+  "title": "OOP Fundamentals",
+  "description": "Classes, inheritance, properties, and readable reprs.",
+  "workshops": [
+    {
+      "id": "oop_01",
+      "title": "Vehicle → Truck (inheritance + property)",
+      "timeLimitMinutes": 10,
+      "prompt": "Create class Vehicle(vin) with read-only property vin. Subclass Truck(Vehicle) with capacity (int). __repr__ should return 'Truck(VIN, capacity=...)'.",
+      "starterCode": "class Vehicle:\n    def __init__(self, vin):\n        pass\n\nclass Truck(Vehicle):\n    def __init__(self, vin, capacity):\n        pass\n    \n    def __repr__(self):\n        pass\n",
+      "hints": [
+        "Hint 1: Use @property for vin (no setter).",
+        "Hint 2: In Truck.__init__, call super().__init__(vin).",
+        "Hint 3: __repr__ returns a developer-friendly string."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  try:\n    V=ns['Vehicle']; T=ns['Truck']\n  except KeyError:\n    return {'score':0,'max_score':max_score,'feedback':'Classes missing'}\n  t=T('VIN1',1000)\n  if getattr(t,'vin',None)!='VIN1': return {'score':60,'max_score':max_score,'feedback':'vin property incorrect'}\n  if 'Truck(VIN1' not in repr(t): return {'score':80,'max_score':max_score,'feedback':'__repr__ format expected to include VIN and capacity'}\n  return {'score':100,'max_score':max_score,'feedback':'Good OOP work!'}\n"
+    },
+    {
+      "id": "oop_02",
+      "title": "classmethod vs staticmethod",
+      "timeLimitMinutes": 8,
+      "prompt": "Implement class Counter with: (a) class attribute total=0; (b) classmethod from_list(lst) that returns sum(lst); (c) staticmethod is_positive(x) -> bool.",
+      "starterCode": "class Counter:\n    total = 0\n    @classmethod\n    def from_list(cls, lst):\n        # TODO\n        pass\n    @staticmethod\n    def is_positive(x):\n        # TODO\n        pass\n",
+      "hints": [
+        "Hint 1: classmethod receives cls.",
+        "Hint 2: staticmethod has no cls/self.",
+        "Hint 3: You can update Counter.total inside from_list."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  C=ns.get('Counter')\n  if C is None: return {'score':0,'max_score':max_score,'feedback':'Class missing'}\n  s=C.from_list([1,2,3])\n  if s!=6: return {'score':60,'max_score':max_score,'feedback':'from_list must sum values'}\n  if not C.is_positive(5) or C.is_positive(-1): return {'score':80,'max_score':max_score,'feedback':'is_positive incorrect'}\n  return {'score':100,'max_score':max_score,'feedback':'Solid!'}\n"
+    }
+  ]
+}
+

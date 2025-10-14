@@ -1,0 +1,34 @@
+{
+  "id": "python_basics",
+  "title": "Python Basics",
+  "description": "Core language skills: functions, loops, and list comprehensions.",
+  "workshops": [
+    {
+      "id": "basics_01",
+      "title": "Even Squares (List Comprehension)",
+      "timeLimitMinutes": 7,
+      "prompt": "Write a function even_squares(nums) -> list that returns the squares of even numbers from nums, preserving order.",
+      "starterCode": "def even_squares(nums):\n    # TODO: return squares of evens, e.g., [1,2,3,4] -> [4,16]\n    pass\n",
+      "hints": [
+        "Hint 1: A list comprehension can include an if-clause.",
+        "Hint 2: x*x is fine for squaring; no need for math.pow.",
+        "Hint 3: Even means x % 2 == 0."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  if 'even_squares' not in ns: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  f=ns['even_squares']\n  try:\n    result=f([1,2,3,4])\n    if result!=[4,16]: return {'score':60,'max_score':max_score,'feedback':'Expected [4,16] for [1,2,3,4]'}\n    result2=f([1,3,5])\n    if result2!=[]: return {'score':80,'max_score':max_score,'feedback':'No evens should return empty list'}\n    return {'score':100,'max_score':max_score,'feedback':'Perfect!'}\n  except Exception as e:\n    return {'score':0,'max_score':max_score,'feedback':str(e)}\n"
+    },
+    {
+      "id": "basics_02",
+      "title": "FizzBuzz Variant",
+      "timeLimitMinutes": 10,
+      "prompt": "Write a function fizzbuzz(n) that returns a list of strings for numbers 1 to n. For multiples of 3, use 'Fizz'. For multiples of 5, use 'Buzz'. For multiples of both, use 'FizzBuzz'. Otherwise, use the number as a string.",
+      "starterCode": "def fizzbuzz(n):\n    # TODO: return list of FizzBuzz strings for 1..n\n    pass\n",
+      "hints": [
+        "Hint 1: Check divisibility by 15 first (both 3 and 5).",
+        "Hint 2: Use elif for 3, then 5.",
+        "Hint 3: Convert numbers to strings with str()."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  if 'fizzbuzz' not in ns: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  f=ns['fizzbuzz']\n  try:\n    result=f(15)\n    expected=['1','2','Fizz','4','Buzz','Fizz','7','8','Fizz','Buzz','11','Fizz','13','14','FizzBuzz']\n    if result!=expected: return {'score':60,'max_score':max_score,'feedback':'Check your FizzBuzz logic'}\n    return {'score':100,'max_score':max_score,'feedback':'Excellent!'}\n  except Exception as e:\n    return {'score':0,'max_score':max_score,'feedback':str(e)}\n"
+    }
+  ]
+}
+

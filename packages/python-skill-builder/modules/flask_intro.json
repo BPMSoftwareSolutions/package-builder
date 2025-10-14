@@ -1,0 +1,32 @@
+{
+  "id": "flask_intro",
+  "title": "Flask Intro",
+  "description": "Basic routes, params, and JSON responses.",
+  "workshops": [
+    {
+      "id": "fl_01",
+      "title": "Hello Route (string param)",
+      "timeLimitMinutes": 8,
+      "prompt": "Write a function make_greeting(name) -> 'Hello, {name}'. (We simulate Flask logic here; focus on pure function.)",
+      "starterCode": "def make_greeting(name):\n    # TODO: format string\n    pass\n",
+      "hints": [
+        "Hint 1: f-strings are concise.",
+        "Hint 2: Ensure exact punctuation."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  f=ns.get('make_greeting')\n  if not f: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  if f('Ford')!='Hello, Ford': return {'score':60,'max_score':max_score,'feedback':'String format mismatch'}\n  return {'score':100,'max_score':max_score,'feedback':'Hi!'}\n"
+    },
+    {
+      "id": "fl_02",
+      "title": "Query Handling (simulate)",
+      "timeLimitMinutes": 10,
+      "prompt": "Implement echo_query(params: dict) that returns {'ok': True, 'q': params.get('q','')}.",
+      "starterCode": "def echo_query(params):\n    # TODO: use dict.get\n    pass\n",
+      "hints": [
+        "Hint 1: params is a dict; use get('q','').",
+        "Hint 2: Return a dict exactly as specified."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  f=ns.get('echo_query')\n  if not f: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  if f({'q':'ping'})!={'ok':True,'q':'ping'}: return {'score':60,'max_score':max_score,'feedback':'Wrong dict result'}\n  if f({})!={'ok':True,'q':''}: return {'score':80,'max_score':max_score,'feedback':'Default missing'}\n  return {'score':100,'max_score':max_score,'feedback':'Clean!'}\n"
+    }
+  ]
+}
+

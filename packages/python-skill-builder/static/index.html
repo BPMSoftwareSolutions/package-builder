@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Training - Interview Prep</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="view">
+            <header>
+                <h1>🐍 Python Training - Interview Prep</h1>
+                <p class="subtitle">Master Python fundamentals for technical screening</p>
+            </header>
+
+            <div id="modules-container" class="modules-grid">
+                <!-- Modules will be loaded here dynamically -->
+            </div>
+        </div>
+
+        <!-- Workshop View -->
+        <div id="workshop-view" class="view hidden">
+            <header class="workshop-header">
+                <button id="back-btn" class="btn-secondary">← Back to Dashboard</button>
+                <div class="workshop-info">
+                    <h2 id="workshop-title">Workshop Title</h2>
+                    <div class="workshop-meta">
+                        <span id="module-title" class="module-badge">Module</span>
+                        <span id="timer-display" class="timer">⏱️ 00:00</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="workshop-content">
+                <div class="prompt-section">
+                    <h3>📝 Task</h3>
+                    <p id="workshop-prompt">Workshop prompt will appear here...</p>
+                </div>
+
+                <div class="editor-section">
+                    <h3>💻 Code Editor</h3>
+                    <textarea id="code-editor" spellcheck="false"></textarea>
+                </div>
+
+                <div class="hints-section">
+                    <h3>💡 Hints</h3>
+                    <div id="hints-container">
+                        <!-- Hints will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="actions-section">
+                    <button id="submit-btn" class="btn-primary">▶️ Run & Grade</button>
+                    <button id="reset-btn" class="btn-secondary">🔄 Reset Code</button>
+                </div>
+
+                <div id="feedback-section" class="feedback-section hidden">
+                    <h3>📊 Results</h3>
+                    <div id="feedback-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+

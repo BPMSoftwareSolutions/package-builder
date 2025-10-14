@@ -1,0 +1,32 @@
+{
+  "id": "comprehensions_and_generators",
+  "title": "Comprehensions & Generators",
+  "description": "Write concise, efficient data transforms with comps and generator expressions.",
+  "workshops": [
+    {
+      "id": "cg_01",
+      "title": "Dict Comp (word lengths)",
+      "timeLimitMinutes": 7,
+      "prompt": "Implement word_lengths(words) that returns {word:len(word)} for words list.",
+      "starterCode": "def word_lengths(words):\n    # TODO: dict comprehension\n    pass\n",
+      "hints": [
+        "Hint 1: {k:v for ...}.",
+        "Hint 2: Remember len(word)."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  f=ns.get('word_lengths')\n  if not f: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  d=f(['hi','car'])\n  if d!={'hi':2,'car':3}: return {'score':60,'max_score':max_score,'feedback':'Check dict comp'}\n  return {'score':100,'max_score':max_score,'feedback':'Nice!'}\n"
+    },
+    {
+      "id": "cg_02",
+      "title": "Generator (even stream)",
+      "timeLimitMinutes": 8,
+      "prompt": "Implement gen_evens(n) that yields even numbers from 0..n inclusive.",
+      "starterCode": "def gen_evens(n):\n    # TODO: use yield in a loop\n    pass\n",
+      "hints": [
+        "Hint 1: use 'yield' inside a for.",
+        "Hint 2: even if i % 2 == 0."
+      ],
+      "tests": "def grade(ns):\n  max_score=100\n  g=ns.get('gen_evens')\n  if not g: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  out=list(g(6))\n  if out!=[0,2,4,6]: return {'score':60,'max_score':max_score,'feedback':'Generator or filter incorrect'}\n  return {'score':100,'max_score':max_score,'feedback':'Great!'}\n"
+    }
+  ]
+}
+
