@@ -2,9 +2,9 @@
   "metadata": {
     "package": "python-skill-builder",
     "version": "1.0.0",
-    "lastUpdated": "2025-10-14",
+    "lastUpdated": "2025-10-15",
     "purpose": "Feature inventory for test suite generation and regression prevention",
-    "relatedIssues": ["#24", "#26"]
+    "relatedIssues": ["#24", "#26", "#31"]
   },
   "features": {
     "backend": {
@@ -54,13 +54,15 @@
           {
             "name": "AST validation",
             "testCases": [
-              "Blocks import statements",
+              "Blocks import statements for non-whitelisted modules",
               "Blocks open() calls",
               "Blocks eval() and exec() in user code",
               "Blocks __import__ in user code",
               "Allows ast.Attribute (method calls)",
               "Allows ast.Try (exception handling)",
-              "Allows ast.Raise (raising exceptions)"
+              "Allows ast.Raise (raising exceptions)",
+              "Allows ast.Lambda (lambda functions)",
+              "Allows lambda in functional programming patterns (map, filter)"
             ]
           },
           {
@@ -68,6 +70,7 @@
             "testCases": [
               "Provides len, range, sum, min, max, abs",
               "Provides enumerate, zip, sorted, all, any",
+              "Provides map, filter for functional programming",
               "Provides list, dict, set, tuple, str, int, float, bool",
               "Provides print, isinstance, type",
               "Provides Exception, ValueError, TypeError",
