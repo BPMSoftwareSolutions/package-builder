@@ -115,30 +115,6 @@ jobs:
           fi
           echo ""
 
-      # █ Agent 3b: E2E (examples/host-app)
-      - name: 🎭 Agent 3b - Tester (E2E Tests - G3)
-        continue-on-error: true
-        run: |
-          echo "╔════════════════════════════════════════════════════════════╗"
-          echo "║                🎭 TESTER AGENT - E2E (G3)                  ║"
-          echo "╚════════════════════════════════════════════════════════════╝"
-          echo ""
-          echo "🌐 Setting up host application..."
-          echo "🎭 Installing Playwright browsers..."
-          echo "🧪 Running end-to-end tests in browser..."
-          echo ""
-          if [ -f "playwright.config.ts" ]; then
-            # Install host app dependencies
-            cd examples/host-app && npm install && cd ../..
-            # Install Playwright browsers
-            npx playwright install --with-deps
-            # Run E2E tests
-            npm run e2e
-          else
-            echo "⚠️  E2E tests not configured yet"
-          fi
-          echo ""
-
       # █ Agent 4: PACK
       - name: 📦 Agent 4 - Packager (G4)
         run: |
