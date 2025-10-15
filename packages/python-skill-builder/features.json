@@ -310,40 +310,124 @@
             {
               "id": "basics_01",
               "title": "Even Squares",
-              "approachCount": 2,
-              "approaches": ["comprehension", "loop"]
+              "approachCount": 3,
+              "approaches": ["comprehension", "loop", "aop_validation_guard"]
             },
             {
               "id": "basics_02",
               "title": "FizzBuzz",
-              "approachCount": 2,
-              "approaches": ["if_elif", "string_concat"]
+              "approachCount": 3,
+              "approaches": ["if_elif", "string_concat", "aop_logging"]
             }
           ]
         },
         {
           "id": "functions_and_syntax",
-          "workshopCount": 2
+          "workshopCount": 2,
+          "workshops": [
+            {
+              "id": "fx_01",
+              "title": "Safe Divider",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_timing"]
+            },
+            {
+              "id": "fx_02",
+              "title": "*args/**kwargs Echo",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_type_checking"]
+            }
+          ]
         },
         {
           "id": "oop_fundamentals",
-          "workshopCount": 2
+          "workshopCount": 2,
+          "workshops": [
+            {
+              "id": "oop_01",
+              "title": "Vehicle → Truck",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_audit"]
+            },
+            {
+              "id": "oop_02",
+              "title": "classmethod vs staticmethod",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_caching"]
+            }
+          ]
         },
         {
           "id": "errors_and_debugging",
-          "workshopCount": 2
+          "workshopCount": 2,
+          "workshops": [
+            {
+              "id": "err_01",
+              "title": "Custom Exception",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_retry"]
+            },
+            {
+              "id": "err_02",
+              "title": "try/except/else/finally",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_error_handling"]
+            }
+          ]
         },
         {
           "id": "comprehensions_and_generators",
-          "workshopCount": 2
+          "workshopCount": 2,
+          "workshops": [
+            {
+              "id": "cg_01",
+              "title": "Dict Comp",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_validation_decorator"]
+            },
+            {
+              "id": "cg_02",
+              "title": "Generator",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_generator_logging"]
+            }
+          ]
         },
         {
           "id": "numpy_intro",
-          "workshopCount": 2
+          "workshopCount": 2,
+          "workshops": [
+            {
+              "id": "np_01",
+              "title": "Elementwise ops",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_shape_validation"]
+            },
+            {
+              "id": "np_02",
+              "title": "Dot product",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_profiling"]
+            }
+          ]
         },
         {
           "id": "flask_intro",
-          "workshopCount": 2
+          "workshopCount": 2,
+          "workshops": [
+            {
+              "id": "fl_01",
+              "title": "Hello Route",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_request_logging"]
+            },
+            {
+              "id": "fl_02",
+              "title": "Query Handling",
+              "approachCount": 2,
+              "approaches": ["traditional", "aop_authentication"]
+            }
+          ]
         }
       ]
     }

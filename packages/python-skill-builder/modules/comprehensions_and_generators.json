@@ -8,24 +8,62 @@
       "title": "Dict Comp (word lengths)",
       "timeLimitMinutes": 7,
       "prompt": "Implement word_lengths(words) that returns {word:len(word)} for words list.",
-      "starterCode": "def word_lengths(words):\n    # TODO: dict comprehension\n    pass\n",
-      "hints": [
-        "Hint 1: {k:v for ...}.",
-        "Hint 2: Remember len(word)."
-      ],
-      "tests": "def grade(ns):\n  max_score=100\n  f=ns.get('word_lengths')\n  if not f: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  d=f(['hi','car'])\n  if d!={'hi':2,'car':3}: return {'score':60,'max_score':max_score,'feedback':'Check dict comp'}\n  return {'score':100,'max_score':max_score,'feedback':'Nice!'}\n"
+      "approaches": [
+        {
+          "id": "traditional",
+          "title": "Traditional Dict Comprehension",
+          "description": "Use standard dictionary comprehension syntax",
+          "starterCode": "def word_lengths(words):\n    # TODO: dict comprehension\n    pass\n",
+          "hints": [
+            "Hint 1: {k:v for ...}.",
+            "Hint 2: Remember len(word)."
+          ],
+          "tests": "def grade(ns):\n  max_score=100\n  f=ns.get('word_lengths')\n  if not f: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  d=f(['hi','car'])\n  if d!={'hi':2,'car':3}: return {'score':60,'max_score':max_score,'feedback':'Check dict comp'}\n  return {'score':100,'max_score':max_score,'feedback':'Nice!'}\n"
+        },
+        {
+          "id": "aop_validation_decorator",
+          "title": "AOP: Input/Output Validation",
+          "description": "Use Aspect-Oriented Programming with a decorator to validate both inputs and outputs",
+          "starterCode": "from functools import wraps\n\ndef validate_io(fn):\n    @wraps(fn)\n    def wrapper(words):\n        # TODO: validate input is a list of strings\n        result = fn(words)\n        # TODO: validate output is a dict\n        return result\n    return wrapper\n\n@validate_io\ndef word_lengths(words):\n    # TODO: return {word: len(word) for word in words}\n    pass\n",
+          "hints": [
+            "Hint 1: Check 'if not isinstance(words, list): raise TypeError(...)'",
+            "Hint 2: Check 'if not all(isinstance(w, str) for w in words): raise TypeError(...)'",
+            "Hint 3: After calling fn(), check 'if not isinstance(result, dict): raise TypeError(...)'"
+          ],
+          "tests": "def grade(ns):\n  max_score=100\n  f=ns.get('word_lengths')\n  if not f: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  # Test basic functionality\n  d=f(['hi','car'])\n  if d!={'hi':2,'car':3}: return {'score':60,'max_score':max_score,'feedback':'Check dict comp'}\n  # Test input validation\n  try:\n    f('not a list')\n    return {'score':70,'max_score':max_score,'feedback':'Should validate input is a list'}\n  except TypeError:\n    pass  # Expected\n  # Check if decorator pattern was used\n  source = ns.get('__source__', '')\n  if '@validate_io' not in source or 'wraps' not in source:\n    return {'score':85,'max_score':max_score,'feedback':'Works, but use the @validate_io decorator pattern!'}\n  return {'score':100,'max_score':max_score,'feedback':'Excellent! AOP validation ensures data integrity.'}\n"
+        }
+      ]
     },
     {
       "id": "cg_02",
       "title": "Generator (even stream)",
       "timeLimitMinutes": 8,
       "prompt": "Implement gen_evens(n) that yields even numbers from 0..n inclusive.",
-      "starterCode": "def gen_evens(n):\n    # TODO: use yield in a loop\n    pass\n",
-      "hints": [
-        "Hint 1: use 'yield' inside a for.",
-        "Hint 2: even if i % 2 == 0."
-      ],
-      "tests": "def grade(ns):\n  max_score=100\n  g=ns.get('gen_evens')\n  if not g: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  out=list(g(6))\n  if out!=[0,2,4,6]: return {'score':60,'max_score':max_score,'feedback':'Generator or filter incorrect'}\n  return {'score':100,'max_score':max_score,'feedback':'Great!'}\n"
+      "approaches": [
+        {
+          "id": "traditional",
+          "title": "Traditional Generator",
+          "description": "Use standard yield statement in a loop",
+          "starterCode": "def gen_evens(n):\n    # TODO: use yield in a loop\n    pass\n",
+          "hints": [
+            "Hint 1: use 'yield' inside a for.",
+            "Hint 2: even if i % 2 == 0."
+          ],
+          "tests": "def grade(ns):\n  max_score=100\n  g=ns.get('gen_evens')\n  if not g: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  out=list(g(6))\n  if out!=[0,2,4,6]: return {'score':60,'max_score':max_score,'feedback':'Generator or filter incorrect'}\n  return {'score':100,'max_score':max_score,'feedback':'Great!'}\n"
+        },
+        {
+          "id": "aop_generator_logging",
+          "title": "AOP: Generator Monitoring",
+          "description": "Use Aspect-Oriented Programming with a decorator to log generator yields and observe lazy evaluation",
+          "starterCode": "from functools import wraps\n\ndef log_yields(fn):\n    @wraps(fn)\n    def wrapper(*args, **kwargs):\n        print(f'[GEN] Starting {fn.__name__} generator')\n        count = 0\n        for value in fn(*args, **kwargs):\n            count += 1\n            # TODO: print log message for each yield\n            yield value\n        # TODO: print final count of yielded values\n    return wrapper\n\n@log_yields\ndef gen_evens(n):\n    # TODO: yield even numbers from 0 to n\n    pass\n",
+          "hints": [
+            "Hint 1: In the wrapper, print f'[GEN] Yielding {value}' before each yield.",
+            "Hint 2: After the loop, print f'[GEN] Completed: {count} values yielded'",
+            "Hint 3: In gen_evens, use 'for i in range(n+1): if i % 2 == 0: yield i'"
+          ],
+          "tests": "def grade(ns):\n  max_score=100\n  g=ns.get('gen_evens')\n  if not g: return {'score':0,'max_score':max_score,'feedback':'Function missing'}\n  # Capture print output\n  import io, sys\n  old_stdout = sys.stdout\n  sys.stdout = buffer = io.StringIO()\n  out=list(g(6))\n  output = buffer.getvalue()\n  sys.stdout = old_stdout\n  # Test basic functionality\n  if out!=[0,2,4,6]: return {'score':60,'max_score':max_score,'feedback':'Generator or filter incorrect'}\n  # Check if logging aspect works\n  if '[GEN]' not in output or 'Yielding' not in output:\n    return {'score':80,'max_score':max_score,'feedback':'Generator logging should print [GEN] messages'}\n  # Check if decorator pattern was used\n  source = ns.get('__source__', '')\n  if '@log_yields' not in source or 'wraps' not in source:\n    return {'score':85,'max_score':max_score,'feedback':'Works, but use the @log_yields decorator pattern!'}\n  return {'score':100,'max_score':max_score,'feedback':'Perfect! AOP monitoring reveals lazy evaluation.'}\n"
+        }
+      ]
     }
   ]
 }
