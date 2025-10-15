@@ -29,9 +29,16 @@ def get_module(mod_id):
 
 # ------- Safe execution sandbox -------
 DISALLOWED_NODES = (
-    ast.Import, ast.ImportFrom, ast.Global, ast.Nonlocal, ast.With, ast.AsyncWith,
+    ast.Global, ast.Nonlocal, ast.With, ast.AsyncWith,
     ast.Lambda  # Removed Try, Raise, Attribute to allow basic Python operations
 )
+
+# Allowed imports for AOP approaches and specific exercises
+ALLOWED_IMPORTS = {
+    'functools': ['wraps'],  # Required for decorators
+    'time': ['sleep', 'time', 'perf_counter'],  # Required for timing/retry decorators
+    'numpy': None,  # Allow all numpy imports (for numpy exercises)
+}
 
 SAFE_BUILTINS = {
     "len": len, "range": range, "sum": sum, "min": min, "max": max, "abs": abs,
@@ -50,16 +57,37 @@ def validate_source(code: str):
     """
     Validate user code using AST parsing.
     Raises ValueError if code contains disallowed constructs.
+    Allows specific safe imports defined in ALLOWED_IMPORTS.
     """
     try:
         tree = ast.parse(code)
     except SyntaxError as e:
         raise ValueError(f"SyntaxError: {e}")
-    
+
     for node in ast.walk(tree):
+        # Check for disallowed nodes (excluding Import/ImportFrom which we handle separately)
         if isinstance(node, DISALLOWED_NODES):
             raise ValueError(f"Use of disallowed language feature in this exercise: {node.__class__.__name__}")
-    
+
+        # Check imports
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                module = alias.name
+                if module not in ALLOWED_IMPORTS:
+                    raise ValueError(f"Import of '{module}' is not allowed. Only {list(ALLOWED_IMPORTS.keys())} are permitted.")
+
+        if isinstance(node, ast.ImportFrom):
+            module = node.module
+            if module not in ALLOWED_IMPORTS:
+                raise ValueError(f"Import from '{module}' is not allowed. Only {list(ALLOWED_IMPORTS.keys())} are permitted.")
+
+            # Check specific imports if restrictions exist
+            allowed_names = ALLOWED_IMPORTS[module]
+            if allowed_names is not None:  # None means all imports allowed
+                for alias in node.names:
+                    if alias.name not in allowed_names:
+                        raise ValueError(f"Import of '{alias.name}' from '{module}' is not allowed. Only {allowed_names} are permitted.")
+
     return tree
 
 def run_user_and_tests(user_code: str, tests_code: str):
@@ -75,13 +103,24 @@ def run_user_and_tests(user_code: str, tests_code: str):
     """
     import inspect
     import builtins
+    import functools
+    import time
 
     # 1) validate user code AST
     validate_source(user_code)
 
-    # 2) prepare sandboxes
+    # 2) Create a restricted __import__ that only allows whitelisted modules
+    def restricted_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if name in ALLOWED_IMPORTS or (fromlist and any(f in ALLOWED_IMPORTS for f in fromlist)):
+            return builtins.__import__(name, globals, locals, fromlist, level)
+        raise ImportError(f"Import of '{name}' is not allowed")
+
+    # 3) prepare sandboxes with allowed modules
+    user_builtins = SAFE_BUILTINS.copy()
+    user_builtins["__import__"] = restricted_import  # Restricted import for user code
+
     user_ns = {
-        "__builtins__": SAFE_BUILTINS,
+        "__builtins__": user_builtins,
         "__source__": user_code,  # Provide source code for pattern detection
         "__name__": "__main__"  # Required for class definitions
     }
