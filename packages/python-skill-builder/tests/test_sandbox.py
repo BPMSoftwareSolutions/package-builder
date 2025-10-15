@@ -139,6 +139,43 @@ def validate_input(x):
         # Should not raise
         validate_source(code)
 
+    def test_sandbox_ast_validation_allows_lambda(self):
+        """Allows ast.Lambda (lambda functions)"""
+        code = """
+def test_func():
+    square = lambda x: x * x
+    return square(5)
+"""
+        # Should not raise
+        validate_source(code)
+
+    def test_sandbox_ast_validation_lambda_in_functional_code(self):
+        """Allows lambda functions in functional programming patterns"""
+        code = """
+def process_numbers(nums):
+    doubled = list(map(lambda x: x * 2, nums))
+    evens = list(filter(lambda x: x % 2 == 0, nums))
+    return doubled, evens
+"""
+        # Should not raise
+        validate_source(code)
+
+        # Test that it actually works
+        test_code = """
+def grade(ns):
+    if 'process_numbers' in ns:
+        try:
+            doubled, evens = ns['process_numbers']([1, 2, 3, 4, 5])
+            if doubled == [2, 4, 6, 8, 10] and evens == [2, 4]:
+                return {'score': 100, 'max_score': 100, 'feedback': 'Lambda functions work correctly'}
+            return {'score': 0, 'max_score': 100, 'feedback': f'Wrong result: doubled={doubled}, evens={evens}'}
+        except Exception as e:
+            return {'score': 0, 'max_score': 100, 'feedback': f'Error: {e}'}
+    return {'score': 0, 'max_score': 100, 'feedback': 'Function missing'}
+"""
+        result = run_user_and_tests(code, test_code)
+        assert result['score'] == 100
+
 
 class TestSandboxSafeBuiltins:
     """Test safe builtins features"""
@@ -159,6 +196,11 @@ class TestSandboxSafeBuiltins:
         assert 'sorted' in SAFE_BUILTINS
         assert 'all' in SAFE_BUILTINS
         assert 'any' in SAFE_BUILTINS
+
+    def test_sandbox_safe_builtins_provides_functional_programming_functions(self):
+        """Provides map, filter for functional programming"""
+        assert 'map' in SAFE_BUILTINS
+        assert 'filter' in SAFE_BUILTINS
     
     def test_sandbox_safe_builtins_provides_type_constructors(self):
         """Provides list, dict, set, tuple, str, int, float, bool"""
