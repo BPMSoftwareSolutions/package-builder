@@ -160,6 +160,16 @@ async function validateBuildOutput(packagePath: string): Promise<string[]> {
   return violations;
 }
 
+async function isTypeScriptPackage(packagePath: string): Promise<boolean> {
+  try {
+    // Check if package has a src directory (TypeScript package indicator)
+    await access(join(packagePath, 'src'));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function validatePackage(packagePath: string): Promise<ValidationResult> {
   const packageName = basename(packagePath);
   const result: ValidationResult = {
@@ -168,42 +178,50 @@ async function validatePackage(packagePath: string): Promise<ValidationResult> {
     violations: [],
     warnings: []
   };
-  
+
   console.log(`\n${'═'.repeat(60)}`);
   console.log(`Validating: ${packageName}`);
   console.log('═'.repeat(60));
-  
+
+  // Check if this is a TypeScript package
+  const isTS = await isTypeScriptPackage(packagePath);
+  if (!isTS) {
+    console.log('⏭️  Skipping non-TypeScript package (no src/ directory)');
+    result.passed = true;
+    return result;
+  }
+
   // Run all validations
   const structureViolations = await validatePackageStructure(packagePath);
   const namingViolations = await validateNaming(packagePath);
   const { violations: packageJsonViolations, warnings: packageJsonWarnings } = await validatePackageJson(packagePath);
   const buildViolations = await validateBuildOutput(packagePath);
-  
+
   result.violations = [
     ...structureViolations,
     ...namingViolations,
     ...packageJsonViolations,
     ...buildViolations
   ];
-  
+
   result.warnings = packageJsonWarnings;
   result.passed = result.violations.length === 0;
-  
+
   // Print results
   if (result.violations.length > 0) {
     console.log('❌ Violations:');
     result.violations.forEach(v => console.log(`   • ${v}`));
   }
-  
+
   if (result.warnings.length > 0) {
     console.log('⚠️  Warnings:');
     result.warnings.forEach(w => console.log(`   • ${w}`));
   }
-  
+
   if (result.passed) {
     console.log('✅ All checks passed');
   }
-  
+
   return result;
 }
 
