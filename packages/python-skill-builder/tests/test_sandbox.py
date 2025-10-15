@@ -10,15 +10,15 @@ class TestSandboxASTValidation:
     """Test AST validation features"""
     
     def test_sandbox_ast_validation_blocks_import(self):
-        """Blocks import statements"""
+        """Blocks import statements for non-whitelisted modules"""
         code = "import os"
-        with pytest.raises(ValueError, match="disallowed"):
+        with pytest.raises(ValueError, match="not allowed"):
             validate_source(code)
-    
+
     def test_sandbox_ast_validation_blocks_import_from(self):
-        """Blocks import from statements"""
+        """Blocks import from statements for non-whitelisted modules"""
         code = "from os import path"
-        with pytest.raises(ValueError, match="disallowed"):
+        with pytest.raises(ValueError, match="not allowed"):
             validate_source(code)
     
     def test_sandbox_ast_validation_blocks_open(self):
@@ -94,10 +94,13 @@ def grade(ns):
     if 'dangerous' in ns:
         try:
             result = ns['dangerous']()
-            return {'score': 0, 'max_score': 100, 'feedback': '__import__ should not be available'}
-        except Exception as e:
-            if '__import__' in str(e):
+            return {'score': 0, 'max_score': 100, 'feedback': '__import__ should be restricted'}
+        except (NameError, ImportError) as e:
+            # Either __import__ not found or import not allowed
+            if '__import__' in str(e) or 'not allowed' in str(e):
                 return {'score': 100, 'max_score': 100, 'feedback': '__import__ blocked correctly'}
+        except Exception as e:
+            return {'score': 0, 'max_score': 100, 'feedback': f'Unexpected error: {e}'}
     return {'score': 0, 'max_score': 100, 'feedback': 'Function missing'}
 """
         result = run_user_and_tests(code, test_code)

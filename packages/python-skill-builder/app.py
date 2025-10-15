@@ -48,6 +48,7 @@ SAFE_BUILTINS = {
     "repr": repr, "getattr": getattr, "setattr": setattr, "hasattr": hasattr,  # Object attribute access
     "Exception": Exception, "ValueError": ValueError, "TypeError": TypeError,
     "KeyError": KeyError, "IndexError": IndexError, "AttributeError": AttributeError,
+    "NameError": NameError, "ImportError": ImportError,  # Required for error handling in tests
     "__build_class__": __build_class__,  # Required for class definitions
     "property": property,  # Required for @property decorator
     "super": super  # Required for super() calls in inheritance

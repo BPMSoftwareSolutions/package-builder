@@ -276,7 +276,7 @@ class TestApiErrorHandling:
         assert response.status_code == 400
         data = response.get_json()
         assert data['ok'] is False
-        assert 'disallowed' in data.get('error', '').lower()
+        assert 'not allowed' in data.get('error', '').lower()
     
     def test_post_api_grade_handles_runtime_error(self, client):
         """Handles runtime errors in user code"""
