@@ -344,15 +344,15 @@ async function submitCode() {
 function displayFeedback(result) {
   const section = document.getElementById('feedback-section');
   const content = document.getElementById('feedback-content');
-    
+
   section.classList.remove('hidden', 'success', 'error');
-    
+
   if (result.ok) {
     const scorePercent = Math.round((result.score / result.max_score) * 100);
     const scoreClass = scorePercent >= 80 ? 'high' : scorePercent >= 60 ? 'medium' : 'low';
-        
+
     section.classList.add(scorePercent >= 80 ? 'success' : 'error');
-        
+
     content.innerHTML = `
             <div class="score-display ${scoreClass}">
                 ${result.score} / ${result.max_score} (${scorePercent}%)
@@ -363,7 +363,14 @@ function displayFeedback(result) {
             <p style="margin-top: 10px; color: var(--text-secondary);">
                 ⏱️ Execution time: ${result.elapsed_ms}ms
             </p>
+            <div id="visualization-container"></div>
         `;
+
+    // Render visualizations if present
+    if (result.visualizations && result.execution_results) {
+      const vizContainer = document.getElementById('visualization-container');
+      visualizationManager.renderAll(result.visualizations, result.execution_results, vizContainer);
+    }
   } else {
     section.classList.add('error');
     content.innerHTML = `
@@ -502,7 +509,7 @@ function updateProgress(score, maxScore) {
       moduleProgress.approachScores[workshopId] = {};
     }
 
-    const previousApproachScore = moduleProgress.approachScores[workshopId][approachId] || 0;
+    // Store the approach score
     moduleProgress.approachScores[workshopId][approachId] = scorePercent;
 
     // Workshop is complete if ANY approach scores >= 80%
@@ -631,4 +638,165 @@ function setupEventListeners() {
     }
   });
 }
+
+// ============================================================================
+// Visualization System
+// ============================================================================
+
+/**
+ * Base Renderer Interface
+ * All visualization renderers must implement this interface
+ */
+class BaseRenderer {
+  /**
+   * Render visualization
+   * @param {Object} _config - Visualization configuration (unused in base class)
+   * @param {Object} _executionResults - Execution results from grading (unused in base class)
+   * @returns {HTMLElement} - Rendered visualization element
+   */
+  render(_config, _executionResults) {
+    throw new Error('render() must be implemented by subclass');
+  }
+
+  /**
+   * Clean up resources when visualization is removed
+   */
+  destroy() {
+    // Override if cleanup is needed
+  }
+}
+
+/**
+ * CLI Dashboard Renderer
+ * Renders text-based dashboards with ASCII art
+ */
+class CLIRenderer extends BaseRenderer {
+  render(config, executionResults) {
+    const container = document.createElement('div');
+    container.className = 'cli-visualization';
+
+    // Get template and placeholders from config
+    const template = config.config?.template || '';
+    const placeholders = config.config?.placeholders || {};
+
+    // Replace placeholders with actual values
+    let output = template;
+    for (const [key, path] of Object.entries(placeholders)) {
+      const value = this.resolvePath(path, executionResults);
+      output = output.replace(new RegExp(`\\{${key}\\}`, 'g'), value);
+    }
+
+    // Create pre element for formatted text
+    const pre = document.createElement('pre');
+    pre.className = 'cli-output';
+    pre.textContent = output;
+
+    container.appendChild(pre);
+    return container;
+  }
+
+  /**
+   * Resolve a dot-notation path in execution results
+   * @param {string} path - Dot-notation path (e.g., "execution.variables.x.value")
+   * @param {Object} executionResults - Execution results object
+   * @returns {string} - Resolved value or placeholder
+   */
+  resolvePath(path, executionResults) {
+    // Handle literal values (not paths)
+    if (!path.startsWith('execution.')) {
+      return path;
+    }
+
+    // Remove 'execution.' prefix and split path
+    const parts = path.replace('execution.', '').split('.');
+    let current = executionResults;
+
+    for (const part of parts) {
+      if (current && typeof current === 'object' && part in current) {
+        current = current[part];
+      } else {
+        return `{${path}}`;  // Return placeholder if path not found
+      }
+    }
+
+    // Convert arrays to comma-separated strings
+    if (Array.isArray(current)) {
+      return current.join(', ');
+    }
+
+    return String(current);
+  }
+}
+
+/**
+ * Visualization Manager
+ * Orchestrates rendering of visualizations based on configuration
+ */
+class VisualizationManager {
+  constructor() {
+    this.renderers = {
+      'cli': new CLIRenderer(),
+      // Future renderers will be added here:
+      // 'web': new WebUIRenderer(),
+      // 'animation': new AnimationRenderer(),
+      // 'agentic': new AgenticRenderer()
+    };
+    this.activeVisualizations = [];
+  }
+
+  /**
+   * Render all enabled visualizations
+   * @param {Array} visualizations - Array of visualization configs
+   * @param {Object} executionResults - Execution results from grading
+   * @param {HTMLElement} container - Container element for visualizations
+   */
+  renderAll(visualizations, executionResults, container) {
+    // Clear previous visualizations
+    this.clearAll();
+    container.innerHTML = '';
+
+    if (!visualizations || visualizations.length === 0) {
+      return;
+    }
+
+    // Render each enabled visualization
+    for (const vizConfig of visualizations) {
+      if (!vizConfig.enabled) {
+        continue;
+      }
+
+      const renderer = this.renderers[vizConfig.type];
+      if (!renderer) {
+        console.warn(`No renderer found for visualization type: ${vizConfig.type}`);
+        continue;
+      }
+
+      try {
+        const element = renderer.render(vizConfig, executionResults);
+        container.appendChild(element);
+        this.activeVisualizations.push({ renderer, element });
+      } catch (error) {
+        console.error(`Failed to render visualization ${vizConfig.id}:`, error);
+      }
+    }
+  }
+
+  /**
+   * Clear all active visualizations
+   */
+  clearAll() {
+    for (const { renderer, element } of this.activeVisualizations) {
+      if (renderer.destroy) {
+        renderer.destroy();
+      }
+      if (element.parentNode) {
+        element.parentNode.removeChild(element);
+      }
+    }
+    this.activeVisualizations = [];
+  }
+}
+
+// Create global visualization manager instance
+const visualizationManager = new VisualizationManager();
 
