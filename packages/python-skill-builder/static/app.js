@@ -395,6 +395,19 @@ function getSavedCode(moduleId, workshopId, approachId) {
 
   // If approachId is provided, get code for that specific approach
   if (approachId) {
+    // MIGRATION: If workshopCode is a string (old format), migrate it
+    if (typeof workshopCode === 'string') {
+      console.log('[getSavedCode] Migrating old string format to object format');
+      // Convert string to object format and save it
+      const oldCode = workshopCode;
+      state.progress[moduleId].code[workshopId] = {
+        [approachId]: oldCode
+      };
+      saveProgress();
+      return oldCode;
+    }
+
+    // New format: workshopCode is an object
     const code = workshopCode[approachId] || null;
     console.log('[getSavedCode] Returning approach code:', code ? code.substring(0, 50) + '...' : 'null');
     return code;
@@ -424,7 +437,14 @@ function saveCode() {
 
   // Save code per approach for multi-approach workshops
   if (state.currentApproachId) {
-    if (!state.progress[moduleId].code[workshopId]) {
+    // MIGRATION: If existing code is a string (old format), convert to object
+    if (typeof state.progress[moduleId].code[workshopId] === 'string') {
+      console.log('[saveCode] Migrating existing string format to object format');
+      const oldCode = state.progress[moduleId].code[workshopId];
+      state.progress[moduleId].code[workshopId] = {
+        [state.currentApproachId]: oldCode
+      };
+    } else if (!state.progress[moduleId].code[workshopId]) {
       state.progress[moduleId].code[workshopId] = {};
     }
     state.progress[moduleId].code[workshopId][state.currentApproachId] = code;
