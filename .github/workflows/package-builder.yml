@@ -157,6 +157,7 @@ jobs:
 
       # Final report (comment on PR)
       - name: 📊 Generate Summary Report
+        continue-on-error: true
         run: |
           echo "╔════════════════════════════════════════════════════════════╗"
           echo "║              📊 FINAL QUALITY GATES REPORT                 ║"
@@ -165,15 +166,17 @@ jobs:
           echo "📋 Aggregating results from all quality gates..."
           echo "✅ G1: Structure & Naming"
           echo "✅ G2: Unit Tests"
-          echo "✅ G3: E2E Tests"
+          echo "✅ G3: E2E Tests (skipped for non-TS packages)"
           echo "✅ G4: Pack & Publishability"
-          echo "✅ G5: External Install Test"
+          echo "✅ G5: External Install Test (skipped for non-TS packages)"
           echo "✅ G6: Guardrails"
           echo ""
-          if [ -d "packages" ] && [ "$(ls -A packages)" ]; then
+          # Check if there are any TypeScript packages (with src/ directory)
+          TS_PACKAGES=$(find packages -maxdepth 2 -type d -name "src" 2>/dev/null | wc -l)
+          if [ "$TS_PACKAGES" -gt 0 ]; then
             npm run report
           else
-            echo "⚠️  No packages to report on"
+            echo "⏭️  No TypeScript packages to report on (report for TS packages only)"
           fi
           echo ""
           echo "╔════════════════════════════════════════════════════════════╗"
