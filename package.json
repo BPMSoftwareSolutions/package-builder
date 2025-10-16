@@ -4,14 +4,12 @@
   "description": "An AI-assisted monorepo that turns small ideas into fully tested npm packages",
   "type": "module",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": [],
   "scripts": {
-    "test": "npm test --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present",
-    "e2e": "playwright test",
+  "test": "echo 'No unit tests at root (packages are externalized)'",
+  "build": "echo 'No build at root (packages are externalized)'",
+  "lint": "echo 'No lint at root (packages are externalized)'",
+  "e2e": "echo 'No e2e tests for this repository (packages are externalized)'",
     "scaffold": "tsx scripts/pb-scaffold.ts",
     "move": "tsx scripts/pb-move.ts",
     "pack-all": "tsx scripts/pb-build-tgz.ts",
@@ -29,12 +27,10 @@
   "author": "BPM Software Solutions",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.48.0",
     "@types/node": "^22.7.5",
     "eslint": "^9.12.0",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.3",
-    "vitest": "^2.1.2"
+    "typescript": "^5.6.3"
   },
   "engines": {
     "node": ">=20.0.0"

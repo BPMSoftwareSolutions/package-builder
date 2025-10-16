@@ -29,6 +29,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Detect packages
+        id: detect
+        run: |
+          echo "╔════════════════════════════════════════════════════════════╗"
+          echo "║                   PACKAGE DETECTION                        ║"
+          echo "╚════════════════════════════════════════════════════════════╝"
+          if [ -d "packages" ]; then
+            COUNT=$(find packages -maxdepth 2 -type f -name package.json 2>/dev/null | wc -l)
+          else
+            COUNT=0
+          fi
+          echo "Found $COUNT package.json files under packages/"
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
+
       # █ Agent 1: PLAN
       # In a real implementation, this would call an LLM to generate a plan
       - name: 🧠 Agent 1 - Planner
@@ -68,17 +82,18 @@ jobs:
 
       # Build packages first (needed for guardrails)
       - name: 🔨 Build Packages
+        if: ${{ steps.detect.outputs.count != '0' }}
         run: |
           echo "╔════════════════════════════════════════════════════════════╗"
           echo "║                    🔨 BUILDING PACKAGES                    ║"
           echo "╚════════════════════════════════════════════════════════════╝"
           echo ""
-          if [ -d "packages" ] && [ "$(ls -A packages)" ]; then
-            npm run build --workspaces --if-present
-          else
-            echo "⚠️  No packages to build"
-          fi
+          npm run build --workspaces --if-present
           echo ""
+      - name: 🔨 Build Packages - Skipped
+        if: ${{ steps.detect.outputs.count == '0' }}
+        run: |
+          echo "⚠️  No packages to build"
 
       # Structure/guardrails quick pass
       - name: 🛡️ Guardrails Check (G6)
@@ -91,7 +106,7 @@ jobs:
           echo "🔍 Validating exports and TypeScript declarations..."
           echo "🔍 Scanning for heavy dependencies..."
           echo ""
-          if [ -d "packages" ] && [ "$(ls -A packages)" ]; then
+          if [ "${{ steps.detect.outputs.count }}" -gt 0 ]; then
             npm run guardrails -- --repo .
           else
             echo "⚠️  No packages to validate"
@@ -108,7 +123,7 @@ jobs:
           echo "🧪 Running unit tests with Vitest..."
           echo "🔬 Testing all functions and edge cases..."
           echo ""
-          if [ -d "packages" ] && [ "$(ls -A packages)" ]; then
+          if [ "${{ steps.detect.outputs.count }}" -gt 0 ]; then
             npm test --workspaces --if-present
           else
             echo "⚠️  No packages to test"
@@ -126,7 +141,7 @@ jobs:
           echo "🔐 Calculating package hashes..."
           echo "📊 Generating package metadata..."
           echo ""
-          if [ -d "packages" ] && [ "$(ls -A packages)" ]; then
+          if [ "${{ steps.detect.outputs.count }}" -gt 0 ]; then
             npm run pack-all -- --packages "packages/*"
           else
             echo "⚠️  No packages to pack"
@@ -172,8 +187,7 @@ jobs:
           echo "✅ G6: Guardrails"
           echo ""
           # Check if there are any TypeScript packages (with src/ directory)
-          TS_PACKAGES=$(find packages -maxdepth 2 -type d -name "src" 2>/dev/null | wc -l)
-          if [ "$TS_PACKAGES" -gt 0 ]; then
+          if [ "${{ steps.detect.outputs.count }}" -gt 0 ]; then
             npm run report
           else
             echo "⏭️  No TypeScript packages to report on (report for TS packages only)"

@@ -16,6 +16,18 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
+      - name: Detect python package
+        id: detect-py
+        run: |
+          if [ -d "packages/python-skill-builder" ]; then
+            if [ -f "packages/python-skill-builder/requirements.txt" ]; then
+              echo "exists=true" >> $GITHUB_OUTPUT
+            else
+              echo "exists=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
       
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -23,28 +35,32 @@ jobs:
           python-version: '3.11'
       
       - name: Install dependencies
+        if: ${{ steps.detect-py.outputs.exists == 'true' }}
         run: |
           cd packages/python-skill-builder
           pip install -r requirements.txt
       
       - name: Validate test coverage against features.json
+        if: ${{ steps.detect-py.outputs.exists == 'true' }}
         run: |
           cd packages/python-skill-builder
           python tests/validate_coverage.py
       
       - name: Run tests with coverage
+        if: ${{ steps.detect-py.outputs.exists == 'true' }}
         run: |
           cd packages/python-skill-builder
           pytest --cov=. --cov-report=term --cov-report=html --cov-report=xml
       
       - name: Check coverage threshold
+        if: ${{ steps.detect-py.outputs.exists == 'true' }}
         run: |
           cd packages/python-skill-builder
           pytest --cov=. --cov-fail-under=80
       
       - name: Upload coverage reports
+        if: ${{ steps.detect-py.outputs.exists == 'true' }}
         uses: codecov/codecov-action@v3
-        if: always()
         with:
           file: ./packages/python-skill-builder/coverage.xml
           flags: python-skill-builder

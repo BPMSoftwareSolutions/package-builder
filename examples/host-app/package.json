@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@bpm/svg-editor": "file:../../packages/svg-editor"
+  "@bpm/svg-editor": "latest"
   },
   "devDependencies": {
     "vite": "^5.4.8",
