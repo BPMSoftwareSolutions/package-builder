@@ -541,6 +541,74 @@ describe('WebUIRenderer', () => {
     renderer.destroy();
     expect(renderer.monacoEditor).toBeNull();
   });
+
+  test('creates dashboard panel with cards', () => {
+    // This test covers: Web Visualization - Dashboard visualization
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'dashboard', type: 'dashboard', title: 'Results Dashboard' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const dashboard = element.querySelector('.dashboard-container');
+    expect(dashboard).toBeTruthy();
+    expect(dashboard.querySelector('.dashboard-header')).toBeTruthy();
+  });
+
+  test('dashboard displays function cards', () => {
+    // This test covers: Web Visualization - Dashboard function cards
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'dashboard', type: 'dashboard', title: 'Results Dashboard' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const functionCard = element.querySelector('.dashboard-card-function');
+    expect(functionCard).toBeTruthy();
+    expect(element.textContent).toContain('helper');
+  });
+
+  test('dashboard displays class cards', () => {
+    // This test covers: Web Visualization - Dashboard class cards
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'dashboard', type: 'dashboard', title: 'Results Dashboard' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const classCard = element.querySelector('.dashboard-card-class');
+    expect(classCard).toBeTruthy();
+    expect(element.textContent).toContain('Counter');
+  });
+
+  test('dashboard displays variable cards', () => {
+    // This test covers: Web Visualization - Dashboard variable cards
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'dashboard', type: 'dashboard', title: 'Results Dashboard' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const variableCard = element.querySelector('.dashboard-card-variable');
+    expect(variableCard).toBeTruthy();
+    expect(element.textContent).toContain('x');
+  });
 });
 
 // Test: Visualization Manager

@@ -22,21 +22,9 @@
                 "title": "Your Solution"
               },
               {
-                "id": "results_panel",
-                "type": "results",
-                "title": "Execution Results",
-                "sections": [
-                  {
-                    "title": "Functions Defined",
-                    "type": "list",
-                    "data": "execution.functions"
-                  },
-                  {
-                    "title": "Variables",
-                    "type": "key-value",
-                    "data": "execution.variables"
-                  }
-                ]
+                "id": "dashboard_panel",
+                "type": "dashboard",
+                "title": "Execution Results"
               }
             ]
           }
@@ -100,21 +88,9 @@
                 "title": "Your Solution"
               },
               {
-                "id": "results_panel",
-                "type": "results",
-                "title": "Execution Results",
-                "sections": [
-                  {
-                    "title": "Functions Defined",
-                    "type": "list",
-                    "data": "execution.functions"
-                  },
-                  {
-                    "title": "Variables",
-                    "type": "key-value",
-                    "data": "execution.variables"
-                  }
-                ]
+                "id": "dashboard_panel",
+                "type": "dashboard",
+                "title": "Execution Results"
               }
             ]
           }

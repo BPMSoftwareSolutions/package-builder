@@ -867,6 +867,8 @@ class WebUIRenderer extends BaseRenderer {
       this.createResultsPanel(content, panel, executionResults);
     } else if (panel.type === 'code') {
       this.createCodeDisplay(content, panel, executionResults);
+    } else if (panel.type === 'dashboard') {
+      this.createDashboardPanel(content, panel, executionResults);
     }
 
     panelElement.appendChild(content);
@@ -938,6 +940,97 @@ class WebUIRenderer extends BaseRenderer {
     pre.textContent = code;
 
     container.appendChild(pre);
+  }
+
+  /**
+   * Create dashboard panel with card-based layout
+   */
+  createDashboardPanel(container, panel, executionResults) {
+    const dashboard = document.createElement('div');
+    dashboard.className = 'dashboard-container';
+
+    // Create header
+    const header = document.createElement('div');
+    header.className = 'dashboard-header';
+    header.innerHTML = `<h3>${panel.title || 'Execution Dashboard'}</h3>`;
+    dashboard.appendChild(header);
+
+    // Create cards grid
+    const cardsGrid = document.createElement('div');
+    cardsGrid.className = 'dashboard-grid';
+
+    // Functions card
+    if (executionResults.functions && Object.keys(executionResults.functions).length > 0) {
+      const functionsCard = this.createDashboardCard(
+        'Functions',
+        '⚙️',
+        Object.keys(executionResults.functions),
+        'function'
+      );
+      cardsGrid.appendChild(functionsCard);
+    }
+
+    // Classes card
+    if (executionResults.classes && Object.keys(executionResults.classes).length > 0) {
+      const classNames = Object.keys(executionResults.classes);
+      const classesCard = this.createDashboardCard(
+        'Classes',
+        '🏗️',
+        classNames,
+        'class'
+      );
+      cardsGrid.appendChild(classesCard);
+    }
+
+    // Variables card
+    if (executionResults.variables && Object.keys(executionResults.variables).length > 0) {
+      const varEntries = Object.entries(executionResults.variables).map(
+        ([name, info]) => `${name}: ${info.value}`
+      );
+      const variablesCard = this.createDashboardCard(
+        'Variables',
+        '📊',
+        varEntries,
+        'variable'
+      );
+      cardsGrid.appendChild(variablesCard);
+    }
+
+    dashboard.appendChild(cardsGrid);
+    container.appendChild(dashboard);
+  }
+
+  /**
+   * Create a dashboard card
+   */
+  createDashboardCard(title, icon, items, type) {
+    const card = document.createElement('div');
+    card.className = `dashboard-card dashboard-card-${type}`;
+
+    const cardHeader = document.createElement('div');
+    cardHeader.className = 'dashboard-card-header';
+    cardHeader.innerHTML = `<span class="dashboard-icon">${icon}</span><h4>${title}</h4>`;
+    card.appendChild(cardHeader);
+
+    const cardBody = document.createElement('div');
+    cardBody.className = 'dashboard-card-body';
+
+    if (items.length === 0) {
+      cardBody.textContent = 'None';
+    } else {
+      const list = document.createElement('ul');
+      list.className = 'dashboard-item-list';
+      for (const item of items) {
+        const li = document.createElement('li');
+        li.className = 'dashboard-item';
+        li.innerHTML = `<span class="dashboard-badge">✓</span> ${item}`;
+        list.appendChild(li);
+      }
+      cardBody.appendChild(list);
+    }
+
+    card.appendChild(cardBody);
+    return card;
   }
 
   /**
