@@ -23,7 +23,7 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["scripts/**/*", "packages/*/src/**/*", "packages/*/test/**/*"],
+  "include": ["scripts/**/*"],
   "exclude": ["node_modules", "dist", ".artifacts", "examples"]
 }
 

@@ -4,14 +4,12 @@
   "description": "An AI-assisted monorepo that turns small ideas into fully tested npm packages",
   "type": "module",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": [],
   "scripts": {
     "test": "npm test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
-    "e2e": "playwright test",
+  "e2e": "echo 'No e2e tests for this repository (packages are externalized)'",
     "scaffold": "tsx scripts/pb-scaffold.ts",
     "move": "tsx scripts/pb-move.ts",
     "pack-all": "tsx scripts/pb-build-tgz.ts",

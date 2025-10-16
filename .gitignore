@@ -1,3 +1,8 @@
+node_modules/
+dist/
+.artifacts/
+test-results/
+.tmp-python-skill-builder/
 # Logs
 logs
 *.log
