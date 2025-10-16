@@ -1117,7 +1117,15 @@ class WebUIRenderer extends BaseRenderer {
   createListDisplay(container, section, executionResults) {
     const data = this.resolvePath(section.data, executionResults);
 
-    if (!Array.isArray(data)) {
+    if (!data) {
+      container.textContent = 'No data available';
+      return;
+    }
+
+    // Handle both arrays and objects (convert object keys to array)
+    let items = Array.isArray(data) ? data : Object.keys(data);
+
+    if (items.length === 0) {
       container.textContent = 'No data available';
       return;
     }
@@ -1125,7 +1133,7 @@ class WebUIRenderer extends BaseRenderer {
     const list = document.createElement('ul');
     list.className = 'results-list';
 
-    for (const item of data) {
+    for (const item of items) {
       const li = document.createElement('li');
       li.textContent = String(item);
       list.appendChild(li);

@@ -421,6 +421,51 @@ describe('WebUIRenderer', () => {
     expect(result).toBeNull();
   });
 
+  test('resolves execution.functions path correctly', () => {
+    // This test covers: Web Visualization - Path resolution for functions
+    const path = 'execution.functions';
+    const result = renderer.resolvePath(path, mockExecutionResults);
+    expect(result).toBeTruthy();
+    expect(result).toEqual(mockExecutionResults.functions);
+  });
+
+  test('resolves execution.variables path correctly', () => {
+    // This test covers: Web Visualization - Path resolution for variables
+    const path = 'execution.variables';
+    const result = renderer.resolvePath(path, mockExecutionResults);
+    expect(result).toBeTruthy();
+    expect(result).toEqual(mockExecutionResults.variables);
+  });
+
+  test('displays functions in results panel when data path resolves', () => {
+    // This test covers: Web Visualization - Results panel data display
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          {
+            id: 'results',
+            type: 'results',
+            title: 'Results',
+            sections: [
+              {
+                title: 'Functions Defined',
+                type: 'list',
+                data: 'execution.functions'
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const resultsSection = element.querySelector('.results-section');
+    expect(resultsSection).toBeTruthy();
+    // Should contain the function name
+    expect(element.textContent).toContain('helper');
+  });
+
   test('creates table display for array data', () => {
     // This test covers: Web Visualization - Results panel content generation
     const config = {
