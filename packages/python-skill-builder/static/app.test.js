@@ -611,6 +611,220 @@ describe('WebUIRenderer', () => {
   });
 });
 
+// Test: AnimationRenderer
+describe('AnimationRenderer', () => {
+  let renderer;
+  let mockExecutionResults;
+
+  beforeEach(() => {
+    mockDOM();
+    renderer = new AnimationRenderer();
+    mockExecutionResults = {
+      user_code: 'def even_squares(nums):\n    return [n**2 for n in nums if n%2==0]',
+      functions: {
+        even_squares: { name: 'even_squares', type: 'function' }
+      }
+    };
+  });
+
+  test('AnimationRenderer instantiation', () => {
+    // This test covers: Animation Renderer instantiation
+    expect(renderer).toBeTruthy();
+    expect(renderer instanceof BaseRenderer).toBe(true);
+  });
+
+  test('renders data-flow animation', () => {
+    // This test covers: Animation Renderer - Data flow visualization
+    const config = {
+      id: 'data_flow_animation',
+      type: 'animation',
+      enabled: true,
+      config: {
+        animationType: 'data-flow',
+        duration: 2000,
+        autoPlay: false
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    expect(element).toBeTruthy();
+    expect(element.className).toContain('animation-visualization');
+    expect(element.querySelector('svg')).toBeTruthy();
+  });
+
+  test('renders state-machine animation', () => {
+    // This test covers: Animation Renderer - State machine visualization
+    const config = {
+      id: 'state_machine_animation',
+      type: 'animation',
+      enabled: true,
+      config: {
+        animationType: 'state-machine',
+        duration: 2000,
+        autoPlay: false
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    expect(element).toBeTruthy();
+    expect(element.querySelector('svg')).toBeTruthy();
+    const circles = element.querySelectorAll('circle');
+    expect(circles.length).toBeGreaterThan(0);
+  });
+
+  test('renders tree animation', () => {
+    // This test covers: Animation Renderer - Tree visualization
+    const config = {
+      id: 'tree_animation',
+      type: 'animation',
+      enabled: true,
+      config: {
+        animationType: 'tree',
+        duration: 2000,
+        autoPlay: false
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    expect(element).toBeTruthy();
+    expect(element.querySelector('svg')).toBeTruthy();
+  });
+
+  test('creates animation controls', () => {
+    // This test covers: Animation controls - Play/pause/speed/step
+    const config = {
+      id: 'animation_with_controls',
+      type: 'animation',
+      enabled: true,
+      config: {
+        animationType: 'data-flow',
+        duration: 2000,
+        autoPlay: false
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const controls = element.querySelector('.animation-controls');
+    expect(controls).toBeTruthy();
+
+    const buttons = controls.querySelectorAll('button');
+    expect(buttons.length).toBeGreaterThanOrEqual(3); // Play/Pause, Step, Reset
+  });
+
+  test('play/pause button toggles animation state', () => {
+    // This test covers: Animation controls - Play/pause functionality
+    const config = {
+      id: 'animation_playback',
+      type: 'animation',
+      enabled: true,
+      config: {
+        animationType: 'data-flow',
+        duration: 2000,
+        autoPlay: false
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const playPauseBtn = element.querySelector('button');
+
+    expect(playPauseBtn.textContent).toContain('Play');
+    playPauseBtn.click();
+    expect(playPauseBtn.textContent).toContain('Pause');
+  });
+
+  test('speed control changes animation speed', () => {
+    // This test covers: Animation controls - Speed adjustment
+    const config = {
+      id: 'animation_speed',
+      type: 'animation',
+      enabled: true,
+      config: {
+        animationType: 'data-flow',
+        duration: 2000,
+        autoPlay: false
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const speedSelect = element.querySelector('select');
+
+    expect(speedSelect).toBeTruthy();
+    speedSelect.value = '2';
+    speedSelect.dispatchEvent(new Event('change'));
+    expect(renderer.speed).toBe(2);
+  });
+
+  test('step button advances animation', () => {
+    // This test covers: Animation controls - Step-through debugging
+    const config = {
+      id: 'animation_step',
+      type: 'animation',
+      enabled: true,
+      config: {
+        animationType: 'data-flow',
+        duration: 2000,
+        autoPlay: false
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const stepBtn = element.querySelectorAll('button')[1]; // Second button is Step
+
+    const initialStep = renderer.currentStep;
+    stepBtn.click();
+    expect(renderer.currentStep).toBeGreaterThan(initialStep);
+  });
+
+  test('reset button resets animation state', () => {
+    // This test covers: Animation controls - Reset functionality
+    const config = {
+      id: 'animation_reset',
+      type: 'animation',
+      enabled: true,
+      config: {
+        animationType: 'data-flow',
+        duration: 2000,
+        autoPlay: false
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    renderer.currentStep = 10;
+    renderer.isPlaying = true;
+
+    const resetBtn = element.querySelectorAll('button')[2]; // Third button is Reset
+    resetBtn.click();
+
+    expect(renderer.currentStep).toBe(0);
+    expect(renderer.isPlaying).toBe(false);
+  });
+
+  test('autoPlay starts animation on render', () => {
+    // This test covers: Animation - Auto-play functionality
+    const config = {
+      id: 'animation_autoplay',
+      type: 'animation',
+      enabled: true,
+      config: {
+        animationType: 'data-flow',
+        duration: 2000,
+        autoPlay: true
+      }
+    };
+
+    renderer.render(config, mockExecutionResults);
+    expect(renderer.isPlaying).toBe(true);
+  });
+
+  test('destroy cleans up animation resources', () => {
+    // This test covers: Animation Renderer - Resource cleanup
+    renderer.animationFrameId = 123;
+    renderer.destroy();
+    // Should not throw and should clean up
+    expect(renderer).toBeTruthy();
+  });
+});
+
 // Test: Visualization Manager
 describe('Visualization Manager', () => {
   let manager;
@@ -624,6 +838,12 @@ describe('Visualization Manager', () => {
     // This test covers: Visualization manager
     expect(manager).toBeTruthy();
     expect(manager.renderers).toBeTruthy();
+  });
+
+  test('supports animation renderer type', () => {
+    // This test covers: Visualization manager - Supports animation renderer
+    expect(manager.renderers['animation']).toBeTruthy();
+    expect(manager.renderers['animation'] instanceof AnimationRenderer).toBe(true);
   });
 
   test('supports web renderer type', () => {

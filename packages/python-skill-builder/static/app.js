@@ -1373,6 +1373,602 @@ class WebUIRenderer extends BaseRenderer {
 }
 
 /**
+ * Animation Renderer
+ * Renders SVG/Canvas-based animations for data flow visualization
+ * Supports data-flow, state-machine, and tree animation types
+ */
+class AnimationRenderer extends BaseRenderer {
+  constructor() {
+    super();
+    this.animationId = null;
+    this.isPlaying = false;
+    this.speed = 1;
+    this.currentStep = 0;
+    this.totalSteps = 0;
+    this.animationFrameId = null;
+    this.startTime = 0;
+  }
+
+  render(config, executionResults) {
+    const container = document.createElement('div');
+    container.className = 'animation-visualization';
+    container.style.cssText = 'width: 100%; height: 400px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9; position: relative;';
+
+    const animationType = config.config?.animationType || 'data-flow';
+    const duration = config.config?.duration || 2000;
+    const autoPlay = config.config?.autoPlay !== false;
+
+    // Create SVG canvas
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', '100%');
+    svg.setAttribute('viewBox', '0 0 800 400');
+    svg.style.cssText = 'display: block;';
+
+    // Create animation based on type
+    if (animationType === 'data-flow') {
+      this.createDataFlowAnimation(svg, executionResults, duration);
+    } else if (animationType === 'state-machine') {
+      this.createStateMachineAnimation(svg, executionResults, duration);
+    } else if (animationType === 'tree') {
+      this.createTreeAnimation(svg, executionResults, duration);
+    }
+
+    container.appendChild(svg);
+
+    // Create controls
+    const controls = this.createControls(container, duration, autoPlay);
+    container.appendChild(controls);
+
+    // Store animation data for playback
+    container.animationData = {
+      svg,
+      duration,
+      animationType,
+      executionResults
+    };
+
+    // Auto-play if enabled
+    if (autoPlay) {
+      this.playAnimation(container);
+    }
+
+    return container;
+  }
+
+  createDataFlowAnimation(svg, executionResults, duration) {
+    // Create a simple data flow animation showing array transformation
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+
+    // Define arrow marker
+    const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+    marker.setAttribute('id', 'arrowhead');
+    marker.setAttribute('markerWidth', '10');
+    marker.setAttribute('markerHeight', '10');
+    marker.setAttribute('refX', '9');
+    marker.setAttribute('refY', '3');
+    marker.setAttribute('orient', 'auto');
+    const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    polygon.setAttribute('points', '0 0, 10 3, 0 6');
+    polygon.setAttribute('fill', '#4CAF50');
+    marker.appendChild(polygon);
+    defs.appendChild(marker);
+    svg.appendChild(defs);
+
+    // Input array
+    const inputGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    inputGroup.setAttribute('class', 'input-group');
+
+    const inputLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    inputLabel.setAttribute('x', '50');
+    inputLabel.setAttribute('y', '30');
+    inputLabel.setAttribute('font-size', '14');
+    inputLabel.setAttribute('font-weight', 'bold');
+    inputLabel.textContent = 'Input';
+    inputGroup.appendChild(inputLabel);
+
+    const inputRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    inputRect.setAttribute('x', '30');
+    inputRect.setAttribute('y', '50');
+    inputRect.setAttribute('width', '120');
+    inputRect.setAttribute('height', '60');
+    inputRect.setAttribute('fill', '#E3F2FD');
+    inputRect.setAttribute('stroke', '#1976D2');
+    inputRect.setAttribute('stroke-width', '2');
+    inputRect.setAttribute('rx', '4');
+    inputGroup.appendChild(inputRect);
+
+    const inputText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    inputText.setAttribute('x', '90');
+    inputText.setAttribute('y', '85');
+    inputText.setAttribute('text-anchor', 'middle');
+    inputText.setAttribute('font-size', '12');
+    inputText.setAttribute('font-family', 'monospace');
+    inputText.textContent = '[1,2,3,4]';
+    inputGroup.appendChild(inputText);
+    svg.appendChild(inputGroup);
+
+    // Processing arrow
+    const arrow1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    arrow1.setAttribute('x1', '150');
+    arrow1.setAttribute('y1', '80');
+    arrow1.setAttribute('x2', '250');
+    arrow1.setAttribute('y2', '80');
+    arrow1.setAttribute('stroke', '#4CAF50');
+    arrow1.setAttribute('stroke-width', '2');
+    arrow1.setAttribute('marker-end', 'url(#arrowhead)');
+    svg.appendChild(arrow1);
+
+    // Processing box
+    const processGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    processGroup.setAttribute('class', 'process-group');
+
+    const processLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    processLabel.setAttribute('x', '300');
+    processLabel.setAttribute('y', '30');
+    processLabel.setAttribute('font-size', '14');
+    processLabel.setAttribute('font-weight', 'bold');
+    processLabel.textContent = 'Process';
+    processGroup.appendChild(processLabel);
+
+    const processRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    processRect.setAttribute('x', '250');
+    processRect.setAttribute('y', '50');
+    processRect.setAttribute('width', '120');
+    processRect.setAttribute('height', '60');
+    processRect.setAttribute('fill', '#FFF3E0');
+    processRect.setAttribute('stroke', '#F57C00');
+    processRect.setAttribute('stroke-width', '2');
+    processRect.setAttribute('rx', '4');
+    processGroup.appendChild(processRect);
+
+    const processText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    processText.setAttribute('x', '310');
+    processText.setAttribute('y', '85');
+    processText.setAttribute('text-anchor', 'middle');
+    processText.setAttribute('font-size', '12');
+    processText.setAttribute('font-family', 'monospace');
+    processText.textContent = 'Filter & Map';
+    processGroup.appendChild(processText);
+    svg.appendChild(processGroup);
+
+    // Output arrow
+    const arrow2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    arrow2.setAttribute('x1', '370');
+    arrow2.setAttribute('y1', '80');
+    arrow2.setAttribute('x2', '470');
+    arrow2.setAttribute('y2', '80');
+    arrow2.setAttribute('stroke', '#4CAF50');
+    arrow2.setAttribute('stroke-width', '2');
+    arrow2.setAttribute('marker-end', 'url(#arrowhead)');
+    svg.appendChild(arrow2);
+
+    // Output array
+    const outputGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    outputGroup.setAttribute('class', 'output-group');
+
+    const outputLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    outputLabel.setAttribute('x', '500');
+    outputLabel.setAttribute('y', '30');
+    outputLabel.setAttribute('font-size', '14');
+    outputLabel.setAttribute('font-weight', 'bold');
+    outputLabel.textContent = 'Output';
+    outputGroup.appendChild(outputLabel);
+
+    const outputRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    outputRect.setAttribute('x', '470');
+    outputRect.setAttribute('y', '50');
+    outputRect.setAttribute('width', '120');
+    outputRect.setAttribute('height', '60');
+    outputRect.setAttribute('fill', '#E8F5E9');
+    outputRect.setAttribute('stroke', '#388E3C');
+    outputRect.setAttribute('stroke-width', '2');
+    outputRect.setAttribute('rx', '4');
+    outputGroup.appendChild(outputRect);
+
+    const outputText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    outputText.setAttribute('x', '530');
+    outputText.setAttribute('y', '85');
+    outputText.setAttribute('text-anchor', 'middle');
+    outputText.setAttribute('font-size', '12');
+    outputText.setAttribute('font-family', 'monospace');
+    outputText.textContent = '[4,16]';
+    outputGroup.appendChild(outputText);
+    svg.appendChild(outputGroup);
+
+    // Add animation
+    const animateArrow1 = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+    animateArrow1.setAttribute('attributeName', 'stroke-dasharray');
+    animateArrow1.setAttribute('values', '0,100;100,0');
+    animateArrow1.setAttribute('dur', `${duration}ms`);
+    animateArrow1.setAttribute('repeatCount', 'indefinite');
+    arrow1.appendChild(animateArrow1);
+
+    const animateArrow2 = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+    animateArrow2.setAttribute('attributeName', 'stroke-dasharray');
+    animateArrow2.setAttribute('values', '0,100;100,0');
+    animateArrow2.setAttribute('dur', `${duration}ms`);
+    animateArrow2.setAttribute('begin', `${duration / 3}ms`);
+    animateArrow2.setAttribute('repeatCount', 'indefinite');
+    arrow2.appendChild(animateArrow2);
+  }
+
+  createStateMachineAnimation(svg, executionResults, duration) {
+    // Create a simple state machine animation
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+
+    // Define arrow marker
+    const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+    marker.setAttribute('id', 'arrowhead-state');
+    marker.setAttribute('markerWidth', '10');
+    marker.setAttribute('markerHeight', '10');
+    marker.setAttribute('refX', '9');
+    marker.setAttribute('refY', '3');
+    marker.setAttribute('orient', 'auto');
+    const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    polygon.setAttribute('points', '0 0, 10 3, 0 6');
+    polygon.setAttribute('fill', '#2196F3');
+    marker.appendChild(polygon);
+    defs.appendChild(marker);
+    svg.appendChild(defs);
+
+    // State 1
+    const state1 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    state1.setAttribute('cx', '100');
+    state1.setAttribute('cy', '200');
+    state1.setAttribute('r', '40');
+    state1.setAttribute('fill', '#E3F2FD');
+    state1.setAttribute('stroke', '#1976D2');
+    state1.setAttribute('stroke-width', '2');
+    svg.appendChild(state1);
+
+    const state1Text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    state1Text.setAttribute('x', '100');
+    state1Text.setAttribute('y', '205');
+    state1Text.setAttribute('text-anchor', 'middle');
+    state1Text.setAttribute('font-size', '14');
+    state1Text.setAttribute('font-weight', 'bold');
+    state1Text.textContent = 'S1';
+    svg.appendChild(state1Text);
+
+    // Transition arrow 1
+    const trans1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    trans1.setAttribute('x1', '140');
+    trans1.setAttribute('y1', '200');
+    trans1.setAttribute('x2', '260');
+    trans1.setAttribute('y2', '200');
+    trans1.setAttribute('stroke', '#2196F3');
+    trans1.setAttribute('stroke-width', '2');
+    trans1.setAttribute('marker-end', 'url(#arrowhead-state)');
+    svg.appendChild(trans1);
+
+    // State 2
+    const state2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    state2.setAttribute('cx', '300');
+    state2.setAttribute('cy', '200');
+    state2.setAttribute('r', '40');
+    state2.setAttribute('fill', '#FFF3E0');
+    state2.setAttribute('stroke', '#F57C00');
+    state2.setAttribute('stroke-width', '2');
+    svg.appendChild(state2);
+
+    const state2Text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    state2Text.setAttribute('x', '300');
+    state2Text.setAttribute('y', '205');
+    state2Text.setAttribute('text-anchor', 'middle');
+    state2Text.setAttribute('font-size', '14');
+    state2Text.setAttribute('font-weight', 'bold');
+    state2Text.textContent = 'S2';
+    svg.appendChild(state2Text);
+
+    // Transition arrow 2
+    const trans2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    trans2.setAttribute('x1', '340');
+    trans2.setAttribute('y1', '200');
+    trans2.setAttribute('x2', '460');
+    trans2.setAttribute('y2', '200');
+    trans2.setAttribute('stroke', '#2196F3');
+    trans2.setAttribute('stroke-width', '2');
+    trans2.setAttribute('marker-end', 'url(#arrowhead-state)');
+    svg.appendChild(trans2);
+
+    // State 3
+    const state3 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    state3.setAttribute('cx', '500');
+    state3.setAttribute('cy', '200');
+    state3.setAttribute('r', '40');
+    state3.setAttribute('fill', '#E8F5E9');
+    state3.setAttribute('stroke', '#388E3C');
+    state3.setAttribute('stroke-width', '2');
+    svg.appendChild(state3);
+
+    const state3Text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    state3Text.setAttribute('x', '500');
+    state3Text.setAttribute('y', '205');
+    state3Text.setAttribute('text-anchor', 'middle');
+    state3Text.setAttribute('font-size', '14');
+    state3Text.setAttribute('font-weight', 'bold');
+    state3Text.textContent = 'S3';
+    svg.appendChild(state3Text);
+
+    // Add animations
+    const animateTrans1 = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+    animateTrans1.setAttribute('attributeName', 'stroke-dasharray');
+    animateTrans1.setAttribute('values', '0,100;100,0');
+    animateTrans1.setAttribute('dur', `${duration}ms`);
+    animateTrans1.setAttribute('repeatCount', 'indefinite');
+    trans1.appendChild(animateTrans1);
+
+    const animateTrans2 = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+    animateTrans2.setAttribute('attributeName', 'stroke-dasharray');
+    animateTrans2.setAttribute('values', '0,100;100,0');
+    animateTrans2.setAttribute('dur', `${duration}ms`);
+    animateTrans2.setAttribute('begin', `${duration / 3}ms`);
+    animateTrans2.setAttribute('repeatCount', 'indefinite');
+    trans2.appendChild(animateTrans2);
+  }
+
+  createTreeAnimation(svg, executionResults, duration) {
+    // Create a simple tree animation
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+
+    // Define arrow marker
+    const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+    marker.setAttribute('id', 'arrowhead-tree');
+    marker.setAttribute('markerWidth', '10');
+    marker.setAttribute('markerHeight', '10');
+    marker.setAttribute('refX', '9');
+    marker.setAttribute('refY', '3');
+    marker.setAttribute('orient', 'auto');
+    const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    polygon.setAttribute('points', '0 0, 10 3, 0 6');
+    polygon.setAttribute('fill', '#9C27B0');
+    marker.appendChild(polygon);
+    defs.appendChild(marker);
+    svg.appendChild(defs);
+
+    // Root node
+    const root = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    root.setAttribute('cx', '400');
+    root.setAttribute('cy', '50');
+    root.setAttribute('r', '30');
+    root.setAttribute('fill', '#F3E5F5');
+    root.setAttribute('stroke', '#9C27B0');
+    root.setAttribute('stroke-width', '2');
+    svg.appendChild(root);
+
+    const rootText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    rootText.setAttribute('x', '400');
+    rootText.setAttribute('y', '55');
+    rootText.setAttribute('text-anchor', 'middle');
+    rootText.setAttribute('font-size', '12');
+    rootText.setAttribute('font-weight', 'bold');
+    rootText.textContent = 'Root';
+    svg.appendChild(rootText);
+
+    // Left child
+    const leftLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    leftLine.setAttribute('x1', '370');
+    leftLine.setAttribute('y1', '80');
+    leftLine.setAttribute('x2', '250');
+    leftLine.setAttribute('y2', '130');
+    leftLine.setAttribute('stroke', '#9C27B0');
+    leftLine.setAttribute('stroke-width', '2');
+    svg.appendChild(leftLine);
+
+    const leftChild = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    leftChild.setAttribute('cx', '250');
+    leftChild.setAttribute('cy', '160');
+    leftChild.setAttribute('r', '25');
+    leftChild.setAttribute('fill', '#E1BEE7');
+    leftChild.setAttribute('stroke', '#9C27B0');
+    leftChild.setAttribute('stroke-width', '2');
+    svg.appendChild(leftChild);
+
+    const leftText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    leftText.setAttribute('x', '250');
+    leftText.setAttribute('y', '165');
+    leftText.setAttribute('text-anchor', 'middle');
+    leftText.setAttribute('font-size', '11');
+    leftText.textContent = 'L';
+    svg.appendChild(leftText);
+
+    // Right child
+    const rightLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    rightLine.setAttribute('x1', '430');
+    rightLine.setAttribute('y1', '80');
+    rightLine.setAttribute('x2', '550');
+    rightLine.setAttribute('y2', '130');
+    rightLine.setAttribute('stroke', '#9C27B0');
+    rightLine.setAttribute('stroke-width', '2');
+    svg.appendChild(rightLine);
+
+    const rightChild = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    rightChild.setAttribute('cx', '550');
+    rightChild.setAttribute('cy', '160');
+    rightChild.setAttribute('r', '25');
+    rightChild.setAttribute('fill', '#E1BEE7');
+    rightChild.setAttribute('stroke', '#9C27B0');
+    rightChild.setAttribute('stroke-width', '2');
+    svg.appendChild(rightChild);
+
+    const rightText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    rightText.setAttribute('x', '550');
+    rightText.setAttribute('y', '165');
+    rightText.setAttribute('text-anchor', 'middle');
+    rightText.setAttribute('font-size', '11');
+    rightText.textContent = 'R';
+    svg.appendChild(rightText);
+
+    // Add animations
+    const animateLeftLine = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+    animateLeftLine.setAttribute('attributeName', 'stroke-dasharray');
+    animateLeftLine.setAttribute('values', '0,100;100,0');
+    animateLeftLine.setAttribute('dur', `${duration}ms`);
+    animateLeftLine.setAttribute('repeatCount', 'indefinite');
+    leftLine.appendChild(animateLeftLine);
+
+    const animateRightLine = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+    animateRightLine.setAttribute('attributeName', 'stroke-dasharray');
+    animateRightLine.setAttribute('values', '0,100;100,0');
+    animateRightLine.setAttribute('dur', `${duration}ms`);
+    animateRightLine.setAttribute('begin', `${duration / 2}ms`);
+    animateRightLine.setAttribute('repeatCount', 'indefinite');
+    rightLine.appendChild(animateRightLine);
+  }
+
+  createControls(container, duration, autoPlay) {
+    const controlsDiv = document.createElement('div');
+    controlsDiv.className = 'animation-controls';
+    controlsDiv.style.cssText = 'display: flex; gap: 10px; padding: 10px; background: #f0f0f0; border-top: 1px solid #ddd; align-items: center;';
+
+    // Play/Pause button
+    const playPauseBtn = document.createElement('button');
+    playPauseBtn.textContent = autoPlay ? '⏸ Pause' : '▶ Play';
+    playPauseBtn.style.cssText = 'padding: 6px 12px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;';
+    playPauseBtn.onclick = () => this.togglePlayPause(container, playPauseBtn);
+    controlsDiv.appendChild(playPauseBtn);
+
+    // Speed control
+    const speedLabel = document.createElement('label');
+    speedLabel.textContent = 'Speed: ';
+    speedLabel.style.cssText = 'font-size: 12px; margin-left: 10px;';
+    controlsDiv.appendChild(speedLabel);
+
+    const speedSelect = document.createElement('select');
+    speedSelect.style.cssText = 'padding: 4px 8px; font-size: 12px; border-radius: 4px; border: 1px solid #ccc;';
+    speedSelect.innerHTML = '<option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="1.5">1.5x</option><option value="2">2x</option>';
+    speedSelect.onchange = (e) => this.changeSpeed(container, parseFloat(e.target.value));
+    controlsDiv.appendChild(speedSelect);
+
+    // Step button
+    const stepBtn = document.createElement('button');
+    stepBtn.textContent = '⏭ Step';
+    stepBtn.style.cssText = 'padding: 6px 12px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-left: 10px;';
+    stepBtn.onclick = () => this.stepAnimation(container);
+    controlsDiv.appendChild(stepBtn);
+
+    // Reset button
+    const resetBtn = document.createElement('button');
+    resetBtn.textContent = '↻ Reset';
+    resetBtn.style.cssText = 'padding: 6px 12px; background: #FF9800; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-left: 10px;';
+    resetBtn.onclick = () => this.resetAnimation(container);
+    controlsDiv.appendChild(resetBtn);
+
+    // Progress indicator
+    const progressDiv = document.createElement('div');
+    progressDiv.className = 'animation-progress';
+    progressDiv.style.cssText = 'margin-left: auto; font-size: 12px; color: #666;';
+    progressDiv.textContent = '0%';
+    controlsDiv.appendChild(progressDiv);
+
+    container.playPauseBtn = playPauseBtn;
+    container.progressDiv = progressDiv;
+
+    return controlsDiv;
+  }
+
+  togglePlayPause(container, button) {
+    this.isPlaying = !this.isPlaying;
+    button.textContent = this.isPlaying ? '⏸ Pause' : '▶ Play';
+
+    if (this.isPlaying) {
+      this.playAnimation(container);
+    } else {
+      this.pauseAnimation(container);
+    }
+  }
+
+  playAnimation(container) {
+    this.isPlaying = true;
+    if (container.playPauseBtn) {
+      container.playPauseBtn.textContent = '⏸ Pause';
+    }
+
+    // Resume SVG animations
+    const svgs = container.querySelectorAll('svg');
+    svgs.forEach(svg => {
+      const animates = svg.querySelectorAll('animate');
+      animates.forEach(animate => {
+        if (animate.pauseAnimation) {
+          animate.pauseAnimation();
+        }
+      });
+    });
+  }
+
+  pauseAnimation(container) {
+    this.isPlaying = false;
+    if (container.playPauseBtn) {
+      container.playPauseBtn.textContent = '▶ Play';
+    }
+
+    // Pause SVG animations
+    const svgs = container.querySelectorAll('svg');
+    svgs.forEach(svg => {
+      const animates = svg.querySelectorAll('animate');
+      animates.forEach(animate => {
+        if (animate.pauseAnimation) {
+          animate.pauseAnimation();
+        }
+      });
+    });
+  }
+
+  changeSpeed(container, speed) {
+    this.speed = speed;
+    const svgs = container.querySelectorAll('svg');
+    svgs.forEach(svg => {
+      const animates = svg.querySelectorAll('animate');
+      animates.forEach(animate => {
+        const originalDur = animate.getAttribute('dur');
+        if (originalDur) {
+          const baseDuration = parseInt(originalDur);
+          const newDuration = baseDuration / speed;
+          animate.setAttribute('dur', `${newDuration}ms`);
+        }
+      });
+    });
+  }
+
+  stepAnimation(container) {
+    // Step through animation frame by frame
+    this.currentStep++;
+    if (container.progressDiv) {
+      const progress = Math.min((this.currentStep * 10) % 100, 100);
+      container.progressDiv.textContent = `${progress}%`;
+    }
+  }
+
+  resetAnimation(container) {
+    this.currentStep = 0;
+    this.isPlaying = false;
+    if (container.playPauseBtn) {
+      container.playPauseBtn.textContent = '▶ Play';
+    }
+    if (container.progressDiv) {
+      container.progressDiv.textContent = '0%';
+    }
+
+    // Reset SVG animations
+    const svgs = container.querySelectorAll('svg');
+    svgs.forEach(svg => {
+      const animates = svg.querySelectorAll('animate');
+      animates.forEach(animate => {
+        animate.beginElement();
+      });
+    });
+  }
+
+  destroy() {
+    // Clean up animation resources
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+    }
+  }
+}
+
+/**
  * Visualization Manager
  * Orchestrates rendering of visualizations based on configuration
  */
@@ -1381,8 +1977,8 @@ class VisualizationManager {
     this.renderers = {
       'cli': new CLIRenderer(),
       'web': new WebUIRenderer(),
+      'animation': new AnimationRenderer(),
       // Future renderers will be added here:
-      // 'animation': new AnimationRenderer(),
       // 'agentic': new AgenticRenderer()
     };
     this.activeVisualizations = [];
