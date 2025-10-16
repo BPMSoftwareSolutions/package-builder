@@ -284,6 +284,49 @@ class TestExpectedResults:
         # Expected should show [4, 16] for input [1, 2, 3, 4]
         assert [4, 16] in func_info['expected_results']
 
+    def test_capture_expected_results_with_variable_assignment(self, client):
+        """Test extraction of expected results from variable assignments (like FizzBuzz)"""
+        # Intentionally wrong FizzBuzz implementation
+        user_code = '''def fizzbuzz(n):
+    result = []
+    for i in range(1, n+1):
+        if i % 7 == 0:  # Wrong: should be 15 for FizzBuzz
+            result.append("FizzBuzz")
+        elif i % 5 == 0:
+            result.append("Buzz")
+        elif i % 3 == 0:
+            result.append("Fizz")
+        else:
+            result.append(str(i))
+    return result'''
+
+        payload = {
+            'moduleId': 'python_basics',
+            'workshopId': 'basics_02',
+            'approachId': 'if_elif',
+            'code': user_code
+        }
+        response = client.post('/api/grade',
+                              data=json.dumps(payload),
+                              content_type='application/json')
+        data = response.get_json()
+
+        assert response.status_code == 200
+        # Score should be 60 (incorrect implementation)
+        assert data['score'] == 60
+
+        # Execution results should include expected results
+        assert 'execution_results' in data
+        func_info = data['execution_results']['functions'].get('fizzbuzz', {})
+
+        # Should have expected_results extracted from variable assignment
+        assert 'expected_results' in func_info, "Should capture expected results from variable assignment"
+        assert isinstance(func_info['expected_results'], list)
+        assert len(func_info['expected_results']) > 0
+        # Expected should contain the full FizzBuzz sequence
+        expected_fizzbuzz = ['1','2','Fizz','4','Buzz','Fizz','7','8','Fizz','Buzz','11','Fizz','13','14','FizzBuzz']
+        assert expected_fizzbuzz in func_info['expected_results']
+
 
 class TestVisualizationUserCode:
     """Test that user code is included in visualization data"""

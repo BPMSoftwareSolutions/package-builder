@@ -98,7 +98,9 @@ def validate_source(code: str):
 def extract_expected_results(tests_code: str):
     """
     Extract expected test results from test code.
-    Looks for patterns like: if result != [4, 16]:
+    Looks for patterns like:
+    - if result != [4, 16]:
+    - expected = [...]; if result != expected:
 
     Args:
         tests_code: Test harness code
@@ -109,8 +111,27 @@ def extract_expected_results(tests_code: str):
     import re
     expected = {}
 
-    # Look for patterns like: if result != [4, 16]:
-    # or: if result2 != []:
+    # Extract function name from pattern: if 'funcname' not in ns:
+    func_pattern = r"if\s+'(\w+)'\s+not\s+in\s+ns"
+    func_matches = re.findall(func_pattern, tests_code)
+    func_name = func_matches[0] if func_matches else 'unknown'
+
+    # First, try to find variable assignments like: expected=['1','2','Fizz',...]
+    var_pattern = r'expected\s*=\s*(\[.*?\])'
+    var_matches = re.findall(var_pattern, tests_code)
+
+    for match in var_matches:
+        try:
+            # Safely evaluate the list literal
+            expected_value = eval(match)
+            if isinstance(expected_value, list):
+                if func_name not in expected:
+                    expected[func_name] = []
+                expected[func_name].append(expected_value)
+        except:
+            pass
+
+    # Also look for direct patterns like: if result != [4, 16]:
     pattern = r'if\s+result\d*\s*!=\s*(\[.*?\])'
     matches = re.findall(pattern, tests_code)
 
@@ -119,9 +140,9 @@ def extract_expected_results(tests_code: str):
             # Safely evaluate the list literal
             expected_value = eval(match)
             if isinstance(expected_value, list):
-                if 'even_squares' not in expected:
-                    expected['even_squares'] = []
-                expected['even_squares'].append(expected_value)
+                if func_name not in expected:
+                    expected[func_name] = []
+                expected[func_name].append(expected_value)
         except:
             pass
 
