@@ -40,9 +40,21 @@ Then open your browser to `http://localhost:3000`
 
 **Features:**
 - 📊 Organization Repository Status - View all repos with issues, PRs, and workflow status
+  - Sortable columns (by name, issues, PRs, stale, last updated)
+  - Filter by repository status (all, with issues, with PRs, with stale PRs)
+  - Auto-refresh capability (30-second interval)
 - 🐛 Issues & PRs - Browse and filter issues and pull requests
+  - Search by title
+  - Filter by state (open, closed, all)
+  - Auto-refresh capability
+  - Separate counts for issues and pull requests
 - 📦 Local Packages - View package build and pack readiness status
+  - Filter by readiness (all, ready, not ready, private, public)
+  - Configurable base path
+  - Auto-refresh capability
+  - Summary statistics
 - 🔍 Search & Filter - Find repositories and issues quickly
+- 🔄 Auto-Refresh - Optional automatic data refresh on all pages (30-second interval)
 - 📱 Responsive Design - Works on desktop and mobile devices
 
 ### CLI Usage
