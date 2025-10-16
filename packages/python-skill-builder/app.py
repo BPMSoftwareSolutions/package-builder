@@ -159,7 +159,7 @@ def run_user_and_tests(user_code: str, tests_code: str):
     max_score = int(result.get("max_score", 100))
 
     # Capture execution results for visualizations
-    execution_results = capture_execution_results(user_ns)
+    execution_results = capture_execution_results(user_ns, user_code)
 
     return {
         "score": score,
@@ -169,20 +169,22 @@ def run_user_and_tests(user_code: str, tests_code: str):
     }
 
 
-def capture_execution_results(user_ns):
+def capture_execution_results(user_ns, user_code=""):
     """
     Capture execution results from user namespace for visualization.
 
     Args:
         user_ns: User namespace after code execution
+        user_code: The user's submitted code (for visualization)
 
     Returns:
-        dict with captured execution data (functions, classes, variables)
+        dict with captured execution data (functions, classes, variables, user_code)
     """
     results = {
         "functions": {},
         "classes": {},
-        "variables": {}
+        "variables": {},
+        "user_code": user_code
     }
 
     # Capture user-defined functions

@@ -190,6 +190,31 @@ class TestVisualizationSchema:
             assert not path.startswith('execution.') or 'execution.' in path
 
 
+class TestVisualizationUserCode:
+    """Test that user code is included in visualization data"""
+
+    def test_web_visualization_includes_user_code(self, client):
+        """Web visualization should include the user's submitted code"""
+        user_code = 'def fizzbuzz(n):\n    result = []\n    for i in range(1, n + 1):\n        if i % 15 == 0:\n            result.append("FizzBuzz")\n        elif i % 3 == 0:\n            result.append("Fizz")\n        elif i % 5 == 0:\n            result.append("Buzz")\n        else:\n            result.append(str(i))\n    return result'
+
+        payload = {
+            'moduleId': 'python_basics',
+            'workshopId': 'basics_02',
+            'approachId': 'if_elif',
+            'code': user_code
+        }
+        response = client.post('/api/grade',
+                              data=json.dumps(payload),
+                              content_type='application/json')
+        data = response.get_json()
+
+        assert response.status_code == 200
+        assert 'execution_results' in data
+        # User code should be included in execution_results for visualization
+        assert 'user_code' in data['execution_results'], "execution_results should include user_code for web visualization"
+        assert data['execution_results']['user_code'] == user_code
+
+
 class TestBackwardCompatibility:
     """Test that existing functionality still works"""
     
