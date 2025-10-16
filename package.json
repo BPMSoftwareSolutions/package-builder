@@ -6,9 +6,9 @@
   "private": true,
   "workspaces": [],
   "scripts": {
-    "test": "npm test --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present",
+  "test": "echo 'No unit tests at root (packages are externalized)'",
+  "build": "echo 'No build at root (packages are externalized)'",
+  "lint": "echo 'No lint at root (packages are externalized)'",
   "e2e": "echo 'No e2e tests for this repository (packages are externalized)'",
     "scaffold": "tsx scripts/pb-scaffold.ts",
     "move": "tsx scripts/pb-move.ts",
