@@ -28,6 +28,16 @@
               }
             ]
           }
+        },
+        {
+          "id": "even_squares_data_flow_animation",
+          "type": "animation",
+          "enabled": true,
+          "config": {
+            "animationType": "data-flow",
+            "duration": 2000,
+            "autoPlay": true
+          }
         }
       ],
       "approaches": [
@@ -93,6 +103,16 @@
                 "title": "Execution Results"
               }
             ]
+          }
+        },
+        {
+          "id": "fizzbuzz_state_machine_animation",
+          "type": "animation",
+          "enabled": true,
+          "config": {
+            "animationType": "state-machine",
+            "duration": 2500,
+            "autoPlay": true
           }
         }
       ],

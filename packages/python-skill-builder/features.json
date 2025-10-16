@@ -1,10 +1,10 @@
 {
   "metadata": {
     "package": "python-skill-builder",
-    "version": "1.1.0",
-    "lastUpdated": "2025-10-15",
+    "version": "1.2.0",
+    "lastUpdated": "2025-10-16",
     "purpose": "Feature inventory for test suite generation and regression prevention",
-    "relatedIssues": ["#24", "#26", "#31", "#33", "#34"]
+    "relatedIssues": ["#24", "#26", "#31", "#33", "#34", "#36", "#38"]
   },
   "features": {
     "backend": {
@@ -315,6 +315,21 @@
               "Code display with fallback to pre element",
               "Table, list, and key-value result displays",
               "Responsive layout on desktop and mobile",
+              "Resource cleanup on destroy"
+            ]
+          },
+          {
+            "name": "Animation renderer",
+            "testCases": [
+              "AnimationRenderer instantiation and rendering",
+              "Data-flow animation visualization",
+              "State-machine animation visualization",
+              "Tree animation visualization",
+              "Animation controls (play, pause, speed, step, reset)",
+              "Auto-play functionality",
+              "Speed adjustment (0.5x, 1x, 1.5x, 2x)",
+              "Step-through debugging support",
+              "Progress indicator display",
               "Resource cleanup on destroy"
             ]
           }
