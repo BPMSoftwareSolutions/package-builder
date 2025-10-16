@@ -264,3 +264,452 @@ describe('Error Handling', () => {
   });
 });
 
+// Test: WebUIRenderer
+describe('WebUIRenderer', () => {
+  let renderer;
+  let mockExecutionResults;
+
+  beforeEach(() => {
+    mockDOM();
+    renderer = new WebUIRenderer();
+    mockExecutionResults = {
+      user_code: 'class Counter:\n    total = 0',
+      classes: {
+        Counter: {
+          name: 'Counter',
+          methods: ['from_list', 'is_positive']
+        }
+      },
+      functions: {
+        helper: { name: 'helper', type: 'function' }
+      },
+      variables: {
+        x: { name: 'x', type: 'int', value: '42' }
+      }
+    };
+  });
+
+  test('WebUIRenderer instantiation', () => {
+    // This test covers: Web Visualization - WebUIRenderer instantiation
+    expect(renderer).toBeTruthy();
+    expect(renderer instanceof BaseRenderer).toBe(true);
+  });
+
+  test('renders split-horizontal layout', () => {
+    // This test covers: Web Visualization - Split-panel layout creation
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'code', type: 'code', title: 'Code' },
+          { id: 'results', type: 'results', title: 'Results' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    expect(element).toBeTruthy();
+    expect(element.classList.contains('web-visualization')).toBe(true);
+    expect(element.classList.contains('split-horizontal')).toBe(true);
+  });
+
+  test('renders split-vertical layout', () => {
+    // This test covers: Web Visualization - Split-panel layout creation
+    const config = {
+      config: {
+        layout: 'split-vertical',
+        panels: [
+          { id: 'code', type: 'code', title: 'Code' },
+          { id: 'results', type: 'results', title: 'Results' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    expect(element.classList.contains('split-vertical')).toBe(true);
+  });
+
+  test('renders tabbed layout', () => {
+    // This test covers: Web Visualization - Tabbed layout
+    const config = {
+      config: {
+        layout: 'tabbed',
+        panels: [
+          { id: 'code', type: 'code', title: 'Code' },
+          { id: 'results', type: 'results', title: 'Results' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    expect(element.classList.contains('tabbed-layout')).toBe(true);
+    const tabButtons = element.querySelectorAll('.tab-button');
+    expect(tabButtons.length).toBe(2);
+  });
+
+  test('creates code panel with user code', () => {
+    // This test covers: Web Visualization - Code display
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'code', type: 'code', title: 'Your Code' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const codeDisplay = element.querySelector('.code-display');
+    expect(codeDisplay).toBeTruthy();
+    expect(codeDisplay.textContent).toContain('class Counter');
+  });
+
+  test('creates results panel with default display', () => {
+    // This test covers: Web Visualization - Results panel content generation
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'results', type: 'results', title: 'Results' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const resultsDisplay = element.querySelector('.results-display');
+    expect(resultsDisplay).toBeTruthy();
+  });
+
+  test('creates results panel with configured sections', () => {
+    // This test covers: Web Visualization - Results panel with sections
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          {
+            id: 'results',
+            type: 'results',
+            title: 'Results',
+            sections: [
+              {
+                title: 'Classes',
+                type: 'list',
+                data: 'execution.classes'
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const sections = element.querySelectorAll('.results-section');
+    expect(sections.length).toBeGreaterThan(0);
+  });
+
+  test('resolves execution result paths correctly', () => {
+    // This test covers: Web Visualization - Config validation for web visualizations
+    const path = 'execution.classes.Counter.name';
+    const result = renderer.resolvePath(path, mockExecutionResults);
+    expect(result).toBe('Counter');
+  });
+
+  test('returns null for invalid paths', () => {
+    // This test covers: Web Visualization - Config validation
+    const path = 'execution.invalid.path.here';
+    const result = renderer.resolvePath(path, mockExecutionResults);
+    expect(result).toBeNull();
+  });
+
+  test('resolves execution.functions path correctly', () => {
+    // This test covers: Web Visualization - Path resolution for functions
+    const path = 'execution.functions';
+    const result = renderer.resolvePath(path, mockExecutionResults);
+    expect(result).toBeTruthy();
+    expect(result).toEqual(mockExecutionResults.functions);
+  });
+
+  test('resolves execution.variables path correctly', () => {
+    // This test covers: Web Visualization - Path resolution for variables
+    const path = 'execution.variables';
+    const result = renderer.resolvePath(path, mockExecutionResults);
+    expect(result).toBeTruthy();
+    expect(result).toEqual(mockExecutionResults.variables);
+  });
+
+  test('displays functions in results panel when data path resolves', () => {
+    // This test covers: Web Visualization - Results panel data display
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          {
+            id: 'results',
+            type: 'results',
+            title: 'Results',
+            sections: [
+              {
+                title: 'Functions Defined',
+                type: 'list',
+                data: 'execution.functions'
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const resultsSection = element.querySelector('.results-section');
+    expect(resultsSection).toBeTruthy();
+    // Should contain the function name
+    expect(element.textContent).toContain('helper');
+  });
+
+  test('creates table display for array data', () => {
+    // This test covers: Web Visualization - Results panel content generation
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          {
+            id: 'results',
+            type: 'results',
+            sections: [
+              {
+                title: 'Data',
+                type: 'table',
+                data: 'execution.classes'
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const table = element.querySelector('.results-table');
+    expect(table).toBeTruthy();
+  });
+
+  test('creates key-value display for object data', () => {
+    // This test covers: Web Visualization - Results panel content generation
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          {
+            id: 'results',
+            type: 'results',
+            sections: [
+              {
+                title: 'Variables',
+                type: 'key-value',
+                data: 'execution.variables'
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const kvList = element.querySelector('.key-value-list');
+    expect(kvList).toBeTruthy();
+  });
+
+  test('panel has title when provided', () => {
+    // This test covers: Web Visualization - Split-panel layout creation
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'code', type: 'code', title: 'Your Solution' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const title = element.querySelector('.panel-title');
+    expect(title).toBeTruthy();
+    expect(title.textContent).toBe('Your Solution');
+  });
+
+  test('destroy method cleans up resources', () => {
+    // This test covers: Web Visualization - Resource cleanup
+    renderer.monacoEditor = { dispose: jest.fn() };
+    renderer.destroy();
+    expect(renderer.monacoEditor).toBeNull();
+  });
+
+  test('creates dashboard panel with cards', () => {
+    // This test covers: Web Visualization - Dashboard visualization
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'dashboard', type: 'dashboard', title: 'Results Dashboard' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const dashboard = element.querySelector('.dashboard-container');
+    expect(dashboard).toBeTruthy();
+    expect(dashboard.querySelector('.dashboard-header')).toBeTruthy();
+  });
+
+  test('dashboard displays function cards', () => {
+    // This test covers: Web Visualization - Dashboard function cards
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'dashboard', type: 'dashboard', title: 'Results Dashboard' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const functionCard = element.querySelector('.dashboard-card-function');
+    expect(functionCard).toBeTruthy();
+    expect(element.textContent).toContain('helper');
+  });
+
+  test('dashboard displays class cards', () => {
+    // This test covers: Web Visualization - Dashboard class cards
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'dashboard', type: 'dashboard', title: 'Results Dashboard' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const classCard = element.querySelector('.dashboard-card-class');
+    expect(classCard).toBeTruthy();
+    expect(element.textContent).toContain('Counter');
+  });
+
+  test('dashboard displays variable cards', () => {
+    // This test covers: Web Visualization - Dashboard variable cards
+    const config = {
+      config: {
+        layout: 'split-horizontal',
+        panels: [
+          { id: 'dashboard', type: 'dashboard', title: 'Results Dashboard' }
+        ]
+      }
+    };
+
+    const element = renderer.render(config, mockExecutionResults);
+    const variableCard = element.querySelector('.dashboard-card-variable');
+    expect(variableCard).toBeTruthy();
+    expect(element.textContent).toContain('x');
+  });
+});
+
+// Test: Visualization Manager
+describe('Visualization Manager', () => {
+  let manager;
+
+  beforeEach(() => {
+    mockDOM();
+    manager = new VisualizationManager();
+  });
+
+  test('VisualizationManager instantiation', () => {
+    // This test covers: Visualization manager
+    expect(manager).toBeTruthy();
+    expect(manager.renderers).toBeTruthy();
+  });
+
+  test('supports web renderer type', () => {
+    // This test covers: Visualization manager - Supports multiple renderer types
+    expect(manager.renderers['web']).toBeTruthy();
+    expect(manager.renderers['web'] instanceof WebUIRenderer).toBe(true);
+  });
+
+  test('renders all enabled visualizations', () => {
+    // This test covers: Visualization manager - Renders all enabled visualizations
+    const container = document.createElement('div');
+    const visualizations = [
+      {
+        id: 'web_viz',
+        type: 'web',
+        enabled: true,
+        config: {
+          layout: 'split-horizontal',
+          panels: [
+            { id: 'code', type: 'code', title: 'Code' }
+          ]
+        }
+      }
+    ];
+    const executionResults = { user_code: 'print("hello")' };
+
+    manager.renderAll(visualizations, executionResults, container);
+    expect(container.children.length).toBeGreaterThan(0);
+  });
+
+  test('skips disabled visualizations', () => {
+    // This test covers: Visualization manager - Renders all enabled visualizations
+    const container = document.createElement('div');
+    const visualizations = [
+      {
+        id: 'web_viz',
+        type: 'web',
+        enabled: false,
+        config: { layout: 'split-horizontal', panels: [] }
+      }
+    ];
+    const executionResults = {};
+
+    manager.renderAll(visualizations, executionResults, container);
+    expect(container.children.length).toBe(0);
+  });
+
+  test('clears previous visualizations', () => {
+    // This test covers: Visualization manager - Clears previous visualizations
+    const container = document.createElement('div');
+    const visualizations = [
+      {
+        id: 'web_viz',
+        type: 'web',
+        enabled: true,
+        config: {
+          layout: 'split-horizontal',
+          panels: [{ id: 'code', type: 'code', title: 'Code' }]
+        }
+      }
+    ];
+    const executionResults = { user_code: 'print("hello")' };
+
+    manager.renderAll(visualizations, executionResults, container);
+    const firstChildCount = container.children.length;
+
+    manager.renderAll(visualizations, executionResults, container);
+    expect(container.children.length).toBe(firstChildCount);
+  });
+
+  test('handles missing renderer types gracefully', () => {
+    // This test covers: Visualization manager - Handles missing renderer types gracefully
+    const container = document.createElement('div');
+    const visualizations = [
+      {
+        id: 'unknown_viz',
+        type: 'unknown',
+        enabled: true,
+        config: {}
+      }
+    ];
+    const executionResults = {};
+
+    expect(() => {
+      manager.renderAll(visualizations, executionResults, container);
+    }).not.toThrow();
+  });
+});
+

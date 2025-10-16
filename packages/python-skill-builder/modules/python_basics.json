@@ -8,6 +8,28 @@
       "title": "Even Squares",
       "timeLimitMinutes": 7,
       "prompt": "Write a function even_squares(nums) -> list that returns the squares of even numbers from nums, preserving order. Example: [1,2,3,4] -> [4,16]",
+      "visualizations": [
+        {
+          "id": "even_squares_web_dashboard",
+          "type": "web",
+          "enabled": true,
+          "config": {
+            "layout": "split-horizontal",
+            "panels": [
+              {
+                "id": "code_panel",
+                "type": "code",
+                "title": "Your Solution"
+              },
+              {
+                "id": "dashboard_panel",
+                "type": "dashboard",
+                "title": "Execution Results"
+              }
+            ]
+          }
+        }
+      ],
       "approaches": [
         {
           "id": "comprehension",
@@ -52,6 +74,28 @@
       "title": "FizzBuzz",
       "timeLimitMinutes": 10,
       "prompt": "Write a function fizzbuzz(n) that returns a list of strings for numbers 1 to n. For multiples of 3, use 'Fizz'. For multiples of 5, use 'Buzz'. For multiples of both, use 'FizzBuzz'. Otherwise, use the number as a string.",
+      "visualizations": [
+        {
+          "id": "fizzbuzz_web_dashboard",
+          "type": "web",
+          "enabled": true,
+          "config": {
+            "layout": "split-horizontal",
+            "panels": [
+              {
+                "id": "code_panel",
+                "type": "code",
+                "title": "Your Solution"
+              },
+              {
+                "id": "dashboard_panel",
+                "type": "dashboard",
+                "title": "Execution Results"
+              }
+            ]
+          }
+        }
+      ],
       "approaches": [
         {
           "id": "if_elif",

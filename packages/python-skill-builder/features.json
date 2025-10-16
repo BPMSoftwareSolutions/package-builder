@@ -303,6 +303,20 @@
               "Handles missing execution result paths",
               "Styled with monospace font and dark theme"
             ]
+          },
+          {
+            "name": "Web UI renderer",
+            "testCases": [
+              "WebUIRenderer instantiation and rendering",
+              "Split-panel layout creation (horizontal, vertical, tabbed)",
+              "Monaco editor initialization with Python syntax highlighting",
+              "Results panel content generation with dynamic sections",
+              "Config validation for web visualizations",
+              "Code display with fallback to pre element",
+              "Table, list, and key-value result displays",
+              "Responsive layout on desktop and mobile",
+              "Resource cleanup on destroy"
+            ]
           }
         ]
       },

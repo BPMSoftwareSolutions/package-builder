@@ -8,6 +8,40 @@
       "title": "Dict Comp (word lengths)",
       "timeLimitMinutes": 7,
       "prompt": "Implement word_lengths(words) that returns {word:len(word)} for words list.",
+      "visualizations": [
+        {
+          "id": "word_lengths_web_dashboard",
+          "type": "web",
+          "enabled": true,
+          "config": {
+            "layout": "split-horizontal",
+            "panels": [
+              {
+                "id": "code_panel",
+                "type": "code",
+                "title": "Your Solution"
+              },
+              {
+                "id": "results_panel",
+                "type": "results",
+                "title": "Execution Results",
+                "sections": [
+                  {
+                    "title": "Functions Defined",
+                    "type": "list",
+                    "data": "execution.functions"
+                  },
+                  {
+                    "title": "Variables",
+                    "type": "key-value",
+                    "data": "execution.variables"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "approaches": [
         {
           "id": "traditional",
@@ -39,6 +73,40 @@
       "title": "Generator (even stream)",
       "timeLimitMinutes": 8,
       "prompt": "Implement gen_evens(n) that yields even numbers from 0..n inclusive.",
+      "visualizations": [
+        {
+          "id": "gen_evens_web_dashboard",
+          "type": "web",
+          "enabled": true,
+          "config": {
+            "layout": "split-horizontal",
+            "panels": [
+              {
+                "id": "code_panel",
+                "type": "code",
+                "title": "Your Solution"
+              },
+              {
+                "id": "results_panel",
+                "type": "results",
+                "title": "Execution Results",
+                "sections": [
+                  {
+                    "title": "Functions Defined",
+                    "type": "list",
+                    "data": "execution.functions"
+                  },
+                  {
+                    "title": "Variables",
+                    "type": "key-value",
+                    "data": "execution.variables"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "approaches": [
         {
           "id": "traditional",

@@ -44,13 +44,45 @@
         {
           "id": "counter_cli_dashboard",
           "type": "cli",
-          "enabled": true,
+          "enabled": false,
           "config": {
             "template": "╔═══════════════════════════════════════╗\n║   🧮  Counter Class Visualization    ║\n╠═══════════════════════════════════════╣\n║  Class Defined: {class_name}          ║\n║  Methods Found: {methods}             ║\n╚═══════════════════════════════════════╝",
             "placeholders": {
               "class_name": "execution.classes.Counter.name",
               "methods": "execution.classes.Counter.methods"
             }
+          }
+        },
+        {
+          "id": "counter_web_dashboard",
+          "type": "web",
+          "enabled": true,
+          "config": {
+            "layout": "split-horizontal",
+            "panels": [
+              {
+                "id": "code_panel",
+                "type": "code",
+                "title": "Your Solution"
+              },
+              {
+                "id": "results_panel",
+                "type": "results",
+                "title": "Execution Results",
+                "sections": [
+                  {
+                    "title": "Classes Defined",
+                    "type": "list",
+                    "data": "execution.classes"
+                  },
+                  {
+                    "title": "Class Methods",
+                    "type": "key-value",
+                    "data": "execution.classes.Counter"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],

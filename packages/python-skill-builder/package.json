@@ -38,6 +38,9 @@
     "type": "git",
     "url": "https://github.com/BPMSoftwareSolutions/package-builder.git",
     "directory": "packages/python-skill-builder"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "monaco-editor": "^0.54.0"
   }
 }
-
