@@ -1030,13 +1030,67 @@ class WebUIRenderer extends BaseRenderer {
           li.innerHTML = `<span class="dashboard-badge">✓</span> ${item}`;
         } else if (typeof item === 'object' && item !== null) {
           // Object with name and return_value (for functions)
-          let content = `<span class="dashboard-badge">✓</span> ${item.name}`;
+          let badge = '✓';
+          let badgeClass = 'dashboard-badge';
+
+          // Check if there are expected results that don't match
+          if (item.expected_results && item.return_value !== undefined) {
+            const actualStr = Array.isArray(item.return_value)
+              ? JSON.stringify(item.return_value)
+              : String(item.return_value);
+
+            // Check if actual matches any expected result
+            let matches = false;
+            for (const expected of item.expected_results) {
+              const expectedStr = Array.isArray(expected)
+                ? JSON.stringify(expected)
+                : String(expected);
+              if (actualStr === expectedStr) {
+                matches = true;
+                break;
+              }
+            }
+
+            if (!matches) {
+              badge = '✗';
+              badgeClass = 'dashboard-badge dashboard-badge-error';
+            }
+          }
+
+          let content = `<span class="${badgeClass}">${badge}</span> ${item.name}`;
           if (item.return_value !== undefined && item.return_value !== null) {
             const returnValueStr = Array.isArray(item.return_value)
               ? `[${item.return_value.join(', ')}]`
               : String(item.return_value);
             content += `<span class="dashboard-return-value"> → ${returnValueStr}</span>`;
           }
+
+          // Show expected results if there's a mismatch
+          if (item.expected_results && item.return_value !== undefined) {
+            const actualStr = Array.isArray(item.return_value)
+              ? JSON.stringify(item.return_value)
+              : String(item.return_value);
+
+            let matches = false;
+            for (const expected of item.expected_results) {
+              const expectedStr = Array.isArray(expected)
+                ? JSON.stringify(expected)
+                : String(expected);
+              if (actualStr === expectedStr) {
+                matches = true;
+                break;
+              }
+            }
+
+            if (!matches) {
+              // Show expected results
+              const expectedStr = item.expected_results.map(e =>
+                Array.isArray(e) ? `[${e.join(', ')}]` : String(e)
+              ).join(' or ');
+              content += `<span class="dashboard-expected-value"> (expected: ${expectedStr})</span>`;
+            }
+          }
+
           li.innerHTML = content;
         }
 

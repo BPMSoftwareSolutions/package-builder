@@ -95,6 +95,39 @@ def validate_source(code: str):
 
     return tree
 
+def extract_expected_results(tests_code: str):
+    """
+    Extract expected test results from test code.
+    Looks for patterns like: if result != [4, 16]:
+
+    Args:
+        tests_code: Test harness code
+
+    Returns:
+        dict mapping function names to lists of expected results
+    """
+    import re
+    expected = {}
+
+    # Look for patterns like: if result != [4, 16]:
+    # or: if result2 != []:
+    pattern = r'if\s+result\d*\s*!=\s*(\[.*?\])'
+    matches = re.findall(pattern, tests_code)
+
+    for match in matches:
+        try:
+            # Safely evaluate the list literal
+            expected_value = eval(match)
+            if isinstance(expected_value, list):
+                if 'even_squares' not in expected:
+                    expected['even_squares'] = []
+                expected['even_squares'].append(expected_value)
+        except:
+            pass
+
+    return expected
+
+
 def run_user_and_tests(user_code: str, tests_code: str):
     """
     Execute user code and test harness in sandboxed environment.
@@ -158,8 +191,11 @@ def run_user_and_tests(user_code: str, tests_code: str):
     feedback = str(result.get("feedback", ""))
     max_score = int(result.get("max_score", 100))
 
+    # Extract expected results from test code
+    expected_results = extract_expected_results(tests_code)
+
     # Capture execution results for visualizations
-    execution_results = capture_execution_results(user_ns, user_code)
+    execution_results = capture_execution_results(user_ns, user_code, expected_results)
 
     return {
         "score": score,
@@ -169,17 +205,21 @@ def run_user_and_tests(user_code: str, tests_code: str):
     }
 
 
-def capture_execution_results(user_ns, user_code=""):
+def capture_execution_results(user_ns, user_code="", expected_results=None):
     """
     Capture execution results from user namespace for visualization.
 
     Args:
         user_ns: User namespace after code execution
         user_code: The user's submitted code (for visualization)
+        expected_results: dict mapping function names to expected results (optional)
 
     Returns:
         dict with captured execution data (functions, classes, variables, user_code)
     """
+    if expected_results is None:
+        expected_results = {}
+
     results = {
         "functions": {},
         "classes": {},
@@ -239,6 +279,10 @@ def capture_execution_results(user_ns, user_code=""):
                 except Exception:
                     # Any other error, skip to next test input
                     continue
+
+            # Add expected results if available for this function
+            if name in expected_results:
+                func_info["expected_results"] = expected_results[name]
 
             results["functions"][name] = func_info
         elif isinstance(obj, type):

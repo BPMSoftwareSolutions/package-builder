@@ -248,6 +248,43 @@ class TestFunctionReturnValues:
         assert len(func_info['return_value']) > 0, "Return value should not be empty"
 
 
+class TestExpectedResults:
+    """Test that expected results are captured when actual results don't match"""
+
+    def test_capture_expected_results_on_mismatch(self, client):
+        """When function result doesn't match expected, show expected in dashboard"""
+        # Intentionally wrong implementation
+        user_code = '''def even_squares(nums):
+    # Wrong: returns all squares, not just evens
+    return [n ** 2 for n in nums]'''
+
+        payload = {
+            'moduleId': 'python_basics',
+            'workshopId': 'basics_01',
+            'approachId': 'comprehension',
+            'code': user_code
+        }
+        response = client.post('/api/grade',
+                              data=json.dumps(payload),
+                              content_type='application/json')
+        data = response.get_json()
+
+        assert response.status_code == 200
+        # Score should be less than 100 (incorrect implementation)
+        assert data['score'] < 100
+
+        # Execution results should include expected results
+        assert 'execution_results' in data
+        func_info = data['execution_results']['functions'].get('even_squares', {})
+
+        # MUST have expected_results when actual doesn't match
+        assert 'expected_results' in func_info, "Should capture expected results when actual doesn't match"
+        assert isinstance(func_info['expected_results'], list)
+        assert len(func_info['expected_results']) > 0
+        # Expected should show [4, 16] for input [1, 2, 3, 4]
+        assert [4, 16] in func_info['expected_results']
+
+
 class TestVisualizationUserCode:
     """Test that user code is included in visualization data"""
 
