@@ -190,6 +190,35 @@ class TestVisualizationSchema:
             assert not path.startswith('execution.') or 'execution.' in path
 
 
+class TestFunctionReturnValues:
+    """Test that function return values are captured for visualization"""
+
+    def test_capture_function_return_values_for_list(self, client):
+        """Functions that return lists should have their return values captured"""
+        user_code = 'def even_squares(nums):\n    return [n*n for n in nums if n % 2 == 0]'
+
+        payload = {
+            'moduleId': 'python_basics',
+            'workshopId': 'basics_01',
+            'approachId': 'comprehension',
+            'code': user_code
+        }
+        response = client.post('/api/grade',
+                              data=json.dumps(payload),
+                              content_type='application/json')
+        data = response.get_json()
+
+        assert response.status_code == 200
+        assert 'execution_results' in data
+        assert 'functions' in data['execution_results']
+        assert 'even_squares' in data['execution_results']['functions']
+
+        # Function should have return_value captured
+        func_info = data['execution_results']['functions']['even_squares']
+        assert 'return_value' in func_info, "Function should have return_value captured"
+        assert func_info['return_value'] is not None
+
+
 class TestVisualizationUserCode:
     """Test that user code is included in visualization data"""
 

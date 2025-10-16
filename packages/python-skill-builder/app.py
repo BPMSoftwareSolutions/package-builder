@@ -194,10 +194,46 @@ def capture_execution_results(user_ns, user_code=""):
 
         if callable(obj) and not isinstance(obj, type):
             # It's a function
-            results["functions"][name] = {
+            func_info = {
                 "name": name,
                 "type": "function"
             }
+
+            # Try to capture return value by calling with no arguments
+            try:
+                return_value = obj()
+                # Serialize the return value
+                if isinstance(return_value, (list, tuple)):
+                    func_info["return_value"] = list(return_value)
+                    func_info["return_type"] = "list" if isinstance(return_value, list) else "tuple"
+                elif isinstance(return_value, dict):
+                    func_info["return_value"] = return_value
+                    func_info["return_type"] = "dict"
+                else:
+                    func_info["return_value"] = str(return_value) if return_value is not None else None
+                    func_info["return_type"] = type(return_value).__name__
+            except (TypeError, ValueError):
+                # Function requires arguments or has other issues, try with common test inputs
+                try:
+                    # Try with empty list for functions that might take a list
+                    return_value = obj([])
+                    if isinstance(return_value, (list, tuple)):
+                        func_info["return_value"] = list(return_value)
+                        func_info["return_type"] = "list" if isinstance(return_value, list) else "tuple"
+                    elif isinstance(return_value, dict):
+                        func_info["return_value"] = return_value
+                        func_info["return_type"] = "dict"
+                    else:
+                        func_info["return_value"] = str(return_value) if return_value is not None else None
+                        func_info["return_type"] = type(return_value).__name__
+                except Exception:
+                    # Skip return value capture if we can't call it
+                    pass
+            except Exception:
+                # Any other error, skip return value capture
+                pass
+
+            results["functions"][name] = func_info
         elif isinstance(obj, type):
             # It's a class
             class_info = {

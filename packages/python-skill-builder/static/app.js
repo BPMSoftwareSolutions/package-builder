@@ -961,10 +961,11 @@ class WebUIRenderer extends BaseRenderer {
 
     // Functions card
     if (executionResults.functions && Object.keys(executionResults.functions).length > 0) {
+      const functionItems = Object.values(executionResults.functions);
       const functionsCard = this.createDashboardCard(
         'Functions',
         '⚙️',
-        Object.keys(executionResults.functions),
+        functionItems,
         'function'
       );
       cardsGrid.appendChild(functionsCard);
@@ -1023,7 +1024,22 @@ class WebUIRenderer extends BaseRenderer {
       for (const item of items) {
         const li = document.createElement('li');
         li.className = 'dashboard-item';
-        li.innerHTML = `<span class="dashboard-badge">✓</span> ${item}`;
+
+        // Handle both string items and objects with return values
+        if (typeof item === 'string') {
+          li.innerHTML = `<span class="dashboard-badge">✓</span> ${item}`;
+        } else if (typeof item === 'object' && item !== null) {
+          // Object with name and return_value (for functions)
+          let content = `<span class="dashboard-badge">✓</span> ${item.name}`;
+          if (item.return_value !== undefined && item.return_value !== null) {
+            const returnValueStr = Array.isArray(item.return_value)
+              ? `[${item.return_value.join(', ')}]`
+              : String(item.return_value);
+            content += `<span class="dashboard-return-value"> → ${returnValueStr}</span>`;
+          }
+          li.innerHTML = content;
+        }
+
         list.appendChild(li);
       }
       cardBody.appendChild(list);
