@@ -1,0 +1,174 @@
+import React, { useState, useEffect } from 'react';
+
+interface LocalPackage {
+  name: string;
+  path: string;
+  version: string;
+  private: boolean;
+  description?: string;
+  buildReady: boolean;
+  packReady: boolean;
+  distExists: boolean;
+  artifactsExists: boolean;
+}
+
+interface PackageReadiness {
+  total: number;
+  ready: number;
+  packages: LocalPackage[];
+}
+
+export default function Packages() {
+  const [data, setData] = useState<PackageReadiness | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [filter, setFilter] = useState('all');
+  const [basePath, setBasePath] = useState('./packages');
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch(`/api/packages?basePath=${encodeURIComponent(basePath)}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch packages: ${response.statusText}`);
+        }
+        const data = await response.json();
+        setData(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch packages');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPackages();
+  }, [basePath]);
+
+  const filteredPackages = data?.packages.filter((pkg) => {
+    if (filter === 'ready') return pkg.packReady;
+    if (filter === 'not-ready') return !pkg.packReady;
+    if (filter === 'private') return pkg.private;
+    if (filter === 'public') return !pkg.private;
+    return true;
+  }) || [];
+
+  return (
+    <div>
+      <h1>Local Packages</h1>
+
+      {error && <div className="error">{error}</div>}
+
+      <div className="filters">
+        <div className="filter-group">
+          <label htmlFor="basePath">Base Path:</label>
+          <input
+            id="basePath"
+            type="text"
+            value={basePath}
+            onChange={(e) => setBasePath(e.target.value)}
+            placeholder="./packages"
+          />
+        </div>
+        <div className="filter-group">
+          <label htmlFor="filter">Filter:</label>
+          <select
+            id="filter"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="all">All Packages</option>
+            <option value="ready">Ready for Pack</option>
+            <option value="not-ready">Not Ready</option>
+            <option value="private">Private</option>
+            <option value="public">Public</option>
+          </select>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="loading">Loading packages...</div>
+      ) : !data ? (
+        <div className="card">
+          <p style={{ textAlign: 'center', color: '#666' }}>
+            No packages found
+          </p>
+        </div>
+      ) : (
+        <>
+          <div style={{ marginBottom: '1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+            <div className="card" style={{ marginBottom: 0 }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#0366d6' }}>
+                  {data.total}
+                </div>
+                <div style={{ color: '#666' }}>Total Packages</div>
+              </div>
+            </div>
+            <div className="card" style={{ marginBottom: 0 }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#28a745' }}>
+                  {data.ready}
+                </div>
+                <div style={{ color: '#666' }}>Ready for Pack</div>
+              </div>
+            </div>
+            <div className="card" style={{ marginBottom: 0 }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#dc3545' }}>
+                  {data.total - data.ready}
+                </div>
+                <div style={{ color: '#666' }}>Not Ready</div>
+              </div>
+            </div>
+          </div>
+
+          {filteredPackages.length === 0 ? (
+            <div className="card">
+              <p style={{ textAlign: 'center', color: '#666' }}>
+                No packages found matching the filter
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-2">
+              {filteredPackages.map((pkg) => (
+                <div key={pkg.name} className="card">
+                  <div style={{ marginBottom: '1rem' }}>
+                    <h3 style={{ marginBottom: '0.5rem' }}>{pkg.name}</h3>
+                    <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                      v{pkg.version}
+                    </div>
+                  </div>
+
+                  {pkg.description && (
+                    <p style={{ marginBottom: '1rem', color: '#666', fontSize: '0.9rem' }}>
+                      {pkg.description}
+                    </p>
+                  )}
+
+                  <div style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <span className={`badge ${pkg.buildReady ? 'badge-success' : 'badge-danger'}`}>
+                      {pkg.buildReady ? '✓' : '✗'} Build
+                    </span>
+                    <span className={`badge ${pkg.packReady ? 'badge-success' : 'badge-danger'}`}>
+                      {pkg.packReady ? '✓' : '✗'} Pack
+                    </span>
+                    <span className={`badge ${pkg.private ? 'badge-warning' : 'badge-info'}`}>
+                      {pkg.private ? 'Private' : 'Public'}
+                    </span>
+                  </div>
+
+                  <div style={{ fontSize: '0.85rem', color: '#999', wordBreak: 'break-all' }}>
+                    {pkg.path}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+

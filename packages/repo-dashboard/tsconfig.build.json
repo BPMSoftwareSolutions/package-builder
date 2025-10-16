@@ -3,6 +3,7 @@
   "compilerOptions": {
     "noEmit": false
   },
-  "exclude": ["test", "**/*.test.ts", "**/*.spec.ts"]
+  "include": ["src/**/*.ts", "!src/**/*.test.ts", "!src/**/*.spec.ts"],
+  "exclude": ["test", "**/*.test.ts", "**/*.spec.ts", "src/web", "src/server.ts", "src/bin/server.ts"]
 }
 

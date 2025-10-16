@@ -10,6 +10,7 @@ A repository and package management dashboard with CLI and library API for viewi
 - 📦 **Local package discovery** - Find packages under `packages/` and report build/pack readiness
 - 🖥️ **Lightweight CLI** - Simple commands for automation and human workflows
 - 📚 **Library API** - Typed functions for programmatic use and integrations
+- 🌐 **Web UI Dashboard** - Interactive web interface for visual repository and package management
 
 ## Installation
 
@@ -18,6 +19,31 @@ npm install @bpm/repo-dashboard
 ```
 
 ## Quick Start
+
+### Web UI Dashboard
+
+Start the web server to access the interactive dashboard:
+
+```bash
+# Development mode (with hot reload)
+npm run dev
+
+# Production build
+npm run build
+npm start
+
+# Preview production build
+npm run preview
+```
+
+Then open your browser to `http://localhost:3000`
+
+**Features:**
+- 📊 Organization Repository Status - View all repos with issues, PRs, and workflow status
+- 🐛 Issues & PRs - Browse and filter issues and pull requests
+- 📦 Local Packages - View package build and pack readiness status
+- 🔍 Search & Filter - Find repositories and issues quickly
+- 📱 Responsive Design - Works on desktop and mobile devices
 
 ### CLI Usage
 
@@ -59,6 +85,9 @@ const packages = await findLocalPackages({ basePath: './packages' });
 
 - `GITHUB_TOKEN` or `GH_TOKEN` - GitHub API token (required for GitHub operations)
 - `NPM_TOKEN` - NPM token (optional, for publishing operations)
+- `WEB_PORT` - Web server port (default: 3000)
+- `WEB_HOST` - Web server host (default: localhost)
+- `NODE_ENV` - Environment mode (development or production)
 
 ### Token Setup
 
@@ -106,6 +135,57 @@ $env:GH_TOKEN = "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 **Note:** The CLI automatically detects token format:
 - Classic tokens (starting with `ghp_`) use `token` authentication
 - Fine-grained tokens (starting with `github_pat_`) use `Bearer` authentication
+
+## Web UI API
+
+The web server exposes REST API endpoints for the dashboard:
+
+### `GET /api/health`
+
+Health check endpoint.
+
+```bash
+curl http://localhost:3000/api/health
+# Response: { "status": "ok", "timestamp": "2025-10-16T12:00:00.000Z" }
+```
+
+### `GET /api/repos/:org`
+
+List repositories for an organization with status.
+
+```bash
+curl http://localhost:3000/api/repos/BPMSoftwareSolutions
+# Response: Array of repositories with issue/PR counts and workflow status
+```
+
+Query parameters:
+- `limit` - Maximum number of repos to return (default: 50, max: 100)
+
+### `GET /api/repos/:owner/:repo/issues`
+
+List issues and PRs for a repository.
+
+```bash
+curl http://localhost:3000/api/repos/BPMSoftwareSolutions/package-builder/issues?state=open
+# Response: Array of issues and pull requests
+```
+
+Query parameters:
+- `state` - Filter by state: `open`, `closed`, or `all` (default: open)
+- `limit` - Maximum number of issues to return (default: 50, max: 100)
+
+### `GET /api/packages`
+
+List local packages with build/pack status.
+
+```bash
+curl http://localhost:3000/api/packages?basePath=./packages
+# Response: { "total": 5, "ready": 3, "packages": [...] }
+```
+
+Query parameters:
+- `basePath` - Base path for packages (default: ./packages)
+- `includePrivate` - Include private packages (default: false)
 
 ## CLI Commands
 
