@@ -729,6 +729,445 @@ class CLIRenderer extends BaseRenderer {
 }
 
 /**
+ * Web UI Renderer
+ * Renders interactive web-based visualizations with split-panel layout
+ * Left panel: Monaco editor with user code
+ * Right panel: Dynamic results panel
+ */
+class WebUIRenderer extends BaseRenderer {
+  constructor() {
+    super();
+    this.monacoEditor = null;
+    this.editorContainer = null;
+  }
+
+  render(config, executionResults) {
+    const container = document.createElement('div');
+    container.className = 'web-visualization';
+
+    // Create split-panel layout
+    const layout = config.config?.layout || 'split-horizontal';
+    const panels = config.config?.panels || [];
+
+    if (layout === 'split-horizontal') {
+      this.createSplitHorizontalLayout(container, panels, executionResults);
+    } else if (layout === 'split-vertical') {
+      this.createSplitVerticalLayout(container, panels, executionResults);
+    } else if (layout === 'tabbed') {
+      this.createTabbedLayout(container, panels, executionResults);
+    }
+
+    return container;
+  }
+
+  /**
+   * Create horizontal split layout (left-right)
+   */
+  createSplitHorizontalLayout(container, panels, executionResults) {
+    container.classList.add('split-horizontal');
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'split-panel-wrapper';
+
+    for (const panel of panels) {
+      const panelElement = this.createPanel(panel, executionResults);
+      wrapper.appendChild(panelElement);
+    }
+
+    container.appendChild(wrapper);
+  }
+
+  /**
+   * Create vertical split layout (top-bottom)
+   */
+  createSplitVerticalLayout(container, panels, executionResults) {
+    container.classList.add('split-vertical');
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'split-panel-wrapper';
+
+    for (const panel of panels) {
+      const panelElement = this.createPanel(panel, executionResults);
+      wrapper.appendChild(panelElement);
+    }
+
+    container.appendChild(wrapper);
+  }
+
+  /**
+   * Create tabbed layout
+   */
+  createTabbedLayout(container, panels, executionResults) {
+    container.classList.add('tabbed-layout');
+
+    const tabContainer = document.createElement('div');
+    tabContainer.className = 'tab-container';
+
+    const tabButtons = document.createElement('div');
+    tabButtons.className = 'tab-buttons';
+
+    const tabContents = document.createElement('div');
+    tabContents.className = 'tab-contents';
+
+    panels.forEach((panel, index) => {
+      const button = document.createElement('button');
+      button.className = `tab-button ${index === 0 ? 'active' : ''}`;
+      button.textContent = panel.title || `Panel ${index + 1}`;
+      button.onclick = () => this.switchTab(tabContents, index);
+      tabButtons.appendChild(button);
+
+      const content = document.createElement('div');
+      content.className = `tab-content ${index === 0 ? 'active' : ''}`;
+      content.appendChild(this.createPanel(panel, executionResults));
+      tabContents.appendChild(content);
+    });
+
+    tabContainer.appendChild(tabButtons);
+    tabContainer.appendChild(tabContents);
+    container.appendChild(tabContainer);
+  }
+
+  /**
+   * Switch active tab
+   */
+  switchTab(tabContents, index) {
+    const contents = tabContents.querySelectorAll('.tab-content');
+    const buttons = tabContents.parentElement.querySelectorAll('.tab-button');
+
+    contents.forEach((content, i) => {
+      content.classList.toggle('active', i === index);
+    });
+
+    buttons.forEach((button, i) => {
+      button.classList.toggle('active', i === index);
+    });
+  }
+
+  /**
+   * Create individual panel based on type
+   */
+  createPanel(panel, executionResults) {
+    const panelElement = document.createElement('div');
+    panelElement.className = `panel panel-${panel.type}`;
+
+    // Add title if present
+    if (panel.title) {
+      const title = document.createElement('div');
+      title.className = 'panel-title';
+      title.textContent = panel.title;
+      panelElement.appendChild(title);
+    }
+
+    const content = document.createElement('div');
+    content.className = 'panel-content';
+
+    if (panel.type === 'code-editor') {
+      this.createCodeEditor(content, panel, executionResults);
+    } else if (panel.type === 'results') {
+      this.createResultsPanel(content, panel, executionResults);
+    } else if (panel.type === 'code') {
+      this.createCodeDisplay(content, panel, executionResults);
+    }
+
+    panelElement.appendChild(content);
+    return panelElement;
+  }
+
+  /**
+   * Create code editor panel with Monaco
+   */
+  createCodeEditor(container, panel, executionResults) {
+    this.editorContainer = document.createElement('div');
+    this.editorContainer.className = 'monaco-editor-container';
+    this.editorContainer.style.height = '400px';
+
+    container.appendChild(this.editorContainer);
+
+    // Load Monaco Editor dynamically
+    this.loadMonacoEditor(this.editorContainer, panel, executionResults);
+  }
+
+  /**
+   * Load Monaco Editor
+   */
+  loadMonacoEditor(container, panel, executionResults) {
+    // Check if Monaco is available
+    if (typeof require !== 'undefined' && typeof monaco !== 'undefined') {
+      this.initializeMonaco(container, panel, executionResults);
+    } else {
+      // Fallback to simple code display if Monaco not available
+      this.createCodeDisplay(container, panel, executionResults);
+    }
+  }
+
+  /**
+   * Initialize Monaco Editor
+   */
+  initializeMonaco(container, panel, executionResults) {
+    try {
+      // Get user code from execution results
+      const userCode = executionResults.user_code || '# No code available';
+
+      // Create editor
+      const editor = monaco.editor.create(container, {
+        value: userCode,
+        language: 'python',
+        theme: 'vs-dark',
+        readOnly: true,
+        minimap: { enabled: false },
+        scrollBeyondLastLine: false,
+        automaticLayout: true
+      });
+
+      this.monacoEditor = editor;
+    } catch (error) {
+      console.error('Failed to initialize Monaco Editor:', error);
+      // Fallback to simple code display
+      this.createCodeDisplay(container, panel, executionResults);
+    }
+  }
+
+  /**
+   * Create simple code display (fallback)
+   */
+  createCodeDisplay(container, panel, executionResults) {
+    const code = executionResults.user_code || '# No code available';
+
+    const pre = document.createElement('pre');
+    pre.className = 'code-display';
+    pre.textContent = code;
+
+    container.appendChild(pre);
+  }
+
+  /**
+   * Create results panel with dynamic sections
+   */
+  createResultsPanel(container, panel, executionResults) {
+    const sections = panel.sections || [];
+
+    if (sections.length === 0) {
+      // Default: show all execution results
+      this.createDefaultResultsDisplay(container, executionResults);
+    } else {
+      // Render configured sections
+      for (const section of sections) {
+        this.createResultSection(container, section, executionResults);
+      }
+    }
+  }
+
+  /**
+   * Create default results display
+   */
+  createDefaultResultsDisplay(container, executionResults) {
+    const resultsDiv = document.createElement('div');
+    resultsDiv.className = 'results-display';
+
+    // Display classes
+    if (executionResults.classes && Object.keys(executionResults.classes).length > 0) {
+      const classesSection = document.createElement('div');
+      classesSection.className = 'results-section';
+      classesSection.innerHTML = '<h4>Classes</h4>';
+
+      const classList = document.createElement('ul');
+      for (const [name, classInfo] of Object.entries(executionResults.classes)) {
+        const li = document.createElement('li');
+        li.textContent = `${name}: ${classInfo.methods?.join(', ') || 'no methods'}`;
+        classList.appendChild(li);
+      }
+      classesSection.appendChild(classList);
+      resultsDiv.appendChild(classesSection);
+    }
+
+    // Display functions
+    if (executionResults.functions && Object.keys(executionResults.functions).length > 0) {
+      const functionsSection = document.createElement('div');
+      functionsSection.className = 'results-section';
+      functionsSection.innerHTML = '<h4>Functions</h4>';
+
+      const functionList = document.createElement('ul');
+      for (const name of Object.keys(executionResults.functions)) {
+        const li = document.createElement('li');
+        li.textContent = name;
+        functionList.appendChild(li);
+      }
+      functionsSection.appendChild(functionList);
+      resultsDiv.appendChild(functionsSection);
+    }
+
+    // Display variables
+    if (executionResults.variables && Object.keys(executionResults.variables).length > 0) {
+      const variablesSection = document.createElement('div');
+      variablesSection.className = 'results-section';
+      variablesSection.innerHTML = '<h4>Variables</h4>';
+
+      const varList = document.createElement('ul');
+      for (const [name, varInfo] of Object.entries(executionResults.variables)) {
+        const li = document.createElement('li');
+        li.textContent = `${name}: ${varInfo.value}`;
+        varList.appendChild(li);
+      }
+      variablesSection.appendChild(varList);
+      resultsDiv.appendChild(variablesSection);
+    }
+
+    container.appendChild(resultsDiv);
+  }
+
+  /**
+   * Create individual result section
+   */
+  createResultSection(container, section, executionResults) {
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'results-section';
+
+    if (section.title) {
+      const title = document.createElement('h4');
+      title.textContent = section.title;
+      sectionDiv.appendChild(title);
+    }
+
+    if (section.type === 'table') {
+      this.createTableDisplay(sectionDiv, section, executionResults);
+    } else if (section.type === 'key-value') {
+      this.createKeyValueDisplay(sectionDiv, section, executionResults);
+    } else if (section.type === 'list') {
+      this.createListDisplay(sectionDiv, section, executionResults);
+    }
+
+    container.appendChild(sectionDiv);
+  }
+
+  /**
+   * Create table display
+   */
+  createTableDisplay(container, section, executionResults) {
+    const data = this.resolvePath(section.data, executionResults);
+
+    if (!Array.isArray(data) || data.length === 0) {
+      container.textContent = 'No data available';
+      return;
+    }
+
+    const table = document.createElement('table');
+    table.className = 'results-table';
+
+    // Create header
+    const headerRow = document.createElement('tr');
+    const firstItem = data[0];
+    if (typeof firstItem === 'object') {
+      for (const key of Object.keys(firstItem)) {
+        const th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
+      }
+    }
+    table.appendChild(headerRow);
+
+    // Create rows
+    for (const item of data) {
+      const row = document.createElement('tr');
+      if (typeof item === 'object') {
+        for (const value of Object.values(item)) {
+          const td = document.createElement('td');
+          td.textContent = String(value);
+          row.appendChild(td);
+        }
+      } else {
+        const td = document.createElement('td');
+        td.textContent = String(item);
+        row.appendChild(td);
+      }
+      table.appendChild(row);
+    }
+
+    container.appendChild(table);
+  }
+
+  /**
+   * Create key-value display
+   */
+  createKeyValueDisplay(container, section, executionResults) {
+    const data = this.resolvePath(section.data, executionResults);
+
+    if (typeof data !== 'object' || data === null) {
+      container.textContent = 'No data available';
+      return;
+    }
+
+    const list = document.createElement('dl');
+    list.className = 'key-value-list';
+
+    for (const [key, value] of Object.entries(data)) {
+      const dt = document.createElement('dt');
+      dt.textContent = key;
+      const dd = document.createElement('dd');
+      dd.textContent = String(value);
+      list.appendChild(dt);
+      list.appendChild(dd);
+    }
+
+    container.appendChild(list);
+  }
+
+  /**
+   * Create list display
+   */
+  createListDisplay(container, section, executionResults) {
+    const data = this.resolvePath(section.data, executionResults);
+
+    if (!Array.isArray(data)) {
+      container.textContent = 'No data available';
+      return;
+    }
+
+    const list = document.createElement('ul');
+    list.className = 'results-list';
+
+    for (const item of data) {
+      const li = document.createElement('li');
+      li.textContent = String(item);
+      list.appendChild(li);
+    }
+
+    container.appendChild(list);
+  }
+
+  /**
+   * Resolve a dot-notation path in execution results
+   */
+  resolvePath(path, executionResults) {
+    if (!path || !path.startsWith('execution.')) {
+      return null;
+    }
+
+    const parts = path.replace('execution.', '').split('.');
+    let current = executionResults;
+
+    for (const part of parts) {
+      if (current && typeof current === 'object' && part in current) {
+        current = current[part];
+      } else {
+        return null;
+      }
+    }
+
+    return current;
+  }
+
+  /**
+   * Clean up resources
+   */
+  destroy() {
+    if (this.monacoEditor) {
+      this.monacoEditor.dispose();
+      this.monacoEditor = null;
+    }
+  }
+}
+
+/**
  * Visualization Manager
  * Orchestrates rendering of visualizations based on configuration
  */
@@ -736,8 +1175,8 @@ class VisualizationManager {
   constructor() {
     this.renderers = {
       'cli': new CLIRenderer(),
+      'web': new WebUIRenderer(),
       // Future renderers will be added here:
-      // 'web': new WebUIRenderer(),
       // 'animation': new AnimationRenderer(),
       // 'agentic': new AgenticRenderer()
     };

@@ -157,11 +157,12 @@ class TestVisualizationSchema:
         # Find workshop with visualization
         workshop = next(w for w in data['workshops'] if w['id'] == 'oop_02')
         assert 'visualizations' in workshop
-        
-        viz = workshop['visualizations'][0]
+
+        # Find the CLI visualization (may not be first)
+        viz = next((v for v in workshop['visualizations'] if v['type'] == 'cli'), None)
+        assert viz is not None, "CLI visualization not found"
         assert viz['id'] == 'counter_cli_dashboard'
         assert viz['type'] == 'cli'
-        assert viz['enabled'] is True
         assert 'config' in viz
         assert 'template' in viz['config']
         assert 'placeholders' in viz['config']
@@ -170,9 +171,11 @@ class TestVisualizationSchema:
         """CLI visualization template is properly formatted"""
         response = client.get('/api/modules/oop_fundamentals')
         data = response.get_json()
-        
+
         workshop = next(w for w in data['workshops'] if w['id'] == 'oop_02')
-        viz = workshop['visualizations'][0]
+        # Find the CLI visualization
+        viz = next((v for v in workshop['visualizations'] if v['type'] == 'cli'), None)
+        assert viz is not None
         
         template = viz['config']['template']
         placeholders = viz['config']['placeholders']

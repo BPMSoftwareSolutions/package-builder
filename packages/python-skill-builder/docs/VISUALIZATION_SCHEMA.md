@@ -70,7 +70,14 @@ Text-based dashboard rendering using ASCII art and formatting.
 
 #### 2. Web Dashboard (`type: "web"`)
 
-Interactive web-based visualization with split panels.
+Interactive web-based visualization with split panels, Monaco Editor integration, and dynamic results display.
+
+**Features:**
+- Split-panel layout (horizontal, vertical, or tabbed)
+- Monaco Editor for code display with Python syntax highlighting
+- Dynamic results panel with tables, lists, and key-value displays
+- Responsive design for desktop and mobile devices
+- Lazy-loading of Monaco Editor for optimal performance
 
 **Configuration:**
 ```json
@@ -83,13 +90,93 @@ Interactive web-based visualization with split panels.
     "panels": [
       {
         "id": "code_panel",
-        "type": "code-editor",
-        "title": "Your Code"
+        "type": "code|code-editor",
+        "title": "Your Solution"
       },
       {
         "id": "results_panel",
         "type": "results",
-        "title": "Execution Results"
+        "title": "Execution Results",
+        "sections": [
+          {
+            "title": "Classes",
+            "type": "list|table|key-value",
+            "data": "execution.classes"
+          },
+          {
+            "title": "Variables",
+            "type": "key-value",
+            "data": "execution.variables"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Panel Types:**
+
+1. **Code Panel** (`type: "code"` or `type: "code-editor"`)
+   - Displays user code with syntax highlighting
+   - Uses Monaco Editor if available, falls back to `<pre>` element
+   - Read-only mode for security
+   - Automatic layout adjustment
+
+2. **Results Panel** (`type: "results"`)
+   - Displays execution results in configurable sections
+   - Supports multiple section types:
+     - `list`: Renders array data as unordered list
+     - `table`: Renders array of objects as HTML table
+     - `key-value`: Renders object as definition list
+   - Each section references execution results via dot-notation paths
+
+**Layout Options:**
+
+- `split-horizontal`: Two panels side-by-side (default)
+- `split-vertical`: Two panels stacked vertically
+- `tabbed`: Panels as tabs with button navigation
+
+**Data Path Resolution:**
+
+Results sections use dot-notation paths to reference execution data:
+- `execution.classes`: Object containing class definitions
+- `execution.functions`: Object containing function definitions
+- `execution.variables`: Object containing variable values
+- `execution.user_code`: The submitted user code
+
+Example path: `execution.classes.Counter.methods` resolves to the methods array of the Counter class.
+
+**Example Configuration:**
+```json
+{
+  "id": "counter_web_dashboard",
+  "type": "web",
+  "enabled": true,
+  "config": {
+    "layout": "split-horizontal",
+    "panels": [
+      {
+        "id": "code_panel",
+        "type": "code",
+        "title": "Your Solution"
+      },
+      {
+        "id": "results_panel",
+        "type": "results",
+        "title": "Execution Results",
+        "sections": [
+          {
+            "title": "Classes Defined",
+            "type": "list",
+            "data": "execution.classes"
+          },
+          {
+            "title": "Class Methods",
+            "type": "key-value",
+            "data": "execution.classes.Counter"
+          }
+        ]
       }
     ]
   }
