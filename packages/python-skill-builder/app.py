@@ -212,8 +212,11 @@ def run_user_and_tests(user_code: str, tests_code: str):
     feedback = str(result.get("feedback", ""))
     max_score = int(result.get("max_score", 100))
 
-    # Extract expected results from test code
-    expected_results = extract_expected_results(tests_code)
+    # Extract expected results from test code only if score is not perfect
+    # (to avoid showing expected results when code is correct)
+    expected_results = {}
+    if score < max_score:
+        expected_results = extract_expected_results(tests_code)
 
     # Capture execution results for visualizations
     execution_results = capture_execution_results(user_ns, user_code, expected_results)
