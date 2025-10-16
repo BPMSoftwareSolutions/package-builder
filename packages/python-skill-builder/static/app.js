@@ -1057,6 +1057,13 @@ class WebUIRenderer extends BaseRenderer {
             }
           }
 
+          // Create a container for the function item
+          const itemContainer = document.createElement('div');
+          itemContainer.className = 'dashboard-function-item';
+
+          // First line: badge + name + actual return value
+          const firstLine = document.createElement('div');
+          firstLine.className = 'dashboard-function-line';
           let content = `<span class="${badgeClass}">${badge}</span> ${item.name}`;
           if (item.return_value !== undefined && item.return_value !== null) {
             const returnValueStr = Array.isArray(item.return_value)
@@ -1064,8 +1071,10 @@ class WebUIRenderer extends BaseRenderer {
               : String(item.return_value);
             content += `<span class="dashboard-return-value"> → ${returnValueStr}</span>`;
           }
+          firstLine.innerHTML = content;
+          itemContainer.appendChild(firstLine);
 
-          // Show expected results if there's a mismatch
+          // Second line: expected results if there's a mismatch
           if (item.expected_results && item.return_value !== undefined) {
             const actualStr = Array.isArray(item.return_value)
               ? JSON.stringify(item.return_value)
@@ -1083,15 +1092,18 @@ class WebUIRenderer extends BaseRenderer {
             }
 
             if (!matches) {
-              // Show expected results
+              // Show expected results on new line
+              const secondLine = document.createElement('div');
+              secondLine.className = 'dashboard-expected-line';
               const expectedStr = item.expected_results.map(e =>
                 Array.isArray(e) ? `[${e.join(', ')}]` : String(e)
               ).join(' or ');
-              content += `<span class="dashboard-expected-value"> (expected: ${expectedStr})</span>`;
+              secondLine.innerHTML = `<span class="dashboard-expected-value">(expected: ${expectedStr})</span>`;
+              itemContainer.appendChild(secondLine);
             }
           }
 
-          li.innerHTML = content;
+          li.appendChild(itemContainer);
         }
 
         list.appendChild(li);

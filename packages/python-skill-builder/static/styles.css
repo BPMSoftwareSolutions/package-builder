@@ -874,13 +874,37 @@ textarea:focus {
     background: #ef4444 !important;
 }
 
+.dashboard-function-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dashboard-function-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dashboard-return-value {
+    color: #00d4ff;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    padding: 2px 6px;
+    background: rgba(0, 212, 255, 0.1);
+    border-radius: 3px;
+}
+
+.dashboard-expected-line {
+    display: flex;
+    align-items: center;
+    margin-left: 26px;
+}
+
 .dashboard-expected-value {
-    display: block;
     color: #fca5a5;
     font-size: 11px;
     font-family: 'Courier New', monospace;
-    margin-top: 4px;
-    margin-left: 26px;
     padding: 2px 6px;
     background: rgba(239, 68, 68, 0.1);
     border-radius: 3px;
