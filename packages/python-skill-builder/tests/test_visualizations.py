@@ -129,16 +129,16 @@ class TestVisualizationConfiguration:
     def test_workshop_without_visualization_config(self, client):
         """Workshop without visualization config works normally (backward compatibility)"""
         payload = {
-            'moduleId': 'python_basics',
-            'workshopId': 'basics_01',
-            'approachId': 'comprehension',
-            'code': 'def even_squares(nums):\n    return [n*n for n in nums if n % 2 == 0]'
+            'moduleId': 'errors_and_debugging',
+            'workshopId': 'err_01',
+            'approachId': 'traditional',
+            'code': 'class BadInput(Exception):\n    pass\n\ndef parse_int(s):\n    try:\n        return int(s)\n    except ValueError:\n        raise BadInput(f"Cannot parse {s}")'
         }
         response = client.post('/api/grade',
                               data=json.dumps(payload),
                               content_type='application/json')
         data = response.get_json()
-        
+
         assert response.status_code == 200
         assert data['ok'] is True
         # visualizations key should not be present if not configured

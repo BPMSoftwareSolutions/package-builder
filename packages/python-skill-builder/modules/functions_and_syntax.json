@@ -8,6 +8,40 @@
       "title": "Safe Divider (defaults + error guard)",
       "timeLimitMinutes": 7,
       "prompt": "Implement safe_divide(a, b, default=0) that returns a/b. If b==0, return default.",
+      "visualizations": [
+        {
+          "id": "safe_divide_web_dashboard",
+          "type": "web",
+          "enabled": true,
+          "config": {
+            "layout": "split-horizontal",
+            "panels": [
+              {
+                "id": "code_panel",
+                "type": "code",
+                "title": "Your Solution"
+              },
+              {
+                "id": "results_panel",
+                "type": "results",
+                "title": "Execution Results",
+                "sections": [
+                  {
+                    "title": "Functions Defined",
+                    "type": "list",
+                    "data": "execution.functions"
+                  },
+                  {
+                    "title": "Variables",
+                    "type": "key-value",
+                    "data": "execution.variables"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "approaches": [
         {
           "id": "traditional",
@@ -40,6 +74,40 @@
       "title": "*args/**kwargs Echo",
       "timeLimitMinutes": 8,
       "prompt": "Implement echo_signature(*args, **kwargs) that returns a tuple: (list(args), sorted list of (key,value) pairs by key).",
+      "visualizations": [
+        {
+          "id": "echo_signature_web_dashboard",
+          "type": "web",
+          "enabled": true,
+          "config": {
+            "layout": "split-horizontal",
+            "panels": [
+              {
+                "id": "code_panel",
+                "type": "code",
+                "title": "Your Solution"
+              },
+              {
+                "id": "results_panel",
+                "type": "results",
+                "title": "Execution Results",
+                "sections": [
+                  {
+                    "title": "Functions Defined",
+                    "type": "list",
+                    "data": "execution.functions"
+                  },
+                  {
+                    "title": "Variables",
+                    "type": "key-value",
+                    "data": "execution.variables"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "approaches": [
         {
           "id": "traditional",
