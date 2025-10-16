@@ -21,6 +21,7 @@ export default function Issues({ repo }: IssuesProps) {
   const [error, setError] = useState<string | null>(null);
   const [state, setState] = useState<'open' | 'closed' | 'all'>('open');
   const [searchTerm, setSearchTerm] = useState('');
+  const [autoRefresh, setAutoRefresh] = useState(false);
 
   useEffect(() => {
     if (!repo) return;
@@ -44,7 +45,17 @@ export default function Issues({ repo }: IssuesProps) {
     };
 
     fetchIssues();
-  }, [repo, state]);
+
+    // Setup auto-refresh if enabled
+    let interval: NodeJS.Timeout;
+    if (autoRefresh) {
+      interval = setInterval(fetchIssues, 30000); // Refresh every 30 seconds
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [repo, state, autoRefresh]);
 
   const filteredIssues = issues.filter((issue) =>
     issue.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -89,6 +100,18 @@ export default function Issues({ repo }: IssuesProps) {
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search issues..."
           />
+        </div>
+        <div className="filter-group">
+          <label htmlFor="autoRefresh">
+            <input
+              id="autoRefresh"
+              type="checkbox"
+              checked={autoRefresh}
+              onChange={(e) => setAutoRefresh(e.target.checked)}
+              style={{ marginRight: '0.5rem' }}
+            />
+            Auto-refresh (30s)
+          </label>
         </div>
       </div>
 

@@ -24,6 +24,7 @@ export default function Packages() {
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState('all');
   const [basePath, setBasePath] = useState('./packages');
+  const [autoRefresh, setAutoRefresh] = useState(false);
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -44,7 +45,17 @@ export default function Packages() {
     };
 
     fetchPackages();
-  }, [basePath]);
+
+    // Setup auto-refresh if enabled
+    let interval: NodeJS.Timeout;
+    if (autoRefresh) {
+      interval = setInterval(fetchPackages, 30000); // Refresh every 30 seconds
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [basePath, autoRefresh]);
 
   const filteredPackages = data?.packages.filter((pkg) => {
     if (filter === 'ready') return pkg.packReady;
@@ -84,6 +95,18 @@ export default function Packages() {
             <option value="private">Private</option>
             <option value="public">Public</option>
           </select>
+        </div>
+        <div className="filter-group">
+          <label htmlFor="autoRefresh">
+            <input
+              id="autoRefresh"
+              type="checkbox"
+              checked={autoRefresh}
+              onChange={(e) => setAutoRefresh(e.target.checked)}
+              style={{ marginRight: '0.5rem' }}
+            />
+            Auto-refresh (30s)
+          </label>
         </div>
       </div>
 

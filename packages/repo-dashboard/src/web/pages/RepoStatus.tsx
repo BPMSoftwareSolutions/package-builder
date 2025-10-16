@@ -19,11 +19,17 @@ interface RepoStatusProps {
   onNavigate: (page: string, org?: string, repo?: string) => void;
 }
 
+type SortField = 'name' | 'issues' | 'prs' | 'stale' | 'updated';
+type SortOrder = 'asc' | 'desc';
+
 export default function RepoStatus({ org, onNavigate }: RepoStatusProps) {
   const [repos, setRepos] = useState<Repository[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState('all');
+  const [sortField, setSortField] = useState<SortField>('name');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [autoRefresh, setAutoRefresh] = useState(false);
 
   useEffect(() => {
     if (!org) return;
@@ -46,7 +52,17 @@ export default function RepoStatus({ org, onNavigate }: RepoStatusProps) {
     };
 
     fetchRepos();
-  }, [org]);
+
+    // Setup auto-refresh if enabled
+    let interval: NodeJS.Timeout;
+    if (autoRefresh) {
+      interval = setInterval(fetchRepos, 30000); // Refresh every 30 seconds
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [org, autoRefresh]);
 
   const getStatusBadge = (status: string) => {
     const statusMap: { [key: string]: string } = {
@@ -58,12 +74,41 @@ export default function RepoStatus({ org, onNavigate }: RepoStatusProps) {
     return statusMap[status] || 'badge-info';
   };
 
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
+
+  const getSortedRepos = (reposToSort: Repository[]) => {
+    const sorted = [...reposToSort];
+    sorted.sort((a, b) => {
+      let aVal: any = a[sortField as keyof Repository];
+      let bVal: any = b[sortField as keyof Repository];
+
+      if (sortField === 'updated') {
+        aVal = new Date(a.lastUpdated).getTime();
+        bVal = new Date(b.lastUpdated).getTime();
+      }
+
+      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+    return sorted;
+  };
+
   const filteredRepos = repos.filter((repo) => {
     if (filter === 'issues') return repo.openIssues > 0;
     if (filter === 'prs') return repo.openPRs > 0;
     if (filter === 'stale') return repo.stalePRs > 0;
     return true;
   });
+
+  const sortedRepos = getSortedRepos(filteredRepos);
 
   if (!org) {
     return (
@@ -93,6 +138,18 @@ export default function RepoStatus({ org, onNavigate }: RepoStatusProps) {
             <option value="stale">With Stale PRs</option>
           </select>
         </div>
+        <div className="filter-group">
+          <label htmlFor="autoRefresh">
+            <input
+              id="autoRefresh"
+              type="checkbox"
+              checked={autoRefresh}
+              onChange={(e) => setAutoRefresh(e.target.checked)}
+              style={{ marginRight: '0.5rem' }}
+            />
+            Auto-refresh (30s)
+          </label>
+        </div>
       </div>
 
       {loading ? (
@@ -108,17 +165,27 @@ export default function RepoStatus({ org, onNavigate }: RepoStatusProps) {
           <table className="table">
             <thead>
               <tr>
-                <th>Repository</th>
-                <th>Issues</th>
-                <th>PRs</th>
-                <th>Stale</th>
+                <th style={{ cursor: 'pointer' }} onClick={() => handleSort('name')}>
+                  Repository {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </th>
+                <th style={{ cursor: 'pointer' }} onClick={() => handleSort('issues')}>
+                  Issues {sortField === 'issues' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </th>
+                <th style={{ cursor: 'pointer' }} onClick={() => handleSort('prs')}>
+                  PRs {sortField === 'prs' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </th>
+                <th style={{ cursor: 'pointer' }} onClick={() => handleSort('stale')}>
+                  Stale {sortField === 'stale' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </th>
                 <th>Workflow</th>
-                <th>Last Updated</th>
+                <th style={{ cursor: 'pointer' }} onClick={() => handleSort('updated')}>
+                  Last Updated {sortField === 'updated' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredRepos.map((repo) => (
+              {sortedRepos.map((repo) => (
                 <tr key={repo.name}>
                   <td>
                     <a href={repo.url} target="_blank" rel="noopener noreferrer">
