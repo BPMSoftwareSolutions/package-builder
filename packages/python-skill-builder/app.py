@@ -199,24 +199,20 @@ def capture_execution_results(user_ns, user_code=""):
                 "type": "function"
             }
 
-            # Try to capture return value by calling with no arguments
-            try:
-                return_value = obj()
-                # Serialize the return value
-                if isinstance(return_value, (list, tuple)):
-                    func_info["return_value"] = list(return_value)
-                    func_info["return_type"] = "list" if isinstance(return_value, list) else "tuple"
-                elif isinstance(return_value, dict):
-                    func_info["return_value"] = return_value
-                    func_info["return_type"] = "dict"
-                else:
-                    func_info["return_value"] = str(return_value) if return_value is not None else None
-                    func_info["return_type"] = type(return_value).__name__
-            except (TypeError, ValueError):
-                # Function requires arguments or has other issues, try with common test inputs
+            # Try to capture return value by calling with various test inputs
+            test_inputs = [
+                (),  # No arguments
+                ([],),  # Empty list
+                ([1, 2, 3, 4, 5],),  # List with numbers
+                ("test",),  # String
+                (5,),  # Single number
+                (0,),  # Zero
+            ]
+
+            for test_input in test_inputs:
                 try:
-                    # Try with empty list for functions that might take a list
-                    return_value = obj([])
+                    return_value = obj(*test_input)
+                    # Serialize the return value
                     if isinstance(return_value, (list, tuple)):
                         func_info["return_value"] = list(return_value)
                         func_info["return_type"] = "list" if isinstance(return_value, list) else "tuple"
@@ -226,12 +222,14 @@ def capture_execution_results(user_ns, user_code=""):
                     else:
                         func_info["return_value"] = str(return_value) if return_value is not None else None
                         func_info["return_type"] = type(return_value).__name__
+                    # Successfully captured return value, break out of loop
+                    break
+                except (TypeError, ValueError, AttributeError):
+                    # This test input didn't work, try the next one
+                    continue
                 except Exception:
-                    # Skip return value capture if we can't call it
-                    pass
-            except Exception:
-                # Any other error, skip return value capture
-                pass
+                    # Any other error, skip to next test input
+                    continue
 
             results["functions"][name] = func_info
         elif isinstance(obj, type):
