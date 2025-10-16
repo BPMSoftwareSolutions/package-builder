@@ -4,7 +4,9 @@
   "description": "An AI-assisted monorepo that turns small ideas into fully tested npm packages",
   "type": "module",
   "private": true,
-  "workspaces": [],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
   "test": "echo 'No unit tests at root (packages are externalized)'",
   "build": "echo 'No build at root (packages are externalized)'",
