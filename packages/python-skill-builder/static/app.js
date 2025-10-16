@@ -1061,20 +1061,42 @@ class WebUIRenderer extends BaseRenderer {
           const itemContainer = document.createElement('div');
           itemContainer.className = 'dashboard-function-item';
 
-          // First line: badge + name + actual return value
+          // First line: badge + name + arguments
           const firstLine = document.createElement('div');
           firstLine.className = 'dashboard-function-line';
           let content = `<span class="${badgeClass}">${badge}</span> ${item.name}`;
-          if (item.return_value !== undefined && item.return_value !== null) {
-            const returnValueStr = Array.isArray(item.return_value)
-              ? `[${item.return_value.join(', ')}]`
-              : String(item.return_value);
-            content += `<span class="dashboard-return-value"> → ${returnValueStr}</span>`;
+
+          // Add arguments if available
+          if (item.arguments && item.arguments.length > 0) {
+            const argsStr = item.arguments.map(arg => {
+              if (Array.isArray(arg)) {
+                return `[${arg.join(', ')}]`;
+              } else if (typeof arg === 'object' && arg !== null) {
+                return JSON.stringify(arg);
+              } else if (typeof arg === 'string') {
+                return `"${arg}"`;
+              } else {
+                return String(arg);
+              }
+            }).join(', ');
+            content += `<span class="dashboard-arguments">(${argsStr})</span>`;
           }
+
           firstLine.innerHTML = content;
           itemContainer.appendChild(firstLine);
 
-          // Second line: expected results if there's a mismatch
+          // Second line: return value
+          if (item.return_value !== undefined && item.return_value !== null) {
+            const returnLine = document.createElement('div');
+            returnLine.className = 'dashboard-return-line';
+            const returnValueStr = Array.isArray(item.return_value)
+              ? `[${item.return_value.join(', ')}]`
+              : String(item.return_value);
+            returnLine.innerHTML = `<span class="dashboard-return-value">→ ${returnValueStr}</span>`;
+            itemContainer.appendChild(returnLine);
+          }
+
+          // Third line: expected results if there's a mismatch
           if (item.expected_results && item.return_value !== undefined) {
             const actualStr = Array.isArray(item.return_value)
               ? JSON.stringify(item.return_value)
@@ -1093,13 +1115,13 @@ class WebUIRenderer extends BaseRenderer {
 
             if (!matches) {
               // Show expected results on new line
-              const secondLine = document.createElement('div');
-              secondLine.className = 'dashboard-expected-line';
+              const thirdLine = document.createElement('div');
+              thirdLine.className = 'dashboard-expected-line';
               const expectedStr = item.expected_results.map(e =>
                 Array.isArray(e) ? `[${e.join(', ')}]` : String(e)
               ).join(' or ');
-              secondLine.innerHTML = `<span class="dashboard-expected-value">(expected: ${expectedStr})</span>`;
-              itemContainer.appendChild(secondLine);
+              thirdLine.innerHTML = `<span class="dashboard-expected-value">(expected: ${expectedStr})</span>`;
+              itemContainer.appendChild(thirdLine);
             }
           }
 

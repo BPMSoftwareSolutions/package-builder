@@ -229,6 +229,34 @@ def run_user_and_tests(user_code: str, tests_code: str):
     }
 
 
+def _serialize_arguments(args_tuple):
+    """
+    Serialize function arguments for display.
+
+    Args:
+        args_tuple: Tuple of arguments passed to function
+
+    Returns:
+        List of serialized arguments (as strings or JSON objects)
+    """
+    serialized = []
+    for arg in args_tuple:
+        if isinstance(arg, (list, tuple)):
+            serialized.append(list(arg))
+        elif isinstance(arg, dict):
+            serialized.append(arg)
+        elif isinstance(arg, str):
+            serialized.append(arg)
+        elif isinstance(arg, (int, float, bool)):
+            serialized.append(arg)
+        elif arg is None:
+            serialized.append(None)
+        else:
+            # For other types, convert to string
+            serialized.append(str(arg))
+    return serialized
+
+
 def capture_execution_results(user_ns, user_code="", expected_results=None):
     """
     Capture execution results from user namespace for visualization.
@@ -286,6 +314,9 @@ def capture_execution_results(user_ns, user_code="", expected_results=None):
                     else:
                         func_info["return_value"] = str(return_value) if return_value is not None else None
                         func_info["return_type"] = type(return_value).__name__
+
+                    # Serialize the arguments that were passed
+                    func_info["arguments"] = _serialize_arguments(test_input)
 
                     # If we got a meaningful result (non-empty for lists/tuples), break
                     # Otherwise, try the next test input
