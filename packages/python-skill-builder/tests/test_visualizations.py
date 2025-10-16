@@ -218,6 +218,35 @@ class TestFunctionReturnValues:
         assert 'return_value' in func_info, "Function should have return_value captured"
         assert func_info['return_value'] is not None
 
+    def test_capture_function_return_values_with_meaningful_data(self, client):
+        """Functions should return meaningful results, not empty arrays"""
+        user_code = '''def even_squares(nums):
+    result = []
+    for n in nums:
+        if n % 2 == 0:
+            result.append(n ** 2)
+    return result'''
+
+        payload = {
+            'moduleId': 'python_basics',
+            'workshopId': 'basics_01',
+            'approachId': 'loop',
+            'code': user_code
+        }
+        response = client.post('/api/grade',
+                              data=json.dumps(payload),
+                              content_type='application/json')
+        data = response.get_json()
+
+        assert response.status_code == 200
+        func_info = data['execution_results']['functions']['even_squares']
+
+        # Should have a non-empty return value (not just [])
+        assert 'return_value' in func_info
+        assert func_info['return_value'] != [], "Should return meaningful data, not empty list"
+        # Should contain some even squares from [1, 2, 3, 4, 5]
+        assert len(func_info['return_value']) > 0, "Return value should not be empty"
+
 
 class TestVisualizationUserCode:
     """Test that user code is included in visualization data"""

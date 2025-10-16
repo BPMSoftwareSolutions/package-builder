@@ -222,8 +222,17 @@ def capture_execution_results(user_ns, user_code=""):
                     else:
                         func_info["return_value"] = str(return_value) if return_value is not None else None
                         func_info["return_type"] = type(return_value).__name__
-                    # Successfully captured return value, break out of loop
-                    break
+
+                    # If we got a meaningful result (non-empty for lists/tuples), break
+                    # Otherwise, try the next test input
+                    if isinstance(return_value, (list, tuple)):
+                        if len(return_value) > 0:
+                            # Got meaningful data, stop trying
+                            break
+                        # Empty result, try next input
+                    else:
+                        # Non-list result, accept it
+                        break
                 except (TypeError, ValueError, AttributeError):
                     # This test input didn't work, try the next one
                     continue
