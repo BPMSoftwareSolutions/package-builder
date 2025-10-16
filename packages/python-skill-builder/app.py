@@ -53,6 +53,8 @@ SAFE_BUILTINS = {
     "NameError": NameError, "ImportError": ImportError,  # Required for error handling in tests
     "__build_class__": __build_class__,  # Required for class definitions
     "property": property,  # Required for @property decorator
+    "classmethod": classmethod,  # Required for @classmethod decorator
+    "staticmethod": staticmethod,  # Required for @staticmethod decorator
     "super": super  # Required for super() calls in inheritance
 }
 
@@ -102,7 +104,7 @@ def run_user_and_tests(user_code: str, tests_code: str):
         tests_code: Test harness that defines grade(user_ns) function
 
     Returns:
-        dict with score, max_score, and feedback
+        dict with score, max_score, feedback, and execution_results
     """
     import inspect
     import builtins
@@ -150,13 +152,82 @@ def run_user_and_tests(user_code: str, tests_code: str):
         raise RuntimeError("Test script must define grade(user_ns) -> dict.")
 
     result = test_ns["grade"](user_ns)
-    
+
     # normalize
     score = int(result.get("score", 0))
     feedback = str(result.get("feedback", ""))
     max_score = int(result.get("max_score", 100))
-    
-    return {"score": score, "max_score": max_score, "feedback": feedback}
+
+    # Capture execution results for visualizations
+    execution_results = capture_execution_results(user_ns)
+
+    return {
+        "score": score,
+        "max_score": max_score,
+        "feedback": feedback,
+        "execution_results": execution_results
+    }
+
+
+def capture_execution_results(user_ns):
+    """
+    Capture execution results from user namespace for visualization.
+
+    Args:
+        user_ns: User namespace after code execution
+
+    Returns:
+        dict with captured execution data (functions, classes, variables)
+    """
+    results = {
+        "functions": {},
+        "classes": {},
+        "variables": {}
+    }
+
+    # Capture user-defined functions
+    for name, obj in user_ns.items():
+        if name.startswith("__"):
+            continue
+
+        if callable(obj) and not isinstance(obj, type):
+            # It's a function
+            results["functions"][name] = {
+                "name": name,
+                "type": "function"
+            }
+        elif isinstance(obj, type):
+            # It's a class
+            class_info = {
+                "name": name,
+                "type": "class",
+                "methods": []
+            }
+
+            # Capture class methods
+            for attr_name in dir(obj):
+                if not attr_name.startswith("_"):
+                    attr = getattr(obj, attr_name)
+                    if callable(attr):
+                        class_info["methods"].append(attr_name)
+
+            results["classes"][name] = class_info
+        elif not callable(obj):
+            # It's a variable - capture type and string representation
+            try:
+                results["variables"][name] = {
+                    "name": name,
+                    "type": type(obj).__name__,
+                    "value": str(obj) if len(str(obj)) < 100 else str(obj)[:97] + "..."
+                }
+            except:
+                results["variables"][name] = {
+                    "name": name,
+                    "type": type(obj).__name__,
+                    "value": "<unable to serialize>"
+                }
+
+    return results
 
 @app.post("/api/grade")
 def grade_submission():
@@ -177,7 +248,9 @@ def grade_submission():
       "score": 100,
       "max_score": 100,
       "feedback": "Great!",
-      "elapsed_ms": 5
+      "elapsed_ms": 5,
+      "execution_results": {...},
+      "visualizations": [...]
     }
     """
     data = request.get_json(force=True)
@@ -215,6 +288,11 @@ def grade_submission():
         t0 = time.time()
         result = run_user_and_tests(code, tests_code)
         result["elapsed_ms"] = int((time.time() - t0) * 1000)
+
+        # Add visualization configurations if present
+        visualizations = ws.get("visualizations", [])
+        if visualizations:
+            result["visualizations"] = visualizations
 
         return jsonify({"ok": True, **result})
 

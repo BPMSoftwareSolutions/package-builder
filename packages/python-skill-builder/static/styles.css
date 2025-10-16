@@ -452,3 +452,34 @@ textarea:focus {
     60%, 100% { content: '...'; }
 }
 
+/* ============================================================================
+   Visualization Styles
+   ============================================================================ */
+
+#visualization-container {
+    margin-top: 20px;
+}
+
+.cli-visualization {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 15px;
+}
+
+.cli-output {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--text-primary);
+    white-space: pre;
+    overflow-x: auto;
+    margin: 0;
+}
+
+/* CLI visualization color enhancements */
+.cli-visualization .cli-output {
+    text-shadow: 0 0 1px rgba(74, 158, 255, 0.3);
+}
+

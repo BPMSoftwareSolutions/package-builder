@@ -40,6 +40,20 @@
       "title": "classmethod vs staticmethod",
       "timeLimitMinutes": 8,
       "prompt": "Implement class Counter with: (a) class attribute total=0; (b) classmethod from_list(lst) that returns sum(lst); (c) staticmethod is_positive(x) -> bool.",
+      "visualizations": [
+        {
+          "id": "counter_cli_dashboard",
+          "type": "cli",
+          "enabled": true,
+          "config": {
+            "template": "╔═══════════════════════════════════════╗\n║   🧮  Counter Class Visualization    ║\n╠═══════════════════════════════════════╣\n║  Class Defined: {class_name}          ║\n║  Methods Found: {methods}             ║\n╚═══════════════════════════════════════╝",
+            "placeholders": {
+              "class_name": "execution.classes.Counter.name",
+              "methods": "execution.classes.Counter.methods"
+            }
+          }
+        }
+      ],
       "approaches": [
         {
           "id": "traditional",

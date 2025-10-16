@@ -1,10 +1,10 @@
 {
   "metadata": {
     "package": "python-skill-builder",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "lastUpdated": "2025-10-15",
     "purpose": "Feature inventory for test suite generation and regression prevention",
-    "relatedIssues": ["#24", "#26", "#31"]
+    "relatedIssues": ["#24", "#26", "#31", "#33", "#34"]
   },
   "features": {
     "backend": {
@@ -128,6 +128,41 @@
             ]
           }
         ]
+      },
+      "visualizations": {
+        "description": "Data-driven visualization system for enhanced learning",
+        "features": [
+          {
+            "name": "Execution results capture",
+            "testCases": [
+              "Captures user-defined functions with name and type",
+              "Captures user-defined classes with name, type, and methods",
+              "Captures user-defined variables with name, type, and value",
+              "Execution results included in /api/grade response",
+              "Execution results available for all grading requests"
+            ]
+          },
+          {
+            "name": "Visualization configuration",
+            "testCases": [
+              "Workshops can define visualizations array in JSON",
+              "Visualizations returned in /api/grade response when configured",
+              "Workshops without visualizations work normally (backward compatibility)",
+              "Visualization config includes id, type, enabled, and config fields"
+            ]
+          },
+          {
+            "name": "CLI dashboard renderer",
+            "testCases": [
+              "Renders text-based dashboards with ASCII art",
+              "Supports template placeholders for dynamic content",
+              "Resolves execution result paths (e.g., execution.classes.Counter.name)",
+              "Handles literal values in placeholders",
+              "Converts arrays to comma-separated strings",
+              "Returns placeholder text for unresolved paths"
+            ]
+          }
+        ]
       }
     },
     "frontend": {
@@ -244,6 +279,31 @@
           "Shows error message for syntax errors",
           "Shows error message for runtime errors",
           "Shows stack trace for debugging"
+        ]
+      },
+      "visualizations": {
+        "description": "Interactive visualizations for enhanced learning",
+        "features": [
+          {
+            "name": "Visualization manager",
+            "testCases": [
+              "VisualizationManager orchestrates rendering",
+              "Supports multiple renderer types (cli, web, animation, agentic)",
+              "Renders all enabled visualizations",
+              "Clears previous visualizations before rendering new ones",
+              "Handles missing renderer types gracefully"
+            ]
+          },
+          {
+            "name": "CLI renderer",
+            "testCases": [
+              "Renders CLI visualizations in feedback section",
+              "Replaces template placeholders with execution results",
+              "Displays formatted ASCII art dashboards",
+              "Handles missing execution result paths",
+              "Styled with monospace font and dark theme"
+            ]
+          }
         ]
       },
       "progressTracking": {
