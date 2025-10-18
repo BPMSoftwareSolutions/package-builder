@@ -12,9 +12,14 @@ function getToken(): string {
     throw new Error(
       'GITHUB_TOKEN, GH_TOKEN, or GH_PAT environment variable is required.\n' +
       'Set it with: $env:GITHUB_TOKEN = "your_token" (PowerShell) or export GITHUB_TOKEN=your_token (bash)\n' +
-      'Create a token at: https://github.com/settings/tokens/new?scopes=repo,workflow'
+      'Create a token at: https://github.com/settings/tokens/new?scopes=repo,workflow\n\n' +
+      'Available environment variables:\n' +
+      `  GITHUB_TOKEN: ${process.env.GITHUB_TOKEN ? '✓ set' : '✗ not set'}\n` +
+      `  GH_TOKEN: ${process.env.GH_TOKEN ? '✓ set' : '✗ not set'}\n` +
+      `  GH_PAT: ${process.env.GH_PAT ? '✓ set' : '✗ not set'}`
     );
   }
+  console.log(`✅ GitHub token found (${token.substring(0, 10)}...)`);
   return token;
 }
 
@@ -53,7 +58,9 @@ async function fetchGitHub<T>(endpoint: string, options?: RequestInit): Promise<
       errorMessage = error || errorMessage;
     }
 
-    throw new Error(errorMessage);
+    const err = new Error(errorMessage);
+    (err as any).status = response.status;
+    throw err;
   }
 
   return response.json() as Promise<T>;
@@ -61,23 +68,54 @@ async function fetchGitHub<T>(endpoint: string, options?: RequestInit): Promise<
 
 export async function listRepos(options: ListReposOptions): Promise<Repository[]> {
   const { org, topic, limit = 100 } = options;
-  
+
   let endpoint = `/orgs/${org}/repos?per_page=${Math.min(limit, 100)}&sort=updated&direction=desc`;
   if (topic) {
     endpoint += `&topic=${topic}`;
   }
 
-  const data = await fetchGitHub<any[]>(endpoint);
-  
-  return data.map(repo => ({
-    name: repo.name,
-    owner: repo.owner.login,
-    url: repo.html_url,
-    description: repo.description,
-    isPrivate: repo.private,
-    topics: repo.topics,
-    lastUpdated: repo.updated_at,
-  }));
+  try {
+    const data = await fetchGitHub<any[]>(endpoint);
+
+    return data.map(repo => ({
+      name: repo.name,
+      owner: repo.owner.login,
+      url: repo.html_url,
+      description: repo.description,
+      isPrivate: repo.private,
+      topics: repo.topics,
+      lastUpdated: repo.updated_at,
+    }));
+  } catch (error) {
+    // If org endpoint fails with 404, try user endpoint
+    const status = (error as any).status;
+    if (status === 404) {
+      console.log(`⚠️ Organization "${org}" not found or not accessible. Trying user repositories...`);
+      try {
+        const userEndpoint = `/user/repos?per_page=${Math.min(limit, 100)}&sort=updated&direction=desc&type=owner`;
+        const data = await fetchGitHub<any[]>(userEndpoint);
+
+        console.log(`✅ Fetched ${data.length} user repositories`);
+
+        return data.map(repo => ({
+          name: repo.name,
+          owner: repo.owner.login,
+          url: repo.html_url,
+          description: repo.description,
+          isPrivate: repo.private,
+          topics: repo.topics,
+          lastUpdated: repo.updated_at,
+        }));
+      } catch (userError) {
+        throw new Error(
+          `Cannot access organization "${org}". ` +
+          `Make sure you have access to the organization or use your own repositories. ` +
+          `Original error: ${error instanceof Error ? error.message : String(error)}`
+        );
+      }
+    }
+    throw error;
+  }
 }
 
 export async function listIssues(options: ListIssuesOptions): Promise<Issue[]> {
