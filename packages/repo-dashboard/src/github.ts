@@ -27,6 +27,8 @@ async function fetchGitHub<T>(endpoint: string, options?: RequestInit): Promise<
     ? `Bearer ${token}`
     : `token ${token}`;
 
+  console.log(`🔗 GitHub API Request: ${endpoint}`);
+
   const response = await fetch(url, {
     ...options,
     headers: {
@@ -38,7 +40,20 @@ async function fetchGitHub<T>(endpoint: string, options?: RequestInit): Promise<
 
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`GitHub API error: ${response.status} ${response.statusText}\n${error}`);
+    console.error(`❌ GitHub API Error: ${response.status} ${response.statusText}`);
+    console.error(`Response: ${error}`);
+
+    let errorMessage = `GitHub API error: ${response.status} ${response.statusText}`;
+    try {
+      const errorJson = JSON.parse(error);
+      if (errorJson.message) {
+        errorMessage = errorJson.message;
+      }
+    } catch {
+      errorMessage = error || errorMessage;
+    }
+
+    throw new Error(errorMessage);
   }
 
   return response.json() as Promise<T>;

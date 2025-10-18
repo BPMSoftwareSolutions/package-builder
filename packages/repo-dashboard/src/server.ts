@@ -46,25 +46,28 @@ app.get('/api/health', (_req: Request, res: Response) => {
 app.get('/api/repos/:org', asyncHandler(async (req: Request, res: Response) => {
   const { org } = req.params;
   const { limit = '50' } = req.query;
-  
+
   try {
-    const repos = await listRepos({ 
-      org, 
-      limit: Math.min(parseInt(limit as string), 100) 
+    console.log(`📊 Fetching repos for org: ${org}`);
+    const repos = await listRepos({
+      org,
+      limit: Math.min(parseInt(limit as string), 100)
     });
-    
+
+    console.log(`✅ Found ${repos.length} repositories`);
+
     // Fetch additional status for each repo
     const reposWithStatus = await Promise.all(
       repos.map(async (repo) => {
         try {
-          const issues = await listIssues({ 
-            repo: `${repo.owner}/${repo.name}`, 
-            state: 'open' 
+          const issues = await listIssues({
+            repo: `${repo.owner}/${repo.name}`,
+            state: 'open'
           });
           const prs = issues.filter(i => i.isPullRequest);
           const staleCount = await countStaleIssues(`${repo.owner}/${repo.name}`);
           const workflow = await getWorkflowStatus({ repo: `${repo.owner}/${repo.name}` });
-          
+
           return {
             ...repo,
             openIssues: issues.filter(i => !i.isPullRequest).length,
@@ -73,6 +76,7 @@ app.get('/api/repos/:org', asyncHandler(async (req: Request, res: Response) => {
             lastWorkflow: workflow?.conclusion || 'unknown',
           };
         } catch (error) {
+          console.warn(`⚠️ Error fetching status for ${repo.name}:`, error instanceof Error ? error.message : error);
           return {
             ...repo,
             openIssues: 0,
@@ -83,11 +87,12 @@ app.get('/api/repos/:org', asyncHandler(async (req: Request, res: Response) => {
         }
       })
     );
-    
+
     res.json(reposWithStatus);
   } catch (error) {
-    res.status(400).json({ 
-      error: error instanceof Error ? error.message : 'Failed to fetch repositories' 
+    console.error('❌ Error fetching repositories:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch repositories'
     });
   }
 }));

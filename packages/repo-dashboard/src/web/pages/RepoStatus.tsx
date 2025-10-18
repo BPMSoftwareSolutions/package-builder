@@ -40,12 +40,16 @@ export default function RepoStatus({ org, onNavigate }: RepoStatusProps) {
         setError(null);
         const response = await fetch(`/api/repos/${org}`);
         if (!response.ok) {
-          throw new Error(`Failed to fetch repositories: ${response.statusText}`);
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = errorData.error || `Failed to fetch repositories: ${response.statusText}`;
+          throw new Error(errorMessage);
         }
         const data = await response.json();
         setRepos(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch repositories');
+        const errorMsg = err instanceof Error ? err.message : 'Failed to fetch repositories';
+        console.error('Error fetching repos:', errorMsg);
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }

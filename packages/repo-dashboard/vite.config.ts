@@ -16,6 +16,12 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    middlewareMode: false,
+  },
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
   },
 });
 
