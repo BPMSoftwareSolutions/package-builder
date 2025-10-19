@@ -181,6 +181,7 @@ app.get('/api/summary/architecture/:org/:repo', asyncHandler(async (req: Request
     const repoNames = architectureRepos.map(r => `${r.owner}/${r.name}`);
 
     console.log(`📊 Found ${repoNames.length} repositories in architecture`);
+    console.log(`📋 Repository names: ${repoNames.join(', ')}`);
 
     // Fetch metrics for architecture repositories
     let totalIssues = 0;
@@ -189,6 +190,7 @@ app.get('/api/summary/architecture/:org/:repo', asyncHandler(async (req: Request
 
     for (const repoName of repoNames) {
       try {
+        console.log(`🔍 Fetching metrics for ${repoName}...`);
         const issues = await listIssues({
           repo: repoName,
           state: 'open'
@@ -208,6 +210,7 @@ app.get('/api/summary/architecture/:org/:repo', asyncHandler(async (req: Request
             stalePRs: staleCount
           }
         });
+        console.log(`✅ Successfully fetched metrics for ${repoName}`);
       } catch (error) {
         console.warn(`⚠️ Error fetching metrics for ${repoName}:`, error instanceof Error ? error.message : error);
       }
