@@ -23,6 +23,9 @@ import { bundleMetricsCollector } from './services/bundle-metrics-collector.js';
 import { testCoverageCollector } from './services/test-coverage-collector.js';
 import { codeQualityCollector } from './services/code-quality-collector.js';
 import { testExecutionCollector } from './services/test-execution-collector.js';
+import { ConstraintDetectionService } from './services/constraint-detection.js';
+import { RootCauseAnalysisService } from './services/root-cause-analysis.js';
+import { PredictiveAnalysisService } from './services/predictive-analysis.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -37,6 +40,11 @@ const DEFAULT_ARCHITECTURE_REPO = process.env.DEFAULT_ARCHITECTURE_REPO || 'rend
 const wipTracker = new WIPTrackerService(prMetricsCollector);
 const flowStageAnalyzer = new FlowStageAnalyzerService(prMetricsCollector);
 const deployCadenceService = new DeployCadenceService(deploymentMetricsCollector);
+
+// Initialize Phase 1.4 services (Constraint Radar & Bottleneck Detection)
+const constraintDetectionService = new ConstraintDetectionService();
+const rootCauseAnalysisService = new RootCauseAnalysisService();
+const predictiveAnalysisService = new PredictiveAnalysisService();
 
 // Middleware
 app.use(express.json());
@@ -1329,6 +1337,186 @@ app.get('/api/metrics/tests/:org/:repo', asyncHandler(async (req: Request, res: 
     console.error('❌ Error fetching test metrics:', error);
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch test metrics'
+    });
+  }
+}));
+
+// Phase 1.4: Constraint Radar & Bottleneck Detection Endpoints
+
+// Get constraints for organization
+app.get('/api/metrics/constraints/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching constraints for organization: ${org}`);
+
+    // For now, return mock data
+    const constraints = {
+      organization: org,
+      timestamp: new Date().toISOString(),
+      constraints: []
+    };
+
+    res.json(constraints);
+  } catch (error) {
+    console.error('❌ Error fetching constraints:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch constraints'
+    });
+  }
+}));
+
+// Get constraints for team
+app.get('/api/metrics/constraints/:org/:team', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, team } = req.params;
+    console.log(`📊 Fetching constraints for team: ${team}`);
+
+    // For now, return mock data
+    const constraints = {
+      organization: org,
+      team,
+      timestamp: new Date().toISOString(),
+      constraints: []
+    };
+
+    res.json(constraints);
+  } catch (error) {
+    console.error('❌ Error fetching team constraints:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch team constraints'
+    });
+  }
+}));
+
+// Get constraint radar for repository
+app.get('/api/metrics/constraints/:org/:team/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, team, repo } = req.params;
+    console.log(`📊 Fetching constraint radar for ${org}/${repo}`);
+
+    // Collect flow stage metrics
+    const flowBreakdown = await flowStageAnalyzer.analyzeFlowStages(org, team, repo);
+
+    // Detect constraints
+    const radarData = constraintDetectionService.detectConstraints(
+      org,
+      team,
+      repo,
+      flowBreakdown.stages,
+      flowBreakdown.anomalies.length
+    );
+
+    res.json({
+      repository: `${org}/${repo}`,
+      radarData,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching constraint radar:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch constraint radar'
+    });
+  }
+}));
+
+// Get bottleneck detection results
+app.get('/api/metrics/bottlenecks/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching bottleneck detection for organization: ${org}`);
+
+    // For now, return mock data
+    const bottlenecks = {
+      organization: org,
+      timestamp: new Date().toISOString(),
+      bottlenecks: []
+    };
+
+    res.json(bottlenecks);
+  } catch (error) {
+    console.error('❌ Error fetching bottlenecks:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch bottlenecks'
+    });
+  }
+}));
+
+// Get constraint history
+app.get('/api/metrics/constraint-history/:org/:team/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, team, repo } = req.params;
+    console.log(`📊 Fetching constraint history for ${org}/${repo}`);
+
+    const history = constraintDetectionService.getConstraintHistory(org, team, repo);
+
+    res.json({
+      repository: `${org}/${repo}`,
+      history,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching constraint history:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch constraint history'
+    });
+  }
+}));
+
+// Acknowledge constraint
+app.post('/api/metrics/constraints/:org/:team/acknowledge', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, team } = req.params;
+    console.log(`📊 Acknowledging constraint for team: ${team}`);
+
+    res.json({
+      organization: org,
+      team,
+      acknowledged: true,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error acknowledging constraint:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to acknowledge constraint'
+    });
+  }
+}));
+
+// Get predictive analysis
+app.get('/api/metrics/predictive/:org/:team/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, team, repo } = req.params;
+    console.log(`📊 Fetching predictive analysis for ${org}/${repo}`);
+
+    // Collect flow stage metrics
+    const flowBreakdown = await flowStageAnalyzer.analyzeFlowStages(org, team, repo);
+
+    // Detect constraints
+    const radarData = constraintDetectionService.detectConstraints(
+      org,
+      team,
+      repo,
+      flowBreakdown.stages
+    );
+
+    // Perform predictive analysis
+    const prediction = predictiveAnalysisService.performPredictiveAnalysis(
+      org,
+      team,
+      repo,
+      radarData.constraints,
+      flowBreakdown.stages
+    );
+
+    res.json({
+      repository: `${org}/${repo}`,
+      prediction,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching predictive analysis:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch predictive analysis'
     });
   }
 }));

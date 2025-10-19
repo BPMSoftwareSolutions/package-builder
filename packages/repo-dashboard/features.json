@@ -1109,9 +1109,93 @@
         "file": "src/integration.test.ts",
         "testCount": 8
       }
+    ],
+    "phase1_4_constraint_radar": [
+      {
+        "name": "ConstraintDetectionService",
+        "status": "implemented",
+        "file": "src/services/constraint-detection.ts",
+        "description": "Backend service for statistical analysis, percentile calculation, outlier detection, and trend identification",
+        "testCases": [
+          "Detect no constraints when all stages are healthy",
+          "Detect high severity constraint when p95 time is high",
+          "Detect critical severity constraint when p99 time is high",
+          "Escalate severity when trend is degrading",
+          "Generate recommendations for each stage type",
+          "Calculate constraint score correctly",
+          "Identify primary and secondary constraints",
+          "Maintain constraint history",
+          "Clear constraint history"
+        ]
+      },
+      {
+        "name": "RootCauseAnalysisService",
+        "status": "implemented",
+        "file": "src/services/root-cause-analysis.ts",
+        "description": "Backend service for correlating constraints with events and generating recommendations",
+        "testCases": [
+          "Analyze root causes for constraints",
+          "Identify large PR patterns",
+          "Identify author concentration patterns",
+          "Generate immediate actions for critical constraints",
+          "Generate long-term improvements",
+          "Correlate with events",
+          "Track affected PRs",
+          "Identify failure patterns"
+        ]
+      },
+      {
+        "name": "PredictiveAnalysisService",
+        "status": "implemented",
+        "file": "src/services/predictive-analysis.ts",
+        "description": "Backend service for forecasting future constraints and severity scoring",
+        "testCases": [
+          "Perform predictive analysis",
+          "Forecast constraints based on trends",
+          "Identify at-risk stages",
+          "Predict bottleneck",
+          "Generate preventive actions",
+          "Calculate risk score for stages",
+          "Handle empty constraints",
+          "Handle historical data",
+          "Determine correct timeframe for probability"
+        ]
+      },
+      {
+        "name": "Constraint Detection API endpoints",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/metrics/constraints/:org - Organization-wide constraints",
+          "GET /api/metrics/constraints/:org/:team - Team-specific constraints",
+          "GET /api/metrics/constraints/:org/:team/:repo - Stage-specific analysis",
+          "GET /api/metrics/bottlenecks/:org - Bottleneck detection results",
+          "POST /api/metrics/constraints/:org/:team/acknowledge - Acknowledge constraint",
+          "GET /api/metrics/constraint-history/:org/:team/:repo - Historical constraint tracking",
+          "GET /api/metrics/predictive/:org/:team/:repo - Predictive analysis"
+        ]
+      },
+      {
+        "name": "Unit tests for ConstraintDetectionService",
+        "status": "implemented",
+        "file": "src/services/constraint-detection.test.ts",
+        "testCount": 10
+      },
+      {
+        "name": "Unit tests for RootCauseAnalysisService",
+        "status": "implemented",
+        "file": "src/services/root-cause-analysis.test.ts",
+        "testCount": 8
+      },
+      {
+        "name": "Unit tests for PredictiveAnalysisService",
+        "status": "implemented",
+        "file": "src/services/predictive-analysis.test.ts",
+        "testCount": 10
+      }
     ]
   },
-  "phase": "Phase 2.1 - Test Coverage & Quality Metrics Dashboard (In Progress) - Issue #77",
+  "phase": "Phase 1.4 - Constraint Radar & Bottleneck Detection (In Progress) - Issue #76",
   "relatedTasks": {
     "completed": [
       "Create feature branch",
