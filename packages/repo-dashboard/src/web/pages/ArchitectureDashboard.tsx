@@ -92,7 +92,30 @@ export const ArchitectureDashboard: React.FC<ArchitectureDashboardProps> = ({ on
 
       {/* Architecture Selector (when using real ADF) */}
       {useRealADF && (
-        <div style={{ marginBottom: '2rem', maxWidth: '400px' }}>
+        <div style={{ marginBottom: '2rem', maxWidth: '500px' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-primary)', fontWeight: 'bold' }}>
+            Organization
+          </label>
+          <input
+            type="text"
+            value={org}
+            onChange={(e) => {
+              setOrg(e.target.value);
+              setSelectedRepo(null);
+            }}
+            placeholder="Enter GitHub organization name"
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              marginBottom: '1rem',
+              backgroundColor: 'var(--bg-primary)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '4px',
+              fontSize: '1rem',
+            }}
+          />
+
           <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-primary)', fontWeight: 'bold' }}>
             Select Architecture
           </label>
@@ -104,6 +127,23 @@ export const ArchitectureDashboard: React.FC<ArchitectureDashboardProps> = ({ on
               setSelectedRepo(repo);
             }}
           />
+
+          <div style={{
+            marginTop: '1rem',
+            padding: '1rem',
+            backgroundColor: 'var(--bg-secondary)',
+            borderRadius: '4px',
+            fontSize: '0.9rem',
+            color: 'var(--text-secondary)',
+            borderLeft: '4px solid var(--accent-color)',
+          }}>
+            <p style={{ margin: '0 0 0.5rem 0' }}>
+              💡 <strong>Tip:</strong> To view an architecture, you need a repository with an <code>adf.json</code> file.
+            </p>
+            <p style={{ margin: 0 }}>
+              Try entering an organization name and selecting from available architectures.
+            </p>
+          </div>
         </div>
       )}
 
