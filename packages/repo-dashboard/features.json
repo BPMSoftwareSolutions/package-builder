@@ -534,7 +534,114 @@
       }
     ]
   },
-  "phase": "Phase 1 - Python Scripts (Complete)",
+  "adfIntegration": {
+    "description": "ADF Integration for fetching and displaying real architecture data from GitHub repositories",
+    "features": [
+      {
+        "name": "ADF Fetcher Service",
+        "status": "implemented",
+        "file": "src/services/adf-fetcher.ts",
+        "testCases": [
+          "Fetch ADF from GitHub repository",
+          "Validate ADF against schema",
+          "Cache ADF files with TTL",
+          "List all ADFs in organization",
+          "Handle GitHub API errors"
+        ]
+      },
+      {
+        "name": "ADF Cache Service",
+        "status": "implemented",
+        "file": "src/services/adf-cache.ts",
+        "testCases": [
+          "Cache ADF entries with TTL",
+          "Track cache hits and misses",
+          "Calculate hit rate",
+          "Invalidate entries by pattern",
+          "Automatic cleanup of expired entries"
+        ]
+      },
+      {
+        "name": "ADF API Endpoints",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/adf/:org/:repo - Fetch ADF for specific repository",
+          "GET /api/adf/:org - List all ADFs in organization",
+          "POST /api/adf/validate - Validate ADF",
+          "GET /api/adf/:org/:repo/metrics - Get ADF metrics",
+          "GET /api/adf/cache/stats - Get cache statistics"
+        ]
+      },
+      {
+        "name": "ADFViewer Component",
+        "status": "implemented",
+        "file": "src/web/components/ADFViewer.tsx",
+        "testCases": [
+          "Display ADF metadata",
+          "Show C4 model containers",
+          "Display relationships",
+          "Show health scores and metrics",
+          "Handle loading and error states"
+        ]
+      },
+      {
+        "name": "ArchitectureSelector Component",
+        "status": "implemented",
+        "file": "src/web/components/ArchitectureSelector.tsx",
+        "testCases": [
+          "List available architectures",
+          "Search and filter ADFs",
+          "Select architecture from dropdown",
+          "Display selected architecture",
+          "Handle fetch errors"
+        ]
+      },
+      {
+        "name": "Enhanced Architecture Dashboard",
+        "status": "implemented",
+        "file": "src/web/pages/ArchitectureDashboard.tsx",
+        "testCases": [
+          "Toggle between mock and real ADF data",
+          "Select repository with ArchitectureSelector",
+          "Display real ADF data with ADFViewer",
+          "Show containers and relationships",
+          "Display metrics and health scores"
+        ]
+      },
+      {
+        "name": "ADF Details Page",
+        "status": "implemented",
+        "file": "src/web/pages/ADFDetailsPage.tsx",
+        "testCases": [
+          "Display full ADF specification",
+          "Show overview section with metrics",
+          "Display containers with details",
+          "Show relationships between containers",
+          "Expandable sections for better UX"
+        ]
+      },
+      {
+        "name": "Unit Tests for ADF Services",
+        "status": "implemented",
+        "testCount": 20,
+        "files": [
+          "test/services/adf-fetcher.test.ts",
+          "test/services/adf-cache.test.ts"
+        ]
+      },
+      {
+        "name": "Component Tests for ADF UI",
+        "status": "implemented",
+        "testCount": 15,
+        "files": [
+          "test/web/components/ADFViewer.test.tsx",
+          "test/web/components/ArchitectureSelector.test.tsx"
+        ]
+      }
+    ]
+  },
+  "phase": "Phase 2 - Web UI Integration (In Progress)",
   "relatedTasks": {
     "completed": [
       "Create feature branch",
@@ -581,6 +688,20 @@
       "Run local CI (npm run ci)",
       "Push branch and create PR",
       "Monitor CI and fix any failures"
+    ],
+    "phase2Completed": [
+      "Create feature branch feat/66-adf-integration",
+      "Implement ADF Fetcher Service",
+      "Implement ADF Cache Service",
+      "Add ADF API endpoints",
+      "Write unit tests for ADF services",
+      "Create ADFViewer component",
+      "Create ArchitectureSelector component",
+      "Enhance Architecture Dashboard",
+      "Create ADF Details Page",
+      "Write component tests",
+      "Run all tests (141 tests passed)",
+      "Build project successfully"
     ]
   }
 }

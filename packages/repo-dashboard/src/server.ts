@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { listRepos, listIssues, getWorkflowStatus, countStaleIssues } from './github.js';
 import { getPackageReadiness } from './local.js';
+import { adfFetcher } from './services/adf-fetcher.js';
+import { adfCache } from './services/adf-cache.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -198,6 +200,132 @@ app.get('/api/packages', asyncHandler(async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch packages'
+    });
+  }
+}));
+
+// ADF endpoints
+app.get('/api/adf/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  const { org, repo } = req.params;
+  const { branch = 'main', path = 'adf.json' } = req.query;
+
+  try {
+    console.log(`📋 Fetching ADF for ${org}/${repo}`);
+
+    // Check cache first
+    const cacheKey = `${org}/${repo}/${branch}/${path}`;
+    const cached = adfCache.get(cacheKey);
+    if (cached) {
+      return res.json(cached);
+    }
+
+    // Fetch from GitHub
+    const adf = await adfFetcher.fetchADF({
+      org,
+      repo,
+      branch: branch as string,
+      path: path as string
+    });
+
+    // Cache the result
+    adfCache.set(cacheKey, adf);
+
+    res.json(adf);
+  } catch (error) {
+    console.error(`❌ Error fetching ADF for ${org}/${repo}:`, error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch ADF'
+    });
+  }
+}));
+
+// List all ADFs in an organization
+app.get('/api/adf/:org', asyncHandler(async (req: Request, res: Response) => {
+  const { org } = req.params;
+
+  try {
+    console.log(`📋 Listing ADFs for organization: ${org}`);
+    const adfs = await adfFetcher.listADFs(org);
+    res.json(adfs);
+  } catch (error) {
+    console.error(`❌ Error listing ADFs for ${org}:`, error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to list ADFs'
+    });
+  }
+}));
+
+// Validate ADF
+app.post('/api/adf/validate', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const adf = req.body;
+    console.log(`📋 Validating ADF: ${adf.name}`);
+
+    const isValid = await adfFetcher.validateADF(adf);
+
+    res.json({
+      valid: isValid,
+      message: 'ADF is valid'
+    });
+  } catch (error) {
+    console.error('❌ ADF validation error:', error);
+    res.status(400).json({
+      valid: false,
+      error: error instanceof Error ? error.message : 'ADF validation failed'
+    });
+  }
+}));
+
+// Get ADF metrics
+app.get('/api/adf/:org/:repo/metrics', asyncHandler(async (req: Request, res: Response) => {
+  const { org, repo } = req.params;
+  const { branch = 'main', path = 'adf.json' } = req.query;
+
+  try {
+    console.log(`📊 Fetching ADF metrics for ${org}/${repo}`);
+
+    const adf = await adfFetcher.fetchADF({
+      org,
+      repo,
+      branch: branch as string,
+      path: path as string
+    });
+
+    const metrics = {
+      org,
+      repo,
+      version: adf.version,
+      name: adf.name,
+      metrics: adf.metrics || {
+        healthScore: 0,
+        testCoverage: 0,
+        buildStatus: 'unknown'
+      },
+      c4Model: {
+        level: adf.c4Model?.level || 'container',
+        containerCount: adf.c4Model?.containers?.length || 0,
+        relationshipCount: adf.c4Model?.relationships?.length || 0
+      }
+    };
+
+    res.json(metrics);
+  } catch (error) {
+    console.error(`❌ Error fetching ADF metrics for ${org}/${repo}:`, error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch ADF metrics'
+    });
+  }
+}));
+
+// Cache statistics endpoint
+app.get('/api/adf/cache/stats', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const stats = adfCache.getStats();
+    res.json(stats);
+  } catch (error) {
+    console.error('❌ Error getting cache stats:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to get cache stats'
     });
   }
 }));

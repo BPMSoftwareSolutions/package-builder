@@ -46,6 +46,7 @@
     "build": "npm run build:cli && npm run build:web",
     "build:cli": "tsc -p tsconfig.build.json",
     "build:web": "vite build",
+    "ci": "npm run test && npm run build",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:web\"",
     "dev:server": "tsx watch src/bin/server.ts",
     "dev:web": "vite",
