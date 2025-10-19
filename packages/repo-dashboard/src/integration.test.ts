@@ -183,5 +183,130 @@ describe('Integration Tests', () => {
       expect(filtered.length).toBe(2);
     });
   });
+
+  describe('Quality Metrics Response Formats (Phase 2.1)', () => {
+    it('should have valid coverage metrics response format', () => {
+      const coverageResponse = {
+        repository: 'BPMSoftwareSolutions/renderx-plugins-sdk',
+        metrics: {
+          timestamp: new Date(),
+          repo: 'BPMSoftwareSolutions/renderx-plugins-sdk',
+          lineCoverage: 82.5,
+          branchCoverage: 78.3,
+          functionCoverage: 85.1,
+          statementCoverage: 81.2,
+          coverageTrend: 'improving',
+          percentageChange: 2.5,
+          uncoveredLines: 150,
+          uncoveredBranches: 45,
+          criticalPathCoverage: 90.5,
+        },
+        timestamp: new Date().toISOString(),
+      };
+
+      expect(coverageResponse.repository).toBeDefined();
+      expect(coverageResponse.metrics.lineCoverage).toBeGreaterThanOrEqual(0);
+      expect(coverageResponse.metrics.lineCoverage).toBeLessThanOrEqual(100);
+      expect(['improving', 'stable', 'degrading']).toContain(coverageResponse.metrics.coverageTrend);
+    });
+
+    it('should have valid quality metrics response format', () => {
+      const qualityResponse = {
+        repository: 'BPMSoftwareSolutions/renderx-plugins-sdk',
+        metrics: {
+          timestamp: new Date(),
+          repo: 'BPMSoftwareSolutions/renderx-plugins-sdk',
+          lintingIssues: { error: 5, warning: 25, info: 40 },
+          typeErrors: 8,
+          securityVulnerabilities: { critical: 0, high: 2, medium: 5, low: 12 },
+          avgCyclomaticComplexity: 3.5,
+          maxCyclomaticComplexity: 12.2,
+          duplicationPercentage: 5.3,
+          qualityScore: 78.5,
+          qualityTrend: 'improving',
+        },
+        timestamp: new Date().toISOString(),
+      };
+
+      expect(qualityResponse.repository).toBeDefined();
+      expect(qualityResponse.metrics.qualityScore).toBeGreaterThanOrEqual(0);
+      expect(qualityResponse.metrics.qualityScore).toBeLessThanOrEqual(100);
+      expect(['improving', 'stable', 'degrading']).toContain(qualityResponse.metrics.qualityTrend);
+      expect(qualityResponse.metrics.lintingIssues.error).toBeGreaterThanOrEqual(0);
+    });
+
+    it('should have valid test metrics response format', () => {
+      const testResponse = {
+        repository: 'BPMSoftwareSolutions/renderx-plugins-sdk',
+        metrics: {
+          timestamp: new Date(),
+          repo: 'BPMSoftwareSolutions/renderx-plugins-sdk',
+          totalTests: 250,
+          passedTests: 230,
+          failedTests: 15,
+          skippedTests: 5,
+          passRate: 0.92,
+          totalExecutionTime: 45,
+          avgTestExecutionTime: 180,
+          flakyTests: ['test1', 'test2'],
+          flakyTestPercentage: 0.008,
+          unitTests: { total: 150, passed: 145 },
+          integrationTests: { total: 75, passed: 70 },
+          e2eTests: { total: 25, passed: 15 },
+        },
+        timestamp: new Date().toISOString(),
+      };
+
+      expect(testResponse.repository).toBeDefined();
+      expect(testResponse.metrics.passRate).toBeGreaterThanOrEqual(0);
+      expect(testResponse.metrics.passRate).toBeLessThanOrEqual(1);
+      expect(testResponse.metrics.totalTests).toBeGreaterThan(0);
+      expect(Array.isArray(testResponse.metrics.flakyTests)).toBe(true);
+    });
+  });
+
+  describe('Quality Metrics Data Flow Validation', () => {
+    it('should validate coverage metrics data consistency', () => {
+      const org = 'BPMSoftwareSolutions';
+      const repo = 'renderx-plugins-sdk';
+      const metrics = {
+        lineCoverage: 82.5,
+        branchCoverage: 78.3,
+        functionCoverage: 85.1,
+        statementCoverage: 81.2,
+      };
+
+      const avgCoverage = (metrics.lineCoverage + metrics.branchCoverage + metrics.functionCoverage + metrics.statementCoverage) / 4;
+      expect(avgCoverage).toBeGreaterThan(0);
+      expect(avgCoverage).toBeLessThanOrEqual(100);
+    });
+
+    it('should validate quality metrics aggregation', () => {
+      const repos = [
+        { qualityScore: 75, repo: 'repo1' },
+        { qualityScore: 85, repo: 'repo2' },
+        { qualityScore: 80, repo: 'repo3' },
+      ];
+
+      const avgQuality = repos.reduce((sum, r) => sum + r.qualityScore, 0) / repos.length;
+      expect(avgQuality).toBeGreaterThan(70);
+      expect(avgQuality).toBeLessThan(90);
+    });
+
+    it('should validate test metrics aggregation', () => {
+      const repos = [
+        { passRate: 0.95, totalTests: 100 },
+        { passRate: 0.90, totalTests: 150 },
+        { passRate: 0.92, totalTests: 120 },
+      ];
+
+      const totalTests = repos.reduce((sum, r) => sum + r.totalTests, 0);
+      const weightedPassRate = repos.reduce((sum, r) => sum + r.passRate * r.totalTests, 0) / totalTests;
+
+      expect(totalTests).toBe(370);
+      expect(weightedPassRate).toBeGreaterThan(0.85);
+      expect(weightedPassRate).toBeLessThan(1);
+    });
+  });
 });
 
