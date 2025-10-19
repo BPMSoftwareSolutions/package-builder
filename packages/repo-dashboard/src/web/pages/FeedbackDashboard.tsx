@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { AlertsPanel } from '../components/AlertsPanel.js';
-import { BuildStatusCard } from '../components/BuildStatusCard.js';
-import { TestResultsPanel } from '../components/TestResultsPanel.js';
-import { DeploymentStatusCard } from '../components/DeploymentStatusCard.js';
-import { FeedbackSummaryCard } from '../components/FeedbackSummaryCard.js';
-import { useWebSocket } from '../hooks/useWebSocket.js';
+import { AlertsPanel } from '../components/AlertsPanel';
+import { BuildStatusCard } from '../components/BuildStatusCard';
+import { TestResultsPanel } from '../components/TestResultsPanel';
+import { DeploymentStatusCard } from '../components/DeploymentStatusCard';
+import { FeedbackSummaryCard } from '../components/FeedbackSummaryCard';
+import { useWebSocket } from '../hooks/useWebSocket';
 
 interface FeedbackDashboardProps {
   org?: string;
   team?: string;
 }
 
-export const FeedbackDashboard: React.FC<FeedbackDashboardProps> = ({ org = 'BPMSoftwareSolutions', team }) => {
+const FeedbackDashboardComponent: React.FC<FeedbackDashboardProps> = ({ org = 'BPMSoftwareSolutions', team }) => {
   const [selectedOrg, setSelectedOrg] = useState(org);
   const [selectedTeam, setSelectedTeam] = useState(team || '');
   const [selectedRepo, setSelectedRepo] = useState('');
@@ -156,4 +156,6 @@ export const FeedbackDashboard: React.FC<FeedbackDashboardProps> = ({ org = 'BPM
     </div>
   );
 };
+
+export default FeedbackDashboardComponent;
 
