@@ -58,6 +58,22 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
           </li>
           <li>
             <a
+              className={`nav-link ${currentPage === 'learning' ? 'active' : ''}`}
+              onClick={() => onNavigate('learning')}
+            >
+              Learning
+            </a>
+          </li>
+          <li>
+            <a
+              className={`nav-link ${currentPage === 'collaboration' ? 'active' : ''}`}
+              onClick={() => onNavigate('collaboration')}
+            >
+              Collaboration
+            </a>
+          </li>
+          <li>
+            <a
               className={`nav-link ${currentPage === 'repos' ? 'active' : ''}`}
               onClick={() => onNavigate('repos', { org: 'BPMSoftwareSolutions' })}
             >
