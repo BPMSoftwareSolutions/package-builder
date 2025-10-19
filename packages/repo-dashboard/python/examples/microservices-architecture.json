@@ -1,0 +1,243 @@
+{
+  "version": "1.0.0",
+  "architecture": {
+    "name": "Microservices Architecture",
+    "description": "A distributed microservices architecture with independent services, API gateway, and shared infrastructure",
+    "c4Model": {
+      "level": "container",
+      "containers": [
+        {
+          "id": "api-gateway",
+          "name": "API Gateway",
+          "type": "service",
+          "description": "Entry point for all client requests, handles routing, authentication, and rate limiting",
+          "repositories": ["api-gateway"],
+          "packages": [
+            {
+              "name": "@bpm/api-gateway",
+              "version": "1.0.0",
+              "status": "stable"
+            }
+          ],
+          "dependencies": ["auth-service", "user-service", "product-service", "order-service"],
+          "metrics": {
+            "healthScore": 0.99,
+            "testCoverage": 0.95,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "auth-service",
+          "name": "Authentication Service",
+          "type": "service",
+          "description": "Handles user authentication, JWT token generation, and OAuth integration",
+          "repositories": ["auth-service"],
+          "packages": [
+            {
+              "name": "@bpm/auth-service",
+              "version": "1.2.0",
+              "status": "stable"
+            }
+          ],
+          "dependencies": ["user-db"],
+          "metrics": {
+            "healthScore": 0.97,
+            "testCoverage": 0.93,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "user-service",
+          "name": "User Service",
+          "type": "service",
+          "description": "Manages user profiles, preferences, and account information",
+          "repositories": ["user-service"],
+          "packages": [
+            {
+              "name": "@bpm/user-service",
+              "version": "1.1.0",
+              "status": "stable"
+            }
+          ],
+          "dependencies": ["user-db", "cache-layer"],
+          "metrics": {
+            "healthScore": 0.96,
+            "testCoverage": 0.90,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "product-service",
+          "name": "Product Service",
+          "type": "service",
+          "description": "Manages product catalog, inventory, and pricing information",
+          "repositories": ["product-service"],
+          "packages": [
+            {
+              "name": "@bpm/product-service",
+              "version": "1.3.0",
+              "status": "stable"
+            }
+          ],
+          "dependencies": ["product-db", "cache-layer"],
+          "metrics": {
+            "healthScore": 0.95,
+            "testCoverage": 0.88,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "order-service",
+          "name": "Order Service",
+          "type": "service",
+          "description": "Handles order creation, processing, and fulfillment",
+          "repositories": ["order-service"],
+          "packages": [
+            {
+              "name": "@bpm/order-service",
+              "version": "1.0.0",
+              "status": "stable"
+            }
+          ],
+          "dependencies": ["order-db", "product-service", "user-service"],
+          "metrics": {
+            "healthScore": 0.94,
+            "testCoverage": 0.87,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "user-db",
+          "name": "User Database",
+          "type": "database",
+          "description": "PostgreSQL database for user data",
+          "repositories": [],
+          "packages": [],
+          "dependencies": [],
+          "metrics": {
+            "healthScore": 0.99,
+            "testCoverage": 0.0,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "product-db",
+          "name": "Product Database",
+          "type": "database",
+          "description": "PostgreSQL database for product data",
+          "repositories": [],
+          "packages": [],
+          "dependencies": [],
+          "metrics": {
+            "healthScore": 0.99,
+            "testCoverage": 0.0,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "order-db",
+          "name": "Order Database",
+          "type": "database",
+          "description": "PostgreSQL database for order data",
+          "repositories": [],
+          "packages": [],
+          "dependencies": [],
+          "metrics": {
+            "healthScore": 0.99,
+            "testCoverage": 0.0,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "cache-layer",
+          "name": "Cache Layer",
+          "type": "service",
+          "description": "Redis cache for frequently accessed data",
+          "repositories": [],
+          "packages": [],
+          "dependencies": [],
+          "metrics": {
+            "healthScore": 0.98,
+            "testCoverage": 0.0,
+            "buildStatus": "success"
+          }
+        }
+      ]
+    },
+    "relationships": [
+      {
+        "from": "api-gateway",
+        "to": "auth-service",
+        "type": "depends_on",
+        "description": "API gateway validates requests with auth service"
+      },
+      {
+        "from": "api-gateway",
+        "to": "user-service",
+        "type": "communicates_with",
+        "description": "API gateway routes user requests to user service"
+      },
+      {
+        "from": "api-gateway",
+        "to": "product-service",
+        "type": "communicates_with",
+        "description": "API gateway routes product requests to product service"
+      },
+      {
+        "from": "api-gateway",
+        "to": "order-service",
+        "type": "communicates_with",
+        "description": "API gateway routes order requests to order service"
+      },
+      {
+        "from": "auth-service",
+        "to": "user-db",
+        "type": "depends_on",
+        "description": "Auth service queries user database"
+      },
+      {
+        "from": "user-service",
+        "to": "user-db",
+        "type": "depends_on",
+        "description": "User service reads/writes to user database"
+      },
+      {
+        "from": "user-service",
+        "to": "cache-layer",
+        "type": "depends_on",
+        "description": "User service caches frequently accessed data"
+      },
+      {
+        "from": "product-service",
+        "to": "product-db",
+        "type": "depends_on",
+        "description": "Product service reads/writes to product database"
+      },
+      {
+        "from": "product-service",
+        "to": "cache-layer",
+        "type": "depends_on",
+        "description": "Product service caches product data"
+      },
+      {
+        "from": "order-service",
+        "to": "order-db",
+        "type": "depends_on",
+        "description": "Order service reads/writes to order database"
+      },
+      {
+        "from": "order-service",
+        "to": "product-service",
+        "type": "depends_on",
+        "description": "Order service queries product service for pricing"
+      },
+      {
+        "from": "order-service",
+        "to": "user-service",
+        "type": "depends_on",
+        "description": "Order service queries user service for customer info"
+      }
+    ]
+  }
+}
+

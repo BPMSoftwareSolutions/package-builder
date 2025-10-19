@@ -1,0 +1,188 @@
+{
+  "metadata": {
+    "package": "repo-dashboard",
+    "version": "1.0.0",
+    "lastUpdated": "2025-10-19",
+    "purpose": "Feature inventory for Enterprise CI/CD Dashboard with ADF Manager",
+    "relatedIssues": ["#50", "#51"]
+  },
+  "features": {
+    "adfManager": {
+      "description": "Architecture Definition File (ADF) Manager for managing architecture specifications",
+      "features": [
+        {
+          "name": "Load ADF from JSON file",
+          "status": "implemented",
+          "testCases": [
+            "Loads valid ADF JSON files",
+            "Raises FileNotFoundError for missing files",
+            "Raises JSONDecodeError for invalid JSON"
+          ]
+        },
+        {
+          "name": "Save ADF to JSON file",
+          "status": "implemented",
+          "testCases": [
+            "Saves ADF to specified file path",
+            "Creates parent directories if needed",
+            "Formats JSON with proper indentation"
+          ]
+        },
+        {
+          "name": "Validate ADF against JSON schema",
+          "status": "implemented",
+          "testCases": [
+            "Validates valid ADF files",
+            "Detects missing required fields",
+            "Validates version format (semantic versioning)",
+            "Validates container types (service, library, ui, database)",
+            "Validates metric values (0-1 range)",
+            "Validates relationship types (depends_on, communicates_with, extends)",
+            "Returns detailed error messages"
+          ]
+        },
+        {
+          "name": "Generate ADF from repository metadata",
+          "status": "implemented",
+          "testCases": [
+            "Generates ADF from single repository",
+            "Generates ADF from multiple repositories",
+            "Creates containers for each repository",
+            "Sets default metrics for generated containers",
+            "Generated ADF passes validation"
+          ]
+        },
+        {
+          "name": "Merge multiple ADF files",
+          "status": "implemented",
+          "testCases": [
+            "Merges two or more ADFs",
+            "Removes duplicate containers by ID",
+            "Combines relationships from all ADFs",
+            "Raises error for empty list",
+            "Returns single ADF unchanged",
+            "Merged ADF passes validation"
+          ]
+        },
+        {
+          "name": "Export ADF to JSON format",
+          "status": "implemented",
+          "testCases": [
+            "Exports ADF to valid JSON string",
+            "Preserves all ADF data",
+            "Formats with proper indentation"
+          ]
+        },
+        {
+          "name": "Export ADF to YAML format",
+          "status": "implemented",
+          "testCases": [
+            "Exports ADF to valid YAML string",
+            "Preserves all ADF data",
+            "Uses proper YAML formatting"
+          ]
+        },
+        {
+          "name": "Export ADF to GraphML format",
+          "status": "implemented",
+          "testCases": [
+            "Exports ADF to valid GraphML XML",
+            "Creates nodes for all containers",
+            "Creates edges for all relationships",
+            "GraphML is valid XML format"
+          ]
+        },
+        {
+          "name": "ADF Schema Definition",
+          "status": "implemented",
+          "testCases": [
+            "Schema defines version field with semantic versioning",
+            "Schema defines architecture with name and description",
+            "Schema defines c4Model with level and containers",
+            "Schema defines container with required fields",
+            "Schema defines metrics with health score, test coverage, build status",
+            "Schema defines relationships with from, to, and type"
+          ]
+        }
+      ]
+    },
+    "examples": {
+      "description": "Example ADF files for different architecture patterns",
+      "features": [
+        {
+          "name": "Symphonic Plugin Architecture (SPA) example",
+          "status": "implemented",
+          "file": "examples/spa-architecture.json",
+          "description": "Example ADF for plugin-based architecture with core engine, plugin registry, event bus, UI framework, and data store"
+        },
+        {
+          "name": "Microservices Architecture example",
+          "status": "implemented",
+          "file": "examples/microservices-architecture.json",
+          "description": "Example ADF for microservices architecture with API gateway, auth service, user service, product service, order service, and databases"
+        }
+      ]
+    },
+    "testing": {
+      "description": "Comprehensive unit tests for ADF Manager",
+      "features": [
+        {
+          "name": "Unit tests for load_adf",
+          "status": "implemented",
+          "testCount": 3
+        },
+        {
+          "name": "Unit tests for save_adf",
+          "status": "implemented",
+          "testCount": 2
+        },
+        {
+          "name": "Unit tests for validate_adf",
+          "status": "implemented",
+          "testCount": 5
+        },
+        {
+          "name": "Unit tests for generate_adf_from_repos",
+          "status": "implemented",
+          "testCount": 3
+        },
+        {
+          "name": "Unit tests for merge_adfs",
+          "status": "implemented",
+          "testCount": 5
+        },
+        {
+          "name": "Unit tests for export_adf",
+          "status": "implemented",
+          "testCount": 7
+        },
+        {
+          "name": "Integration tests",
+          "status": "implemented",
+          "testCount": 2
+        }
+      ]
+    }
+  },
+  "phase": "Phase 1 - Python Scripts",
+  "relatedTasks": {
+    "completed": [
+      "Create feature branch",
+      "Set up Python project structure",
+      "Implement ADF schema validation",
+      "Implement load_adf and save_adf functions",
+      "Implement validate_adf function",
+      "Implement generate_adf_from_repos function",
+      "Implement merge_adfs function",
+      "Implement export_adf function",
+      "Write comprehensive unit tests",
+      "Create example ADF files"
+    ],
+    "remaining": [
+      "Run local CI and fix errors",
+      "Push branch and create PR",
+      "Monitor CI and fix any failures"
+    ]
+  }
+}
+
