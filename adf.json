@@ -1,0 +1,150 @@
+{
+  "version": "1.0.0",
+  "name": "RenderX Plugins Demo Architecture",
+  "description": "Architecture Definition File for RenderX Plugins Demo system",
+  "c4Model": {
+    "level": "container",
+    "containers": [
+      {
+        "id": "web-ui",
+        "name": "Web UI",
+        "type": "ui",
+        "description": "React-based web interface for plugin management",
+        "technology": "React, TypeScript, Vite",
+        "metrics": {
+          "healthScore": 0.92,
+          "testCoverage": 0.85,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-engine",
+        "name": "Plugin Engine",
+        "type": "service",
+        "description": "Core plugin execution and lifecycle management engine",
+        "technology": "Node.js, TypeScript",
+        "metrics": {
+          "healthScore": 0.88,
+          "testCoverage": 0.90,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-registry",
+        "name": "Plugin Registry",
+        "type": "service",
+        "description": "Central registry for plugin discovery and metadata",
+        "technology": "Node.js, Express, PostgreSQL",
+        "metrics": {
+          "healthScore": 0.85,
+          "testCoverage": 0.80,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "api-gateway",
+        "name": "API Gateway",
+        "type": "service",
+        "description": "REST API gateway for plugin operations",
+        "technology": "Express.js, TypeScript",
+        "metrics": {
+          "healthScore": 0.90,
+          "testCoverage": 0.88,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "database",
+        "name": "Database",
+        "type": "database",
+        "description": "PostgreSQL database for plugin metadata and configuration",
+        "technology": "PostgreSQL",
+        "metrics": {
+          "healthScore": 0.95,
+          "testCoverage": 0.0,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "cache-layer",
+        "name": "Cache Layer",
+        "type": "service",
+        "description": "Redis cache for performance optimization",
+        "technology": "Redis",
+        "metrics": {
+          "healthScore": 0.93,
+          "testCoverage": 0.0,
+          "buildStatus": "success"
+        }
+      }
+    ],
+    "relationships": [
+      {
+        "from": "web-ui",
+        "to": "api-gateway",
+        "type": "communicates_with",
+        "description": "HTTP/REST API calls"
+      },
+      {
+        "from": "api-gateway",
+        "to": "plugin-engine",
+        "type": "communicates_with",
+        "description": "Plugin execution requests"
+      },
+      {
+        "from": "api-gateway",
+        "to": "plugin-registry",
+        "type": "communicates_with",
+        "description": "Plugin discovery and metadata"
+      },
+      {
+        "from": "plugin-engine",
+        "to": "plugin-registry",
+        "type": "communicates_with",
+        "description": "Plugin loading and validation"
+      },
+      {
+        "from": "plugin-registry",
+        "to": "database",
+        "type": "reads_writes",
+        "description": "Persistent storage"
+      },
+      {
+        "from": "plugin-engine",
+        "to": "cache-layer",
+        "type": "reads_writes",
+        "description": "Performance caching"
+      },
+      {
+        "from": "api-gateway",
+        "to": "cache-layer",
+        "type": "reads_writes",
+        "description": "Response caching"
+      }
+    ]
+  },
+  "metrics": {
+    "healthScore": 0.90,
+    "testCoverage": 0.83,
+    "buildStatus": "success",
+    "lastUpdated": "2025-10-19T16:00:00Z"
+  },
+  "packages": [
+    {
+      "name": "@renderx/plugin-engine",
+      "version": "1.0.0",
+      "description": "Core plugin execution engine"
+    },
+    {
+      "name": "@renderx/plugin-registry",
+      "version": "1.0.0",
+      "description": "Plugin discovery and management"
+    },
+    {
+      "name": "@renderx/api-gateway",
+      "version": "1.0.0",
+      "description": "REST API gateway"
+    }
+  ]
+}
+
