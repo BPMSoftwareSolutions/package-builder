@@ -120,17 +120,219 @@ app.get('/api/repos/:owner/:repo/issues', asyncHandler(async (req: Request, res:
 // Get local packages
 app.get('/api/packages', asyncHandler(async (req: Request, res: Response) => {
   const { basePath = './packages', includePrivate = 'false' } = req.query;
-  
+
   try {
     const readiness = await getPackageReadiness({
       basePath: basePath as string,
       includePrivate: includePrivate === 'true'
     });
-    
+
     res.json(readiness);
   } catch (error) {
-    res.status(400).json({ 
-      error: error instanceof Error ? error.message : 'Failed to fetch packages' 
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch packages'
+    });
+  }
+}));
+
+// Architecture endpoints
+app.get('/api/architecture', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    // Return mock architecture data for now
+    const architecture = {
+      version: '1.0.0',
+      name: 'Enterprise CI/CD Dashboard',
+      description: 'Comprehensive dashboard for CI/CD monitoring and metrics',
+      c4Model: {
+        level: 'container',
+        containers: [
+          {
+            id: 'web-ui',
+            name: 'Web UI',
+            type: 'ui',
+            description: 'React-based web dashboard',
+            repositories: ['package-builder'],
+            packages: [{ name: '@bpm/repo-dashboard', version: '0.1.0', status: 'beta' }],
+            metrics: { healthScore: 0.85, testCoverage: 0.75, buildStatus: 'success' },
+          },
+          {
+            id: 'api-server',
+            name: 'API Server',
+            type: 'service',
+            description: 'Express.js API server',
+            repositories: ['package-builder'],
+            packages: [{ name: '@bpm/repo-dashboard', version: '0.1.0', status: 'beta' }],
+            metrics: { healthScore: 0.90, testCoverage: 0.80, buildStatus: 'success' },
+          },
+          {
+            id: 'python-scripts',
+            name: 'Python Scripts',
+            type: 'library',
+            description: 'Python data collection and analysis',
+            repositories: ['package-builder'],
+            packages: [],
+            metrics: { healthScore: 0.88, testCoverage: 0.85, buildStatus: 'success' },
+          },
+        ],
+      },
+      relationships: [
+        { from: 'web-ui', to: 'api-server', type: 'communicates_with', description: 'HTTP requests' },
+        { from: 'api-server', to: 'python-scripts', type: 'depends_on', description: 'Calls Python CLI' },
+      ],
+    };
+    res.json(architecture);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch architecture'
+    });
+  }
+}));
+
+// Metrics endpoints
+app.get('/api/metrics', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { days = '30' } = req.query;
+    // Return mock metrics data
+    const metrics = {
+      timestamp: new Date().toISOString(),
+      organization: 'BPMSoftwareSolutions',
+      summary: {
+        totalRepos: 5,
+        healthScore: 0.85,
+        buildSuccessRate: 0.92,
+        testCoverageAvg: 0.78,
+        openIssuesTotal: 12,
+        stalePRsTotal: 3,
+        deploymentFrequency: 2.5,
+        leadTimeForChanges: 4.2,
+        meanTimeToRecovery: 1.5,
+        changeFailureRate: 0.08,
+      },
+      byRepository: {
+        'package-builder': {
+          healthScore: 0.88,
+          buildStatus: 'success',
+          testCoverage: 0.82,
+          openIssues: 5,
+          stalePRs: 1,
+          lastDeployment: new Date().toISOString(),
+          deploymentFrequency: 3.0,
+          leadTime: 3.5,
+          mttr: 1.2,
+          changeFailureRate: 0.05,
+        },
+      },
+      trends: {
+        healthScoreTrend: Array.from({ length: parseInt(days as string) }, () => 0.85 + Math.random() * 0.1),
+        buildSuccessRateTrend: Array.from({ length: parseInt(days as string) }, () => 0.90 + Math.random() * 0.05),
+        testCoverageTrend: Array.from({ length: parseInt(days as string) }, () => 0.75 + Math.random() * 0.1),
+        deploymentFrequencyTrend: Array.from({ length: parseInt(days as string) }, () => 2.0 + Math.random() * 1.5),
+      },
+    };
+    res.json(metrics);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch metrics'
+    });
+  }
+}));
+
+// C4 Diagram endpoints
+app.get('/api/c4/:level/mermaid', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { level } = req.params;
+    const diagram = `graph TD
+    A[Web UI] -->|HTTP| B[API Server]
+    B -->|CLI| C[Python Scripts]
+    C -->|Data| D[Database]
+    B -->|Queries| D`;
+    res.json({ diagram });
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to generate diagram'
+    });
+  }
+}));
+
+// Components endpoints
+app.get('/api/components', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const components = [
+      {
+        id: 'web-ui',
+        name: 'Web UI',
+        type: 'ui',
+        description: 'React-based web dashboard',
+      },
+      {
+        id: 'api-server',
+        name: 'API Server',
+        type: 'service',
+        description: 'Express.js API server',
+      },
+    ];
+    res.json(components);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch components'
+    });
+  }
+}));
+
+app.get('/api/components/:id', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const component = {
+      id,
+      name: id.replace('-', ' ').toUpperCase(),
+      type: 'service',
+      description: 'Component description',
+      repositories: ['package-builder'],
+      packages: [{ name: '@bpm/repo-dashboard', version: '0.1.0', status: 'beta' }],
+      dependencies: [],
+      metrics: { healthScore: 0.85, testCoverage: 0.80, buildStatus: 'success' },
+    };
+    res.json(component);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch component'
+    });
+  }
+}));
+
+// Insights endpoints
+app.get('/api/insights', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const insights = {
+      trends: [
+        {
+          metric: 'Health Score',
+          description: 'Overall system health is improving',
+          direction: 'up',
+          change: 5.2,
+        },
+      ],
+      anomalies: [
+        {
+          metric: 'Build Success Rate',
+          description: 'Unusual drop in build success rate',
+          severity: 'high',
+        },
+      ],
+      recommendations: [
+        {
+          title: 'Improve Test Coverage',
+          description: 'Test coverage is below target',
+          priority: 'high',
+          actions: ['Add unit tests', 'Increase integration tests'],
+        },
+      ],
+      report: '# System Analysis Report\n\nOverall system health is good with room for improvement.',
+    };
+    res.json(insights);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch insights'
     });
   }
 }));

@@ -1,3 +1,6 @@
+@import './dark-mode.css';
+@import './components.css';
+
 * {
   margin: 0;
   padding: 0;
@@ -26,8 +29,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #fff;
-  color: var(--text-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .app {
@@ -46,13 +49,14 @@ body {
 
 /* Navigation */
 .navigation {
-  background-color: var(--dark-color);
-  color: white;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   padding: 1rem 2rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-md);
   position: sticky;
   top: 0;
   z-index: 100;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .nav-container {
@@ -66,7 +70,7 @@ body {
 .nav-brand {
   font-size: 1.5rem;
   font-weight: bold;
-  color: white;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
@@ -74,10 +78,11 @@ body {
   display: flex;
   gap: 2rem;
   list-style: none;
+  align-items: center;
 }
 
 .nav-link {
-  color: white;
+  color: var(--text-primary);
   text-decoration: none;
   cursor: pointer;
   padding: 0.5rem 1rem;
@@ -87,7 +92,8 @@ body {
 
 .nav-link:hover,
 .nav-link.active {
-  background-color: var(--primary-color);
+  background-color: var(--accent-color);
+  color: var(--bg-primary);
 }
 
 /* Loading and Error States */
@@ -97,22 +103,22 @@ body {
   align-items: center;
   padding: 2rem;
   font-size: 1.1rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .error {
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  color: #721c24;
+  background-color: rgba(220, 53, 69, 0.1);
+  border: 1px solid var(--danger-color);
+  color: var(--danger-color);
   padding: 1rem;
   border-radius: 4px;
   margin-bottom: 1rem;
 }
 
 .success {
-  background-color: #d4edda;
-  border: 1px solid #c3e6cb;
-  color: #155724;
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid var(--success-color);
+  color: var(--success-color);
   padding: 1rem;
   border-radius: 4px;
   margin-bottom: 1rem;
@@ -122,14 +128,15 @@ body {
 .table {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
-  box-shadow: var(--shadow);
+  background-color: var(--bg-primary);
+  box-shadow: var(--shadow-md);
   border-radius: 4px;
   overflow: hidden;
+  border: 1px solid var(--border-color);
 }
 
 .table thead {
-  background-color: var(--light-color);
+  background-color: var(--bg-secondary);
   border-bottom: 2px solid var(--border-color);
 }
 
@@ -137,25 +144,26 @@ body {
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: var(--text-color);
+  color: var(--text-primary);
 }
 
 .table td {
   padding: 1rem;
   border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
 
 .table tbody tr:hover {
-  background-color: var(--light-color);
+  background-color: var(--bg-secondary);
 }
 
 /* Cards */
 .card {
-  background-color: white;
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 1.5rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-md);
   margin-bottom: 1rem;
 }
 
@@ -165,10 +173,12 @@ body {
   margin-bottom: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
 
 .card-body {
   margin-bottom: 1rem;
+  color: var(--text-primary);
 }
 
 .card-footer {
@@ -193,23 +203,24 @@ body {
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
-  color: white;
+  background-color: var(--accent-color);
+  color: var(--bg-primary);
 }
 
 .btn-primary:hover {
-  background-color: #0256c7;
-  box-shadow: var(--shadow);
+  background-color: var(--accent-hover);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-secondary {
-  background-color: var(--secondary-color);
-  color: white;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
 .btn-secondary:hover {
-  background-color: #5a32a3;
-  box-shadow: var(--shadow);
+  background-color: var(--bg-tertiary);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-small {
@@ -227,23 +238,23 @@ body {
 }
 
 .badge-success {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: rgba(76, 175, 80, 0.2);
+  color: var(--success-color);
 }
 
 .badge-danger {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: rgba(244, 67, 54, 0.2);
+  color: var(--danger-color);
 }
 
 .badge-warning {
-  background-color: #fff3cd;
-  color: #856404;
+  background-color: rgba(255, 152, 0, 0.2);
+  color: var(--warning-color);
 }
 
 .badge-info {
-  background-color: #d1ecf1;
-  color: #0c5460;
+  background-color: rgba(33, 150, 243, 0.2);
+  color: var(--info-color);
 }
 
 /* Grid */
@@ -281,7 +292,7 @@ body {
 
 .filter-group label {
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--text-primary);
 }
 
 .filter-group input,
@@ -290,6 +301,8 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 /* Responsive */
