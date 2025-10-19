@@ -4,7 +4,7 @@
  * repo-dashboard CLI entry point
  */
 
-import { handleStatus, handleIssues, handlePackages, handlePack } from '../cli.js';
+import { handleStatus, handleIssues, handlePackages, handlePack, handleCombinedReadme } from '../cli.js';
 
 const command = process.argv[2];
 const args = process.argv.slice(3);
@@ -29,6 +29,9 @@ async function main() {
         break;
       case 'pack':
         await handlePack(args);
+        break;
+      case 'combined-readme':
+        await handleCombinedReadme(args);
         break;
       case '--help':
       case '-h':
@@ -126,6 +129,27 @@ EXAMPLES:
   repo-dashboard pack --package packages/repo-dashboard --dry-run
 `);
       break;
+    case 'combined-readme':
+      console.log(`
+repo-dashboard combined-readme - Generate combined README from repositories
+
+USAGE:
+  repo-dashboard combined-readme --org <org> --patterns <pattern> [options]
+
+OPTIONS:
+  --org <org>           Organization or user name (required)
+  --patterns <pattern>  Glob patterns to match (required, can be specified multiple times)
+  --output <file>       Output file path (default: stdout)
+  --case-insensitive    Use case-insensitive pattern matching
+  --limit <number>      Maximum repositories to fetch (default: 100)
+  --help, -h            Show this help message
+
+EXAMPLES:
+  repo-dashboard combined-readme --org BPMSoftwareSolutions --patterns "renderx-*"
+  repo-dashboard combined-readme --org BPMSoftwareSolutions --patterns "renderx-*" "musical-*" --output combined-README.md
+  repo-dashboard combined-readme --org BPMSoftwareSolutions --patterns "renderx-*" --case-insensitive
+`);
+      break;
     default:
       printHelp();
   }
@@ -139,11 +163,12 @@ USAGE:
   repo-dashboard <command> [options]
 
 COMMANDS:
-  status      Show health summary for repositories
-  issues      Report open issues and stale PRs
-  packages    Find and report on local packages
-  pack        Pack a specific package
-  help        Show this help message
+  status            Show health summary for repositories
+  issues            Report open issues and stale PRs
+  packages          Find and report on local packages
+  pack              Pack a specific package
+  combined-readme   Generate combined README from repositories
+  help              Show this help message
 
 OPTIONS:
   --help, -h      Show help
@@ -155,6 +180,7 @@ EXAMPLES:
   repo-dashboard issues --repo BPMSoftwareSolutions/package-builder --filter stale
   repo-dashboard packages --list-ready
   repo-dashboard pack --package packages/repo-dashboard --dry-run
+  repo-dashboard combined-readme --org BPMSoftwareSolutions --patterns "renderx-*"
 
 For more information, visit: https://github.com/BPMSoftwareSolutions/package-builder
 `);

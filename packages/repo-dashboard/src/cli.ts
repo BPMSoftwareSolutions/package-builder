@@ -5,6 +5,7 @@
 import { parseArgs } from 'node:util';
 import { listRepos, listIssues, getWorkflowStatus, countStaleIssues } from './github.js';
 import { getPackageReadiness } from './local.js';
+import { generateAndSaveCombinedReadme } from './combined-readme.js';
 import { StatusOptions, IssuesOptions, PackagesOptions, PackOptions } from './types.js';
 
 export async function handleStatus(args: string[]): Promise<void> {
@@ -196,5 +197,48 @@ export async function handlePack(args: string[]): Promise<void> {
     console.log(`\n📦 Packing ${options.package}...`);
     console.log('(Not yet implemented)\n');
   }
+}
+
+export async function handleCombinedReadme(args: string[]): Promise<void> {
+  const { values } = parseArgs({
+    args,
+    options: {
+      org: { type: 'string' },
+      patterns: { type: 'string', multiple: true },
+      output: { type: 'string' },
+      'case-insensitive': { type: 'boolean', default: false },
+      limit: { type: 'string', default: '100' },
+    },
+    allowPositionals: false,
+  });
+
+  const org = values.org as string | undefined;
+  if (!org) {
+    throw new Error('--org is required');
+  }
+
+  const patterns = values.patterns as string[] | undefined;
+  if (!patterns || patterns.length === 0) {
+    throw new Error('--patterns is required (can be specified multiple times)');
+  }
+
+  const output = values.output as string | undefined;
+  const caseInsensitive = values['case-insensitive'] as boolean;
+  const limit = parseInt(values.limit as string, 10);
+
+  console.log(`\n📚 Generating combined README for ${org}`);
+  console.log(`   Patterns: ${patterns.join(', ')}`);
+  if (output) {
+    console.log(`   Output: ${output}`);
+  }
+  console.log('');
+
+  await generateAndSaveCombinedReadme({
+    org,
+    patterns,
+    output,
+    caseInsensitive,
+    limit,
+  });
 }
 
