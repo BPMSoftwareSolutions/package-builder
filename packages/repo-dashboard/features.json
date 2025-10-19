@@ -418,7 +418,123 @@
       }
     ]
   },
-  "phase": "Phase 1 - Python Scripts",
+  "cliInterface": {
+    "description": "CLI Interface module for command-line access to all Phase 1 functionality",
+    "features": [
+      {
+        "name": "CLI initialization with Click framework",
+        "status": "implemented",
+        "testCases": [
+          "CLI version command works",
+          "CLI help command works",
+          "All command groups are registered"
+        ]
+      },
+      {
+        "name": "ADF commands (load, validate, generate, export, merge)",
+        "status": "implemented",
+        "testCases": [
+          "Load ADF from file",
+          "Validate ADF against schema",
+          "Generate ADF from repositories",
+          "Export ADF to JSON, YAML, GraphML",
+          "Merge multiple ADF files"
+        ]
+      },
+      {
+        "name": "Metrics commands (aggregate, history, export)",
+        "status": "implemented",
+        "testCases": [
+          "Aggregate metrics for organization",
+          "Get metrics history",
+          "Export metrics to JSON and CSV"
+        ]
+      },
+      {
+        "name": "C4 diagram commands (generate)",
+        "status": "implemented",
+        "testCases": [
+          "Generate Mermaid diagrams",
+          "Generate PlantUML diagrams",
+          "Generate GraphML diagrams",
+          "Generate JSON graph representation"
+        ]
+      },
+      {
+        "name": "Learning commands (analyze, report)",
+        "status": "implemented",
+        "testCases": [
+          "Analyze patterns in metrics",
+          "Generate learning reports"
+        ]
+      },
+      {
+        "name": "Unit tests for CLI",
+        "status": "implemented",
+        "testCount": 18
+      }
+    ]
+  },
+  "storageLayer": {
+    "description": "Data Storage Layer for persisting metrics and ADF files",
+    "features": [
+      {
+        "name": "SQLite database initialization",
+        "status": "implemented",
+        "testCases": [
+          "Creates database file",
+          "Creates metrics table with proper schema",
+          "Creates adf_files table with proper schema",
+          "Creates indexes for performance"
+        ]
+      },
+      {
+        "name": "Metrics storage operations",
+        "status": "implemented",
+        "testCases": [
+          "Save metrics to database",
+          "Retrieve metrics history",
+          "Filter metrics by organization and date range",
+          "Export metrics to CSV"
+        ]
+      },
+      {
+        "name": "ADF file storage operations",
+        "status": "implemented",
+        "testCases": [
+          "Save ADF to file and database",
+          "Load ADF from file",
+          "List stored ADF files",
+          "Delete ADF files",
+          "Support ADF versioning"
+        ]
+      },
+      {
+        "name": "Data retention and cleanup",
+        "status": "implemented",
+        "testCases": [
+          "Clean up old metrics data",
+          "Support configurable retention policies"
+        ]
+      },
+      {
+        "name": "Directory structure management",
+        "status": "implemented",
+        "testCases": [
+          "Create .data/metrics.db for database",
+          "Create .data/adf/ for ADF files",
+          "Create .data/exports/ for exports",
+          "Create .data/reports/ for reports"
+        ]
+      },
+      {
+        "name": "Unit tests for Storage Manager",
+        "status": "implemented",
+        "testCount": 16
+      }
+    ]
+  },
+  "phase": "Phase 1 - Python Scripts (Complete)",
   "relatedTasks": {
     "completed": [
       "Create feature branch",
@@ -453,10 +569,16 @@
       "Implement bottleneck identification",
       "Implement recommendations generation",
       "Implement report generation",
-      "Write comprehensive unit tests for Learning Analyzer"
+      "Write comprehensive unit tests for Learning Analyzer",
+      "Implement CLI interface with Click framework",
+      "Implement all CLI commands (ADF, Metrics, C4, Learning)",
+      "Write comprehensive unit tests for CLI",
+      "Implement Storage Manager with SQLite",
+      "Implement metrics and ADF file storage",
+      "Write comprehensive unit tests for Storage Manager"
     ],
     "remaining": [
-      "Run local CI and fix errors",
+      "Run local CI (npm run ci)",
       "Push branch and create PR",
       "Monitor CI and fix any failures"
     ]
