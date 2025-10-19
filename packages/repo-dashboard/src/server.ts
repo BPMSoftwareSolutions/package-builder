@@ -14,6 +14,9 @@ import { extractRepositoriesFromADF } from './services/adf-repository-extractor.
 import { prMetricsCollector } from './services/pull-request-metrics-collector.js';
 import { deploymentMetricsCollector } from './services/deployment-metrics-collector.js';
 import { metricsAggregator } from './services/metrics-aggregator.js';
+import { WIPTrackerService } from './services/wip-tracker.js';
+import { FlowStageAnalyzerService } from './services/flow-stage-analyzer.js';
+import { DeployCadenceService } from './services/deploy-cadence.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,6 +26,11 @@ const PORT = process.env.WEB_PORT ? parseInt(process.env.WEB_PORT) : 3000;
 const HOST = process.env.WEB_HOST || 'localhost';
 const DEFAULT_ARCHITECTURE_ORG = process.env.DEFAULT_ARCHITECTURE_ORG || 'BPMSoftwareSolutions';
 const DEFAULT_ARCHITECTURE_REPO = process.env.DEFAULT_ARCHITECTURE_REPO || 'renderx-plugins-demo';
+
+// Initialize Phase 1.2 services
+const wipTracker = new WIPTrackerService(prMetricsCollector);
+const flowStageAnalyzer = new FlowStageAnalyzerService(prMetricsCollector);
+const deployCadenceService = new DeployCadenceService(deploymentMetricsCollector);
 
 // Middleware
 app.use(express.json());
@@ -834,6 +842,125 @@ app.get('/api/metrics/cache/stats', asyncHandler(async (req: Request, res: Respo
     console.error('❌ Error fetching cache stats:', error);
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch cache stats'
+    });
+  }
+}));
+
+// Phase 1.2: Flow Visualization Endpoints
+
+// Get WIP metrics for a team
+app.get('/api/metrics/wip/:org/:team', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, team } = req.params;
+    const { repos = '', days = '30' } = req.query;
+    const daysNum = parseInt(days as string, 10) || 30;
+    const repoList = (repos as string).split(',').filter(r => r.trim());
+
+    if (repoList.length === 0) {
+      return res.status(400).json({
+        error: 'At least one repository must be specified in the repos parameter'
+      });
+    }
+
+    console.log(`📊 Fetching WIP metrics for ${org}/${team}`);
+
+    const metrics = await wipTracker.calculateWIPMetrics(org, team, repoList, daysNum);
+
+    res.json({
+      team,
+      org,
+      period: `${daysNum}d`,
+      metrics,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching WIP metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch WIP metrics'
+    });
+  }
+}));
+
+// Get flow stage breakdown for a repository
+app.get('/api/metrics/flow-stages/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    const { team = 'unknown', days = '30' } = req.query;
+    const daysNum = parseInt(days as string, 10) || 30;
+
+    console.log(`📊 Fetching flow stage metrics for ${org}/${repo}`);
+
+    const breakdown = await flowStageAnalyzer.analyzeFlowStages(org, team as string, repo, daysNum);
+
+    res.json({
+      repository: `${org}/${repo}`,
+      team,
+      period: `${daysNum}d`,
+      breakdown,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching flow stage metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch flow stage metrics'
+    });
+  }
+}));
+
+// Get deploy cadence metrics for a repository
+app.get('/api/metrics/deploy-cadence/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    const { team = 'unknown', days = '30' } = req.query;
+    const daysNum = parseInt(days as string, 10) || 30;
+
+    console.log(`📊 Fetching deploy cadence metrics for ${org}/${repo}`);
+
+    const cadence = await deployCadenceService.calculateDeployCadence(org, team as string, repo, daysNum);
+
+    res.json({
+      repository: `${org}/${repo}`,
+      team,
+      period: `${daysNum}d`,
+      cadence,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching deploy cadence metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch deploy cadence metrics'
+    });
+  }
+}));
+
+// Get WIP alerts for a team
+app.get('/api/metrics/wip-alerts/:org/:team', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, team } = req.params;
+    const { repos = '', threshold = '10' } = req.query;
+    const thresholdNum = parseInt(threshold as string, 10) || 10;
+    const repoList = (repos as string).split(',').filter(r => r.trim());
+
+    if (repoList.length === 0) {
+      return res.status(400).json({
+        error: 'At least one repository must be specified in the repos parameter'
+      });
+    }
+
+    console.log(`📊 Checking WIP alerts for ${org}/${team}`);
+
+    const alert = await wipTracker.checkWIPAlert(org, team, repoList, thresholdNum);
+
+    res.json({
+      team,
+      org,
+      alert,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error checking WIP alerts:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to check WIP alerts'
     });
   }
 }));
