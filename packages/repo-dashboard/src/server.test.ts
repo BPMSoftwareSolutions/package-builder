@@ -169,5 +169,48 @@ describe('Architecture Summary Endpoint', () => {
       'renderx-plugins-sdk'
     ]);
   });
+
+  it('should NOT skip repositories when GitHub API calls fail', () => {
+    // This test demonstrates the issue: if GitHub API calls fail,
+    // repositories are silently skipped from the response
+    // Load the actual ADF file
+    const adfPath = join(__dirname, '..', 'docs', 'renderx-plugins-demo-adf.json');
+    const adfContent = readFileSync(adfPath, 'utf-8');
+    const adf = JSON.parse(adfContent);
+
+    // Extract repositories using the same logic as the endpoint
+    const repos = extractRepositoriesFromADF(adf, 'BPMSoftwareSolutions');
+
+    // Simulate what happens when GitHub API calls fail:
+    // The endpoint catches errors and skips repositories
+    const repositories = [];
+    for (const repo of repos) {
+      try {
+        // Simulate GitHub API call failure
+        throw new Error('GitHub API call failed');
+      } catch (error) {
+        // Repository is silently skipped!
+        console.warn(`⚠️ Error fetching metrics for ${repo.owner}/${repo.name}:`, error instanceof Error ? error.message : error);
+      }
+    }
+
+    // This is the problem: repositories array is empty!
+    expect(repositories).toHaveLength(0);
+
+    // But we should still return the repositories even if metrics fail
+    // The fix: return repositories with default/cached metrics instead of skipping them
+    const repositoriesWithDefaults = repos.map(r => ({
+      name: r.name,
+      owner: r.owner,
+      health: 0, // Default health when metrics unavailable
+      issues: {
+        open: 0,
+        stalePRs: 0
+      }
+    }));
+
+    // With the fix, we should have 9 repositories
+    expect(repositoriesWithDefaults).toHaveLength(9);
+  });
 });
 

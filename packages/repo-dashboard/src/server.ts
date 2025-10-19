@@ -189,31 +189,43 @@ app.get('/api/summary/architecture/:org/:repo', asyncHandler(async (req: Request
     const repositories = [];
 
     for (const repoName of repoNames) {
+      let issueCount = 0;
+      let staleCount = 0;
+      let health = 85;
+      let metricsAvailable = false;
+
       try {
         console.log(`🔍 Fetching metrics for ${repoName}...`);
         const issues = await listIssues({
           repo: repoName,
           state: 'open'
         });
-        const issueCount = issues.filter(i => !i.isPullRequest).length;
-        const staleCount = await countStaleIssues(repoName);
-
-        totalIssues += issueCount;
-        totalStalePRs += staleCount;
-
-        repositories.push({
-          name: repoName.split('/')[1],
-          owner: repoName.split('/')[0],
-          health: Math.min(100, Math.max(0, 85 + Math.random() * 10)),
-          issues: {
-            open: issueCount,
-            stalePRs: staleCount
-          }
-        });
+        issueCount = issues.filter(i => !i.isPullRequest).length;
+        staleCount = await countStaleIssues(repoName);
+        metricsAvailable = true;
         console.log(`✅ Successfully fetched metrics for ${repoName}`);
       } catch (error) {
         console.warn(`⚠️ Error fetching metrics for ${repoName}:`, error instanceof Error ? error.message : error);
+        console.log(`📌 Using default metrics for ${repoName}`);
+        // Use default metrics instead of skipping the repository
+        issueCount = 0;
+        staleCount = 0;
+        health = 0; // Indicate metrics are unavailable
       }
+
+      totalIssues += issueCount;
+      totalStalePRs += staleCount;
+
+      repositories.push({
+        name: repoName.split('/')[1],
+        owner: repoName.split('/')[0],
+        health: Math.min(100, Math.max(0, health + (metricsAvailable ? Math.random() * 10 : 0))),
+        issues: {
+          open: issueCount,
+          stalePRs: staleCount
+        },
+        metricsAvailable
+      });
     }
 
     // Calculate container health scores
