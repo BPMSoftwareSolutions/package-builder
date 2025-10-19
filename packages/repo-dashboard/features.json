@@ -164,6 +164,111 @@
       ]
     }
   },
+  "metricsAggregator": {
+    "description": "Metrics Aggregator module for collecting and aggregating CI/CD metrics across repositories",
+    "features": [
+      {
+        "name": "RepositoryMetrics dataclass",
+        "status": "implemented",
+        "testCases": [
+          "Creates RepositoryMetrics instances",
+          "Validates all required fields",
+          "Provides default values for optional fields"
+        ]
+      },
+      {
+        "name": "AggregatedMetrics dataclass",
+        "status": "implemented",
+        "testCases": [
+          "Creates AggregatedMetrics instances",
+          "Stores aggregated data from multiple repositories",
+          "Maintains trends and summary data"
+        ]
+      },
+      {
+        "name": "MetricsAggregator initialization",
+        "status": "implemented",
+        "testCases": [
+          "Initializes with organization and GitHub token",
+          "Creates SQLite database for metrics history",
+          "Sets up proper database schema"
+        ]
+      },
+      {
+        "name": "Get repository metrics",
+        "status": "implemented",
+        "testCases": [
+          "Collects metrics for a single repository",
+          "Returns RepositoryMetrics object",
+          "Calculates health score and DORA metrics"
+        ]
+      },
+      {
+        "name": "Aggregate repository metrics",
+        "status": "implemented",
+        "testCases": [
+          "Aggregates metrics for multiple repositories",
+          "Calculates summary metrics",
+          "Handles empty repository lists",
+          "Stores metrics in database"
+        ]
+      },
+      {
+        "name": "Calculate health score",
+        "status": "implemented",
+        "testCases": [
+          "Calculates health score (0-100)",
+          "Based on build success, test coverage, issue resolution, PR review time, deployment frequency"
+        ]
+      },
+      {
+        "name": "Calculate DORA metrics",
+        "status": "implemented",
+        "testCases": [
+          "Calculates deployment frequency",
+          "Calculates lead time for changes",
+          "Calculates mean time to recovery (MTTR)",
+          "Calculates change failure rate"
+        ]
+      },
+      {
+        "name": "Get metrics history",
+        "status": "implemented",
+        "testCases": [
+          "Retrieves metrics history for specified days",
+          "Returns trend data",
+          "Queries SQLite database"
+        ]
+      },
+      {
+        "name": "Export metrics to JSON",
+        "status": "implemented",
+        "testCases": [
+          "Exports aggregated metrics to JSON format",
+          "Preserves all metric data",
+          "Properly formats JSON output"
+        ]
+      },
+      {
+        "name": "Export metrics to CSV",
+        "status": "implemented",
+        "testCases": [
+          "Exports repository metrics to CSV format",
+          "Includes all metric fields",
+          "Properly formats CSV output"
+        ]
+      },
+      {
+        "name": "Store metrics in SQLite",
+        "status": "implemented",
+        "testCases": [
+          "Stores metrics in database",
+          "Creates proper database schema",
+          "Maintains metrics history"
+        ]
+      }
+    ]
+  },
   "phase": "Phase 1 - Python Scripts",
   "relatedTasks": {
     "completed": [
@@ -175,8 +280,16 @@
       "Implement generate_adf_from_repos function",
       "Implement merge_adfs function",
       "Implement export_adf function",
-      "Write comprehensive unit tests",
-      "Create example ADF files"
+      "Write comprehensive unit tests for ADF Manager",
+      "Create example ADF files",
+      "Implement Metrics Data Structures",
+      "Implement MetricsAggregator class",
+      "Implement GitHub metrics collection",
+      "Implement DORA metrics calculation",
+      "Implement health score calculation",
+      "Implement metrics aggregation",
+      "Implement metrics history and export",
+      "Write comprehensive unit tests for Metrics Aggregator"
     ],
     "remaining": [
       "Run local CI and fix errors",
