@@ -1,0 +1,155 @@
+{
+  "version": "1.0.0",
+  "architecture": {
+    "name": "Symphonic Plugin Architecture (SPA)",
+    "description": "A modular plugin-based architecture for building extensible applications with clear separation of concerns and component isolation.",
+    "c4Model": {
+      "level": "container",
+      "containers": [
+        {
+          "id": "core-engine",
+          "name": "Core Engine",
+          "type": "service",
+          "description": "Central orchestration engine that manages plugin lifecycle, communication, and resource allocation",
+          "repositories": ["renderx-core", "renderx-engine"],
+          "packages": [
+            {
+              "name": "@bpm/renderx-core",
+              "version": "2.0.0",
+              "status": "stable"
+            },
+            {
+              "name": "@bpm/renderx-engine",
+              "version": "1.5.0",
+              "status": "stable"
+            }
+          ],
+          "dependencies": ["plugin-registry", "event-bus"],
+          "metrics": {
+            "healthScore": 0.98,
+            "testCoverage": 0.92,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "plugin-registry",
+          "name": "Plugin Registry",
+          "type": "service",
+          "description": "Manages plugin discovery, registration, versioning, and dependency resolution",
+          "repositories": ["renderx-plugin-registry"],
+          "packages": [
+            {
+              "name": "@bpm/renderx-plugin-registry",
+              "version": "1.2.0",
+              "status": "stable"
+            }
+          ],
+          "dependencies": ["event-bus"],
+          "metrics": {
+            "healthScore": 0.95,
+            "testCoverage": 0.88,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "event-bus",
+          "name": "Event Bus",
+          "type": "library",
+          "description": "Pub/sub event system for inter-plugin communication and decoupled messaging",
+          "repositories": ["renderx-event-bus"],
+          "packages": [
+            {
+              "name": "@bpm/renderx-event-bus",
+              "version": "1.0.0",
+              "status": "stable"
+            }
+          ],
+          "dependencies": [],
+          "metrics": {
+            "healthScore": 0.96,
+            "testCoverage": 0.90,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "ui-framework",
+          "name": "UI Framework",
+          "type": "ui",
+          "description": "React-based UI framework for building plugin user interfaces with consistent styling",
+          "repositories": ["renderx-ui", "renderx-components"],
+          "packages": [
+            {
+              "name": "@bpm/renderx-ui",
+              "version": "3.0.0",
+              "status": "stable"
+            },
+            {
+              "name": "@bpm/renderx-components",
+              "version": "2.5.0",
+              "status": "stable"
+            }
+          ],
+          "dependencies": ["event-bus"],
+          "metrics": {
+            "healthScore": 0.94,
+            "testCoverage": 0.85,
+            "buildStatus": "success"
+          }
+        },
+        {
+          "id": "data-store",
+          "name": "Data Store",
+          "type": "database",
+          "description": "Persistent data storage layer supporting multiple backends (SQLite, PostgreSQL, MongoDB)",
+          "repositories": ["renderx-data-store"],
+          "packages": [
+            {
+              "name": "@bpm/renderx-data-store",
+              "version": "1.3.0",
+              "status": "stable"
+            }
+          ],
+          "dependencies": [],
+          "metrics": {
+            "healthScore": 0.97,
+            "testCoverage": 0.91,
+            "buildStatus": "success"
+          }
+        }
+      ]
+    },
+    "relationships": [
+      {
+        "from": "core-engine",
+        "to": "plugin-registry",
+        "type": "depends_on",
+        "description": "Core engine queries plugin registry for available plugins"
+      },
+      {
+        "from": "core-engine",
+        "to": "event-bus",
+        "type": "depends_on",
+        "description": "Core engine uses event bus for plugin communication"
+      },
+      {
+        "from": "plugin-registry",
+        "to": "event-bus",
+        "type": "depends_on",
+        "description": "Plugin registry publishes events on plugin changes"
+      },
+      {
+        "from": "ui-framework",
+        "to": "event-bus",
+        "type": "communicates_with",
+        "description": "UI framework communicates with plugins via event bus"
+      },
+      {
+        "from": "core-engine",
+        "to": "data-store",
+        "type": "depends_on",
+        "description": "Core engine persists plugin state to data store"
+      }
+    ]
+  }
+}
+
