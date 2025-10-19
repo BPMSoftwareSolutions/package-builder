@@ -181,6 +181,7 @@ app.get('/api/summary/architecture/:org/:repo', asyncHandler(async (req: Request
     const repoNames = architectureRepos.map(r => `${r.owner}/${r.name}`);
 
     console.log(`📊 Found ${repoNames.length} repositories in architecture`);
+    console.log(`📋 Repository names: ${repoNames.join(', ')}`);
 
     // Fetch metrics for architecture repositories
     let totalIssues = 0;
@@ -188,29 +189,43 @@ app.get('/api/summary/architecture/:org/:repo', asyncHandler(async (req: Request
     const repositories = [];
 
     for (const repoName of repoNames) {
+      let issueCount = 0;
+      let staleCount = 0;
+      let health = 85;
+      let metricsAvailable = false;
+
       try {
+        console.log(`🔍 Fetching metrics for ${repoName}...`);
         const issues = await listIssues({
           repo: repoName,
           state: 'open'
         });
-        const issueCount = issues.filter(i => !i.isPullRequest).length;
-        const staleCount = await countStaleIssues(repoName);
-
-        totalIssues += issueCount;
-        totalStalePRs += staleCount;
-
-        repositories.push({
-          name: repoName.split('/')[1],
-          owner: repoName.split('/')[0],
-          health: Math.min(100, Math.max(0, 85 + Math.random() * 10)),
-          issues: {
-            open: issueCount,
-            stalePRs: staleCount
-          }
-        });
+        issueCount = issues.filter(i => !i.isPullRequest).length;
+        staleCount = await countStaleIssues(repoName);
+        metricsAvailable = true;
+        console.log(`✅ Successfully fetched metrics for ${repoName}`);
       } catch (error) {
         console.warn(`⚠️ Error fetching metrics for ${repoName}:`, error instanceof Error ? error.message : error);
+        console.log(`📌 Using default metrics for ${repoName}`);
+        // Use default metrics instead of skipping the repository
+        issueCount = 0;
+        staleCount = 0;
+        health = 0; // Indicate metrics are unavailable
       }
+
+      totalIssues += issueCount;
+      totalStalePRs += staleCount;
+
+      repositories.push({
+        name: repoName.split('/')[1],
+        owner: repoName.split('/')[0],
+        health: Math.min(100, Math.max(0, health + (metricsAvailable ? Math.random() * 10 : 0))),
+        issues: {
+          open: issueCount,
+          stalePRs: staleCount
+        },
+        metricsAvailable
+      });
     }
 
     // Calculate container health scores
@@ -246,6 +261,77 @@ app.get('/api/summary/architecture/:org/:repo', asyncHandler(async (req: Request
     console.error('❌ Error fetching architecture summary:', error);
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch architecture summary'
+    });
+  }
+}));
+
+// Get architecture-specific repositories
+app.get('/api/repos/architecture/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    const { branch = 'main', path = 'adf.json' } = req.query;
+
+    console.log(`📊 Fetching architecture-specific repos for ${org}/${repo}`);
+
+    // Check if this is a local ADF file (renderx-plugins-demo)
+    let adf: any;
+    if (repo === 'renderx-plugins-demo' && path === 'adf.json') {
+      // Load the local renderx-plugins-demo-adf.json file
+      adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    } else {
+      // Fetch the ADF from GitHub
+      adf = await adfFetcher.fetchADF({
+        org,
+        repo,
+        branch: branch as string,
+        path: path as string
+      });
+    }
+
+    // Extract repositories from ADF
+    const architectureRepos = extractRepositoriesFromADF(adf, org);
+    const repoNames = architectureRepos.map(r => `${r.owner}/${r.name}`);
+
+    console.log(`📊 Found ${repoNames.length} repositories in architecture`);
+
+    // Fetch additional status for each architecture repository
+    const reposWithStatus = await Promise.all(
+      architectureRepos.map(async (repo) => {
+        try {
+          const issues = await listIssues({
+            repo: `${repo.owner}/${repo.name}`,
+            state: 'open'
+          });
+          const prs = issues.filter(i => i.isPullRequest);
+          const staleCount = await countStaleIssues(`${repo.owner}/${repo.name}`);
+          const workflow = await getWorkflowStatus({ repo: `${repo.owner}/${repo.name}` });
+
+          return {
+            ...repo,
+            openIssues: issues.filter(i => !i.isPullRequest).length,
+            openPRs: prs.length,
+            stalePRs: staleCount,
+            lastWorkflow: workflow?.conclusion || 'unknown',
+          };
+        } catch (error) {
+          console.warn(`⚠️ Error fetching status for ${repo.name}:`, error instanceof Error ? error.message : error);
+          return {
+            ...repo,
+            openIssues: 0,
+            openPRs: 0,
+            stalePRs: 0,
+            lastWorkflow: 'error',
+          };
+        }
+      })
+    );
+
+    console.log(`✅ Fetched status for ${reposWithStatus.length} architecture repositories`);
+    res.json(reposWithStatus);
+  } catch (error) {
+    console.error('❌ Error fetching architecture repositories:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch architecture repositories'
     });
   }
 }));

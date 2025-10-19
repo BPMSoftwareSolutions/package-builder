@@ -20,12 +20,18 @@ function AppContent() {
   const [selectedOrg, setSelectedOrg] = useState<string>('BPMSoftwareSolutions');
   const [selectedRepo, setSelectedRepo] = useState<string>('BPMSoftwareSolutions/package-builder');
   const [selectedComponent, setSelectedComponent] = useState<any>(null);
+  const [selectedArchOrg, setSelectedArchOrg] = useState<string>('BPMSoftwareSolutions');
+  const [selectedArchRepo, setSelectedArchRepo] = useState<string | null>(null);
+  const [isArchitectureMode, setIsArchitectureMode] = useState<boolean>(false);
 
   const handleNavigation = (page: Page, data?: any) => {
     setCurrentPage(page);
     if (data?.org) setSelectedOrg(data.org);
     if (data?.repo) setSelectedRepo(data.repo);
     if (data?.component) setSelectedComponent(data.component);
+    if (data?.archOrg) setSelectedArchOrg(data.archOrg);
+    if (data?.archRepo !== undefined) setSelectedArchRepo(data.archRepo);
+    if (data?.isArchitectureMode !== undefined) setIsArchitectureMode(data.isArchitectureMode);
   };
 
   return (
@@ -38,7 +44,7 @@ function AppContent() {
           {currentPage === 'metrics' && <MetricsDashboard onNavigate={handleNavigation} />}
           {currentPage === 'insights' && <InsightsPage onNavigate={handleNavigation} />}
           {currentPage === 'component-details' && <ComponentDetails component={selectedComponent} onNavigate={handleNavigation} />}
-          {currentPage === 'repos' && <RepoStatus org={selectedOrg} onNavigate={handleNavigation} />}
+          {currentPage === 'repos' && <RepoStatus org={selectedOrg} repo={selectedArchRepo || undefined} isArchitectureMode={isArchitectureMode} onNavigate={handleNavigation} />}
           {currentPage === 'issues' && <Issues repo={selectedRepo} />}
           {currentPage === 'packages' && <Packages />}
           {currentPage === 'settings' && <SettingsPage onNavigate={handleNavigation} />}

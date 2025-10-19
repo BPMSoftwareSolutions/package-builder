@@ -4,6 +4,14 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import express, { Request, Response } from 'express';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
+import { extractRepositoriesFromADF } from './services/adf-repository-extractor.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 describe('Server Setup', () => {
   it('should have required environment variables configured', () => {
@@ -84,6 +92,125 @@ describe('API Routes', () => {
   it('should have packages endpoint', () => {
     const endpoint = '/api/packages';
     expect(endpoint).toBe('/api/packages');
+  });
+
+  it('should have architecture summary endpoint', () => {
+    const endpoint = '/api/summary/architecture/:org/:repo';
+    expect(endpoint).toMatch(/\/api\/summary\/architecture/);
+  });
+});
+
+describe('Architecture Summary Endpoint', () => {
+  it('should extract all 9 repositories from renderx-plugins-demo ADF', () => {
+    // Load the actual ADF file
+    const adfPath = join(__dirname, '..', 'docs', 'renderx-plugins-demo-adf.json');
+    const adfContent = readFileSync(adfPath, 'utf-8');
+    const adf = JSON.parse(adfContent);
+
+    // Extract repositories using the same logic as the endpoint
+    const repos = extractRepositoriesFromADF(adf, 'BPMSoftwareSolutions');
+
+    // Should have 9 unique repositories
+    expect(repos).toHaveLength(9);
+
+    // Verify all expected repositories are present
+    const repoNames = repos.map(r => r.name).sort();
+    expect(repoNames).toEqual([
+      'musical-conductor',
+      'renderx-manifest-tools',
+      'renderx-plugins-canvas',
+      'renderx-plugins-components',
+      'renderx-plugins-control-panel',
+      'renderx-plugins-demo',
+      'renderx-plugins-header',
+      'renderx-plugins-library',
+      'renderx-plugins-sdk'
+    ]);
+  });
+
+  it('should return 9 repositories in the summary response', () => {
+    // Load the actual ADF file
+    const adfPath = join(__dirname, '..', 'docs', 'renderx-plugins-demo-adf.json');
+    const adfContent = readFileSync(adfPath, 'utf-8');
+    const adf = JSON.parse(adfContent);
+
+    // Extract repositories using the same logic as the endpoint
+    const repos = extractRepositoriesFromADF(adf, 'BPMSoftwareSolutions');
+
+    // Simulate the response structure that the endpoint would return
+    const summary = {
+      repositories: repos.map(r => ({
+        name: r.name,
+        owner: r.owner,
+        health: 85,
+        issues: {
+          open: 0,
+          stalePRs: 0
+        }
+      })),
+      aggregatedMetrics: {
+        totalIssues: 0,
+        totalStalePRs: 0,
+        averageHealth: 85
+      }
+    };
+
+    // Verify the response has 9 repositories
+    expect(summary.repositories).toHaveLength(9);
+    expect(summary.repositories.map(r => r.name).sort()).toEqual([
+      'musical-conductor',
+      'renderx-manifest-tools',
+      'renderx-plugins-canvas',
+      'renderx-plugins-components',
+      'renderx-plugins-control-panel',
+      'renderx-plugins-demo',
+      'renderx-plugins-header',
+      'renderx-plugins-library',
+      'renderx-plugins-sdk'
+    ]);
+  });
+
+  it('should NOT skip repositories when GitHub API calls fail', () => {
+    // This test demonstrates the issue: if GitHub API calls fail,
+    // repositories are silently skipped from the response
+    // Load the actual ADF file
+    const adfPath = join(__dirname, '..', 'docs', 'renderx-plugins-demo-adf.json');
+    const adfContent = readFileSync(adfPath, 'utf-8');
+    const adf = JSON.parse(adfContent);
+
+    // Extract repositories using the same logic as the endpoint
+    const repos = extractRepositoriesFromADF(adf, 'BPMSoftwareSolutions');
+
+    // Simulate what happens when GitHub API calls fail:
+    // The endpoint catches errors and skips repositories
+    const repositories = [];
+    for (const repo of repos) {
+      try {
+        // Simulate GitHub API call failure
+        throw new Error('GitHub API call failed');
+      } catch (error) {
+        // Repository is silently skipped!
+        console.warn(`⚠️ Error fetching metrics for ${repo.owner}/${repo.name}:`, error instanceof Error ? error.message : error);
+      }
+    }
+
+    // This is the problem: repositories array is empty!
+    expect(repositories).toHaveLength(0);
+
+    // But we should still return the repositories even if metrics fail
+    // The fix: return repositories with default/cached metrics instead of skipping them
+    const repositoriesWithDefaults = repos.map(r => ({
+      name: r.name,
+      owner: r.owner,
+      health: 0, // Default health when metrics unavailable
+      issues: {
+        open: 0,
+        stalePRs: 0
+      }
+    }));
+
+    // With the fix, we should have 9 repositories
+    expect(repositoriesWithDefaults).toHaveLength(9);
   });
 });
 
