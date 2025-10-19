@@ -17,8 +17,8 @@ type Page = 'dashboard' | 'repos' | 'issues' | 'packages' | 'architecture' | 'me
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
-  const [selectedOrg, setSelectedOrg] = useState<string>('');
-  const [selectedRepo, setSelectedRepo] = useState<string>('');
+  const [selectedOrg, setSelectedOrg] = useState<string>('BPMSoftwareSolutions');
+  const [selectedRepo, setSelectedRepo] = useState<string>('BPMSoftwareSolutions/package-builder');
   const [selectedComponent, setSelectedComponent] = useState<any>(null);
 
   const handleNavigation = (page: Page, data?: any) => {

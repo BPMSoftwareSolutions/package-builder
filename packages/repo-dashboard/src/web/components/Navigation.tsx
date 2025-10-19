@@ -51,7 +51,7 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
           <li>
             <a
               className={`nav-link ${currentPage === 'repos' ? 'active' : ''}`}
-              onClick={() => onNavigate('repos')}
+              onClick={() => onNavigate('repos', { org: 'BPMSoftwareSolutions' })}
             >
               Repositories
             </a>
@@ -59,7 +59,7 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
           <li>
             <a
               className={`nav-link ${currentPage === 'issues' ? 'active' : ''}`}
-              onClick={() => onNavigate('issues')}
+              onClick={() => onNavigate('issues', { repo: 'BPMSoftwareSolutions/package-builder' })}
             >
               Issues
             </a>

@@ -15,14 +15,16 @@ interface Repository {
 }
 
 interface RepoStatusProps {
-  org: string;
+  org?: string;
   onNavigate: (page: string, org?: string, repo?: string) => void;
 }
 
 type SortField = 'name' | 'issues' | 'prs' | 'stale' | 'updated';
 type SortOrder = 'asc' | 'desc';
 
-export default function RepoStatus({ org, onNavigate }: RepoStatusProps) {
+const DEFAULT_ORG = 'BPMSoftwareSolutions';
+
+export default function RepoStatus({ org = DEFAULT_ORG, onNavigate }: RepoStatusProps) {
   const [repos, setRepos] = useState<Repository[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -113,14 +115,6 @@ export default function RepoStatus({ org, onNavigate }: RepoStatusProps) {
   });
 
   const sortedRepos = getSortedRepos(filteredRepos);
-
-  if (!org) {
-    return (
-      <div className="error">
-        Please select an organization from the dashboard
-      </div>
-    );
-  }
 
   return (
     <div>

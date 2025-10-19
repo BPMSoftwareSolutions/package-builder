@@ -12,10 +12,12 @@ interface Issue {
 }
 
 interface IssuesProps {
-  repo: string;
+  repo?: string;
 }
 
-export default function Issues({ repo }: IssuesProps) {
+const DEFAULT_REPO = 'BPMSoftwareSolutions/package-builder';
+
+export default function Issues({ repo = DEFAULT_REPO }: IssuesProps) {
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,14 +65,6 @@ export default function Issues({ repo }: IssuesProps) {
 
   const issueCount = issues.filter((i) => !i.isPullRequest).length;
   const prCount = issues.filter((i) => i.isPullRequest).length;
-
-  if (!repo) {
-    return (
-      <div className="error">
-        Please select a repository from the dashboard
-      </div>
-    );
-  }
 
   return (
     <div>
