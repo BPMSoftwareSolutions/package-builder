@@ -28,6 +28,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
   const [selectedArchRepo, setSelectedArchRepo] = useState<string | null>(null);
   const [isArchitectureMode, setIsArchitectureMode] = useState(true);
   const [defaultArchLoaded, setDefaultArchLoaded] = useState(false);
+  const [showArchitectureSelector, setShowArchitectureSelector] = useState(false);
 
   // Load default architecture on component mount
   useEffect(() => {
@@ -106,8 +107,6 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     if (health >= 60) return '#ffc107';
     return '#dc3545';
   };
-
-  const [showArchitectureSelector, setShowArchitectureSelector] = useState(false);
 
   const handleArchitectureSelect = (org: string, repo: string) => {
     setSelectedArchOrg(org);
