@@ -48,10 +48,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setTheme(newTheme);
   };
 
-  if (!isInitialized) {
-    return <>{children}</>;
-  }
-
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
       {children}

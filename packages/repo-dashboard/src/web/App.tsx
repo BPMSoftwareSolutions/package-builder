@@ -29,7 +29,7 @@ function AppContent() {
   };
 
   return (
-    <div className="app">
+    <>
       <Navigation currentPage={currentPage} onNavigate={handleNavigation} />
       <main className="main-content">
         <ErrorBoundary>
@@ -44,14 +44,16 @@ function AppContent() {
           {currentPage === 'settings' && <SettingsPage onNavigate={handleNavigation} />}
         </ErrorBoundary>
       </main>
-    </div>
+    </>
   );
 }
 
 export default function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <div className="app">
+        <AppContent />
+      </div>
     </ThemeProvider>
   );
 }
