@@ -34,6 +34,10 @@ import { environmentConfigurationService } from './services/environment-configur
 import { configurationDriftDetectionService } from './services/configuration-drift-detection.js';
 import { buildEnvironmentService } from './services/build-environment.js';
 import { environmentHealthService } from './services/environment-health.js';
+import { BusFactorAnalysisService } from './services/bus-factor-analysis.js';
+import { KnowledgeSharingService } from './services/knowledge-sharing.js';
+import { SkillInventoryService } from './services/skill-inventory.js';
+import { CodeOwnershipService } from './services/code-ownership.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -53,6 +57,12 @@ const deployCadenceService = new DeployCadenceService(deploymentMetricsCollector
 const constraintDetectionService = new ConstraintDetectionService();
 const rootCauseAnalysisService = new RootCauseAnalysisService();
 const predictiveAnalysisService = new PredictiveAnalysisService();
+
+// Initialize Phase 1.7 services (Knowledge Sharing & Bus Factor Analysis)
+const busFactorAnalysisService = new BusFactorAnalysisService();
+const knowledgeSharingService = new KnowledgeSharingService();
+const skillInventoryService = new SkillInventoryService();
+const codeOwnershipService = new CodeOwnershipService();
 
 // Middleware
 app.use(express.json());
@@ -1999,6 +2009,156 @@ app.get('/api/insights', asyncHandler(async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch insights'
+    });
+  }
+}));
+
+// Phase 1.7 API endpoints - Knowledge Sharing & Bus Factor Analysis
+
+// Bus Factor Analysis endpoints
+app.get('/api/metrics/bus-factor/:org/:team/:repo', asyncHandler(async (req: Request, res: Response) => {
+  const { org, team, repo } = req.params;
+  try {
+    // Mock commit history for demonstration
+    const commitHistory = [
+      { author: 'alice', files: ['src/main.ts', 'src/utils.ts'] },
+      { author: 'alice', files: ['src/main.ts'] },
+      { author: 'bob', files: ['src/api.ts'] },
+      { author: 'charlie', files: ['src/config.ts'] },
+    ];
+
+    const analysis = await busFactorAnalysisService.analyzeBusFactor(org, team, repo, commitHistory);
+    res.json(analysis);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to analyze bus factor'
+    });
+  }
+}));
+
+// Knowledge Sharing endpoints
+app.get('/api/metrics/knowledge-sharing/:org/:team', asyncHandler(async (req: Request, res: Response) => {
+  const { org, team } = req.params;
+  try {
+    // Mock PR metrics for demonstration
+    const prMetrics = [
+      { reviewers: ['alice', 'bob'] },
+      { reviewers: ['bob', 'charlie'] },
+      { reviewers: ['alice'] },
+    ];
+
+    const metrics = await knowledgeSharingService.calculateMetrics(
+      org,
+      team,
+      prMetrics,
+      5, // documentationUpdates
+      2, // knowledgeSharingEvents
+      1  // pairProgrammingSessions
+    );
+    res.json(metrics);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to calculate knowledge sharing metrics'
+    });
+  }
+}));
+
+// Skill Inventory endpoints
+app.get('/api/metrics/skill-inventory/:org/:team', asyncHandler(async (req: Request, res: Response) => {
+  const { org, team } = req.params;
+  try {
+    // Mock commit history for skill extraction
+    const commitHistory = [
+      { author: 'alice', files: ['src/main.ts', 'src/utils.tsx'] },
+      { author: 'bob', files: ['src/api.ts', 'Dockerfile'] },
+      { author: 'charlie', files: ['src/config.ts', 'src/main.test.ts'] },
+    ];
+
+    const inventory = await skillInventoryService.calculateSkillInventory(
+      org,
+      team,
+      commitHistory,
+      ['alice', 'bob', 'charlie']
+    );
+    res.json(inventory);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to calculate skill inventory'
+    });
+  }
+}));
+
+// Code Ownership endpoints
+app.get('/api/metrics/code-ownership/:org/:team/:repo', asyncHandler(async (req: Request, res: Response) => {
+  const { org, team, repo } = req.params;
+  try {
+    // Mock commit and review history
+    const commitHistory = [
+      { author: 'alice', files: ['src/main.ts', 'src/utils.ts'] },
+      { author: 'alice', files: ['src/main.ts'] },
+      { author: 'bob', files: ['src/api.ts'] },
+    ];
+
+    const reviewData = [
+      { file: 'src/main.ts', reviewers: ['bob', 'charlie'] },
+      { file: 'src/api.ts', reviewers: ['alice'] },
+    ];
+
+    const metrics = await codeOwnershipService.calculateOwnership(
+      org,
+      team,
+      repo,
+      commitHistory,
+      reviewData
+    );
+    res.json(metrics);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to calculate code ownership'
+    });
+  }
+}));
+
+// High-risk areas endpoint
+app.get('/api/metrics/high-risk-areas/:org', asyncHandler(async (req: Request, res: Response) => {
+  const { org } = req.params;
+  try {
+    // Return aggregated high-risk areas across organization
+    const highRiskAreas = {
+      timestamp: new Date(),
+      org,
+      criticalRiskAreas: [
+        {
+          repo: 'renderx-plugins-sdk',
+          team: 'SDK Team',
+          busFactor: 1,
+          riskLevel: 'critical',
+          keyPerson: 'alice',
+          recommendation: 'Immediate knowledge transfer required'
+        }
+      ],
+      highRiskAreas: [
+        {
+          repo: 'musical-conductor',
+          team: 'Conductor Team',
+          busFactor: 2,
+          riskLevel: 'high',
+          keyPeople: ['bob', 'charlie'],
+          recommendation: 'Increase code review participation'
+        }
+      ],
+      summary: {
+        totalRepos: 9,
+        criticalCount: 1,
+        highCount: 2,
+        mediumCount: 3,
+        lowCount: 3
+      }
+    };
+    res.json(highRiskAreas);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch high-risk areas'
     });
   }
 }));
