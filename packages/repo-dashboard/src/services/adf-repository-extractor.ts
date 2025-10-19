@@ -24,35 +24,56 @@ export function extractRepositoriesFromADF(adf: ArchitectureDefinition, defaultO
 
   // Extract repositories from containers
   for (const container of adf.c4Model.containers) {
-    // Check if container has repositories metadata
+    // Check if container has repositories metadata (array)
     if (container.repositories && Array.isArray(container.repositories)) {
-      for (const repoName of container.repositories) {
-        const key = `${defaultOrg}/${repoName}`;
+      for (const repo of container.repositories) {
+        // Handle both string format "owner/name" and just "name"
+        let owner = defaultOrg;
+        let name = repo;
+
+        if (typeof repo === 'string' && repo.includes('/')) {
+          const parts = repo.split('/');
+          owner = parts[0];
+          name = parts[1];
+        }
+
+        const key = `${owner}/${name}`;
         if (!repositories.has(key)) {
           repositories.set(key, {
-            name: repoName,
-            owner: defaultOrg
+            name,
+            owner
           });
         }
       }
     }
 
-    // Also check for repository in container metadata
+    // Also check for repository in container metadata (singular)
     if (container.repository) {
-      const repoName = typeof container.repository === 'string' 
-        ? container.repository 
-        : container.repository.name;
-      
-      const owner = typeof container.repository === 'object' && container.repository.owner
-        ? container.repository.owner
-        : defaultOrg;
+      let owner = defaultOrg;
+      let name = '';
 
-      const key = `${owner}/${repoName}`;
-      if (!repositories.has(key)) {
-        repositories.set(key, {
-          name: repoName,
-          owner
-        });
+      if (typeof container.repository === 'string') {
+        // Handle both "owner/name" and just "name" formats
+        if (container.repository.includes('/')) {
+          const parts = container.repository.split('/');
+          owner = parts[0];
+          name = parts[1];
+        } else {
+          name = container.repository;
+        }
+      } else if (typeof container.repository === 'object') {
+        name = container.repository.name || '';
+        owner = container.repository.owner || defaultOrg;
+      }
+
+      if (name) {
+        const key = `${owner}/${name}`;
+        if (!repositories.has(key)) {
+          repositories.set(key, {
+            name,
+            owner
+          });
+        }
       }
     }
   }
