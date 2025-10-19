@@ -887,7 +887,87 @@
       }
     ]
   },
-  "phase": "Phase 1.2 - Flow Visualization Widgets (In Progress) - Issue #74",
+  "renderxSpecificMetrics": {
+    "description": "RenderX-Specific Metrics Collection for Phase 1.3 - Conductor Throughput, CIA/SPA Gates, Bundle Budgets",
+    "features": [
+      {
+        "name": "ConductorMetricsCollector service",
+        "status": "implemented",
+        "file": "src/services/conductor-metrics-collector.ts",
+        "testCases": [
+          "Collect Conductor metrics from repository",
+          "Calculate throughput metrics (sequences/minute, queue length)",
+          "Calculate execution times and success rates",
+          "Track error types and rates",
+          "Cache results with TTL",
+          "Calculate trend direction",
+          "Maintain metrics history for trend analysis",
+          "Clear cache functionality"
+        ]
+      },
+      {
+        "name": "ArchitectureValidationCollector service",
+        "status": "implemented",
+        "file": "src/services/architecture-validation-collector.ts",
+        "testCases": [
+          "Collect CIA/SPA validation metrics",
+          "Track pass/fail rates",
+          "Identify violation types (import-boundary, sequence-shape, dependency-cycle)",
+          "Calculate organization-wide pass rate",
+          "Track violation trends",
+          "Cache results with TTL",
+          "Maintain metrics history"
+        ]
+      },
+      {
+        "name": "BundleMetricsCollector service",
+        "status": "implemented",
+        "file": "src/services/bundle-metrics-collector.ts",
+        "testCases": [
+          "Collect bundle size metrics",
+          "Compare against performance budgets",
+          "Calculate bundle status (green/yellow/red)",
+          "Track load times and runtime performance",
+          "Generate budget alerts",
+          "Cache results with TTL",
+          "Maintain metrics history"
+        ]
+      },
+      {
+        "name": "RenderX-Specific Metrics API endpoints",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/metrics/conductor/:org - Conductor metrics for organization",
+          "GET /api/metrics/conductor/:org/:repo - Conductor metrics for specific repo",
+          "GET /api/metrics/architecture-validation/:org - Architecture validation metrics",
+          "GET /api/metrics/architecture-validation/:org/:repo - Per-repo validation metrics",
+          "GET /api/metrics/bundle/:org - Bundle metrics for organization",
+          "GET /api/metrics/bundle/:org/:repo - Bundle metrics for specific repo",
+          "GET /api/metrics/bundle-alerts/:org - Bundle threshold alerts"
+        ]
+      },
+      {
+        "name": "Unit tests for ConductorMetricsCollector",
+        "status": "implemented",
+        "file": "src/services/conductor-metrics-collector.test.ts",
+        "testCount": 10
+      },
+      {
+        "name": "Unit tests for ArchitectureValidationCollector",
+        "status": "implemented",
+        "file": "src/services/architecture-validation-collector.test.ts",
+        "testCount": 15
+      },
+      {
+        "name": "Unit tests for BundleMetricsCollector",
+        "status": "implemented",
+        "file": "src/services/bundle-metrics-collector.test.ts",
+        "testCount": 14
+      }
+    ]
+  },
+  "phase": "Phase 1.3 - RenderX-Specific Metrics (In Progress) - Issue #75",
   "relatedTasks": {
     "completed": [
       "Create feature branch",
