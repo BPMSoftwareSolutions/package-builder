@@ -44,7 +44,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       } catch (err) {
         console.warn('Failed to load default architecture config:', err);
         // Use hardcoded defaults
-        setSelectedArchRepo('package-builder');
+        setSelectedArchRepo('renderx-plugins-demo');
         setDefaultArchLoaded(true);
       }
     };

@@ -5,6 +5,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { readFileSync } from 'node:fs';
 import { listRepos, listIssues, getWorkflowStatus, countStaleIssues } from './github.js';
 import { getPackageReadiness } from './local.js';
 import { adfFetcher } from './services/adf-fetcher.js';
@@ -18,7 +19,7 @@ const app = express();
 const PORT = process.env.WEB_PORT ? parseInt(process.env.WEB_PORT) : 3000;
 const HOST = process.env.WEB_HOST || 'localhost';
 const DEFAULT_ARCHITECTURE_ORG = process.env.DEFAULT_ARCHITECTURE_ORG || 'BPMSoftwareSolutions';
-const DEFAULT_ARCHITECTURE_REPO = process.env.DEFAULT_ARCHITECTURE_REPO || 'package-builder';
+const DEFAULT_ARCHITECTURE_REPO = process.env.DEFAULT_ARCHITECTURE_REPO || 'renderx-plugins-demo';
 
 // Middleware
 app.use(express.json());
@@ -41,6 +42,21 @@ const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => P
   (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
+
+// Helper function to load local ADF file
+function loadLocalADF(filename: string): any {
+  try {
+    const adfPath = join(__dirname, '..', 'docs', filename);
+    console.log(`📂 Loading local ADF from: ${adfPath}`);
+    const content = readFileSync(adfPath, 'utf-8');
+    const adf = JSON.parse(content);
+    console.log(`✅ Successfully loaded local ADF: ${adf.name}`);
+    return adf;
+  } catch (error) {
+    console.error(`❌ Error loading local ADF ${filename}:`, error);
+    throw error;
+  }
+}
 
 // Health check endpoint
 app.get('/api/health', (_req: Request, res: Response) => {
@@ -145,13 +161,20 @@ app.get('/api/summary/architecture/:org/:repo', asyncHandler(async (req: Request
 
     console.log(`📊 Fetching architecture-aware summary for ${org}/${repo}`);
 
-    // Fetch the ADF
-    const adf = await adfFetcher.fetchADF({
-      org,
-      repo,
-      branch: branch as string,
-      path: path as string
-    });
+    // Check if this is a local ADF file (renderx-plugins-demo)
+    let adf: any;
+    if (repo === 'renderx-plugins-demo' && path === 'adf.json') {
+      // Load the local renderx-plugins-demo-adf.json file
+      adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    } else {
+      // Fetch the ADF from GitHub
+      adf = await adfFetcher.fetchADF({
+        org,
+        repo,
+        branch: branch as string,
+        path: path as string
+      });
+    }
 
     // Extract repositories from ADF
     const architectureRepos = extractRepositoriesFromADF(adf, org);
