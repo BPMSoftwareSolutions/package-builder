@@ -17,6 +17,9 @@ import { metricsAggregator } from './services/metrics-aggregator.js';
 import { WIPTrackerService } from './services/wip-tracker.js';
 import { FlowStageAnalyzerService } from './services/flow-stage-analyzer.js';
 import { DeployCadenceService } from './services/deploy-cadence.js';
+import { conductorMetricsCollector } from './services/conductor-metrics-collector.js';
+import { architectureValidationCollector } from './services/architecture-validation-collector.js';
+import { bundleMetricsCollector } from './services/bundle-metrics-collector.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -961,6 +964,186 @@ app.get('/api/metrics/wip-alerts/:org/:team', asyncHandler(async (req: Request, 
     console.error('❌ Error checking WIP alerts:', error);
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to check WIP alerts'
+    });
+  }
+}));
+
+// RenderX-Specific Metrics Endpoints (Phase 1.3)
+
+// Get Conductor metrics for organization
+app.get('/api/metrics/conductor/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching Conductor metrics for organization: ${org}`);
+
+    // For now, return aggregated mock data
+    const metrics = {
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        sequencesPerMinute: 250,
+        avgQueueLength: 15,
+        avgExecutionTime: 280,
+        successRate: 0.94,
+        errorRate: 0.06
+      }
+    };
+
+    res.json(metrics);
+  } catch (error) {
+    console.error('❌ Error fetching Conductor metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch Conductor metrics'
+    });
+  }
+}));
+
+// Get Conductor metrics for specific repository
+app.get('/api/metrics/conductor/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    console.log(`📊 Fetching Conductor metrics for ${org}/${repo}`);
+
+    const metrics = await conductorMetricsCollector.collectConductorMetrics(org, repo);
+
+    res.json({
+      repository: `${org}/${repo}`,
+      metrics,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching Conductor metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch Conductor metrics'
+    });
+  }
+}));
+
+// Get architecture validation metrics for organization
+app.get('/api/metrics/architecture-validation/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching architecture validation metrics for organization: ${org}`);
+
+    // For now, return aggregated mock data
+    const metrics = {
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        passRate: 0.85,
+        failRate: 0.15,
+        commonViolations: [
+          { type: 'import-boundary', count: 12 },
+          { type: 'sequence-shape', count: 5 },
+          { type: 'dependency-cycle', count: 2 }
+        ]
+      }
+    };
+
+    res.json(metrics);
+  } catch (error) {
+    console.error('❌ Error fetching validation metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch validation metrics'
+    });
+  }
+}));
+
+// Get architecture validation metrics for specific repository
+app.get('/api/metrics/architecture-validation/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    const { commit = 'HEAD' } = req.query;
+    console.log(`📊 Fetching validation metrics for ${org}/${repo}`);
+
+    const metrics = await architectureValidationCollector.collectValidationMetrics(org, repo, commit as string);
+
+    res.json({
+      repository: `${org}/${repo}`,
+      metrics,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching validation metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch validation metrics'
+    });
+  }
+}));
+
+// Get bundle metrics for organization
+app.get('/api/metrics/bundle/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching bundle metrics for organization: ${org}`);
+
+    // For now, return aggregated mock data
+    const metrics = {
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        totalBundleSize: 2500000,
+        avgLoadTime: 1500,
+        healthStatus: 'good'
+      }
+    };
+
+    res.json(metrics);
+  } catch (error) {
+    console.error('❌ Error fetching bundle metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch bundle metrics'
+    });
+  }
+}));
+
+// Get bundle metrics for specific repository
+app.get('/api/metrics/bundle/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    console.log(`📊 Fetching bundle metrics for ${org}/${repo}`);
+
+    const metrics = await bundleMetricsCollector.collectBundleMetrics(org, repo);
+    const alerts = bundleMetricsCollector.checkBudgetAlerts(metrics);
+
+    res.json({
+      repository: `${org}/${repo}`,
+      metrics,
+      alerts,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching bundle metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch bundle metrics'
+    });
+  }
+}));
+
+// Get bundle threshold alerts for organization
+app.get('/api/metrics/bundle-alerts/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching bundle alerts for organization: ${org}`);
+
+    // For now, return mock alert data
+    const alerts = {
+      organization: org,
+      timestamp: new Date().toISOString(),
+      alerts: [
+        {
+          repository: 'renderx-plugins-canvas',
+          severity: 'warning',
+          message: 'Plugin bundle approaching budget limit'
+        }
+      ]
+    };
+
+    res.json(alerts);
+  } catch (error) {
+    console.error('❌ Error fetching bundle alerts:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch bundle alerts'
     });
   }
 }));
