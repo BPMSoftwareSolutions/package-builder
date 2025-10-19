@@ -38,6 +38,11 @@ import { BusFactorAnalysisService } from './services/bus-factor-analysis.js';
 import { KnowledgeSharingService } from './services/knowledge-sharing.js';
 import { SkillInventoryService } from './services/skill-inventory.js';
 import { CodeOwnershipService } from './services/code-ownership.js';
+import { buildStatusService } from './services/build-status.js';
+import { testResultsService } from './services/test-results.js';
+import { deploymentStatusService } from './services/deployment-status.js';
+import { feedbackAggregationService } from './services/feedback-aggregation.js';
+import { alertingService } from './services/alerting.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -2159,6 +2164,157 @@ app.get('/api/metrics/high-risk-areas/:org', asyncHandler(async (req: Request, r
   } catch (error) {
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch high-risk areas'
+    });
+  }
+}));
+
+// Phase 1.8: Real-Time Feedback & Alerting System endpoints
+
+// Build Status endpoints
+app.get('/api/metrics/build-status/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  const { org, repo } = req.params;
+  try {
+    const buildStatus = await buildStatusService.collectBuildStatus(org, repo);
+    res.json({
+      timestamp: new Date(),
+      org,
+      repo,
+      buildStatus: buildStatus.length > 0 ? buildStatus[0] : null,
+      history: buildStatus.slice(0, 10)
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch build status'
+    });
+  }
+}));
+
+// Test Results endpoints
+app.get('/api/metrics/test-results/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  const { org, repo } = req.params;
+  try {
+    const testResults = await testResultsService.collectTestResults(org, repo);
+    res.json({
+      timestamp: new Date(),
+      org,
+      repo,
+      latest: testResults.length > 0 ? testResults[0] : null,
+      history: testResults.slice(0, 10)
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch test results'
+    });
+  }
+}));
+
+// Deployment Status endpoints
+app.get('/api/metrics/deployment-status/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  const { org, repo } = req.params;
+  try {
+    const deploymentStatus = await deploymentStatusService.collectDeploymentStatus(org, repo);
+    res.json({
+      timestamp: new Date(),
+      org,
+      repo,
+      latest: deploymentStatus.length > 0 ? deploymentStatus[0] : null,
+      history: deploymentStatus.slice(0, 10)
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch deployment status'
+    });
+  }
+}));
+
+// Feedback Aggregation endpoints
+app.get('/api/metrics/feedback-summary/:org', asyncHandler(async (req: Request, res: Response) => {
+  const { org } = req.params;
+  try {
+    // Get list of repos from query parameter or use default
+    const repos = req.query.repos ? (Array.isArray(req.query.repos) ? req.query.repos : [req.query.repos]) : [];
+    const summary = await feedbackAggregationService.aggregateFeedback(org, repos as string[]);
+    res.json(summary);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch feedback summary'
+    });
+  }
+}));
+
+// Alert endpoints
+app.get('/api/metrics/alerts/:org', asyncHandler(async (req: Request, res: Response) => {
+  const { org } = req.params;
+  try {
+    const alerts = alertingService.getActiveAlerts();
+    const metrics = alertingService.getAlertMetrics();
+    res.json({
+      timestamp: new Date(),
+      org,
+      alerts,
+      metrics
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch alerts'
+    });
+  }
+}));
+
+// Get alerts for specific team
+app.get('/api/metrics/alerts/:org/:team', asyncHandler(async (req: Request, res: Response) => {
+  const { org, team } = req.params;
+  try {
+    const alerts = alertingService.getTeamAlerts(team);
+    res.json({
+      timestamp: new Date(),
+      org,
+      team,
+      alerts
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch team alerts'
+    });
+  }
+}));
+
+// Acknowledge alert endpoint
+app.post('/api/metrics/alerts/:org/:alertId/acknowledge', asyncHandler(async (req: Request, res: Response) => {
+  const { org, alertId } = req.params;
+  try {
+    const alert = alertingService.acknowledgeAlert(alertId);
+    if (!alert) {
+      return res.status(404).json({ error: 'Alert not found' });
+    }
+    res.json({
+      timestamp: new Date(),
+      org,
+      alert
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to acknowledge alert'
+    });
+  }
+}));
+
+// Resolve alert endpoint
+app.post('/api/metrics/alerts/:org/:alertId/resolve', asyncHandler(async (req: Request, res: Response) => {
+  const { org, alertId } = req.params;
+  try {
+    const alert = alertingService.resolveAlert(alertId);
+    if (!alert) {
+      return res.status(404).json({ error: 'Alert not found' });
+    }
+    res.json({
+      timestamp: new Date(),
+      org,
+      alert
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to resolve alert'
     });
   }
 }));
