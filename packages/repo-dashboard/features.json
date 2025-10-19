@@ -1871,6 +1871,207 @@
         "testCount": 12
       }
     ]
+  },
+  "flowVisualizationUI": {
+    "description": "Flow Visualization UI Components for Phase 2.0 - Issue #94",
+    "features": [
+      {
+        "name": "ValueStreamCard component",
+        "status": "implemented",
+        "file": "src/web/components/ValueStreamCard.tsx",
+        "description": "Timeline visualization showing PR → Deploy flow with median times for each stage",
+        "testCases": [
+          "Display timeline with 6 stages (Idea, PR, Review, Build, Test, Deploy)",
+          "Show median time for each stage",
+          "Display 7-day and 30-day trends",
+          "Show trend indicators (improving/stable/degrading)",
+          "Expandable details view",
+          "Color-coded stages",
+          "Drill-down functionality"
+        ]
+      },
+      {
+        "name": "PRFlowChart component",
+        "status": "implemented",
+        "file": "src/web/components/PRFlowChart.tsx",
+        "description": "Stacked bar chart showing time breakdown by stage with percentages",
+        "testCases": [
+          "Display stacked bar chart with stage breakdown",
+          "Show percentage of time per stage",
+          "Identify longest stage",
+          "Display trend indicator",
+          "Provide recommendations",
+          "Show total time",
+          "Expandable details"
+        ]
+      },
+      {
+        "name": "WIPGauge component",
+        "status": "implemented",
+        "file": "src/web/components/WIPGauge.tsx",
+        "description": "Gauge showing current WIP vs limit with status indicators",
+        "testCases": [
+          "Display gauge visualization",
+          "Show current WIP and limit",
+          "Display status (healthy/warning/critical)",
+          "Show percentage of limit",
+          "Color-coded status indicators",
+          "Quick action buttons",
+          "Team information"
+        ]
+      },
+      {
+        "name": "WIPTrendChart component",
+        "status": "implemented",
+        "file": "src/web/components/WIPTrendChart.tsx",
+        "description": "Line chart showing WIP trends over 30 days",
+        "testCases": [
+          "Display line chart with 30-day data",
+          "Show WIP vs limit over time",
+          "Display average, max, min WIP",
+          "Show trend direction",
+          "Interactive hover details",
+          "Responsive SVG visualization",
+          "Color-coded trend lines"
+        ]
+      },
+      {
+        "name": "ConstraintRadar component",
+        "status": "implemented",
+        "file": "src/web/components/ConstraintRadar.tsx",
+        "description": "Radar chart identifying bottlenecks across teams",
+        "testCases": [
+          "Display radar/spider chart",
+          "Show constraint severity by team",
+          "Display critical/high/medium counts",
+          "Color-coded severity levels",
+          "Expandable details",
+          "Team-specific information",
+          "Drill-down functionality"
+        ]
+      },
+      {
+        "name": "BottleneckAlert component",
+        "status": "implemented",
+        "file": "src/web/components/BottleneckAlert.tsx",
+        "description": "Alert component for constraint changes and bottleneck notifications",
+        "testCases": [
+          "Display alert list with severity indicators",
+          "Show affected teams",
+          "Display suggested actions",
+          "Expandable alert details",
+          "Acknowledge and resolve buttons",
+          "Color-coded severity",
+          "Empty state handling"
+        ]
+      },
+      {
+        "name": "FlowStageBreakdown component",
+        "status": "implemented",
+        "file": "src/web/components/FlowStageBreakdown.tsx",
+        "description": "Show time in each stage with percentiles (median, p95, p99)",
+        "testCases": [
+          "Display stage breakdown with percentiles",
+          "Show median, p5, p95, p99 times",
+          "Display trend indicators",
+          "Progress bar visualization",
+          "Expandable percentile details",
+          "Identify fastest/slowest stages",
+          "Drill-down functionality"
+        ]
+      },
+      {
+        "name": "DeployCadenceChart component",
+        "status": "implemented",
+        "file": "src/web/components/DeployCadenceChart.tsx",
+        "description": "Show deployment frequency with success rates",
+        "testCases": [
+          "Display bar chart with deployment frequency",
+          "Show success rates",
+          "Track rollbacks",
+          "Display average deploys per day",
+          "Show recent deployments list",
+          "Trend indicator",
+          "Expandable history view"
+        ]
+      },
+      {
+        "name": "ConductorThroughputChart component",
+        "status": "implemented",
+        "file": "src/web/components/ConductorThroughputChart.tsx",
+        "description": "Show Conductor metrics (sequences/min, queue length, execution time)",
+        "testCases": [
+          "Display throughput metrics",
+          "Show queue length",
+          "Display success rate",
+          "Show average execution time",
+          "System health status indicator",
+          "Error rate analysis",
+          "Trend indicator"
+        ]
+      },
+      {
+        "name": "BundleSizeGauge component",
+        "status": "implemented",
+        "file": "src/web/components/BundleSizeGauge.tsx",
+        "description": "Track bundle size and performance budgets",
+        "testCases": [
+          "Display total bundle size vs budget",
+          "Show load time",
+          "Track over-budget bundles",
+          "Display individual bundle metrics",
+          "Color-coded status (green/yellow/red)",
+          "Percentage of budget visualization",
+          "Expandable bundle list"
+        ]
+      },
+      {
+        "name": "FlowDashboard page",
+        "status": "implemented",
+        "file": "src/web/pages/FlowDashboard.tsx",
+        "description": "New page combining all 10 flow components in a dashboard layout",
+        "testCases": [
+          "Display all 10 flow components",
+          "Organization and team selectors",
+          "Responsive grid layout",
+          "Mock data for demonstration",
+          "Component integration",
+          "Navigation support",
+          "Proper styling and spacing"
+        ]
+      },
+      {
+        "name": "App.tsx integration",
+        "status": "implemented",
+        "file": "src/web/App.tsx",
+        "description": "Wire FlowDashboard into main application routing",
+        "testCases": [
+          "Add 'flow' to Page type union",
+          "Import FlowDashboard component",
+          "Add conditional rendering for flow page",
+          "Pass navigation callbacks",
+          "Proper error boundary handling"
+        ]
+      },
+      {
+        "name": "Navigation.tsx enhancement",
+        "status": "implemented",
+        "file": "src/web/components/Navigation.tsx",
+        "description": "Add Flow navigation link to main navigation",
+        "testCases": [
+          "Add Flow link to navigation menu",
+          "Active state styling",
+          "Navigation callback",
+          "Proper link positioning"
+        ]
+      },
+      {
+        "name": "Unit tests for Flow components",
+        "status": "implemented",
+        "testCount": 50,
+        "description": "Comprehensive unit tests for all 10 flow visualization components"
+      }
+    ]
   }
 }
 
