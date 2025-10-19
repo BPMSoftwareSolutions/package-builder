@@ -332,6 +332,92 @@
       }
     ]
   },
+  "learningAnalyzer": {
+    "description": "Continuous Learning Analyzer module for analyzing patterns in metrics over time",
+    "features": [
+      {
+        "name": "LearningAnalyzer class initialization",
+        "status": "implemented",
+        "testCases": [
+          "Initializes with metrics history",
+          "Stores trends, anomalies, correlations, insights"
+        ]
+      },
+      {
+        "name": "Trend detection and analysis",
+        "status": "implemented",
+        "testCases": [
+          "Detects increasing trends",
+          "Detects decreasing trends",
+          "Detects stable trends",
+          "Calculates slope and confidence",
+          "Handles empty and single-value lists"
+        ]
+      },
+      {
+        "name": "Anomaly detection",
+        "status": "implemented",
+        "testCases": [
+          "Detects statistical anomalies using z-score",
+          "Calculates severity levels (low, medium, high, critical)",
+          "Handles empty history and insufficient data",
+          "Provides anomaly descriptions and deviation percentages"
+        ]
+      },
+      {
+        "name": "Correlation analysis",
+        "status": "implemented",
+        "testCases": [
+          "Calculates Pearson correlation coefficient",
+          "Detects positive correlations",
+          "Detects negative correlations",
+          "Identifies leading indicators",
+          "Handles edge cases (empty lists, mismatched lengths)"
+        ]
+      },
+      {
+        "name": "Insights generation",
+        "status": "implemented",
+        "testCases": [
+          "Generates health insights",
+          "Generates bottleneck insights",
+          "Generates insights from trends and anomalies"
+        ]
+      },
+      {
+        "name": "Bottleneck identification",
+        "status": "implemented",
+        "testCases": [
+          "Identifies high anomaly counts",
+          "Identifies declining metrics",
+          "Provides severity and affected metrics"
+        ]
+      },
+      {
+        "name": "Recommendations generation",
+        "status": "implemented",
+        "testCases": [
+          "Generates recommendations for declining health",
+          "Generates recommendations for anomalies",
+          "Includes priority, impact, and action items"
+        ]
+      },
+      {
+        "name": "Report generation",
+        "status": "implemented",
+        "testCases": [
+          "Generates markdown reports",
+          "Includes executive summary",
+          "Includes trends, anomalies, and recommendations sections"
+        ]
+      },
+      {
+        "name": "Unit tests for Learning Analyzer",
+        "status": "implemented",
+        "testCount": 26
+      }
+    ]
+  },
   "phase": "Phase 1 - Python Scripts",
   "relatedTasks": {
     "completed": [
@@ -358,7 +444,16 @@
       "Implement PlantUML diagram generation",
       "Implement GraphML export",
       "Implement JSON graph representation",
-      "Write comprehensive unit tests for C4 Model Generator"
+      "Write comprehensive unit tests for C4 Model Generator",
+      "Implement Learning Analyzer class",
+      "Implement trend detection",
+      "Implement anomaly detection",
+      "Implement correlation analysis",
+      "Implement insights generation",
+      "Implement bottleneck identification",
+      "Implement recommendations generation",
+      "Implement report generation",
+      "Write comprehensive unit tests for Learning Analyzer"
     ],
     "remaining": [
       "Run local CI and fix errors",
