@@ -17,6 +17,7 @@
         "type": "web-application",
         "description": "Thin-client React application that loads and orchestrates plugins via manifest-driven configuration",
         "technology": "React 19, TypeScript, Vite",
+        "repository": "BPMSoftwareSolutions/renderx-plugins-demo",
         "responsibilities": [
           "Plugin system initialization",
           "Manifest-driven plugin loading",
@@ -42,6 +43,10 @@
         "type": "library",
         "description": "Core plugin infrastructure providing base interfaces, manifest schema, and utilities for RenderX-compatible plugins",
         "technology": "TypeScript, Node.js",
+        "repositories": [
+          "BPMSoftwareSolutions/renderx-plugins-sdk",
+          "BPMSoftwareSolutions/renderx-manifest-tools"
+        ],
         "responsibilities": [
           "Plugin interface definitions",
           "Manifest schema validation",
@@ -72,6 +77,7 @@
         "type": "library",
         "description": "Orchestration engine powering plugin coordination through symphonies, movements, and beats",
         "technology": "TypeScript, Node.js",
+        "repository": "BPMSoftwareSolutions/musical-conductor",
         "responsibilities": [
           "Plugin coordination",
           "Workflow orchestration",
@@ -97,6 +103,13 @@
         "type": "library",
         "description": "Reference implementations demonstrating plugin patterns and orchestration flows",
         "technology": "React, TypeScript",
+        "repositories": [
+          "BPMSoftwareSolutions/renderx-plugins-canvas",
+          "BPMSoftwareSolutions/renderx-plugins-components",
+          "BPMSoftwareSolutions/renderx-plugins-control-panel",
+          "BPMSoftwareSolutions/renderx-plugins-header",
+          "BPMSoftwareSolutions/renderx-plugins-library"
+        ],
         "responsibilities": [
           "UI panel extensions",
           "Component rendering",
@@ -152,6 +165,7 @@
         "type": "ui-component-library",
         "description": "React components organized in layered architecture (core, domain, ui, infrastructure, vendor)",
         "technology": "React 19, TypeScript, CSS",
+        "repository": "BPMSoftwareSolutions/renderx-plugins-demo",
         "responsibilities": [
           "Plugin panel rendering",
           "Diagnostics UI",
@@ -177,6 +191,7 @@
         "type": "build-system",
         "description": "Manifest and artifact generation system for external plugin consumption and integrity verification",
         "technology": "Node.js, Crypto",
+        "repository": "BPMSoftwareSolutions/renderx-plugins-demo",
         "responsibilities": [
           "Manifest generation",
           "Artifact bundling",
