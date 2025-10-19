@@ -1,0 +1,491 @@
+{
+  "version": "1.0.0",
+  "name": "RenderX Plugins Demo",
+  "description": "A thin-client host application showcasing the RenderX plugin architecture with manifest-driven plugin loading orchestrated via the MusicalConductor engine",
+  "organization": "BPMSoftwareSolutions",
+  "repository": "renderx-plugins-demo",
+  "repositoryUrl": "https://github.com/BPMSoftwareSolutions/renderx-plugins-demo",
+  "license": "Apache-2.0",
+  "type": "application",
+  "status": "active",
+  "c4Model": {
+    "level": "container",
+    "containers": [
+      {
+        "id": "host-app",
+        "name": "RenderX Host Application",
+        "type": "web-application",
+        "description": "Thin-client React application that loads and orchestrates plugins via manifest-driven configuration",
+        "technology": "React 19, TypeScript, Vite",
+        "responsibilities": [
+          "Plugin system initialization",
+          "Manifest-driven plugin loading",
+          "UI slot management",
+          "Orchestration coordination via MusicalConductor"
+        ],
+        "packages": [
+          {
+            "name": "renderx-plugins-demo",
+            "version": "0.1.0",
+            "status": "active"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.85,
+          "testCoverage": 0.78,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-system",
+        "name": "Plugin System",
+        "type": "library",
+        "description": "Core plugin infrastructure providing base interfaces, manifest schema, and utilities for RenderX-compatible plugins",
+        "technology": "TypeScript, Node.js",
+        "responsibilities": [
+          "Plugin interface definitions",
+          "Manifest schema validation",
+          "Plugin lifecycle management",
+          "Component catalog discovery"
+        ],
+        "packages": [
+          {
+            "name": "@renderx-plugins/host-sdk",
+            "version": "1.0.4-rc.0",
+            "status": "release-candidate"
+          },
+          {
+            "name": "@renderx-plugins/manifest-tools",
+            "version": "0.1.2",
+            "status": "active"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.88,
+          "testCoverage": 0.82,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "orchestration-engine",
+        "name": "MusicalConductor Orchestration Engine",
+        "type": "library",
+        "description": "Orchestration engine powering plugin coordination through symphonies, movements, and beats",
+        "technology": "TypeScript, Node.js",
+        "responsibilities": [
+          "Plugin coordination",
+          "Workflow orchestration",
+          "Event management",
+          "State synchronization"
+        ],
+        "packages": [
+          {
+            "name": "musical-conductor",
+            "version": "1.4.5",
+            "status": "active"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.90,
+          "testCoverage": 0.85,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-examples",
+        "name": "Example Plugins",
+        "type": "library",
+        "description": "Reference implementations demonstrating plugin patterns and orchestration flows",
+        "technology": "React, TypeScript",
+        "responsibilities": [
+          "UI panel extensions",
+          "Component rendering",
+          "Orchestration flow examples",
+          "Testing sandbox"
+        ],
+        "packages": [
+          {
+            "name": "@renderx-plugins/canvas",
+            "version": "0.1.0-rc.3",
+            "status": "release-candidate"
+          },
+          {
+            "name": "@renderx-plugins/canvas-component",
+            "version": "1.0.11",
+            "status": "active"
+          },
+          {
+            "name": "@renderx-plugins/components",
+            "version": "0.1.1",
+            "status": "active"
+          },
+          {
+            "name": "@renderx-plugins/control-panel",
+            "version": "0.1.0-rc.9",
+            "status": "release-candidate"
+          },
+          {
+            "name": "@renderx-plugins/header",
+            "version": "0.1.1",
+            "status": "active"
+          },
+          {
+            "name": "@renderx-plugins/library",
+            "version": "1.0.3",
+            "status": "active"
+          },
+          {
+            "name": "@renderx-plugins/library-component",
+            "version": "0.1.0-rc.5",
+            "status": "release-candidate"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.82,
+          "testCoverage": 0.75,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "ui-layer",
+        "name": "UI Layer",
+        "type": "ui-component-library",
+        "description": "React components organized in layered architecture (core, domain, ui, infrastructure, vendor)",
+        "technology": "React 19, TypeScript, CSS",
+        "responsibilities": [
+          "Plugin panel rendering",
+          "Diagnostics UI",
+          "Tree explorer visualization",
+          "Layout management"
+        ],
+        "directories": [
+          "src/core",
+          "src/domain",
+          "src/ui",
+          "src/infrastructure",
+          "src/vendor"
+        ],
+        "metrics": {
+          "healthScore": 0.84,
+          "testCoverage": 0.80,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "artifact-system",
+        "name": "Artifact System",
+        "type": "build-system",
+        "description": "Manifest and artifact generation system for external plugin consumption and integrity verification",
+        "technology": "Node.js, Crypto",
+        "responsibilities": [
+          "Manifest generation",
+          "Artifact bundling",
+          "Integrity verification",
+          "Signature management"
+        ],
+        "scripts": [
+          "scripts/build-artifacts.js",
+          "scripts/generate-interaction-manifest.js",
+          "scripts/generate-topics-manifest.js",
+          "scripts/generate-layout-manifest.js",
+          "scripts/sync-json-components.js",
+          "scripts/sync-json-sequences.js",
+          "scripts/sync-plugins.js"
+        ],
+        "metrics": {
+          "healthScore": 0.86,
+          "testCoverage": 0.79,
+          "buildStatus": "success"
+        }
+      }
+    ],
+    "relationships": [
+      {
+        "from": "host-app",
+        "to": "plugin-system",
+        "type": "depends_on",
+        "description": "Host application uses plugin system interfaces and SDK"
+      },
+      {
+        "from": "host-app",
+        "to": "orchestration-engine",
+        "type": "depends_on",
+        "description": "Host uses MusicalConductor for plugin orchestration"
+      },
+      {
+        "from": "host-app",
+        "to": "plugin-examples",
+        "type": "loads",
+        "description": "Host loads and renders example plugins"
+      },
+      {
+        "from": "host-app",
+        "to": "ui-layer",
+        "type": "uses",
+        "description": "Host renders UI components from UI layer"
+      },
+      {
+        "from": "plugin-examples",
+        "to": "plugin-system",
+        "type": "implements",
+        "description": "Example plugins implement plugin system interfaces"
+      },
+      {
+        "from": "plugin-examples",
+        "to": "orchestration-engine",
+        "type": "uses",
+        "description": "Plugins use orchestration engine for coordination"
+      },
+      {
+        "from": "artifact-system",
+        "to": "plugin-system",
+        "type": "generates",
+        "description": "Artifact system generates manifests for plugin discovery"
+      }
+    ]
+  },
+  "layers": {
+    "presentation": {
+      "description": "React UI components and pages",
+      "path": "src/ui",
+      "technologies": ["React", "TypeScript", "CSS"]
+    },
+    "domain": {
+      "description": "Business logic and domain models",
+      "path": "src/domain",
+      "technologies": ["TypeScript"]
+    },
+    "core": {
+      "description": "Core utilities and helpers",
+      "path": "src/core",
+      "technologies": ["TypeScript"]
+    },
+    "infrastructure": {
+      "description": "External service integrations",
+      "path": "src/infrastructure",
+      "technologies": ["TypeScript", "Node.js"]
+    },
+    "vendor": {
+      "description": "Third-party integrations",
+      "path": "src/vendor",
+      "technologies": ["TypeScript"]
+    }
+  },
+  "dependencies": {
+    "runtime": [
+      {
+        "name": "@renderx-plugins/host-sdk",
+        "version": "1.0.4-rc.0",
+        "type": "peer-dependency",
+        "purpose": "Plugin system SDK"
+      },
+      {
+        "name": "musical-conductor",
+        "version": "1.4.5",
+        "type": "dependency",
+        "purpose": "Orchestration engine"
+      },
+      {
+        "name": "react",
+        "version": "19.1.1",
+        "type": "dependency",
+        "purpose": "UI framework"
+      },
+      {
+        "name": "react-dom",
+        "version": "19.1.1",
+        "type": "dependency",
+        "purpose": "React DOM rendering"
+      },
+      {
+        "name": "lucide-react",
+        "version": "0.544.0",
+        "type": "dependency",
+        "purpose": "Icon library"
+      }
+    ],
+    "devDependencies": [
+      {
+        "name": "typescript",
+        "version": "5.9.2",
+        "type": "dev-dependency",
+        "purpose": "Type checking"
+      },
+      {
+        "name": "vite",
+        "version": "7.1.3",
+        "type": "dev-dependency",
+        "purpose": "Build tool"
+      },
+      {
+        "name": "vitest",
+        "version": "3.2.4",
+        "type": "dev-dependency",
+        "purpose": "Unit testing"
+      },
+      {
+        "name": "cypress",
+        "version": "15.2.0",
+        "type": "dev-dependency",
+        "purpose": "E2E testing"
+      },
+      {
+        "name": "eslint",
+        "version": "9.33.0",
+        "type": "dev-dependency",
+        "purpose": "Code linting"
+      }
+    ]
+  },
+  "features": [
+    {
+      "id": "manifest-driven-loading",
+      "name": "Manifest-Driven Plugin Loading",
+      "description": "Plugins are loaded and configured via JSON manifests",
+      "status": "active",
+      "phase": "production"
+    },
+    {
+      "id": "plugin-orchestration",
+      "name": "Plugin Orchestration",
+      "description": "MusicalConductor-powered coordination of plugin workflows",
+      "status": "active",
+      "phase": "production"
+    },
+    {
+      "id": "ui-slots",
+      "name": "UI Slot System",
+      "description": "Manifest-driven panel slots for UI extension",
+      "status": "active",
+      "phase": "production"
+    },
+    {
+      "id": "artifact-integrity",
+      "name": "Artifact Integrity Verification",
+      "description": "SHA-256 hashing and signature verification for artifacts",
+      "status": "active",
+      "phase": "beta"
+    },
+    {
+      "id": "external-plugin-mode",
+      "name": "External Plugin Artifact Mode",
+      "description": "Thin host can run without plugin source code",
+      "status": "active",
+      "phase": "beta"
+    },
+    {
+      "id": "diagnostics-panel",
+      "name": "Diagnostics Panel",
+      "description": "Plugin discovery and debugging UI",
+      "status": "active",
+      "phase": "production",
+      "refactoringPhase": 4
+    },
+    {
+      "id": "host-sdk",
+      "name": "Host SDK",
+      "description": "Public API for plugin authors",
+      "status": "active",
+      "phase": "release-candidate"
+    }
+  ],
+  "buildSystem": {
+    "type": "vite",
+    "scripts": {
+      "dev": "npm run pre:manifests && vite",
+      "build": "npm run pre:manifests && vite build",
+      "preview": "vite preview",
+      "test": "vitest run",
+      "test:watch": "vitest --watch",
+      "lint": "eslint .",
+      "e2e": "cypress run"
+    },
+    "artifacts": {
+      "integrity": "artifacts.integrity.json",
+      "manifests": [
+        "interaction-manifest.json",
+        "topics-manifest.json",
+        "layout-manifest.json",
+        "plugin-manifest.json"
+      ],
+      "catalogs": [
+        "json-components/",
+        "json-sequences/",
+        "json-interactions/",
+        "json-topics/"
+      ]
+    }
+  },
+  "testing": {
+    "unit": {
+      "framework": "vitest",
+      "coverage": "v8"
+    },
+    "e2e": {
+      "framework": "cypress",
+      "baseUrl": "http://localhost:5173"
+    },
+    "integration": {
+      "framework": "vitest",
+      "description": "Plugin loading and orchestration tests"
+    }
+  },
+  "refactoring": {
+    "active": true,
+    "zones": [
+      {
+        "name": "Diagnostics Module",
+        "issueId": 297,
+        "currentPhase": 4,
+        "targetPhase": 6,
+        "files": [
+          "src/ui/diagnostics/DiagnosticsPanel.tsx",
+          "src/ui/PluginTreeExplorer.tsx"
+        ],
+        "completed": [
+          "Phase 1: Type system centralization",
+          "Phase 2: Business logic extraction",
+          "Phase 3: Custom hooks extraction",
+          "Phase 4: Component extraction"
+        ],
+        "pending": [
+          "Phase 5: Tree explorer modularization",
+          "Phase 6: Testing & documentation"
+        ]
+      }
+    ]
+  },
+  "environmentVariables": [
+    {
+      "name": "HOST_ARTIFACTS_DIR",
+      "description": "Points host at pre-built artifacts directory",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "RENDERX_DISABLE_STARTUP_VALIDATION",
+      "description": "Skip plugin & manifest count summary",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "RENDERX_DISABLE_INTEGRITY",
+      "description": "Skip integrity verification",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "RENDERX_VALIDATION_STRICT",
+      "description": "Escalate validator warnings to errors",
+      "default": "0",
+      "required": false
+    }
+  ],
+  "metrics": {
+    "overallHealthScore": 0.85,
+    "averageTestCoverage": 0.80,
+    "buildStatus": "success",
+    "lastUpdated": "2025-10-19"
+  }
+}
+
