@@ -43,5 +43,16 @@ export {
   handleIssues,
   handlePackages,
   handlePack,
+  handleCombinedReadme,
 } from './cli.js';
+
+// Export combined README functions
+export {
+  generateCombinedReadme,
+  generateAndSaveCombinedReadme,
+  getReadmeContent,
+  matchesPatterns,
+} from './combined-readme.js';
+
+export type { CombinedReadmeOptions } from './combined-readme.js';
 
