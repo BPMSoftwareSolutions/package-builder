@@ -719,7 +719,99 @@
       }
     ]
   },
-  "phase": "Phase 2 - Web UI Integration (In Progress) - Issue #68 Architecture-First Dashboard",
+  "valueStreamMetricsCollection": {
+    "description": "Value Stream Metrics Collection for Phase 1.1 - PR Cycle Times & Deployment Frequency",
+    "features": [
+      {
+        "name": "PullRequestMetricsCollector service",
+        "status": "implemented",
+        "file": "src/services/pull-request-metrics-collector.ts",
+        "testCases": [
+          "Collect PR metrics from GitHub API",
+          "Calculate cycle time stages",
+          "Handle pagination for large repositories",
+          "Cache results with TTL",
+          "Calculate aggregate metrics",
+          "Clear cache functionality"
+        ]
+      },
+      {
+        "name": "DeploymentMetricsCollector service",
+        "status": "implemented",
+        "file": "src/services/deployment-metrics-collector.ts",
+        "testCases": [
+          "Collect deployment metrics from GitHub Actions",
+          "Extract deployment information from workflow names",
+          "Calculate deployment frequency and success rates",
+          "Track rollbacks",
+          "Cache results with TTL",
+          "Calculate aggregate metrics"
+        ]
+      },
+      {
+        "name": "MetricsAggregator service",
+        "status": "implemented",
+        "file": "src/services/metrics-aggregator.ts",
+        "testCases": [
+          "Aggregate metrics by team",
+          "Calculate rolling averages",
+          "Generate trend data",
+          "Support 7-day and 30-day periods",
+          "Calculate trend direction (improving/stable/degrading)"
+        ]
+      },
+      {
+        "name": "MetricsStorage service",
+        "status": "implemented",
+        "file": "src/services/metrics-storage.ts",
+        "testCases": [
+          "Store PR metrics in memory",
+          "Store deployment metrics in memory",
+          "Maintain time-series data",
+          "Calculate trends from time series",
+          "Provide metric statistics",
+          "Implement data retention policy"
+        ]
+      },
+      {
+        "name": "Value Stream Metrics API endpoints",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/metrics/value-stream/:org/:repo - Get PR metrics for repository",
+          "GET /api/metrics/deployment/:org/:repo - Get deployment metrics for repository",
+          "GET /api/metrics/team/:team - Get aggregated metrics for team",
+          "GET /api/metrics/teams - Get list of all teams",
+          "GET /api/metrics/cache/stats - Get cache statistics"
+        ]
+      },
+      {
+        "name": "Unit tests for PullRequestMetricsCollector",
+        "status": "implemented",
+        "file": "src/services/pull-request-metrics-collector.test.ts",
+        "testCount": 10
+      },
+      {
+        "name": "Unit tests for DeploymentMetricsCollector",
+        "status": "implemented",
+        "file": "src/services/deployment-metrics-collector.test.ts",
+        "testCount": 10
+      },
+      {
+        "name": "Unit tests for MetricsAggregator",
+        "status": "implemented",
+        "file": "src/services/metrics-aggregator.test.ts",
+        "testCount": 12
+      },
+      {
+        "name": "Unit tests for MetricsStorage",
+        "status": "implemented",
+        "file": "src/services/metrics-storage.test.ts",
+        "testCount": 15
+      }
+    ]
+  },
+  "phase": "Phase 1.1 - Value Stream Metrics Collection (In Progress) - Issue #73",
   "relatedTasks": {
     "completed": [
       "Create feature branch",

@@ -11,6 +11,9 @@ import { getPackageReadiness } from './local.js';
 import { adfFetcher } from './services/adf-fetcher.js';
 import { adfCache } from './services/adf-cache.js';
 import { extractRepositoriesFromADF } from './services/adf-repository-extractor.js';
+import { prMetricsCollector } from './services/pull-request-metrics-collector.js';
+import { deploymentMetricsCollector } from './services/deployment-metrics-collector.js';
+import { metricsAggregator } from './services/metrics-aggregator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -716,6 +719,121 @@ app.get('/api/components/:id', asyncHandler(async (req: Request, res: Response) 
   } catch (error) {
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch component'
+    });
+  }
+}));
+
+// Value Stream Metrics Endpoints
+
+// Get PR metrics for a repository
+app.get('/api/metrics/value-stream/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    const { days = '30' } = req.query;
+    const daysNum = parseInt(days as string, 10) || 30;
+
+    console.log(`📊 Fetching PR metrics for ${org}/${repo}`);
+
+    const metrics = await prMetricsCollector.collectPRMetrics(org, repo, daysNum);
+    const aggregated = await prMetricsCollector.calculateAggregateMetrics(org, repo, daysNum);
+
+    res.json({
+      repository: `${org}/${repo}`,
+      period: `${daysNum}d`,
+      metrics: aggregated,
+      prCount: metrics.length,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching PR metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch PR metrics'
+    });
+  }
+}));
+
+// Get deployment metrics for a repository
+app.get('/api/metrics/deployment/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    const { days = '30' } = req.query;
+    const daysNum = parseInt(days as string, 10) || 30;
+
+    console.log(`📊 Fetching deployment metrics for ${org}/${repo}`);
+
+    const metrics = await deploymentMetricsCollector.collectDeploymentMetrics(org, repo, daysNum);
+    const aggregated = await deploymentMetricsCollector.calculateAggregateMetrics(org, repo, daysNum);
+
+    res.json({
+      repository: `${org}/${repo}`,
+      period: `${daysNum}d`,
+      metrics: aggregated,
+      deploymentCount: metrics.length,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching deployment metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch deployment metrics'
+    });
+  }
+}));
+
+// Get team metrics
+app.get('/api/metrics/team/:team', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { team } = req.params;
+    const { org = 'BPMSoftwareSolutions', period = '30d' } = req.query;
+
+    console.log(`📊 Fetching team metrics for ${team}`);
+
+    const teamMetrics = await metricsAggregator.aggregateTeamMetrics(
+      org as string,
+      team,
+      (period as '7d' | '30d') || '30d'
+    );
+
+    res.json(teamMetrics);
+  } catch (error) {
+    console.error('❌ Error fetching team metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch team metrics'
+    });
+  }
+}));
+
+// Get all teams
+app.get('/api/metrics/teams', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const teams = metricsAggregator.getTeams();
+    res.json({
+      teams,
+      count: teams.length,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching teams:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch teams'
+    });
+  }
+}));
+
+// Get metrics cache statistics
+app.get('/api/metrics/cache/stats', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const prStats = prMetricsCollector.getCacheStats();
+    const deployStats = deploymentMetricsCollector.getCacheStats();
+
+    res.json({
+      prMetrics: prStats,
+      deploymentMetrics: deployStats,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching cache stats:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch cache stats'
     });
   }
 }));
