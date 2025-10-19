@@ -4,7 +4,10 @@
     "version": "1.0.0",
     "lastUpdated": "2025-10-19",
     "purpose": "Feature inventory for Enterprise CI/CD Dashboard with ADF Manager",
-    "relatedIssues": ["#50", "#51"]
+    "relatedIssues": [
+      "#50",
+      "#51"
+    ]
   },
   "features": {
     "adfManager": {
@@ -160,6 +163,303 @@
           "name": "Integration tests",
           "status": "implemented",
           "testCount": 2
+        }
+      ]
+    },
+    "learningCollaboration": {
+      "description": "Phase 2.1: Learning & Collaboration components for team knowledge sharing and cross-team coordination",
+      "features": [
+        {
+          "name": "BusFactorCard component",
+          "status": "implemented",
+          "file": "src/web/components/BusFactorCard.tsx",
+          "description": "Shows key person risk with bus factor score (1-10) and risk level indicators",
+          "testCases": [
+            "Display bus factor score (1-10)",
+            "Show risk level (low/medium/high/critical)",
+            "List key people at risk with percentages",
+            "Display recommendations for knowledge sharing",
+            "Show trend indicator (improving/stable/degrading)",
+            "Expandable details section",
+            "Color-coded risk levels"
+          ]
+        },
+        {
+          "name": "CodeOwnershipChart component",
+          "status": "implemented",
+          "file": "src/web/components/CodeOwnershipChart.tsx",
+          "description": "Pie chart visualization of code ownership distribution with concentration metrics",
+          "testCases": [
+            "Display pie chart of code ownership",
+            "Show concentration level (0-100)",
+            "List owners with file counts and percentages",
+            "Display recommendations for spreading ownership",
+            "Expandable owner details",
+            "Color-coded ownership segments",
+            "Drill-down functionality"
+          ]
+        },
+        {
+          "name": "KnowledgeSharingBoard component",
+          "status": "implemented",
+          "file": "src/web/components/KnowledgeSharingBoard.tsx",
+          "description": "Lists knowledge sharing sessions with participants, topics, and resources",
+          "testCases": [
+            "Display knowledge sharing sessions",
+            "Show participants and topics",
+            "Display resources shared count",
+            "Show total participants",
+            "Display upcoming sessions count",
+            "Expandable session details",
+            "Session date and time display"
+          ]
+        },
+        {
+          "name": "SkillInventoryCard component",
+          "status": "implemented",
+          "file": "src/web/components/SkillInventoryCard.tsx",
+          "description": "Shows team skills by proficiency level (beginner/intermediate/expert)",
+          "testCases": [
+            "Display skills by level",
+            "Show people count per skill level",
+            "Display skill gaps",
+            "Show training recommendations",
+            "Expandable skill details",
+            "Color-coded proficiency levels",
+            "Gap analysis visualization"
+          ]
+        },
+        {
+          "name": "MetricsTrendAnalysis component",
+          "status": "implemented",
+          "file": "src/web/components/MetricsTrendAnalysis.tsx",
+          "description": "Line chart showing historical trends with correlation and anomaly detection",
+          "testCases": [
+            "Display line chart with historical data",
+            "Show trend direction (improving/stable/degrading)",
+            "Display correlation coefficient",
+            "Show anomaly count",
+            "Interactive hover details",
+            "Responsive SVG visualization",
+            "Trend indicator icon"
+          ]
+        },
+        {
+          "name": "PredictionChart component",
+          "status": "implemented",
+          "file": "src/web/components/PredictionChart.tsx",
+          "description": "Shows predicted metrics for next 30 days with confidence intervals",
+          "testCases": [
+            "Display predicted metrics",
+            "Show confidence intervals",
+            "Display what-if scenarios",
+            "Show prediction date range",
+            "Expandable scenario details",
+            "Color-coded confidence levels",
+            "Trend projection visualization"
+          ]
+        },
+        {
+          "name": "RootCauseAnalysisCard component",
+          "status": "implemented",
+          "file": "src/web/components/RootCauseAnalysisCard.tsx",
+          "description": "Lists root causes with frequency and severity for identified issues",
+          "testCases": [
+            "Display root causes list",
+            "Show frequency count",
+            "Display severity level",
+            "Show impact percentage",
+            "Expandable cause details",
+            "Color-coded severity levels",
+            "Trend indicator"
+          ]
+        },
+        {
+          "name": "LearningRecommendations component",
+          "status": "implemented",
+          "file": "src/web/components/LearningRecommendations.tsx",
+          "description": "Shows improvement suggestions with priority levels and implementation status",
+          "testCases": [
+            "Display recommendations list",
+            "Show priority level",
+            "Display implementation status",
+            "Show impact score",
+            "Expandable recommendation details",
+            "Color-coded priority levels",
+            "Action button"
+          ]
+        },
+        {
+          "name": "HandoffTimeline component",
+          "status": "implemented",
+          "file": "src/web/components/HandoffTimeline.tsx",
+          "description": "Tracks handoffs between teams with duration and status",
+          "testCases": [
+            "Display handoff timeline",
+            "Show handoff duration",
+            "Display status (pending/in-progress/completed)",
+            "Show team names",
+            "Expandable handoff details",
+            "Color-coded status",
+            "Timeline visualization"
+          ]
+        },
+        {
+          "name": "CrossTeamCommunicationHub component",
+          "status": "implemented",
+          "file": "src/web/components/CrossTeamCommunicationHub.tsx",
+          "description": "Lists communication channels between teams with frequency and effectiveness",
+          "testCases": [
+            "Display communication channels",
+            "Show channel type",
+            "Display frequency",
+            "Show effectiveness score",
+            "Expandable channel details",
+            "Color-coded effectiveness",
+            "Channel statistics"
+          ]
+        },
+        {
+          "name": "CIAGateStatus component",
+          "status": "implemented",
+          "file": "src/web/components/CIAGateStatus.tsx",
+          "description": "Shows CIA validation gate status with pass rates and failure reasons",
+          "testCases": [
+            "Display gate status",
+            "Show pass rate percentage",
+            "Display failure count",
+            "Show failure reasons",
+            "Expandable failure details",
+            "Color-coded status",
+            "Trend indicator"
+          ]
+        },
+        {
+          "name": "SPAGateStatus component",
+          "status": "implemented",
+          "file": "src/web/components/SPAGateStatus.tsx",
+          "description": "Shows SPA validation gate status with pass rates and failure reasons",
+          "testCases": [
+            "Display gate status",
+            "Show pass rate percentage",
+            "Display failure count",
+            "Show failure reasons",
+            "Expandable failure details",
+            "Color-coded status",
+            "Trend indicator"
+          ]
+        },
+        {
+          "name": "DependencyHealthChart component",
+          "status": "implemented",
+          "file": "src/web/components/DependencyHealthChart.tsx",
+          "description": "Shows dependency health with version status and vulnerabilities",
+          "testCases": [
+            "Display dependency list",
+            "Show version status",
+            "Display vulnerability count",
+            "Show update availability",
+            "Expandable dependency details",
+            "Color-coded health status",
+            "Vulnerability severity"
+          ]
+        },
+        {
+          "name": "BlockerTracker component",
+          "status": "implemented",
+          "file": "src/web/components/BlockerTracker.tsx",
+          "description": "Tracks blocker resolution with status and severity",
+          "testCases": [
+            "Display blocker list",
+            "Show blocker status",
+            "Display severity level",
+            "Show resolution time",
+            "Expandable blocker details",
+            "Color-coded severity",
+            "Status timeline"
+          ]
+        },
+        {
+          "name": "TeamSatisfactionScore component",
+          "status": "implemented",
+          "file": "src/web/components/TeamSatisfactionScore.tsx",
+          "description": "Shows team collaboration satisfaction scores with trend analysis",
+          "testCases": [
+            "Display satisfaction score",
+            "Show score trend",
+            "Display feedback count",
+            "Show team comparison",
+            "Expandable feedback details",
+            "Color-coded score levels",
+            "Trend visualization"
+          ]
+        },
+        {
+          "name": "LearningDashboard page",
+          "status": "implemented",
+          "file": "src/web/pages/LearningDashboard.tsx",
+          "description": "Aggregates all 8 learning components with org/team selectors",
+          "testCases": [
+            "Display organization selector",
+            "Display team selector",
+            "Show all 8 learning components",
+            "Responsive layout",
+            "Component data loading",
+            "Error handling",
+            "Mock data display"
+          ]
+        },
+        {
+          "name": "CollaborationDashboard page",
+          "status": "implemented",
+          "file": "src/web/pages/CollaborationDashboard.tsx",
+          "description": "Aggregates all 7 collaboration components with org/team selectors",
+          "testCases": [
+            "Display organization selector",
+            "Display team selector",
+            "Show all 7 collaboration components",
+            "Responsive layout",
+            "Component data loading",
+            "Error handling",
+            "Mock data display"
+          ]
+        },
+        {
+          "name": "App.tsx integration",
+          "status": "implemented",
+          "file": "src/web/App.tsx",
+          "description": "Updated App.tsx with new routes for /learning and /collaboration pages",
+          "testCases": [
+            "Import LearningDashboard component",
+            "Import CollaborationDashboard component",
+            "Add 'learning' to Page type union",
+            "Add 'collaboration' to Page type union",
+            "Add conditional rendering for learning page",
+            "Add conditional rendering for collaboration page",
+            "Proper routing"
+          ]
+        },
+        {
+          "name": "Navigation.tsx integration",
+          "status": "implemented",
+          "file": "src/web/components/Navigation.tsx",
+          "description": "Updated Navigation.tsx with links for Learning and Collaboration pages",
+          "testCases": [
+            "Add Learning navigation link",
+            "Add Collaboration navigation link",
+            "Active state styling for learning",
+            "Active state styling for collaboration",
+            "Navigation callbacks",
+            "Proper link positioning",
+            "Responsive navigation"
+          ]
+        },
+        {
+          "name": "Unit tests for Learning/Collaboration components",
+          "status": "implemented",
+          "file": "test/web/components/LearningCollaboration.test.tsx",
+          "testCount": 80,
+          "description": "Comprehensive unit tests for all 15 learning and collaboration components"
         }
       ]
     }
@@ -1879,7 +2179,7 @@
         "name": "ValueStreamCard component",
         "status": "implemented",
         "file": "src/web/components/ValueStreamCard.tsx",
-        "description": "Timeline visualization showing PR → Deploy flow with median times for each stage",
+        "description": "Timeline visualization showing PR \u00e2\u2020\u2019 Deploy flow with median times for each stage",
         "testCases": [
           "Display timeline with 6 stages (Idea, PR, Review, Build, Test, Deploy)",
           "Show median time for each stage",
@@ -2074,4 +2374,3 @@
     ]
   }
 }
-

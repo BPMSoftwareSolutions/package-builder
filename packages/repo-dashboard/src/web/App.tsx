@@ -13,8 +13,10 @@ import InsightsPage from './pages/InsightsPage';
 import SettingsPage from './pages/SettingsPage';
 import ComponentDetails from './pages/ComponentDetails';
 import FlowDashboard from './pages/FlowDashboard';
+import LearningDashboard from './pages/LearningDashboard';
+import CollaborationDashboard from './pages/CollaborationDashboard';
 
-type Page = 'dashboard' | 'repos' | 'issues' | 'packages' | 'architecture' | 'metrics' | 'insights' | 'settings' | 'component-details' | 'flow';
+type Page = 'dashboard' | 'repos' | 'issues' | 'packages' | 'architecture' | 'metrics' | 'insights' | 'settings' | 'component-details' | 'flow' | 'learning' | 'collaboration';
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
@@ -45,6 +47,8 @@ function AppContent() {
           {currentPage === 'metrics' && <MetricsDashboard onNavigate={handleNavigation} />}
           {currentPage === 'insights' && <InsightsPage onNavigate={handleNavigation} />}
           {currentPage === 'flow' && <FlowDashboard onNavigate={handleNavigation} />}
+          {currentPage === 'learning' && <LearningDashboard />}
+          {currentPage === 'collaboration' && <CollaborationDashboard />}
           {currentPage === 'component-details' && <ComponentDetails component={selectedComponent} onNavigate={handleNavigation} />}
           {currentPage === 'repos' && <RepoStatus org={selectedOrg} repo={selectedArchRepo || undefined} isArchitectureMode={isArchitectureMode} onNavigate={handleNavigation} />}
           {currentPage === 'issues' && <Issues repo={selectedRepo} />}
