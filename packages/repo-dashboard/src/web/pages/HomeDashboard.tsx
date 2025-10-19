@@ -210,7 +210,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           </div>
 
           {/* Repositories Card */}
-          <div className="card">
+          <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('repos', { org: selectedArchOrg, archOrg: selectedArchOrg, archRepo: selectedArchRepo, isArchitectureMode: true })}>
             <div className="card-header">📦 Repositories</div>
             <div className="card-body" style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>

@@ -16,6 +16,8 @@ interface Repository {
 
 interface RepoStatusProps {
   org?: string;
+  repo?: string;
+  isArchitectureMode?: boolean;
   onNavigate: (page: string, org?: string, repo?: string) => void;
 }
 
@@ -24,7 +26,7 @@ type SortOrder = 'asc' | 'desc';
 
 const DEFAULT_ORG = 'BPMSoftwareSolutions';
 
-export default function RepoStatus({ org = DEFAULT_ORG, onNavigate }: RepoStatusProps) {
+export default function RepoStatus({ org = DEFAULT_ORG, repo, isArchitectureMode = false, onNavigate }: RepoStatusProps) {
   const [repos, setRepos] = useState<Repository[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +42,14 @@ export default function RepoStatus({ org = DEFAULT_ORG, onNavigate }: RepoStatus
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(`/api/repos/${org}`);
+
+        // Use architecture endpoint if in architecture mode
+        const url = isArchitectureMode && repo
+          ? `/api/repos/architecture/${org}/${repo}`
+          : `/api/repos/${org}`;
+
+        console.log(`📊 Fetching repos from: ${url}`);
+        const response = await fetch(url);
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           const errorMessage = errorData.error || `Failed to fetch repositories: ${response.statusText}`;
@@ -68,7 +77,7 @@ export default function RepoStatus({ org = DEFAULT_ORG, onNavigate }: RepoStatus
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [org, autoRefresh]);
+  }, [org, repo, isArchitectureMode, autoRefresh]);
 
   const getStatusBadge = (status: string) => {
     const statusMap: { [key: string]: string } = {
@@ -118,7 +127,7 @@ export default function RepoStatus({ org = DEFAULT_ORG, onNavigate }: RepoStatus
 
   return (
     <div>
-      <h1>Repository Status - {org}</h1>
+      <h1>Repository Status - {isArchitectureMode && repo ? `${repo} (Architecture)` : org}</h1>
 
       {error && <div className="error">{error}</div>}
 
