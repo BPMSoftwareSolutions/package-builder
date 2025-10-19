@@ -1299,7 +1299,125 @@
       }
     ]
   },
-  "phase": "Phase 1.5 - Cross-Team Dependency Tracking & Hand-off Analysis (In Progress) - Issue #80",
+  "environmentConsistencyConfigurationDrift": {
+    "description": "Environment Consistency & Configuration Drift Detection for Phase 1.6 - Issue #81",
+    "features": [
+      {
+        "name": "EnvironmentConfigurationService",
+        "status": "implemented",
+        "file": "src/services/environment-configuration.ts",
+        "description": "Service for collecting and tracking environment configurations from CI/CD workflows",
+        "testCases": [
+          "Collect environment configuration for production",
+          "Collect environment configuration for dev",
+          "Collect environment configuration for staging",
+          "Include tool versions (node, npm, python, docker)",
+          "Include dependencies (react, typescript, vite)",
+          "Get configuration history",
+          "Track configuration changes",
+          "Get all tracked environments",
+          "Clear cache"
+        ]
+      },
+      {
+        "name": "ConfigurationDriftDetectionService",
+        "status": "implemented",
+        "file": "src/services/configuration-drift-detection.ts",
+        "description": "Service for detecting and tracking configuration differences across environments",
+        "testCases": [
+          "Detect drift between dev and production",
+          "Generate recommendations",
+          "Calculate severity based on differences",
+          "Detect tool version differences",
+          "Detect dependency differences",
+          "Get drift metrics for repository",
+          "Track multiple drifts",
+          "Return zero metrics for non-existent repository",
+          "Mark critical severity for major differences",
+          "Mark low severity for minor differences"
+        ]
+      },
+      {
+        "name": "BuildEnvironmentService",
+        "status": "implemented",
+        "file": "src/services/build-environment.ts",
+        "description": "Service for monitoring build tool versions and validating build reproducibility",
+        "testCases": [
+          "Collect build environment information",
+          "Include tool versions (node, python, java, docker)",
+          "Track build success",
+          "Track reproducibility",
+          "Track environment consistency",
+          "Get build environment metrics",
+          "Return zero metrics for non-existent repository",
+          "Track multiple builds",
+          "Calculate success rate correctly",
+          "Validate reproducibility",
+          "Get version mismatches"
+        ]
+      },
+      {
+        "name": "EnvironmentHealthService",
+        "status": "implemented",
+        "file": "src/services/environment-health.ts",
+        "description": "Service for calculating environment consistency scores and tracking environment-related failures",
+        "testCases": [
+          "Calculate environment health score",
+          "Determine health status (healthy/warning/critical)",
+          "Generate recommendations",
+          "Track environment-related failures",
+          "Calculate MTTR",
+          "Calculate failure rate",
+          "Get environment health metrics",
+          "Track multiple health scores",
+          "Calculate average health score",
+          "Calculate trend (improving/stable/degrading)",
+          "Mark healthy status for high scores",
+          "Mark warning status for medium scores",
+          "Mark critical status for low scores",
+          "Recommend improving reproducibility if score is low",
+          "Recommend addressing drift if score is high"
+        ]
+      },
+      {
+        "name": "Environment Configuration API endpoints",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/metrics/environment/:org/:env - Environment configuration",
+          "GET /api/metrics/environment-drift/:org - Configuration drift metrics",
+          "GET /api/metrics/build-environment/:org/:repo - Build environment info",
+          "GET /api/metrics/environment-health/:org - Environment health status",
+          "GET /api/metrics/environment-consistency/:org - Consistency score"
+        ]
+      },
+      {
+        "name": "Unit tests for EnvironmentConfigurationService",
+        "status": "implemented",
+        "file": "src/services/environment-configuration.test.ts",
+        "testCount": 12
+      },
+      {
+        "name": "Unit tests for ConfigurationDriftDetectionService",
+        "status": "implemented",
+        "file": "src/services/configuration-drift-detection.test.ts",
+        "testCount": 14
+      },
+      {
+        "name": "Unit tests for BuildEnvironmentService",
+        "status": "implemented",
+        "file": "src/services/build-environment.test.ts",
+        "testCount": 13
+      },
+      {
+        "name": "Unit tests for EnvironmentHealthService",
+        "status": "implemented",
+        "file": "src/services/environment-health.test.ts",
+        "testCount": 16
+      }
+    ]
+  },
+  "phase": "Phase 1.6 - Environment Consistency & Configuration Drift Detection (In Progress) - Issue #81",
   "relatedTasks": {
     "completed": [
       "Create feature branch",

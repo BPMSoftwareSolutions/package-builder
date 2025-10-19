@@ -30,6 +30,10 @@ import { crossTeamDependencyService } from './services/cross-team-dependency.js'
 import { handoffTrackingService } from './services/handoff-tracking.js';
 import { dependencyHealthService } from './services/dependency-health.js';
 import { crossTeamCommunicationService } from './services/cross-team-communication.js';
+import { environmentConfigurationService } from './services/environment-configuration.js';
+import { configurationDriftDetectionService } from './services/configuration-drift-detection.js';
+import { buildEnvironmentService } from './services/build-environment.js';
+import { environmentHealthService } from './services/environment-health.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -1802,6 +1806,162 @@ app.get('/api/metrics/cross-team-communication/:org', asyncHandler(async (req: R
     console.error('❌ Error fetching cross-team communication metrics:', error);
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch cross-team communication metrics'
+    });
+  }
+}));
+
+// Environment Configuration endpoints
+app.get('/api/metrics/environment/:org/:env', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, env } = req.params;
+    const repo = req.query.repo as string || 'renderx-plugins-demo';
+
+    console.log(`📋 Fetching environment configuration for ${org}/${repo} (${env})`);
+
+    const config = await environmentConfigurationService.collectEnvironmentConfiguration(
+      org,
+      repo,
+      env as 'dev' | 'staging' | 'production'
+    );
+
+    res.json({
+      organization: org,
+      repository: repo,
+      environment: env,
+      configuration: config,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching environment configuration:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch environment configuration'
+    });
+  }
+}));
+
+// Configuration Drift Detection endpoints
+app.get('/api/metrics/environment-drift/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    const repo = req.query.repo as string || 'renderx-plugins-demo';
+
+    console.log(`🔍 Fetching configuration drift metrics for ${org}/${repo}`);
+
+    const drift = await configurationDriftDetectionService.detectDrift(
+      org,
+      repo,
+      'dev',
+      'production'
+    );
+
+    const driftMetrics = configurationDriftDetectionService.getDriftMetrics(repo);
+
+    res.json({
+      organization: org,
+      repository: repo,
+      drift,
+      metrics: driftMetrics,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching configuration drift:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch configuration drift'
+    });
+  }
+}));
+
+// Build Environment endpoints
+app.get('/api/metrics/build-environment/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+
+    console.log(`🔨 Fetching build environment for ${org}/${repo}`);
+
+    const buildEnv = await buildEnvironmentService.collectBuildEnvironment(org, repo);
+    const metrics = buildEnvironmentService.getBuildEnvironmentMetrics(repo);
+
+    res.json({
+      organization: org,
+      repository: repo,
+      buildEnvironment: buildEnv,
+      metrics,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching build environment:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch build environment'
+    });
+  }
+}));
+
+// Environment Health endpoints
+app.get('/api/metrics/environment-health/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    const repo = req.query.repo as string || 'renderx-plugins-demo';
+
+    console.log(`💚 Fetching environment health for ${org}/${repo}`);
+
+    const healthScore = await environmentHealthService.calculateEnvironmentHealth(org, repo);
+    const healthMetrics = environmentHealthService.getEnvironmentHealthMetrics(repo);
+
+    res.json({
+      organization: org,
+      repository: repo,
+      healthScore,
+      metrics: healthMetrics,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching environment health:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch environment health'
+    });
+  }
+}));
+
+// Environment Consistency Score endpoints
+app.get('/api/metrics/environment-consistency/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+
+    console.log(`📊 Fetching environment consistency for ${org}`);
+
+    // Get consistency scores for all tracked environments
+    const trackedEnvs = environmentConfigurationService.getAllTrackedEnvironments();
+    const consistencyScores = [];
+
+    for (const envKey of trackedEnvs) {
+      const [repo, env] = envKey.split(':');
+      const healthMetrics = environmentHealthService.getEnvironmentHealthMetrics(repo);
+      if (healthMetrics.healthScores.length > 0) {
+        const latestScore = healthMetrics.healthScores[healthMetrics.healthScores.length - 1];
+        consistencyScores.push({
+          repository: repo,
+          environment: env,
+          consistencyScore: latestScore.consistencyScore,
+          reproducibilityScore: latestScore.reproducibilityScore,
+          driftScore: latestScore.driftScore,
+          overallHealthScore: latestScore.overallHealthScore,
+          status: latestScore.status
+        });
+      }
+    }
+
+    res.json({
+      organization: org,
+      consistencyScores,
+      averageConsistency: consistencyScores.length > 0
+        ? Math.round(consistencyScores.reduce((sum, s) => sum + s.consistencyScore, 0) / consistencyScores.length)
+        : 0,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching environment consistency:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch environment consistency'
     });
   }
 }));
