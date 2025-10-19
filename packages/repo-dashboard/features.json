@@ -1195,7 +1195,111 @@
       }
     ]
   },
-  "phase": "Phase 1.4 - Constraint Radar & Bottleneck Detection (In Progress) - Issue #76",
+  "crossTeamDependencyTracking": {
+    "description": "Cross-Team Dependency Tracking & Hand-off Analysis for Phase 1.5 - Issue #80",
+    "features": [
+      {
+        "name": "CrossTeamDependencyService",
+        "status": "implemented",
+        "file": "src/services/cross-team-dependency.ts",
+        "description": "Service for tracking cross-team dependencies and building dependency graphs",
+        "testCases": [
+          "Initialize team mapping from ADF",
+          "Extract cross-team dependencies from ADF relationships",
+          "Build dependency graph with nodes and edges",
+          "Identify critical paths",
+          "Get team-specific dependencies",
+          "Calculate dependency health scores",
+          "Get all dependencies",
+          "Get dependency graph"
+        ]
+      },
+      {
+        "name": "HandoffTrackingService",
+        "status": "implemented",
+        "file": "src/services/handoff-tracking.ts",
+        "description": "Service for tracking PR reviews across teams and measuring hand-off efficiency",
+        "testCases": [
+          "Initialize team mapping",
+          "Calculate handoff metrics from PR metrics",
+          "Get team handoff metrics",
+          "Identify approval bottlenecks",
+          "Get all handoff metrics",
+          "Calculate efficiency scores",
+          "Track handoff frequency"
+        ]
+      },
+      {
+        "name": "DependencyHealthService",
+        "status": "implemented",
+        "file": "src/services/dependency-health.ts",
+        "description": "Service for monitoring dependency versions and detecting breaking changes",
+        "testCases": [
+          "Check dependency health for repositories",
+          "Record integration test results",
+          "Get test pass rates",
+          "Create and resolve alerts",
+          "Get health status for repositories",
+          "Calculate organization-wide health score",
+          "Track breaking changes",
+          "Monitor outdated dependencies"
+        ]
+      },
+      {
+        "name": "CrossTeamCommunicationService",
+        "status": "implemented",
+        "file": "src/services/cross-team-communication.ts",
+        "description": "Service for tracking cross-team issues and communication patterns",
+        "testCases": [
+          "Initialize team mapping",
+          "Track cross-team issues",
+          "Calculate communication metrics",
+          "Get team communication patterns",
+          "Generate recommendations",
+          "Get all cross-team issues",
+          "Get team-specific cross-team issues",
+          "Determine issue priority"
+        ]
+      },
+      {
+        "name": "Cross-Team Dependency API endpoints",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/metrics/dependencies/:org - Organization-wide dependencies",
+          "GET /api/metrics/dependencies/:org/:team - Team-specific dependencies",
+          "GET /api/metrics/handoffs/:org/:team - Hand-off metrics for team",
+          "GET /api/metrics/dependency-health/:org - Dependency health status",
+          "GET /api/metrics/cross-team-communication/:org - Cross-team communication metrics"
+        ]
+      },
+      {
+        "name": "Unit tests for CrossTeamDependencyService",
+        "status": "implemented",
+        "file": "src/services/cross-team-dependency.test.ts",
+        "testCount": 12
+      },
+      {
+        "name": "Unit tests for HandoffTrackingService",
+        "status": "implemented",
+        "file": "src/services/handoff-tracking.test.ts",
+        "testCount": 10
+      },
+      {
+        "name": "Unit tests for DependencyHealthService",
+        "status": "implemented",
+        "file": "src/services/dependency-health.test.ts",
+        "testCount": 14
+      },
+      {
+        "name": "Unit tests for CrossTeamCommunicationService",
+        "status": "implemented",
+        "file": "src/services/cross-team-communication.test.ts",
+        "testCount": 12
+      }
+    ]
+  },
+  "phase": "Phase 1.5 - Cross-Team Dependency Tracking & Hand-off Analysis (In Progress) - Issue #80",
   "relatedTasks": {
     "completed": [
       "Create feature branch",
