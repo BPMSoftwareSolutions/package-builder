@@ -11,12 +11,13 @@ import ArchitectureDashboard from './pages/ArchitectureDashboard';
 import MetricsDashboard from './pages/MetricsDashboard';
 import InsightsPage from './pages/InsightsPage';
 import SettingsPage from './pages/SettingsPage';
+import DashboardSettings from './pages/DashboardSettings';
 import ComponentDetails from './pages/ComponentDetails';
 import FlowDashboard from './pages/FlowDashboard';
 import LearningDashboard from './pages/LearningDashboard';
 import CollaborationDashboard from './pages/CollaborationDashboard';
 
-type Page = 'dashboard' | 'repos' | 'issues' | 'packages' | 'architecture' | 'metrics' | 'insights' | 'settings' | 'component-details' | 'flow' | 'learning' | 'collaboration';
+type Page = 'dashboard' | 'repos' | 'issues' | 'packages' | 'architecture' | 'metrics' | 'insights' | 'settings' | 'dashboard-settings' | 'component-details' | 'flow' | 'learning' | 'collaboration';
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
@@ -54,6 +55,7 @@ function AppContent() {
           {currentPage === 'issues' && <Issues repo={selectedRepo} />}
           {currentPage === 'packages' && <Packages />}
           {currentPage === 'settings' && <SettingsPage onNavigate={handleNavigation} />}
+          {currentPage === 'dashboard-settings' && <DashboardSettings onNavigate={handleNavigation} />}
         </ErrorBoundary>
       </main>
     </>
