@@ -23,7 +23,7 @@ function getToken(): string {
   return token;
 }
 
-async function fetchGitHub<T>(endpoint: string, options?: RequestInit): Promise<T> {
+export async function fetchGitHub<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const token = getToken();
   const url = `${GITHUB_API_BASE}${endpoint}`;
 
