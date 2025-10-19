@@ -91,27 +91,33 @@ class GitHubAPIClient:
     
     def get_repositories(self) -> List[Dict]:
         """
-        Get all repositories in the organization.
-        
+        Get all repositories in the organization or user account.
+
         Returns:
             List of repository dictionaries
         """
         repos = []
         page = 1
-        
+
         while True:
+            # Try organization endpoint first, then fall back to user endpoint
             endpoint = f"/orgs/{self.org}/repos?page={page}&per_page=100"
             data = self._make_request(endpoint)
-            
+
+            # If org endpoint fails, try user endpoint
+            if data is None:
+                endpoint = f"/users/{self.org}/repos?page={page}&per_page=100"
+                data = self._make_request(endpoint)
+
             if not data:
                 break
-                
+
             if not data:  # Empty page
                 break
-                
+
             repos.extend(data)
             page += 1
-            
+
         return repos
     
     def get_readme(self, repo_name: str) -> Optional[str]:
