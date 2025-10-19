@@ -26,7 +26,32 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
   const [error, setError] = useState<string | null>(null);
   const [selectedArchOrg, setSelectedArchOrg] = useState<string>('BPMSoftwareSolutions');
   const [selectedArchRepo, setSelectedArchRepo] = useState<string | null>(null);
-  const [isArchitectureMode, setIsArchitectureMode] = useState(false);
+  const [isArchitectureMode, setIsArchitectureMode] = useState(true);
+  const [defaultArchLoaded, setDefaultArchLoaded] = useState(false);
+
+  // Load default architecture on component mount
+  useEffect(() => {
+    const loadDefaultArchitecture = async () => {
+      try {
+        const response = await fetch('/api/config');
+        if (response.ok) {
+          const config = await response.json();
+          setSelectedArchOrg(config.defaultArchitectureOrg);
+          setSelectedArchRepo(config.defaultArchitectureRepo);
+          setDefaultArchLoaded(true);
+        }
+      } catch (err) {
+        console.warn('Failed to load default architecture config:', err);
+        // Use hardcoded defaults
+        setSelectedArchRepo('package-builder');
+        setDefaultArchLoaded(true);
+      }
+    };
+
+    if (!defaultArchLoaded) {
+      loadDefaultArchitecture();
+    }
+  }, [defaultArchLoaded]);
 
   useEffect(() => {
     const fetchSummary = async () => {
@@ -63,8 +88,10 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       }
     };
 
-    fetchSummary();
-  }, [isArchitectureMode, selectedArchOrg, selectedArchRepo]);
+    if (defaultArchLoaded) {
+      fetchSummary();
+    }
+  }, [isArchitectureMode, selectedArchOrg, selectedArchRepo, defaultArchLoaded]);
 
   if (loading) {
     return <div className="loading">Loading dashboard...</div>;
@@ -80,15 +107,22 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     return '#dc3545';
   };
 
+  const [showArchitectureSelector, setShowArchitectureSelector] = useState(false);
+
   const handleArchitectureSelect = (org: string, repo: string) => {
     setSelectedArchOrg(org);
     setSelectedArchRepo(repo);
     setIsArchitectureMode(true);
+    setShowArchitectureSelector(false);
   };
 
   const handleBackToOrganization = () => {
     setIsArchitectureMode(false);
     setSelectedArchRepo(null);
+  };
+
+  const handleSwitchArchitecture = () => {
+    setShowArchitectureSelector(!showArchitectureSelector);
   };
 
   return (
@@ -100,20 +134,36 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
             : `${summary?.organization || 'BPMSoftwareSolutions'} Dashboard`}
         </h1>
         {isArchitectureMode && (
-          <button
-            onClick={handleBackToOrganization}
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: '#6c757d',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '0.9rem'
-            }}
-          >
-            ← Back to Organization
-          </button>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={handleSwitchArchitecture}
+              style={{
+                padding: '0.5rem 1rem',
+                backgroundColor: '#0366d6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '0.9rem'
+              }}
+            >
+              🔄 Switch Architecture
+            </button>
+            <button
+              onClick={handleBackToOrganization}
+              style={{
+                padding: '0.5rem 1rem',
+                backgroundColor: '#6c757d',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '0.9rem'
+              }}
+            >
+              ← Back to Organization
+            </button>
+          </div>
         )}
       </div>
 
@@ -127,7 +177,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
         </div>
       )}
 
-      {!isArchitectureMode && (
+      {showArchitectureSelector && (
         <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
           <h3 style={{ margin: '0 0 1rem 0' }}>Select an Architecture</h3>
           <ArchitectureSelector

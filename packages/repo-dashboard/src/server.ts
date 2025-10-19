@@ -70,6 +70,11 @@ app.get('/api/summary', asyncHandler(async (req: Request, res: Response) => {
       }
     }
 
+    // Default to architecture-first mode: redirect to default architecture
+    // This ensures the dashboard loads only repos from the architecture instead of all org repos
+    return res.redirect(`/api/summary/architecture/${DEFAULT_ARCHITECTURE_ORG}/${DEFAULT_ARCHITECTURE_REPO}`);
+
+    // Legacy code below kept for reference but unreachable
     // Fetch repos for the organization
     const repos = await listRepos({ org, limit: 100 });
 
