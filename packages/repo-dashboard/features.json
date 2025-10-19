@@ -811,7 +811,83 @@
       }
     ]
   },
-  "phase": "Phase 1.1 - Value Stream Metrics Collection (In Progress) - Issue #73",
+  "flowVisualizationWidgets": {
+    "description": "Flow Visualization Widgets for Phase 1.2 - WIP Tracking, Flow Stage Analysis, Deploy Cadence",
+    "features": [
+      {
+        "name": "WIPTrackerService service",
+        "status": "implemented",
+        "file": "src/services/wip-tracker.ts",
+        "testCases": [
+          "Calculate WIP metrics for a team",
+          "Filter only open PRs",
+          "Calculate average files changed and diff lines",
+          "Track WIP trends (increasing/stable/decreasing)",
+          "Check WIP threshold alerts",
+          "Detect critical severity when WIP exceeds 1.5x threshold",
+          "Clear and retrieve history"
+        ]
+      },
+      {
+        "name": "FlowStageAnalyzerService service",
+        "status": "implemented",
+        "file": "src/services/flow-stage-analyzer.ts",
+        "testCases": [
+          "Analyze flow stages for merged PRs",
+          "Calculate stage metrics (median, p95, p5 times)",
+          "Calculate percentage of time per stage",
+          "Detect anomalies in flow stages",
+          "Calculate trends from history",
+          "Handle empty PR lists",
+          "Filter only merged PRs"
+        ]
+      },
+      {
+        "name": "DeployCadenceService service",
+        "status": "implemented",
+        "file": "src/services/deploy-cadence.ts",
+        "testCases": [
+          "Calculate deploy cadence metrics",
+          "Group deployments by environment",
+          "Calculate success rates",
+          "Track rollbacks",
+          "Calculate deploys per day",
+          "Calculate trends from history",
+          "Handle empty deployment lists"
+        ]
+      },
+      {
+        "name": "Flow Visualization API endpoints",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/metrics/wip/:org/:team - Get WIP metrics for team",
+          "GET /api/metrics/flow-stages/:org/:repo - Get flow stage breakdown",
+          "GET /api/metrics/deploy-cadence/:org/:repo - Get deploy cadence metrics",
+          "GET /api/metrics/wip-alerts/:org/:team - Get WIP threshold alerts"
+        ]
+      },
+      {
+        "name": "Unit tests for WIPTrackerService",
+        "status": "implemented",
+        "file": "src/services/wip-tracker.test.ts",
+        "testCount": 8
+      },
+      {
+        "name": "Unit tests for FlowStageAnalyzerService",
+        "status": "implemented",
+        "file": "src/services/flow-stage-analyzer.test.ts",
+        "testCount": 9
+      },
+      {
+        "name": "Unit tests for DeployCadenceService",
+        "status": "implemented",
+        "file": "src/services/deploy-cadence.test.ts",
+        "testCount": 10
+      }
+    ]
+  },
+  "phase": "Phase 1.2 - Flow Visualization Widgets (In Progress) - Issue #74",
   "relatedTasks": {
     "completed": [
       "Create feature branch",
