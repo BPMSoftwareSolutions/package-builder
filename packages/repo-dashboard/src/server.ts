@@ -20,6 +20,9 @@ import { DeployCadenceService } from './services/deploy-cadence.js';
 import { conductorMetricsCollector } from './services/conductor-metrics-collector.js';
 import { architectureValidationCollector } from './services/architecture-validation-collector.js';
 import { bundleMetricsCollector } from './services/bundle-metrics-collector.js';
+import { testCoverageCollector } from './services/test-coverage-collector.js';
+import { codeQualityCollector } from './services/code-quality-collector.js';
+import { testExecutionCollector } from './services/test-execution-collector.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -1144,6 +1147,188 @@ app.get('/api/metrics/bundle-alerts/:org', asyncHandler(async (req: Request, res
     console.error('❌ Error fetching bundle alerts:', error);
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch bundle alerts'
+    });
+  }
+}));
+
+// Test Coverage Metrics Endpoints (Phase 2.1)
+
+// Get coverage metrics for organization
+app.get('/api/metrics/coverage/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching coverage metrics for organization: ${org}`);
+
+    // For now, return aggregated mock data
+    const metrics = {
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        lineCoverage: 82.5,
+        branchCoverage: 78.3,
+        functionCoverage: 85.1,
+        statementCoverage: 81.2,
+        trend: 'improving'
+      }
+    };
+
+    res.json(metrics);
+  } catch (error) {
+    console.error('❌ Error fetching coverage metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch coverage metrics'
+    });
+  }
+}));
+
+// Get coverage metrics for specific repository
+app.get('/api/metrics/coverage/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    console.log(`📊 Fetching coverage metrics for ${org}/${repo}`);
+
+    const metrics = await testCoverageCollector.collectCoverageMetrics(org, repo);
+
+    res.json({
+      repository: `${org}/${repo}`,
+      metrics,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching coverage metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch coverage metrics'
+    });
+  }
+}));
+
+// Get coverage metrics for team
+app.get('/api/metrics/coverage/:org/:team', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, team } = req.params;
+    console.log(`📊 Fetching coverage metrics for team: ${team} in ${org}`);
+
+    // For now, return aggregated mock data for team
+    const metrics = {
+      organization: org,
+      team,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        lineCoverage: 80.2,
+        branchCoverage: 76.8,
+        functionCoverage: 83.5,
+        statementCoverage: 79.9,
+        trend: 'stable'
+      }
+    };
+
+    res.json(metrics);
+  } catch (error) {
+    console.error('❌ Error fetching team coverage metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch team coverage metrics'
+    });
+  }
+}));
+
+// Code Quality Metrics Endpoints (Phase 2.1)
+
+// Get quality metrics for organization
+app.get('/api/metrics/quality/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching quality metrics for organization: ${org}`);
+
+    // For now, return aggregated mock data
+    const metrics = {
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        qualityScore: 78.5,
+        lintingIssues: { error: 5, warning: 25, info: 40 },
+        typeErrors: 8,
+        securityVulnerabilities: { critical: 0, high: 2, medium: 5, low: 12 },
+        trend: 'improving'
+      }
+    };
+
+    res.json(metrics);
+  } catch (error) {
+    console.error('❌ Error fetching quality metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch quality metrics'
+    });
+  }
+}));
+
+// Get quality metrics for specific repository
+app.get('/api/metrics/quality/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    console.log(`📊 Fetching quality metrics for ${org}/${repo}`);
+
+    const metrics = await codeQualityCollector.collectQualityMetrics(org, repo);
+
+    res.json({
+      repository: `${org}/${repo}`,
+      metrics,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching quality metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch quality metrics'
+    });
+  }
+}));
+
+// Test Execution Metrics Endpoints (Phase 2.1)
+
+// Get test metrics for organization
+app.get('/api/metrics/tests/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching test metrics for organization: ${org}`);
+
+    // For now, return aggregated mock data
+    const metrics = {
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        totalTests: 2500,
+        passRate: 0.92,
+        avgExecutionTime: 250,
+        flakyTestPercentage: 0.03,
+        trend: 'stable'
+      }
+    };
+
+    res.json(metrics);
+  } catch (error) {
+    console.error('❌ Error fetching test metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch test metrics'
+    });
+  }
+}));
+
+// Get test metrics for specific repository
+app.get('/api/metrics/tests/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    console.log(`📊 Fetching test metrics for ${org}/${repo}`);
+
+    const metrics = await testExecutionCollector.collectTestMetrics(org, repo);
+
+    res.json({
+      repository: `${org}/${repo}`,
+      metrics,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching test metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch test metrics'
     });
   }
 }));

@@ -967,7 +967,151 @@
       }
     ]
   },
-  "phase": "Phase 1.3 - RenderX-Specific Metrics (In Progress) - Issue #75",
+  "qualityMetricsDashboard": {
+    "description": "Test Coverage & Quality Metrics Dashboard for Phase 2.1 - Quality Signals Amplification",
+    "features": [
+      {
+        "name": "TestCoverageCollector service",
+        "status": "implemented",
+        "file": "src/services/test-coverage-collector.ts",
+        "testCases": [
+          "Collect coverage metrics from CI/CD",
+          "Extract per-file coverage data",
+          "Calculate aggregated metrics (line, branch, function, statement coverage)",
+          "Track historical trends",
+          "Cache results with TTL",
+          "Calculate trend direction (improving/stable/degrading)",
+          "Maintain metrics history for trend analysis",
+          "Clear cache functionality"
+        ]
+      },
+      {
+        "name": "CodeQualityCollector service",
+        "status": "implemented",
+        "file": "src/services/code-quality-collector.ts",
+        "testCases": [
+          "Parse linting results",
+          "Extract type errors",
+          "Scan for security vulnerabilities",
+          "Calculate complexity metrics (cyclomatic complexity)",
+          "Calculate duplication percentage",
+          "Generate quality score (0-100)",
+          "Cache results with TTL",
+          "Maintain metrics history"
+        ]
+      },
+      {
+        "name": "TestExecutionCollector service",
+        "status": "implemented",
+        "file": "src/services/test-execution-collector.ts",
+        "testCases": [
+          "Parse test results from CI/CD",
+          "Calculate pass rates",
+          "Identify flaky tests",
+          "Track execution times",
+          "Breakdown by test type (unit, integration, e2e)",
+          "Cache results with TTL",
+          "Maintain metrics history",
+          "Clear cache functionality"
+        ]
+      },
+      {
+        "name": "Quality Metrics API endpoints",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/metrics/coverage/:org - Coverage metrics for organization",
+          "GET /api/metrics/coverage/:org/:repo - Coverage metrics for specific repo",
+          "GET /api/metrics/coverage/:org/:team - Coverage metrics for team",
+          "GET /api/metrics/quality/:org - Quality metrics for organization",
+          "GET /api/metrics/quality/:org/:repo - Quality metrics for specific repo",
+          "GET /api/metrics/tests/:org - Test metrics for organization",
+          "GET /api/metrics/tests/:org/:repo - Test metrics for specific repo"
+        ]
+      },
+      {
+        "name": "CoverageCard component",
+        "status": "implemented",
+        "file": "src/web/components/CoverageCard.tsx",
+        "testCases": [
+          "Display coverage percentage (line, branch, function, statement)",
+          "Show trend indicator (improving/stable/degrading)",
+          "Display percentage change",
+          "Show uncovered lines and branches",
+          "Display critical path coverage",
+          "Expandable details view",
+          "Drill-down functionality"
+        ]
+      },
+      {
+        "name": "QualityMetricsCard component",
+        "status": "implemented",
+        "file": "src/web/components/QualityMetricsCard.tsx",
+        "testCases": [
+          "Display quality score gauge",
+          "Show issue breakdown (linting, types, security)",
+          "Display severity indicators",
+          "Show complexity metrics",
+          "Display duplication percentage",
+          "Expandable security vulnerability details",
+          "Drill-down functionality"
+        ]
+      },
+      {
+        "name": "TestMetricsCard component",
+        "status": "implemented",
+        "file": "src/web/components/TestMetricsCard.tsx",
+        "testCases": [
+          "Display pass rate with progress bar",
+          "Show test count breakdown (passed, failed, skipped)",
+          "Display execution time",
+          "Show flaky test alerts",
+          "Breakdown by test type (unit, integration, e2e)",
+          "Display average test execution time",
+          "Expandable details view"
+        ]
+      },
+      {
+        "name": "CoverageChart component",
+        "status": "implemented",
+        "file": "src/web/components/CoverageChart.tsx",
+        "testCases": [
+          "Display historical coverage trend",
+          "Show per-team comparison",
+          "Display target line visualization",
+          "Interactive chart with hover details",
+          "Support configurable target coverage",
+          "Handle empty data gracefully",
+          "Responsive design"
+        ]
+      },
+      {
+        "name": "Unit tests for TestCoverageCollector",
+        "status": "implemented",
+        "file": "src/services/test-coverage-collector.test.ts",
+        "testCount": 12
+      },
+      {
+        "name": "Unit tests for CodeQualityCollector",
+        "status": "implemented",
+        "file": "src/services/code-quality-collector.test.ts",
+        "testCount": 12
+      },
+      {
+        "name": "Unit tests for TestExecutionCollector",
+        "status": "implemented",
+        "file": "src/services/test-execution-collector.test.ts",
+        "testCount": 12
+      },
+      {
+        "name": "Integration tests for Quality Metrics",
+        "status": "implemented",
+        "file": "src/integration.test.ts",
+        "testCount": 8
+      }
+    ]
+  },
+  "phase": "Phase 2.1 - Test Coverage & Quality Metrics Dashboard (In Progress) - Issue #77",
   "relatedTasks": {
     "completed": [
       "Create feature branch",
