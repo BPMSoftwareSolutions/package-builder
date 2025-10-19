@@ -269,6 +269,69 @@
       }
     ]
   },
+  "c4ModelGenerator": {
+    "description": "C4 Model Generator module for generating C4 architecture diagrams from ADF",
+    "features": [
+      {
+        "name": "C4ModelGenerator class initialization",
+        "status": "implemented",
+        "testCases": [
+          "Initializes with valid ADF",
+          "Raises ValueError for empty ADF",
+          "Raises ValueError for missing architecture field",
+          "Extracts architecture, containers, and relationships"
+        ]
+      },
+      {
+        "name": "Generate Mermaid diagrams for all C4 levels",
+        "status": "implemented",
+        "testCases": [
+          "Generates system context diagram",
+          "Generates container diagram",
+          "Generates component diagram",
+          "Generates code level diagram",
+          "Raises ValueError for invalid level"
+        ]
+      },
+      {
+        "name": "Generate PlantUML diagrams for all C4 levels",
+        "status": "implemented",
+        "testCases": [
+          "Generates system context diagram",
+          "Generates container diagram",
+          "Generates component diagram",
+          "Generates code level diagram",
+          "Raises ValueError for invalid level"
+        ]
+      },
+      {
+        "name": "Export to GraphML format",
+        "status": "implemented",
+        "testCases": [
+          "Generates valid GraphML XML",
+          "Includes nodes for all containers",
+          "Includes edges for all relationships",
+          "Includes health metrics when requested",
+          "Generates valid XML structure"
+        ]
+      },
+      {
+        "name": "Generate JSON graph representation",
+        "status": "implemented",
+        "testCases": [
+          "Generates nodes with correct structure",
+          "Generates edges with correct structure",
+          "Includes metadata with architecture info",
+          "Preserves all container and relationship data"
+        ]
+      },
+      {
+        "name": "Unit tests for C4 Model Generator",
+        "status": "implemented",
+        "testCount": 20
+      }
+    ]
+  },
   "phase": "Phase 1 - Python Scripts",
   "relatedTasks": {
     "completed": [
@@ -289,7 +352,13 @@
       "Implement health score calculation",
       "Implement metrics aggregation",
       "Implement metrics history and export",
-      "Write comprehensive unit tests for Metrics Aggregator"
+      "Write comprehensive unit tests for Metrics Aggregator",
+      "Implement C4 Model Generator class",
+      "Implement Mermaid diagram generation",
+      "Implement PlantUML diagram generation",
+      "Implement GraphML export",
+      "Implement JSON graph representation",
+      "Write comprehensive unit tests for C4 Model Generator"
     ],
     "remaining": [
       "Run local CI and fix errors",
