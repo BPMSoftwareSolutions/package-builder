@@ -118,7 +118,15 @@ export class ADFFetcher {
 
       // Fetch all repositories in the organization
       const endpoint = `/orgs/${org}/repos?per_page=100&sort=updated&direction=desc`;
-      const repos = await fetchGitHub<any[]>(endpoint);
+
+      let repos: any[] = [];
+      try {
+        repos = await fetchGitHub<any[]>(endpoint);
+      } catch (error) {
+        console.warn(`⚠️ Could not fetch repos for organization ${org}:`, error);
+        // Return empty array if organization doesn't exist or has no repos
+        return [];
+      }
 
       const adfs: ADFMetadata[] = [];
 
@@ -150,7 +158,8 @@ export class ADFFetcher {
       return adfs;
     } catch (error) {
       console.error(`❌ Error listing ADFs for ${org}:`, error);
-      throw error;
+      // Return empty array instead of throwing to avoid breaking the UI
+      return [];
     }
   }
 

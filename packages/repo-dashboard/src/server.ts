@@ -246,12 +246,12 @@ app.get('/api/adf/:org', asyncHandler(async (req: Request, res: Response) => {
   try {
     console.log(`📋 Listing ADFs for organization: ${org}`);
     const adfs = await adfFetcher.listADFs(org);
+    // Always return 200 with empty array if no ADFs found
     res.json(adfs);
   } catch (error) {
     console.error(`❌ Error listing ADFs for ${org}:`, error);
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to list ADFs'
-    });
+    // Return empty array instead of error to avoid breaking the UI
+    res.json([]);
   }
 }));
 
