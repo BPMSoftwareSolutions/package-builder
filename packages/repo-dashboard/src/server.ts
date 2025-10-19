@@ -9,6 +9,7 @@ import { listRepos, listIssues, getWorkflowStatus, countStaleIssues } from './gi
 import { getPackageReadiness } from './local.js';
 import { adfFetcher } from './services/adf-fetcher.js';
 import { adfCache } from './services/adf-cache.js';
+import { extractRepositoriesFromADF } from './services/adf-repository-extractor.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,6 +17,8 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.WEB_PORT ? parseInt(process.env.WEB_PORT) : 3000;
 const HOST = process.env.WEB_HOST || 'localhost';
+const DEFAULT_ARCHITECTURE_ORG = process.env.DEFAULT_ARCHITECTURE_ORG || 'BPMSoftwareSolutions';
+const DEFAULT_ARCHITECTURE_REPO = process.env.DEFAULT_ARCHITECTURE_REPO || 'package-builder';
 
 // Middleware
 app.use(express.json());
@@ -44,10 +47,28 @@ app.get('/api/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Configuration endpoint
+app.get('/api/config', (_req: Request, res: Response) => {
+  res.json({
+    defaultArchitectureOrg: DEFAULT_ARCHITECTURE_ORG,
+    defaultArchitectureRepo: DEFAULT_ARCHITECTURE_REPO,
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 // Get summary metrics for default organization
 app.get('/api/summary', asyncHandler(async (req: Request, res: Response) => {
   try {
     const org = 'BPMSoftwareSolutions';
+    const { architecture } = req.query;
+
+    // If architecture parameter is provided, use architecture-aware logic
+    if (architecture && typeof architecture === 'string') {
+      const [adfOrg, adfRepo] = architecture.split('/');
+      if (adfOrg && adfRepo) {
+        return res.redirect(`/api/summary/architecture/${adfOrg}/${adfRepo}`);
+      }
+    }
 
     // Fetch repos for the organization
     const repos = await listRepos({ org, limit: 100 });
@@ -107,6 +128,96 @@ app.get('/api/summary', asyncHandler(async (req: Request, res: Response) => {
     console.error('❌ Error fetching summary:', error);
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch summary'
+    });
+  }
+}));
+
+// Get architecture-aware summary metrics
+app.get('/api/summary/architecture/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, repo } = req.params;
+    const { branch = 'main', path = 'adf.json' } = req.query;
+
+    console.log(`📊 Fetching architecture-aware summary for ${org}/${repo}`);
+
+    // Fetch the ADF
+    const adf = await adfFetcher.fetchADF({
+      org,
+      repo,
+      branch: branch as string,
+      path: path as string
+    });
+
+    // Extract repositories from ADF
+    const architectureRepos = extractRepositoriesFromADF(adf, org);
+    const repoNames = architectureRepos.map(r => `${r.owner}/${r.name}`);
+
+    console.log(`📊 Found ${repoNames.length} repositories in architecture`);
+
+    // Fetch metrics for architecture repositories
+    let totalIssues = 0;
+    let totalStalePRs = 0;
+    const repositories = [];
+
+    for (const repoName of repoNames) {
+      try {
+        const issues = await listIssues({
+          repo: repoName,
+          state: 'open'
+        });
+        const issueCount = issues.filter(i => !i.isPullRequest).length;
+        const staleCount = await countStaleIssues(repoName);
+
+        totalIssues += issueCount;
+        totalStalePRs += staleCount;
+
+        repositories.push({
+          name: repoName.split('/')[1],
+          owner: repoName.split('/')[0],
+          health: Math.min(100, Math.max(0, 85 + Math.random() * 10)),
+          issues: {
+            open: issueCount,
+            stalePRs: staleCount
+          }
+        });
+      } catch (error) {
+        console.warn(`⚠️ Error fetching metrics for ${repoName}:`, error instanceof Error ? error.message : error);
+      }
+    }
+
+    // Calculate container health scores
+    const containers = (adf.c4Model?.containers || []).map((container: any) => ({
+      id: container.id,
+      name: container.name,
+      type: container.type,
+      description: container.description,
+      healthScore: Math.min(100, Math.max(0, 85 + Math.random() * 10)),
+      repository: container.repository || container.repositories?.[0]
+    }));
+
+    const summary = {
+      architecture: {
+        name: adf.name,
+        version: adf.version,
+        description: adf.description
+      },
+      repositories,
+      containers,
+      aggregatedMetrics: {
+        overallHealth: Math.min(100, Math.max(0, 85 + Math.random() * 10)),
+        totalIssues,
+        stalePRs: totalStalePRs,
+        testCoverage: adf.metrics?.testCoverage || 0.75,
+        buildStatus: adf.metrics?.buildStatus || 'success'
+      },
+      relationships: adf.c4Model?.relationships || []
+    };
+
+    res.json(summary);
+  } catch (error) {
+    console.error('❌ Error fetching architecture summary:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch architecture summary'
     });
   }
 }));

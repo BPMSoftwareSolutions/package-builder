@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { ArchitectureSelector } from '../components/ArchitectureSelector';
 
 interface SummaryData {
-  organization: string;
-  repos: { total: number; health: number };
-  architectures: { total: number; health: number };
-  packages: { total: number; health: number };
-  issues: { open: number; stalePRs: number };
-  recentActivity: Array<{ type: string; description: string; timestamp: string }>;
+  organization?: string;
+  repos?: { total: number; health: number };
+  architectures?: { total: number; health: number };
+  packages?: { total: number; health: number };
+  issues?: { open: number; stalePRs: number };
+  recentActivity?: Array<{ type: string; description: string; timestamp: string }>;
+  // Architecture-aware summary fields
+  architecture?: { name: string; version: string; description?: string };
+  repositories?: Array<{ name: string; owner: string; health: number; issues: { open: number; stalePRs: number } }>;
+  containers?: Array<{ id: string; name: string; type: string; description: string; healthScore: number; repository?: string }>;
+  aggregatedMetrics?: { overallHealth: number; totalIssues: number; stalePRs: number; testCoverage: number; buildStatus: string };
+  relationships?: Array<{ from: string; to: string; type: string; description: string }>;
 }
 
 interface HomeDashboardProps {
@@ -17,13 +24,22 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
   const [summary, setSummary] = useState<SummaryData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedArchOrg, setSelectedArchOrg] = useState<string>('BPMSoftwareSolutions');
+  const [selectedArchRepo, setSelectedArchRepo] = useState<string | null>(null);
+  const [isArchitectureMode, setIsArchitectureMode] = useState(false);
 
   useEffect(() => {
     const fetchSummary = async () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch('/api/summary');
+
+        let url = '/api/summary';
+        if (isArchitectureMode && selectedArchRepo) {
+          url = `/api/summary/architecture/${selectedArchOrg}/${selectedArchRepo}`;
+        }
+
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`Failed to fetch summary: ${response.statusText}`);
         }
@@ -48,7 +64,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     };
 
     fetchSummary();
-  }, []);
+  }, [isArchitectureMode, selectedArchOrg, selectedArchRepo]);
 
   if (loading) {
     return <div className="loading">Loading dashboard...</div>;
@@ -64,107 +80,242 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
     return '#dc3545';
   };
 
+  const handleArchitectureSelect = (org: string, repo: string) => {
+    setSelectedArchOrg(org);
+    setSelectedArchRepo(repo);
+    setIsArchitectureMode(true);
+  };
+
+  const handleBackToOrganization = () => {
+    setIsArchitectureMode(false);
+    setSelectedArchRepo(null);
+  };
+
   return (
     <div>
-      <h1>{summary.organization} Dashboard</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h1>
+          {isArchitectureMode && summary?.architecture
+            ? `${summary.architecture.name} Architecture Dashboard`
+            : `${summary?.organization || 'BPMSoftwareSolutions'} Dashboard`}
+        </h1>
+        {isArchitectureMode && (
+          <button
+            onClick={handleBackToOrganization}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.9rem'
+            }}
+          >
+            ← Back to Organization
+          </button>
+        )}
+      </div>
+
+      {isArchitectureMode && summary?.architecture && (
+        <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '4px', borderLeft: '4px solid #0366d6' }}>
+          <h3 style={{ margin: '0 0 0.5rem 0' }}>{summary.architecture.name}</h3>
+          <p style={{ margin: '0 0 0.5rem 0', color: '#666' }}>Version: {summary.architecture.version}</p>
+          {summary.architecture.description && (
+            <p style={{ margin: 0, color: '#666' }}>{summary.architecture.description}</p>
+          )}
+        </div>
+      )}
+
+      {!isArchitectureMode && (
+        <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+          <h3 style={{ margin: '0 0 1rem 0' }}>Select an Architecture</h3>
+          <ArchitectureSelector
+            org={selectedArchOrg}
+            onSelect={handleArchitectureSelect}
+            selectedRepo={selectedArchRepo || undefined}
+          />
+        </div>
+      )}
+
       <p style={{ marginBottom: '2rem', color: '#666' }}>
-        Comprehensive summary of your organization's repositories, architectures, and packages
+        {isArchitectureMode
+          ? 'Architecture-specific summary with filtered repositories and components'
+          : 'Comprehensive summary of your organization\'s repositories, architectures, and packages'}
       </p>
 
       {error && <div className="error" style={{ marginBottom: '1rem' }}>{error}</div>}
 
-      <div className="grid grid-3">
-        {/* Repositories Card */}
-        <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('repos', { org: 'BPMSoftwareSolutions' })}>
-          <div className="card-header">📦 Repositories</div>
-          <div className="card-body" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-              {summary.repos.total}
-            </div>
-            <div style={{ color: '#666', marginBottom: '1rem' }}>repositories</div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-              <span style={{ color: '#666' }}>Health:</span>
-              <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: getHealthColor(summary.repos.health) }}>
-                {summary.repos.health}%
-              </span>
+      {isArchitectureMode && summary?.aggregatedMetrics ? (
+        // Architecture-specific cards
+        <div className="grid grid-3">
+          {/* Overall Health Card */}
+          <div className="card">
+            <div className="card-header">💪 Overall Health</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: getHealthColor(summary.aggregatedMetrics.overallHealth) }}>
+                {summary.aggregatedMetrics.overallHealth.toFixed(1)}%
+              </div>
+              <div style={{ color: '#666' }}>architecture health</div>
             </div>
           </div>
-        </div>
 
-        {/* Architectures Card */}
-        <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('architecture')}>
-          <div className="card-header">🏗️ Architectures</div>
-          <div className="card-body" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-              {summary.architectures.total}
-            </div>
-            <div style={{ color: '#666', marginBottom: '1rem' }}>architectures</div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-              <span style={{ color: '#666' }}>Health:</span>
-              <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: getHealthColor(summary.architectures.health) }}>
-                {summary.architectures.health}%
-              </span>
+          {/* Repositories Card */}
+          <div className="card">
+            <div className="card-header">📦 Repositories</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                {summary.repositories?.length || 0}
+              </div>
+              <div style={{ color: '#666', marginBottom: '1rem' }}>in architecture</div>
+              <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                {summary.aggregatedMetrics.totalIssues} issues
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Packages Card */}
-        <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('packages')}>
-          <div className="card-header">📚 Packages</div>
-          <div className="card-body" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-              {summary.packages.total}
-            </div>
-            <div style={{ color: '#666', marginBottom: '1rem' }}>packages</div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-              <span style={{ color: '#666' }}>Health:</span>
-              <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: getHealthColor(summary.packages.health) }}>
-                {summary.packages.health}%
-              </span>
+          {/* Containers Card */}
+          <div className="card">
+            <div className="card-header">🏗️ Containers</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                {summary.containers?.length || 0}
+              </div>
+              <div style={{ color: '#666', marginBottom: '1rem' }}>components</div>
+              <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                {summary.relationships?.length || 0} relationships
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Issues Card */}
-        <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('issues', { repo: 'BPMSoftwareSolutions/package-builder' })}>
-          <div className="card-header">🐛 Issues</div>
-          <div className="card-body" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#0366d6' }}>
-              {summary.issues.open}
-            </div>
-            <div style={{ color: '#666', marginBottom: '1rem' }}>open issues</div>
-            <div style={{ fontSize: '0.9rem', color: '#666' }}>
-              {summary.issues.stalePRs} stale PRs
+          {/* Test Coverage Card */}
+          <div className="card">
+            <div className="card-header">✅ Test Coverage</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: getHealthColor(summary.aggregatedMetrics.testCoverage * 100) }}>
+                {(summary.aggregatedMetrics.testCoverage * 100).toFixed(1)}%
+              </div>
+              <div style={{ color: '#666' }}>coverage</div>
             </div>
           </div>
-        </div>
 
-        {/* Metrics Card */}
-        <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('metrics')}>
-          <div className="card-header">📊 Metrics</div>
-          <div className="card-body" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-              DORA Metrics
-            </div>
-            <div style={{ color: '#666', fontSize: '0.9rem' }}>
-              View deployment frequency, lead time, MTTR, and change failure rate
+          {/* Build Status Card */}
+          <div className="card">
+            <div className="card-header">🔨 Build Status</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: summary.aggregatedMetrics.buildStatus === 'success' ? '#28a745' : '#dc3545' }}>
+                {summary.aggregatedMetrics.buildStatus.toUpperCase()}
+              </div>
+              <div style={{ color: '#666' }}>latest build</div>
             </div>
           </div>
-        </div>
 
-        {/* Insights Card */}
-        <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('insights')}>
-          <div className="card-header">💡 Insights</div>
-          <div className="card-body" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-              AI-Powered Analysis
-            </div>
-            <div style={{ color: '#666', fontSize: '0.9rem' }}>
-              Trends, anomalies, and recommendations
+          {/* Stale PRs Card */}
+          <div className="card">
+            <div className="card-header">⏳ Stale PRs</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: summary.aggregatedMetrics.stalePRs > 0 ? '#ffc107' : '#28a745' }}>
+                {summary.aggregatedMetrics.stalePRs}
+              </div>
+              <div style={{ color: '#666' }}>stale pull requests</div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        // Organization-wide cards
+        <div className="grid grid-3">
+          {/* Repositories Card */}
+          <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('repos', { org: 'BPMSoftwareSolutions' })}>
+            <div className="card-header">📦 Repositories</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                {summary?.repos?.total || 0}
+              </div>
+              <div style={{ color: '#666', marginBottom: '1rem' }}>repositories</div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                <span style={{ color: '#666' }}>Health:</span>
+                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: getHealthColor(summary?.repos?.health || 0) }}>
+                  {summary?.repos?.health?.toFixed(1) || 0}%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Architectures Card */}
+          <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('architecture')}>
+            <div className="card-header">🏗️ Architectures</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                {summary?.architectures?.total || 0}
+              </div>
+              <div style={{ color: '#666', marginBottom: '1rem' }}>architectures</div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                <span style={{ color: '#666' }}>Health:</span>
+                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: getHealthColor(summary?.architectures?.health || 0) }}>
+                  {summary?.architectures?.health?.toFixed(1) || 0}%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Packages Card */}
+          <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('packages')}>
+            <div className="card-header">📚 Packages</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                {summary?.packages?.total || 0}
+              </div>
+              <div style={{ color: '#666', marginBottom: '1rem' }}>packages</div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                <span style={{ color: '#666' }}>Health:</span>
+                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: getHealthColor(summary?.packages?.health || 0) }}>
+                  {summary?.packages?.health?.toFixed(1) || 0}%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Issues Card */}
+          <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('issues', { repo: 'BPMSoftwareSolutions/package-builder' })}>
+            <div className="card-header">🐛 Issues</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#0366d6' }}>
+                {summary?.issues?.open || 0}
+              </div>
+              <div style={{ color: '#666', marginBottom: '1rem' }}>open issues</div>
+              <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                {summary?.issues?.stalePRs || 0} stale PRs
+              </div>
+            </div>
+          </div>
+
+          {/* Metrics Card */}
+          <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('metrics')}>
+            <div className="card-header">📊 Metrics</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+                DORA Metrics
+              </div>
+              <div style={{ color: '#666', fontSize: '0.9rem' }}>
+                View deployment frequency, lead time, MTTR, and change failure rate
+              </div>
+            </div>
+          </div>
+
+          {/* Insights Card */}
+          <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('insights')}>
+            <div className="card-header">💡 Insights</div>
+            <div className="card-body" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+                AI-Powered Analysis
+              </div>
+              <div style={{ color: '#666', fontSize: '0.9rem' }}>
+                Trends, anomalies, and recommendations
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Recent Activity Section */}
       {summary.recentActivity && summary.recentActivity.length > 0 && (

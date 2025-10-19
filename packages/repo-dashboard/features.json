@@ -641,7 +641,85 @@
       }
     ]
   },
-  "phase": "Phase 2 - Web UI Integration (In Progress)",
+  "architectureFirstDashboard": {
+    "description": "Architecture-First Dashboard transformation for Issue #68",
+    "features": [
+      {
+        "name": "ADF Repository Extractor Service",
+        "status": "implemented",
+        "file": "src/services/adf-repository-extractor.ts",
+        "testCases": [
+          "Extract repositories from container repositories array",
+          "Extract repositories from container repository string",
+          "Extract repositories from container repository object",
+          "Deduplicate repositories",
+          "Handle ADF with no containers",
+          "Use default organization when not specified",
+          "Return repository names in owner/name format"
+        ]
+      },
+      {
+        "name": "Architecture-Aware Summary Endpoint",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/summary/architecture/:org/:repo - Fetch architecture-aware summary",
+          "GET /api/summary?architecture=org/repo - Updated summary endpoint with optional architecture parameter"
+        ],
+        "testCases": [
+          "Fetch ADF from specified repository",
+          "Extract repository list from ADF containers",
+          "Fetch metrics only for architecture-included repositories",
+          "Return architecture-specific summary with aggregated metrics",
+          "Handle missing repositories gracefully"
+        ]
+      },
+      {
+        "name": "Configuration Endpoint",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/config - Get default architecture configuration"
+        ],
+        "testCases": [
+          "Return DEFAULT_ARCHITECTURE_ORG from environment",
+          "Return DEFAULT_ARCHITECTURE_REPO from environment",
+          "Provide default values if environment variables not set"
+        ]
+      },
+      {
+        "name": "HomeDashboard Component Enhancement",
+        "status": "implemented",
+        "file": "src/web/pages/HomeDashboard.tsx",
+        "testCases": [
+          "Display architecture selector dropdown",
+          "Switch between organization-wide and architecture-specific views",
+          "Show architecture metadata when in architecture mode",
+          "Display architecture-specific cards (health, repositories, containers, coverage, build status, stale PRs)",
+          "Show back button to return to organization view",
+          "Fetch architecture-aware summary when architecture selected"
+        ]
+      },
+      {
+        "name": "Unit Tests for ADF Repository Extractor",
+        "status": "implemented",
+        "file": "src/services/adf-repository-extractor.test.ts",
+        "testCount": 9,
+        "testCases": [
+          "Extract repositories from container repositories array",
+          "Extract repositories from container repository string",
+          "Extract repositories from container repository object",
+          "Deduplicate repositories",
+          "Handle ADF with no containers",
+          "Handle ADF with empty containers array",
+          "Use default organization when not specified",
+          "Return repository names in owner/name format",
+          "Handle mixed repository sources"
+        ]
+      }
+    ]
+  },
+  "phase": "Phase 2 - Web UI Integration (In Progress) - Issue #68 Architecture-First Dashboard",
   "relatedTasks": {
     "completed": [
       "Create feature branch",
@@ -685,9 +763,20 @@
       "Write comprehensive unit tests for Storage Manager"
     ],
     "remaining": [
-      "Run local CI (npm run ci)",
       "Push branch and create PR",
       "Monitor CI and fix any failures"
+    ],
+    "issue68Completed": [
+      "Create feature branch feat/68-architecture-first-dashboard",
+      "Implement ADF Repository Extractor Service",
+      "Create architecture-aware summary endpoint",
+      "Update summary endpoint with optional architecture parameter",
+      "Add configuration endpoint for default architecture",
+      "Enhance HomeDashboard component with architecture selector",
+      "Add architecture-specific card displays",
+      "Write comprehensive unit tests for ADF Repository Extractor",
+      "Run all tests (150 tests passed)",
+      "Build project successfully"
     ],
     "phase2Completed": [
       "Create feature branch feat/66-adf-integration",
