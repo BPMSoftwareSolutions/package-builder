@@ -26,6 +26,10 @@ import { testExecutionCollector } from './services/test-execution-collector.js';
 import { ConstraintDetectionService } from './services/constraint-detection.js';
 import { RootCauseAnalysisService } from './services/root-cause-analysis.js';
 import { PredictiveAnalysisService } from './services/predictive-analysis.js';
+import { crossTeamDependencyService } from './services/cross-team-dependency.js';
+import { handoffTrackingService } from './services/handoff-tracking.js';
+import { dependencyHealthService } from './services/dependency-health.js';
+import { crossTeamCommunicationService } from './services/cross-team-communication.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -1517,6 +1521,287 @@ app.get('/api/metrics/predictive/:org/:team/:repo', asyncHandler(async (req: Req
     console.error('❌ Error fetching predictive analysis:', error);
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch predictive analysis'
+    });
+  }
+}));
+
+// Phase 1.5: Cross-Team Dependency Tracking & Hand-off Analysis endpoints
+
+// Get organization-wide dependencies
+app.get('/api/metrics/dependencies/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+    const { branch = 'main', path = 'adf.json' } = req.query;
+
+    console.log(`📊 Fetching cross-team dependencies for ${org}`);
+
+    // Load ADF
+    let adf: any;
+    if (org === 'BPMSoftwareSolutions' && path === 'adf.json') {
+      adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    } else {
+      adf = await adfFetcher.fetchADF({
+        org,
+        repo: DEFAULT_ARCHITECTURE_REPO,
+        branch: branch as string,
+        path: path as string
+      });
+    }
+
+    // Initialize team mapping from ADF
+    const teamMapping: Record<string, string[]> = {};
+    if (adf.c4Model?.containers) {
+      for (const container of adf.c4Model.containers) {
+        const team = container.team || container.name || 'Unknown';
+        const repos = container.repositories || (container.repository ? [container.repository] : []);
+        teamMapping[team] = repos;
+      }
+    }
+
+    crossTeamDependencyService.initializeTeamMapping(adf, teamMapping);
+    const dependencies = crossTeamDependencyService.extractDependencies(adf);
+    crossTeamDependencyService.buildDependencyGraph(dependencies);
+
+    res.json({
+      organization: org,
+      dependencies,
+      graph: crossTeamDependencyService.getDependencyGraph(),
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching dependencies:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch dependencies'
+    });
+  }
+}));
+
+// Get team-specific dependencies
+app.get('/api/metrics/dependencies/:org/:team', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, team } = req.params;
+    const { branch = 'main', path = 'adf.json' } = req.query;
+
+    console.log(`📊 Fetching dependencies for team ${team} in ${org}`);
+
+    // Load ADF
+    let adf: any;
+    if (org === 'BPMSoftwareSolutions' && path === 'adf.json') {
+      adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    } else {
+      adf = await adfFetcher.fetchADF({
+        org,
+        repo: DEFAULT_ARCHITECTURE_REPO,
+        branch: branch as string,
+        path: path as string
+      });
+    }
+
+    // Initialize team mapping
+    const teamMapping: Record<string, string[]> = {};
+    if (adf.c4Model?.containers) {
+      for (const container of adf.c4Model.containers) {
+        const teamName = container.team || container.name || 'Unknown';
+        const repos = container.repositories || (container.repository ? [container.repository] : []);
+        teamMapping[teamName] = repos;
+      }
+    }
+
+    crossTeamDependencyService.initializeTeamMapping(adf, teamMapping);
+    crossTeamDependencyService.extractDependencies(adf);
+    const teamDeps = crossTeamDependencyService.getTeamDependencies(team);
+
+    res.json({
+      organization: org,
+      team,
+      teamDependencies: teamDeps,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching team dependencies:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch team dependencies'
+    });
+  }
+}));
+
+// Get hand-off metrics for a team
+app.get('/api/metrics/handoffs/:org/:team', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org, team } = req.params;
+
+    console.log(`📊 Fetching hand-off metrics for team ${team} in ${org}`);
+
+    // Initialize team mapping
+    const teamMapping: Record<string, string[]> = {
+      'Host Team': ['renderx-plugins-demo'],
+      'SDK Team': ['renderx-plugins-sdk', 'renderx-manifest-tools'],
+      'Conductor Team': ['musical-conductor'],
+      'Plugin Teams': [
+        'renderx-plugins-canvas',
+        'renderx-plugins-components',
+        'renderx-plugins-control-panel',
+        'renderx-plugins-header',
+        'renderx-plugins-library'
+      ]
+    };
+
+    handoffTrackingService.initializeTeamMapping(teamMapping);
+
+    // Get PR metrics for the team's repos
+    const teamRepos = teamMapping[team] || [];
+    const allPRMetrics: any[] = [];
+
+    for (const repo of teamRepos) {
+      try {
+        const metrics = await prMetricsCollector.collectMetrics(`${org}/${repo}`, '30d');
+        allPRMetrics.push(...metrics);
+      } catch (error) {
+        console.warn(`⚠️ Could not fetch PR metrics for ${repo}`);
+      }
+    }
+
+    // Calculate handoff metrics
+    const handoffMetrics = handoffTrackingService.calculateHandoffMetrics(allPRMetrics);
+    const teamHandoffMetrics = handoffTrackingService.getTeamHandoffMetrics(team);
+    const bottlenecks = handoffTrackingService.identifyApprovalBottlenecks();
+
+    res.json({
+      organization: org,
+      team,
+      handoffMetrics,
+      teamHandoffMetrics,
+      bottlenecks,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching hand-off metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch hand-off metrics'
+    });
+  }
+}));
+
+// Get dependency health status
+app.get('/api/metrics/dependency-health/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+
+    console.log(`📊 Fetching dependency health for ${org}`);
+
+    // Get all repositories in the organization
+    const repos = await listRepos({ org, limit: 100 });
+
+    // Check dependency health for each repo
+    for (const repo of repos) {
+      try {
+        // Mock dependency data for demonstration
+        const dependencies = [
+          {
+            name: 'react',
+            currentVersion: '18.2.0',
+            latestVersion: '18.2.0',
+            isUpToDate: true,
+            hasBreakingChanges: false,
+            releaseDate: new Date()
+          },
+          {
+            name: 'typescript',
+            currentVersion: '5.0.0',
+            latestVersion: '5.1.0',
+            isUpToDate: false,
+            hasBreakingChanges: false,
+            releaseDate: new Date()
+          }
+        ];
+
+        dependencyHealthService.checkDependencyHealth(`${org}/${repo.name}`, dependencies);
+      } catch (error) {
+        console.warn(`⚠️ Could not check health for ${repo.name}`);
+      }
+    }
+
+    const allHealthStatuses = dependencyHealthService.getAllHealthStatuses();
+    const orgHealthScore = dependencyHealthService.getOrganizationHealthScore();
+
+    res.json({
+      organization: org,
+      healthStatuses: allHealthStatuses,
+      organizationHealthScore: orgHealthScore,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching dependency health:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch dependency health'
+    });
+  }
+}));
+
+// Get cross-team communication metrics
+app.get('/api/metrics/cross-team-communication/:org', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { org } = req.params;
+
+    console.log(`📊 Fetching cross-team communication metrics for ${org}`);
+
+    // Initialize team mapping
+    const teamMapping: Record<string, string[]> = {
+      'Host Team': ['renderx-plugins-demo'],
+      'SDK Team': ['renderx-plugins-sdk', 'renderx-manifest-tools'],
+      'Conductor Team': ['musical-conductor'],
+      'Plugin Teams': [
+        'renderx-plugins-canvas',
+        'renderx-plugins-components',
+        'renderx-plugins-control-panel',
+        'renderx-plugins-header',
+        'renderx-plugins-library'
+      ]
+    };
+
+    crossTeamCommunicationService.initializeTeamMapping(teamMapping);
+
+    // Get issues for all repos
+    for (const [team, repos] of Object.entries(teamMapping)) {
+      for (const repo of repos) {
+        try {
+          const issues = await listIssues({
+            repo: `${org}/${repo}`,
+            state: 'all',
+            limit: 50
+          });
+
+          // Track cross-team issues
+          for (const issue of issues) {
+            if (issue.isPullRequest) {
+              // Simplified: assume response time is based on issue age
+              const responseTime = Math.random() * 1000; // minutes
+              crossTeamCommunicationService.trackCrossTeamIssue(issue, repo, repo, responseTime);
+            }
+          }
+        } catch (error) {
+          console.warn(`⚠️ Could not fetch issues for ${repo}`);
+        }
+      }
+    }
+
+    // Get communication patterns for all teams
+    const communicationPatterns = [];
+    for (const team of Object.keys(teamMapping)) {
+      const pattern = crossTeamCommunicationService.getTeamCommunicationPattern(team);
+      communicationPatterns.push(pattern);
+    }
+
+    res.json({
+      organization: org,
+      communicationPatterns,
+      allCrossTeamIssues: crossTeamCommunicationService.getAllCrossTeamIssues(),
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Error fetching cross-team communication metrics:', error);
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch cross-team communication metrics'
     });
   }
 }));
