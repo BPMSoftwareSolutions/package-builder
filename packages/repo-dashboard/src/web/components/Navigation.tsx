@@ -88,6 +88,14 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
             </li>
             <li>
               <a
+                className={`nav-link ${currentPage === 'bottleneck' ? 'active' : ''}`}
+                onClick={() => onNavigate('bottleneck')}
+              >
+                🚨 Bottleneck Detection
+              </a>
+            </li>
+            <li>
+              <a
                 className={`nav-link ${currentPage === 'repos' ? 'active' : ''}`}
                 onClick={() => onNavigate('repos', { org: 'BPMSoftwareSolutions' })}
               >

@@ -17,8 +17,9 @@ import FlowDashboard from './pages/FlowDashboard';
 import LearningDashboard from './pages/LearningDashboard';
 import CollaborationDashboard from './pages/CollaborationDashboard';
 import ConductorLogsMonitoringDashboard from './pages/ConductorLogsMonitoringDashboard';
+import BottleneckDetectionDashboard from './pages/BottleneckDetectionDashboard';
 
-type Page = 'dashboard' | 'repos' | 'issues' | 'packages' | 'architecture' | 'metrics' | 'insights' | 'settings' | 'dashboard-settings' | 'component-details' | 'flow' | 'learning' | 'collaboration' | 'conductor-logs';
+type Page = 'dashboard' | 'repos' | 'issues' | 'packages' | 'architecture' | 'metrics' | 'insights' | 'settings' | 'dashboard-settings' | 'component-details' | 'flow' | 'learning' | 'collaboration' | 'conductor-logs' | 'bottleneck';
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
@@ -52,6 +53,7 @@ function AppContent() {
           {currentPage === 'learning' && <LearningDashboard />}
           {currentPage === 'collaboration' && <CollaborationDashboard />}
           {currentPage === 'conductor-logs' && <ConductorLogsMonitoringDashboard onNavigate={handleNavigation} />}
+          {currentPage === 'bottleneck' && <BottleneckDetectionDashboard />}
           {currentPage === 'component-details' && <ComponentDetails component={selectedComponent} onNavigate={handleNavigation} />}
           {currentPage === 'repos' && <RepoStatus org={selectedOrg} repo={selectedArchRepo || undefined} isArchitectureMode={isArchitectureMode} onNavigate={handleNavigation} />}
           {currentPage === 'issues' && <Issues repo={selectedRepo} />}
