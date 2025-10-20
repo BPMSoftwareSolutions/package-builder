@@ -38,7 +38,14 @@ export const DependencyGraph: React.FC<DependencyGraphProps> = ({
     depends_on: { stroke: 'var(--type-service)', strokeDasharray: '0' },
     communicates_with: { stroke: 'var(--severity-medium)', strokeDasharray: '5 5' },
     extends: { stroke: 'var(--severity-info)', strokeDasharray: '2 2' },
+    implements: { stroke: 'var(--severity-info)', strokeDasharray: '2 2' },
+    uses: { stroke: 'var(--type-service)', strokeDasharray: '0' },
+    generates: { stroke: 'var(--severity-medium)', strokeDasharray: '5 5' },
+    loads: { stroke: 'var(--severity-medium)', strokeDasharray: '5 5' },
   };
+
+  // Default style for unknown edge types
+  const defaultEdgeStyle = { stroke: 'var(--border-color)', strokeDasharray: '0' };
 
   // Simple grid layout
   const nodeWidth = 150;
@@ -83,7 +90,7 @@ export const DependencyGraph: React.FC<DependencyGraphProps> = ({
             const toPos = positions[edge.to];
             if (!fromPos || !toPos) return null;
 
-            const style = edgeTypeStyles[edge.type || 'depends_on'];
+            const style = edgeTypeStyles[edge.type || 'depends_on'] || defaultEdgeStyle;
             const x1 = fromPos.x + nodeWidth / 2;
             const y1 = fromPos.y + nodeHeight / 2;
             const x2 = toPos.x + nodeWidth / 2;
