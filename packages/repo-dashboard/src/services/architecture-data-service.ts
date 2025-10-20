@@ -147,8 +147,8 @@ class ArchitectureDataService {
     });
 
     // Build relationships
-    const relationships = architecture.c4Model.relationships || [];
-    relationships.forEach((rel) => {
+    const relationships = architecture.relationships || [];
+    relationships.forEach((rel: any) => {
       const fromId = nodeMap[rel.from];
       const toId = nodeMap[rel.to];
       if (fromId && toId) {
