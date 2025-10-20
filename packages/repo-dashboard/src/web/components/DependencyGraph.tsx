@@ -28,16 +28,16 @@ export const DependencyGraph: React.FC<DependencyGraphProps> = ({
   onNodeClick,
 }) => {
   const typeColors: Record<string, string> = {
-    service: '#2196f3',
-    library: '#4caf50',
-    ui: '#ff9800',
-    database: '#f44336',
+    service: 'var(--type-service)',
+    library: 'var(--severity-info)',
+    ui: 'var(--severity-medium)',
+    database: 'var(--severity-critical)',
   };
 
   const edgeTypeStyles: Record<string, { stroke: string; strokeDasharray: string }> = {
-    depends_on: { stroke: '#4a9eff', strokeDasharray: '0' },
-    communicates_with: { stroke: '#ff9800', strokeDasharray: '5 5' },
-    extends: { stroke: '#4caf50', strokeDasharray: '2 2' },
+    depends_on: { stroke: 'var(--type-service)', strokeDasharray: '0' },
+    communicates_with: { stroke: 'var(--severity-medium)', strokeDasharray: '5 5' },
+    extends: { stroke: 'var(--severity-info)', strokeDasharray: '2 2' },
   };
 
   // Simple grid layout

@@ -24,10 +24,10 @@ export const ConstraintRadar: React.FC<ConstraintRadarProps> = ({ metrics, onDri
   const [expanded, setExpanded] = useState(false);
 
   const getSeverityColor = (severity: number) => {
-    if (severity >= 80) return '#f44336'; // critical
-    if (severity >= 60) return '#ff9800'; // high
-    if (severity >= 40) return '#ffc107'; // medium
-    return '#4caf50'; // low
+    if (severity >= 80) return 'var(--severity-critical)'; // critical
+    if (severity >= 60) return 'var(--severity-medium)'; // high
+    if (severity >= 40) return 'var(--severity-low)'; // medium
+    return 'var(--severity-info)'; // low
   };
 
   const getSeverityLabel = (severity: number) => {
@@ -70,10 +70,10 @@ export const ConstraintRadar: React.FC<ConstraintRadarProps> = ({ metrics, onDri
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h3 style={{ margin: 0, color: 'var(--text-primary)' }}>Constraint Radar</h3>
         <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.75rem' }}>
-          <div style={{ padding: '0.25rem 0.5rem', backgroundColor: '#f44336', color: 'white', borderRadius: '3px', fontWeight: 'bold' }}>
+          <div style={{ padding: '0.25rem 0.5rem', backgroundColor: 'var(--severity-critical)', color: 'white', borderRadius: '3px', fontWeight: 'bold' }}>
             {metrics.criticalCount} Critical
           </div>
-          <div style={{ padding: '0.25rem 0.5rem', backgroundColor: '#ff9800', color: 'white', borderRadius: '3px', fontWeight: 'bold' }}>
+          <div style={{ padding: '0.25rem 0.5rem', backgroundColor: 'var(--severity-medium)', color: 'white', borderRadius: '3px', fontWeight: 'bold' }}>
             {metrics.highCount} High
           </div>
         </div>
@@ -85,7 +85,7 @@ export const ConstraintRadar: React.FC<ConstraintRadarProps> = ({ metrics, onDri
           style={{
             width: '200px',
             height: '200px',
-            backgroundColor: 'var(--border-color)',
+            backgroundColor: 'var(--bg-secondary)',
             borderRadius: '4px',
           }}
         >
@@ -126,7 +126,7 @@ export const ConstraintRadar: React.FC<ConstraintRadarProps> = ({ metrics, onDri
           <polyline
             points={radarPoints}
             fill="rgba(33, 150, 243, 0.2)"
-            stroke="#2196f3"
+            stroke="var(--type-service)"
             strokeWidth="1.5"
           />
 
@@ -172,7 +172,7 @@ export const ConstraintRadar: React.FC<ConstraintRadarProps> = ({ metrics, onDri
             key={idx}
             style={{
               padding: '0.75rem',
-              backgroundColor: 'var(--border-color)',
+              backgroundColor: 'var(--bg-secondary)',
               borderRadius: '4px',
               borderLeft: `4px solid ${getSeverityColor(constraint.severity)}`,
             }}
@@ -202,7 +202,7 @@ export const ConstraintRadar: React.FC<ConstraintRadarProps> = ({ metrics, onDri
                 style={{
                   padding: '0.5rem',
                   marginBottom: '0.5rem',
-                  backgroundColor: 'var(--border-color)',
+                  backgroundColor: 'var(--bg-secondary)',
                   borderRadius: '4px',
                   borderLeft: `3px solid ${getSeverityColor(constraint.severity)}`,
                   fontSize: '0.875rem',

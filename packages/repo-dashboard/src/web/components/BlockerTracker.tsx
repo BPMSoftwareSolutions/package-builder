@@ -28,28 +28,28 @@ export const BlockerTracker: React.FC<BlockerTrackerProps> = ({ metrics, onDrill
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'low':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'medium':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'high':
-        return '#f44336';
+        return 'var(--severity-critical)';
       case 'critical':
-        return '#b71c1c';
+        return 'var(--severity-critical)';
       default:
-        return '#9e9e9e';
+        return 'var(--text-tertiary)';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'resolved':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'in-progress':
-        return '#2196f3';
+        return 'var(--type-service)';
       case 'open':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#9e9e9e';
+        return 'var(--text-tertiary)';
     }
   };
 
@@ -78,7 +78,7 @@ export const BlockerTracker: React.FC<BlockerTrackerProps> = ({ metrics, onDrill
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             Open Blockers
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: metrics.openCount > 0 ? '#f44336' : '#4caf50' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: metrics.openCount > 0 ? 'var(--severity-critical)' : 'var(--severity-info)' }}>
             {metrics.openCount}
           </div>
         </div>
@@ -97,7 +97,7 @@ export const BlockerTracker: React.FC<BlockerTrackerProps> = ({ metrics, onDrill
           Recent Blockers
         </div>
         {metrics.blockers.slice(0, 3).map((blocker) => (
-          <div key={blocker.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+          <div key={blocker.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
               <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 {blocker.title}
@@ -124,7 +124,7 @@ export const BlockerTracker: React.FC<BlockerTrackerProps> = ({ metrics, onDrill
               All Blockers
             </h4>
             {metrics.blockers.map((blocker) => (
-              <div key={blocker.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+              <div key={blocker.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                   <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {blocker.title}

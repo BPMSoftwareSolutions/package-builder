@@ -482,7 +482,7 @@
 }
 
 .export-button:hover {
-  background-color: #0256c7;
+  background-color: var(--accent-hover);
 }
 
 .export-menu {
@@ -1099,7 +1099,8 @@
 }
 
 .btn-save:hover {
-  background-color: #218838;
+  background-color: var(--success-color);
+  opacity: 0.9;
 }
 
 .btn-reset {

@@ -29,20 +29,20 @@ export const HandoffTimeline: React.FC<HandoffTimelineProps> = ({ metrics, onDri
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'in-progress':
-        return '#2196f3';
+        return 'var(--type-service)';
       case 'blocked':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#9e9e9e';
+        return 'var(--text-tertiary)';
     }
   };
 
   const getEfficiencyColor = (efficiency: number) => {
-    if (efficiency >= 80) return '#4caf50';
-    if (efficiency >= 60) return '#ff9800';
-    return '#f44336';
+    if (efficiency >= 80) return 'var(--severity-info)';
+    if (efficiency >= 60) return 'var(--severity-medium)';
+    return 'var(--severity-critical)';
   };
 
   return (
@@ -79,7 +79,7 @@ export const HandoffTimeline: React.FC<HandoffTimelineProps> = ({ metrics, onDri
             Efficiency
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--border-color)', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
@@ -100,7 +100,7 @@ export const HandoffTimeline: React.FC<HandoffTimelineProps> = ({ metrics, onDri
           Recent Handoffs
         </div>
         {metrics.handoffs.slice(0, 3).map((handoff) => (
-          <div key={handoff.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+          <div key={handoff.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
               <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 {handoff.fromTeam} → {handoff.toTeam}
@@ -123,7 +123,7 @@ export const HandoffTimeline: React.FC<HandoffTimelineProps> = ({ metrics, onDri
               All Handoffs
             </h4>
             {metrics.handoffs.map((handoff) => (
-              <div key={handoff.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+              <div key={handoff.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                   <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {handoff.fromTeam} → {handoff.toTeam}
@@ -136,7 +136,7 @@ export const HandoffTimeline: React.FC<HandoffTimelineProps> = ({ metrics, onDri
                   {handoff.startDate} to {handoff.endDate} • {handoff.duration}h
                 </div>
                 {handoff.blockers.length > 0 && (
-                  <div style={{ color: '#f44336', fontSize: '0.75rem' }}>
+                  <div style={{ color: 'var(--severity-critical)', fontSize: '0.75rem' }}>
                     Blockers: {handoff.blockers.join(', ')}
                   </div>
                 )}

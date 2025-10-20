@@ -71,11 +71,11 @@ export const ADFViewer: React.FC<ADFViewerProps> = ({
   if (error) {
     return (
       <div style={{
-        backgroundColor: '#ffebee',
-        color: '#c62828',
+        backgroundColor: 'rgba(244, 67, 54, 0.1)',
+        color: 'var(--severity-critical)',
         padding: '1rem',
         borderRadius: '4px',
-        border: '1px solid #ef5350'
+        border: `1px solid var(--severity-critical)`
       }}>
         <strong>Error:</strong> {error}
       </div>
@@ -90,10 +90,10 @@ export const ADFViewer: React.FC<ADFViewerProps> = ({
   const relationships: Relationship[] = adf.c4Model?.relationships || [];
 
   const typeColors: Record<string, string> = {
-    service: '#2196f3',
-    library: '#4caf50',
-    ui: '#ff9800',
-    database: '#f44336',
+    service: 'var(--type-service)',
+    library: 'var(--type-library)',
+    ui: 'var(--type-ui)',
+    database: 'var(--type-database)',
   };
 
   return (
@@ -162,7 +162,7 @@ export const ADFViewer: React.FC<ADFViewerProps> = ({
                 </h3>
                 <span
                   style={{
-                    backgroundColor: typeColors[container.type] || '#999',
+                    backgroundColor: typeColors[container.type] || 'var(--text-tertiary)',
                     color: 'white',
                     padding: '0.25rem 0.5rem',
                     borderRadius: '3px',

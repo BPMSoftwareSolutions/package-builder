@@ -46,9 +46,9 @@ export const FeedbackSummaryCard: React.FC<FeedbackSummaryCardProps> = ({ org, t
   }, [org, team, onHealthChange]);
 
   const getHealthColor = (score: number) => {
-    if (score >= 80) return '#4caf50';
-    if (score >= 60) return '#ff9800';
-    return '#f44336';
+    if (score >= 80) return 'var(--severity-info)';
+    if (score >= 60) return 'var(--severity-medium)';
+    return 'var(--severity-critical)';
   };
 
   const getTrendIcon = (trend: string) => {
@@ -61,21 +61,21 @@ export const FeedbackSummaryCard: React.FC<FeedbackSummaryCardProps> = ({ org, t
 
   const getTrendColor = (trend: string) => {
     switch (trend) {
-      case 'improving': return '#4caf50';
-      case 'degrading': return '#f44336';
-      default: return '#ff9800';
+      case 'improving': return 'var(--severity-info)';
+      case 'degrading': return 'var(--severity-critical)';
+      default: return 'var(--severity-medium)';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'passing':
-      case 'success': return '#4caf50';
+      case 'success': return 'var(--severity-info)';
       case 'failing':
-      case 'failed': return '#f44336';
+      case 'failed': return 'var(--severity-critical)';
       case 'flaky':
-      case 'in-progress': return '#ff9800';
-      default: return '#9e9e9e';
+      case 'in-progress': return 'var(--severity-medium)';
+      default: return 'var(--text-tertiary)';
     }
   };
 
@@ -100,8 +100,8 @@ export const FeedbackSummaryCard: React.FC<FeedbackSummaryCardProps> = ({ org, t
       {error && (
         <div style={{
           padding: '1rem',
-          backgroundColor: '#ffebee',
-          color: '#c62828',
+          backgroundColor: 'rgba(244, 67, 54, 0.1)',
+          color: 'var(--severity-critical)',
           borderRadius: '4px',
           marginBottom: '1rem'
         }}>
@@ -161,7 +161,7 @@ export const FeedbackSummaryCard: React.FC<FeedbackSummaryCardProps> = ({ org, t
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             Active Alerts
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: summary.alertCount > 0 ? '#f44336' : '#4caf50' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: summary.alertCount > 0 ? 'var(--severity-critical)' : 'var(--severity-info)' }}>
             {summary.alertCount}
           </div>
         </div>

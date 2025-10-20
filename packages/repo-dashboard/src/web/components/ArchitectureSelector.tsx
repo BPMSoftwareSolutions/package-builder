@@ -141,7 +141,7 @@ export const ArchitectureSelector: React.FC<ArchitectureSelectorProps> = ({
           {error && (
             <div style={{
               padding: '1rem',
-              color: '#c62828',
+              color: 'var(--severity-critical)',
               fontSize: '0.9rem',
             }}>
               {error}

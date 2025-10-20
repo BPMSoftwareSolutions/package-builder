@@ -113,11 +113,11 @@ export const ADFDetailsPage: React.FC<ADFDetailsPageProps> = ({
     return (
       <div style={{ padding: '2rem' }}>
         <div style={{
-          backgroundColor: '#ffebee',
-          color: '#c62828',
+          backgroundColor: 'rgba(244, 67, 54, 0.1)',
+          color: 'var(--severity-critical)',
           padding: '1rem',
           borderRadius: '4px',
-          border: '1px solid #ef5350',
+          border: '1px solid var(--severity-critical)',
           marginBottom: '2rem'
         }}>
           <strong>Error:</strong> {error}

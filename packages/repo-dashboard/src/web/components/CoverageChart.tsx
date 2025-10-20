@@ -129,7 +129,7 @@ export const CoverageChart: React.FC<CoverageChartProps> = ({
             y1={targetY}
             x2={chartWidth - padding.right}
             y2={targetY}
-            stroke="#ff9800"
+            stroke="var(--severity-medium)"
             strokeDasharray="4"
             strokeWidth="2"
             opacity="0.7"
@@ -138,7 +138,7 @@ export const CoverageChart: React.FC<CoverageChartProps> = ({
             x={chartWidth - padding.right + 5}
             y={targetY + 4}
             fontSize="12"
-            fill="#ff9800"
+            fill="var(--severity-medium)"
             fontWeight="bold"
           >
             Target: {targetCoverage}%
@@ -148,7 +148,7 @@ export const CoverageChart: React.FC<CoverageChartProps> = ({
           <path
             d={pathData}
             fill="none"
-            stroke="#4caf50"
+            stroke="var(--severity-info)"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -165,7 +165,7 @@ export const CoverageChart: React.FC<CoverageChartProps> = ({
                 cx={x}
                 cy={y}
                 r="4"
-                fill={isAboveTarget ? '#4caf50' : '#ff9800'}
+                fill={isAboveTarget ? 'var(--severity-info)' : 'var(--severity-medium)'}
                 stroke="white"
                 strokeWidth="2"
               />
@@ -206,11 +206,11 @@ export const CoverageChart: React.FC<CoverageChartProps> = ({
 
       <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem', fontSize: '0.875rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div style={{ width: '12px', height: '12px', backgroundColor: '#4caf50', borderRadius: '2px' }} />
+          <div style={{ width: '12px', height: '12px', backgroundColor: 'var(--severity-info)', borderRadius: '2px' }} />
           <span style={{ color: 'var(--text-secondary)' }}>Coverage Trend</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div style={{ width: '12px', height: '2px', backgroundColor: '#ff9800' }} />
+          <div style={{ width: '12px', height: '2px', backgroundColor: 'var(--severity-medium)' }} />
           <span style={{ color: 'var(--text-secondary)' }}>Target ({targetCoverage}%)</span>
         </div>
       </div>

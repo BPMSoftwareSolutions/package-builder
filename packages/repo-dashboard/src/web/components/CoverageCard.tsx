@@ -23,18 +23,18 @@ export const CoverageCard: React.FC<CoverageCardProps> = ({ metrics, onDrillDown
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--trend-improving)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--trend-degrading)';
       default:
-        return '#ff9800';
+        return 'var(--trend-stable)';
     }
   };
 
   const getCoverageColor = (coverage: number) => {
-    if (coverage >= 80) return '#4caf50'; // green
-    if (coverage >= 60) return '#ff9800'; // orange
-    return '#f44336'; // red
+    if (coverage >= 80) return 'var(--coverage-high)'; // green
+    if (coverage >= 60) return 'var(--coverage-medium)'; // orange
+    return 'var(--coverage-low)'; // red
   };
 
   const avgCoverage = (metrics.lineCoverage + metrics.branchCoverage + metrics.functionCoverage + metrics.statementCoverage) / 4;
@@ -104,7 +104,7 @@ export const CoverageCard: React.FC<CoverageCardProps> = ({ metrics, onDrillDown
           Average Coverage
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--border-color)', borderRadius: '4px', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', overflow: 'hidden' }}>
             <div
               style={{
                 height: '100%',

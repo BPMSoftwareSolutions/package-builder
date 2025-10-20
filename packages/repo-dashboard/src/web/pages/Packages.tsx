@@ -114,7 +114,7 @@ export default function Packages() {
         <div className="loading">Loading packages...</div>
       ) : !data ? (
         <div className="card">
-          <p style={{ textAlign: 'center', color: '#666' }}>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
             No packages found
           </p>
         </div>
@@ -123,33 +123,33 @@ export default function Packages() {
           <div style={{ marginBottom: '1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
             <div className="card" style={{ marginBottom: 0 }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#0366d6' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--accent-color)' }}>
                   {data.total}
                 </div>
-                <div style={{ color: '#666' }}>Total Packages</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Total Packages</div>
               </div>
             </div>
             <div className="card" style={{ marginBottom: 0 }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#28a745' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--severity-info)' }}>
                   {data.ready}
                 </div>
-                <div style={{ color: '#666' }}>Ready for Pack</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Ready for Pack</div>
               </div>
             </div>
             <div className="card" style={{ marginBottom: 0 }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#dc3545' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--severity-critical)' }}>
                   {data.total - data.ready}
                 </div>
-                <div style={{ color: '#666' }}>Not Ready</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Not Ready</div>
               </div>
             </div>
           </div>
 
           {filteredPackages.length === 0 ? (
             <div className="card">
-              <p style={{ textAlign: 'center', color: '#666' }}>
+              <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
                 No packages found matching the filter
               </p>
             </div>
@@ -159,13 +159,13 @@ export default function Packages() {
                 <div key={pkg.name} className="card">
                   <div style={{ marginBottom: '1rem' }}>
                     <h3 style={{ marginBottom: '0.5rem' }}>{pkg.name}</h3>
-                    <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                    <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                       v{pkg.version}
                     </div>
                   </div>
 
                   {pkg.description && (
-                    <p style={{ marginBottom: '1rem', color: '#666', fontSize: '0.9rem' }}>
+                    <p style={{ marginBottom: '1rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
                       {pkg.description}
                     </p>
                   )}
@@ -182,7 +182,7 @@ export default function Packages() {
                     </span>
                   </div>
 
-                  <div style={{ fontSize: '0.85rem', color: '#999', wordBreak: 'break-all' }}>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)', wordBreak: 'break-all' }}>
                     {pkg.path}
                   </div>
                 </div>

@@ -17,6 +17,42 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* Stage colors for Value Stream - Light mode (fallback) */
+  --stage-idea-bg: #e3f2fd;
+  --stage-pr-bg: #f3e5f5;
+  --stage-review-bg: #fce4ec;
+  --stage-build-bg: #fff3e0;
+  --stage-test-bg: #f1f8e9;
+  --stage-deploy-bg: #e0f2f1;
+
+  /* Trend colors - Light mode (fallback) */
+  --trend-improving: #4caf50;
+  --trend-degrading: #f44336;
+  --trend-stable: #ff9800;
+
+  /* Coverage colors - Light mode (fallback) */
+  --coverage-high: #4caf50;
+  --coverage-medium: #ff9800;
+  --coverage-low: #f44336;
+
+  /* Severity colors - Light mode (fallback) */
+  --severity-critical: #f44336;
+  --severity-high: #ff5722;
+  --severity-medium: #ff9800;
+  --severity-low: #ffc107;
+  --severity-info: #4caf50;
+
+  /* Status colors - Light mode (fallback) */
+  --status-active: #f44336;
+  --status-acknowledged: #ff9800;
+  --status-resolved: #4caf50;
+
+  /* Component type colors - Light mode (fallback) */
+  --type-service: #2196f3;
+  --type-library: #4caf50;
+  --type-ui: #ff9800;
+  --type-database: #f44336;
 }
 
 /* Dark mode (default) */
@@ -38,6 +74,46 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+
+  /* Stage colors for Value Stream - Dark mode */
+  --stage-idea-bg: #1a3a52;
+  --stage-pr-bg: #3a1a52;
+  --stage-review-bg: #521a3a;
+  --stage-build-bg: #523a1a;
+  --stage-test-bg: #1a521a;
+  --stage-deploy-bg: #1a3a3a;
+  --stage-review: #ff6b9d;
+  --stage-build: #ffa500;
+  --stage-test: #66bb6a;
+  --stage-waiting: #42a5f5;
+
+  /* Trend colors - Dark mode */
+  --trend-improving: #4caf50;
+  --trend-degrading: #f44336;
+  --trend-stable: #ff9800;
+
+  /* Coverage colors - Dark mode */
+  --coverage-high: #4caf50;
+  --coverage-medium: #ff9800;
+  --coverage-low: #f44336;
+
+  /* Severity colors - Dark mode */
+  --severity-critical: #f44336;
+  --severity-high: #ff5722;
+  --severity-medium: #ff9800;
+  --severity-low: #ffc107;
+  --severity-info: #4caf50;
+
+  /* Status colors - Dark mode */
+  --status-active: #f44336;
+  --status-acknowledged: #ff9800;
+  --status-resolved: #4caf50;
+
+  /* Component type colors - Dark mode */
+  --type-service: #2196f3;
+  --type-library: #4caf50;
+  --type-ui: #ff9800;
+  --type-database: #f44336;
 }
 
 /* Light mode override */
@@ -58,6 +134,46 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* Stage colors for Value Stream - Light mode */
+  --stage-idea-bg: #e3f2fd;
+  --stage-pr-bg: #f3e5f5;
+  --stage-review-bg: #fce4ec;
+  --stage-build-bg: #fff3e0;
+  --stage-test-bg: #f1f8e9;
+  --stage-deploy-bg: #e0f2f1;
+  --stage-review: #fce4ec;
+  --stage-build: #fff3e0;
+  --stage-test: #f1f8e9;
+  --stage-waiting: #e3f2fd;
+
+  /* Trend colors - Light mode */
+  --trend-improving: #4caf50;
+  --trend-degrading: #f44336;
+  --trend-stable: #ff9800;
+
+  /* Coverage colors - Light mode */
+  --coverage-high: #4caf50;
+  --coverage-medium: #ff9800;
+  --coverage-low: #f44336;
+
+  /* Severity colors - Light mode */
+  --severity-critical: #f44336;
+  --severity-high: #ff5722;
+  --severity-medium: #ff9800;
+  --severity-low: #ffc107;
+  --severity-info: #4caf50;
+
+  /* Status colors - Light mode */
+  --status-active: #f44336;
+  --status-acknowledged: #ff9800;
+  --status-resolved: #4caf50;
+
+  /* Component type colors - Light mode */
+  --type-service: #2196f3;
+  --type-library: #4caf50;
+  --type-ui: #ff9800;
+  --type-database: #f44336;
 }
 
 /* Smooth transitions for theme changes */

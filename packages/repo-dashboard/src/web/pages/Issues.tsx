@@ -112,18 +112,18 @@ export default function Issues({ repo = DEFAULT_REPO }: IssuesProps) {
       <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem' }}>
         <div className="card" style={{ flex: 1, marginBottom: 0 }}>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#0366d6' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--accent-color)' }}>
               {issueCount}
             </div>
-            <div style={{ color: '#666' }}>Issues</div>
+            <div style={{ color: 'var(--text-secondary)' }}>Issues</div>
           </div>
         </div>
         <div className="card" style={{ flex: 1, marginBottom: 0 }}>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#6f42c1' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--type-library)' }}>
               {prCount}
             </div>
-            <div style={{ color: '#666' }}>Pull Requests</div>
+            <div style={{ color: 'var(--text-secondary)' }}>Pull Requests</div>
           </div>
         </div>
       </div>
@@ -132,7 +132,7 @@ export default function Issues({ repo = DEFAULT_REPO }: IssuesProps) {
         <div className="loading">Loading issues...</div>
       ) : filteredIssues.length === 0 ? (
         <div className="card">
-          <p style={{ textAlign: 'center', color: '#666' }}>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
             No issues found
           </p>
         </div>
@@ -147,7 +147,7 @@ export default function Issues({ repo = DEFAULT_REPO }: IssuesProps) {
                       #{issue.number} {issue.title}
                     </a>
                   </h3>
-                  <div style={{ display: 'flex', gap: '1rem', fontSize: '0.9rem', color: '#666' }}>
+                  <div style={{ display: 'flex', gap: '1rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                     <span>
                       {issue.isPullRequest ? '🔀 PR' : '🐛 Issue'}
                     </span>

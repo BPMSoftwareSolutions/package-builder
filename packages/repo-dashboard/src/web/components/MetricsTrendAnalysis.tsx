@@ -36,11 +36,11 @@ export const MetricsTrendAnalysis: React.FC<MetricsTrendAnalysisProps> = ({ metr
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#ff9800';
+        return 'var(--severity-medium)';
     }
   };
 
@@ -70,7 +70,7 @@ export const MetricsTrendAnalysis: React.FC<MetricsTrendAnalysisProps> = ({ metr
         </div>
       </div>
 
-      <div style={{ marginBottom: '1.5rem', height: '100px', position: 'relative', backgroundColor: 'var(--border-color)', borderRadius: '4px', padding: '0.5rem' }}>
+      <div style={{ marginBottom: '1.5rem', height: '100px', position: 'relative', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', padding: '0.5rem' }}>
         <svg style={{ width: '100%', height: '100%' }} viewBox={`0 0 ${metrics.data.length * 20} 100`} preserveAspectRatio="none">
           <polyline
             points={metrics.data.map((d, i) => `${i * 20},${100 - ((d.value - minValue) / range) * 100}`).join(' ')}
@@ -111,7 +111,7 @@ export const MetricsTrendAnalysis: React.FC<MetricsTrendAnalysisProps> = ({ metr
             </div>
             <div>
               <div style={{ color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>Anomalies Detected</div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: metrics.anomalies > 0 ? '#f44336' : '#4caf50' }}>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: metrics.anomalies > 0 ? 'var(--severity-critical)' : 'var(--severity-info)' }}>
                 {metrics.anomalies}
               </div>
             </div>

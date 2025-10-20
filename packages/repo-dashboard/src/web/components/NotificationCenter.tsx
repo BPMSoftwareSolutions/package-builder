@@ -59,14 +59,14 @@ export default function NotificationCenter({
   const getNotificationColor = (type: NotificationType) => {
     switch (type) {
       case 'error':
-        return '#dc3545';
+        return 'var(--severity-critical)';
       case 'warning':
-        return '#ffc107';
+        return 'var(--severity-medium)';
       case 'success':
-        return '#28a745';
+        return 'var(--severity-info)';
       case 'info':
       default:
-        return '#0366d6';
+        return 'var(--type-service)';
     }
   };
 

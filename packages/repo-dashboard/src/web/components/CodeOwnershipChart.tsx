@@ -22,12 +22,12 @@ export const CodeOwnershipChart: React.FC<CodeOwnershipChartProps> = ({ metrics,
   const [expanded, setExpanded] = useState(false);
 
   const getConcentrationColor = (concentration: number) => {
-    if (concentration < 40) return '#4caf50'; // green - good distribution
-    if (concentration < 60) return '#ff9800'; // orange - moderate
-    return '#f44336'; // red - high concentration
+    if (concentration < 40) return 'var(--severity-info)'; // green - good distribution
+    if (concentration < 60) return 'var(--severity-medium)'; // orange - moderate
+    return 'var(--severity-critical)'; // red - high concentration
   };
 
-  const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f'];
+  const colors = ['var(--type-service)', 'var(--severity-medium)', 'var(--severity-info)', 'var(--severity-critical)', 'var(--type-library)', 'var(--type-database)', 'var(--type-ui)', 'var(--text-tertiary)'];
 
   return (
     <div
@@ -75,7 +75,7 @@ export const CodeOwnershipChart: React.FC<CodeOwnershipChartProps> = ({ metrics,
               <span style={{ color: 'var(--text-primary)' }}>{item.owner}</span>
               <span style={{ color: 'var(--text-secondary)' }}>{item.percentage.toFixed(1)}% ({item.filesOwned} files)</span>
             </div>
-            <div style={{ height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ height: '6px', backgroundColor: 'var(--bg-secondary)', borderRadius: '3px', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
@@ -93,7 +93,7 @@ export const CodeOwnershipChart: React.FC<CodeOwnershipChartProps> = ({ metrics,
           Concentration Level
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--border-color)', borderRadius: '4px', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', overflow: 'hidden' }}>
             <div
               style={{
                 height: '100%',

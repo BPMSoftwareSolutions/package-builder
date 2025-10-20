@@ -24,9 +24,9 @@ export const TeamSatisfactionScore: React.FC<TeamSatisfactionScoreProps> = ({ me
   const [expanded, setExpanded] = useState(false);
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return '#4caf50';
-    if (score >= 60) return '#ff9800';
-    return '#f44336';
+    if (score >= 80) return 'var(--severity-info)';
+    if (score >= 60) return 'var(--severity-medium)';
+    return 'var(--severity-critical)';
   };
 
   const getTrendIcon = (trend: string) => {
@@ -43,11 +43,11 @@ export const TeamSatisfactionScore: React.FC<TeamSatisfactionScoreProps> = ({ me
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#ff9800';
+        return 'var(--severity-medium)';
     }
   };
 
@@ -76,7 +76,7 @@ export const TeamSatisfactionScore: React.FC<TeamSatisfactionScoreProps> = ({ me
           Overall Score
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div style={{ flex: 1, height: '12px', backgroundColor: 'var(--border-color)', borderRadius: '6px', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px', overflow: 'hidden' }}>
             <div
               style={{
                 height: '100%',
@@ -108,7 +108,7 @@ export const TeamSatisfactionScore: React.FC<TeamSatisfactionScoreProps> = ({ me
                 </span>
               </div>
             </div>
-            <div style={{ height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ height: '6px', backgroundColor: 'var(--bg-secondary)', borderRadius: '3px', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
@@ -128,7 +128,7 @@ export const TeamSatisfactionScore: React.FC<TeamSatisfactionScoreProps> = ({ me
               All Teams
             </h4>
             {metrics.teams.map((team, idx) => (
-              <div key={idx} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+              <div key={idx} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                   <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {team.team}

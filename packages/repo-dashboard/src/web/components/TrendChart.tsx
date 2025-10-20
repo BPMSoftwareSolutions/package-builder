@@ -78,8 +78,8 @@ export const TrendChart: React.FC<TrendChartProps> = ({
           <Line
             type="monotone"
             dataKey={dataKey}
-            stroke="#4a9eff"
-            dot={{ fill: '#4a9eff' }}
+            stroke="var(--type-service)"
+            dot={{ fill: 'var(--type-service)' }}
             activeDot={{ r: 8 }}
             isAnimationActive={true}
           />
@@ -88,7 +88,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({
               <ReferenceLine
                 key={`anomaly-${idx}`}
                 x={data[idx]?.[xAxisKey]}
-                stroke="#f44336"
+                stroke="var(--severity-critical)"
                 strokeDasharray="3 3"
               />
             ))}

@@ -60,11 +60,11 @@ export const DeploymentStatusCard: React.FC<DeploymentStatusCardProps> = ({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'success': return '#4caf50';
-      case 'failed': return '#f44336';
-      case 'in-progress': return '#2196f3';
-      case 'rolled-back': return '#ff9800';
-      default: return '#9e9e9e';
+      case 'success': return 'var(--severity-info)';
+      case 'failed': return 'var(--severity-critical)';
+      case 'in-progress': return 'var(--type-service)';
+      case 'rolled-back': return 'var(--severity-medium)';
+      default: return 'var(--text-tertiary)';
     }
   };
 
@@ -99,8 +99,8 @@ export const DeploymentStatusCard: React.FC<DeploymentStatusCardProps> = ({
       {error && (
         <div style={{
           padding: '1rem',
-          backgroundColor: '#ffebee',
-          color: '#c62828',
+          backgroundColor: 'rgba(244, 67, 54, 0.1)',
+          color: 'var(--severity-critical)',
           borderRadius: '4px',
           marginBottom: '1rem'
         }}>
@@ -169,7 +169,7 @@ export const DeploymentStatusCard: React.FC<DeploymentStatusCardProps> = ({
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             Rollbacks
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: deploymentStatus.rollbackCount > 0 ? '#ff9800' : '#4caf50' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: deploymentStatus.rollbackCount > 0 ? 'var(--severity-medium)' : 'var(--severity-info)' }}>
             {deploymentStatus.rollbackCount}
           </div>
         </div>

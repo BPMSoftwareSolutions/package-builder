@@ -37,18 +37,18 @@ export const SPAGateStatus: React.FC<SPAGateStatusProps> = ({ metrics, onDrillDo
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#ff9800';
+        return 'var(--severity-medium)';
     }
   };
 
   const getPassRateColor = (rate: number) => {
-    if (rate >= 90) return '#4caf50';
-    if (rate >= 70) return '#ff9800';
-    return '#f44336';
+    if (rate >= 90) return 'var(--severity-info)';
+    if (rate >= 70) return 'var(--severity-medium)';
+    return 'var(--severity-critical)';
   };
 
   return (
@@ -78,7 +78,7 @@ export const SPAGateStatus: React.FC<SPAGateStatusProps> = ({ metrics, onDrillDo
           Pass Rate
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div style={{ flex: 1, height: '12px', backgroundColor: 'var(--border-color)', borderRadius: '6px', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px', overflow: 'hidden' }}>
             <div
               style={{
                 height: '100%',
@@ -98,17 +98,17 @@ export const SPAGateStatus: React.FC<SPAGateStatusProps> = ({ metrics, onDrillDo
           Recent Results
         </div>
         {metrics.results.slice(0, 3).map((result, idx) => (
-          <div key={idx} style={{ marginBottom: '0.5rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+          <div key={idx} style={{ marginBottom: '0.5rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
               <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 {result.repository}
               </span>
-              <span style={{ color: result.status === 'passing' ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>
+              <span style={{ color: result.status === 'passing' ? 'var(--severity-info)' : 'var(--severity-critical)', fontWeight: 'bold' }}>
                 {result.status.toUpperCase()}
               </span>
             </div>
             {result.violations > 0 && (
-              <div style={{ color: '#f44336', fontSize: '0.75rem' }}>
+              <div style={{ color: 'var(--severity-critical)', fontSize: '0.75rem' }}>
                 {result.violations} violations
               </div>
             )}
@@ -123,12 +123,12 @@ export const SPAGateStatus: React.FC<SPAGateStatusProps> = ({ metrics, onDrillDo
               All Results
             </h4>
             {metrics.results.map((result, idx) => (
-              <div key={idx} style={{ marginBottom: '0.5rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+              <div key={idx} style={{ marginBottom: '0.5rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                   <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {result.repository}
                   </span>
-                  <span style={{ color: result.status === 'passing' ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>
+                  <span style={{ color: result.status === 'passing' ? 'var(--severity-info)' : 'var(--severity-critical)', fontWeight: 'bold' }}>
                     {result.status.toUpperCase()}
                   </span>
                 </div>

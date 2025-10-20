@@ -36,11 +36,11 @@ export const PRFlowChart: React.FC<PRFlowChartProps> = ({ metrics, onDrillDown }
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--trend-improving)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--trend-degrading)';
       default:
-        return '#ff9800';
+        return 'var(--trend-stable)';
     }
   };
 
@@ -94,7 +94,7 @@ export const PRFlowChart: React.FC<PRFlowChartProps> = ({ metrics, onDrillDown }
         <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', fontWeight: 'bold' }}>
           Time Distribution
         </div>
-        <div style={{ display: 'flex', height: '40px', borderRadius: '4px', overflow: 'hidden', gap: '2px', backgroundColor: 'var(--border-color)' }}>
+        <div style={{ display: 'flex', height: '40px', borderRadius: '4px', overflow: 'hidden', gap: '2px', backgroundColor: 'var(--bg-secondary)' }}>
           {metrics.stages.map((stage, idx) => (
             <div
               key={idx}
@@ -116,7 +116,7 @@ export const PRFlowChart: React.FC<PRFlowChartProps> = ({ metrics, onDrillDown }
             key={idx}
             style={{
               padding: '0.75rem',
-              backgroundColor: 'var(--border-color)',
+              backgroundColor: 'var(--bg-secondary)',
               borderRadius: '4px',
               borderLeft: `4px solid ${stage.color}`,
             }}
@@ -140,7 +140,7 @@ export const PRFlowChart: React.FC<PRFlowChartProps> = ({ metrics, onDrillDown }
             <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-primary)', fontSize: '0.95rem' }}>
               Longest Stage
             </h4>
-            <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', borderLeft: `4px solid ${longest.color}` }}>
+            <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', borderLeft: `4px solid ${longest.color}` }}>
               <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 {longest.stage}
               </div>
@@ -157,7 +157,7 @@ export const PRFlowChart: React.FC<PRFlowChartProps> = ({ metrics, onDrillDown }
             <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-primary)', fontSize: '0.95rem' }}>
               Recommendation
             </h4>
-            <div style={{ padding: '0.75rem', backgroundColor: '#fff3cd', borderRadius: '4px', fontSize: '0.875rem', color: '#856404' }}>
+            <div style={{ padding: '0.75rem', backgroundColor: 'var(--warning-color)', borderRadius: '4px', fontSize: '0.875rem', color: 'var(--text-primary)' }}>
               Focus on reducing {longest.stage.toLowerCase()} time to improve overall flow efficiency.
             </div>
           </div>

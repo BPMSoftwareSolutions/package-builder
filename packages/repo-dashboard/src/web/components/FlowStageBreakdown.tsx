@@ -37,11 +37,11 @@ export const FlowStageBreakdown: React.FC<FlowStageBreakdownProps> = ({ metrics,
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--trend-improving)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--trend-degrading)';
       default:
-        return '#ff9800';
+        return 'var(--trend-stable)';
     }
   };
 
@@ -76,7 +76,7 @@ export const FlowStageBreakdown: React.FC<FlowStageBreakdownProps> = ({ metrics,
             key={idx}
             style={{
               padding: '1rem',
-              backgroundColor: 'var(--border-color)',
+              backgroundColor: 'var(--bg-secondary)',
               borderRadius: '6px',
               cursor: 'pointer',
               border: selectedStage === stage.stage ? '2px solid var(--primary-color)' : '1px solid transparent',
@@ -104,7 +104,7 @@ export const FlowStageBreakdown: React.FC<FlowStageBreakdownProps> = ({ metrics,
               <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
                 Median: {formatTime(stage.median)}
               </div>
-              <div style={{ height: '8px', backgroundColor: 'var(--border-color)', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{ height: '8px', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', overflow: 'hidden' }}>
                 <div
                   style={{
                     height: '100%',
@@ -150,13 +150,13 @@ export const FlowStageBreakdown: React.FC<FlowStageBreakdownProps> = ({ metrics,
             Summary
           </h4>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.875rem', marginBottom: '1rem' }}>
-            <div style={{ padding: '0.5rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+            <div style={{ padding: '0.5rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
               <div style={{ color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>Fastest Stage</div>
               <div style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 {metrics.stages.reduce((min, s) => s.median < min.median ? s : min).stage}
               </div>
             </div>
-            <div style={{ padding: '0.5rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+            <div style={{ padding: '0.5rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
               <div style={{ color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>Slowest Stage</div>
               <div style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 {metrics.stages.reduce((max, s) => s.median > max.median ? s : max).stage}

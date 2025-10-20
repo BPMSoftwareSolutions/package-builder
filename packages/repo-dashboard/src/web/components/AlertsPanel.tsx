@@ -45,21 +45,21 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({ org, team, maxAlerts =
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return '#f44336';
-      case 'high': return '#ff9800';
-      case 'medium': return '#ffc107';
-      case 'low': return '#2196f3';
-      default: return '#9e9e9e';
+      case 'critical': return 'var(--severity-critical)';
+      case 'high': return 'var(--severity-medium)';
+      case 'medium': return 'var(--severity-low)';
+      case 'low': return 'var(--type-service)';
+      default: return 'var(--text-tertiary)';
     }
   };
 
   const getStatusBadge = (status: string) => {
     const colors: Record<string, string> = {
-      active: '#f44336',
-      acknowledged: '#ff9800',
-      resolved: '#4caf50'
+      active: 'var(--status-active)',
+      acknowledged: 'var(--status-acknowledged)',
+      resolved: 'var(--status-resolved)'
     };
-    return colors[status] || '#9e9e9e';
+    return colors[status] || 'var(--text-tertiary)';
   };
 
   if (loading) {
@@ -79,8 +79,8 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({ org, team, maxAlerts =
       {error && (
         <div style={{
           padding: '1rem',
-          backgroundColor: '#ffebee',
-          color: '#c62828',
+          backgroundColor: 'rgba(244, 67, 54, 0.1)',
+          color: 'var(--severity-critical)',
           borderRadius: '4px',
           marginBottom: '1rem'
         }}>

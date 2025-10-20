@@ -38,24 +38,24 @@ export const BundleSizeGauge: React.FC<BundleSizeGaugeProps> = ({ metrics, onDri
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--trend-improving)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--trend-degrading)';
       default:
-        return '#ff9800';
+        return 'var(--trend-stable)';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'green':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'yellow':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'red':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#2196f3';
+        return 'var(--type-service)';
     }
   };
 
@@ -107,7 +107,7 @@ export const BundleSizeGauge: React.FC<BundleSizeGaugeProps> = ({ metrics, onDri
             {metrics.totalSize} KB / {metrics.totalBudget} KB
           </span>
         </div>
-        <div style={{ height: '24px', backgroundColor: 'var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+        <div style={{ height: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', overflow: 'hidden' }}>
           <div
             style={{
               height: '100%',
@@ -128,7 +128,7 @@ export const BundleSizeGauge: React.FC<BundleSizeGaugeProps> = ({ metrics, onDri
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Load Time
           </div>
@@ -136,11 +136,11 @@ export const BundleSizeGauge: React.FC<BundleSizeGaugeProps> = ({ metrics, onDri
             {metrics.loadTime.toFixed(2)}s
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Over Budget
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: overBudgetCount > 0 ? '#f44336' : '#4caf50' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: overBudgetCount > 0 ? 'var(--severity-critical)' : 'var(--severity-info)' }}>
             {overBudgetCount}
           </div>
         </div>
@@ -152,7 +152,7 @@ export const BundleSizeGauge: React.FC<BundleSizeGaugeProps> = ({ metrics, onDri
             key={idx}
             style={{
               padding: '0.75rem',
-              backgroundColor: 'var(--border-color)',
+              backgroundColor: 'var(--bg-secondary)',
               borderRadius: '4px',
               borderLeft: `4px solid ${getStatusColor(bundle.status)}`,
             }}
@@ -189,7 +189,7 @@ export const BundleSizeGauge: React.FC<BundleSizeGaugeProps> = ({ metrics, onDri
                 style={{
                   padding: '0.5rem',
                   marginBottom: '0.5rem',
-                  backgroundColor: 'var(--border-color)',
+                  backgroundColor: 'var(--bg-secondary)',
                   borderRadius: '4px',
                   borderLeft: `3px solid ${getStatusColor(bundle.status)}`,
                   display: 'flex',

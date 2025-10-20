@@ -21,13 +21,13 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'healthy':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'warning':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'critical':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#2196f3';
+        return 'var(--type-service)';
     }
   };
 
@@ -79,7 +79,7 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
             {metrics.currentWIP} / {metrics.wipLimit}
           </span>
         </div>
-        <div style={{ height: '24px', backgroundColor: 'var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+        <div style={{ height: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', overflow: 'hidden' }}>
           <div
             style={{
               height: '100%',
@@ -100,7 +100,7 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Current WIP
           </div>
@@ -108,7 +108,7 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
             {metrics.currentWIP}
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             WIP Limit
           </div>
@@ -124,7 +124,7 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
             <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-primary)', fontSize: '0.95rem' }}>
               Status Details
             </h4>
-            <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+            <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
               <div style={{ marginBottom: '0.5rem' }}>
                 <span style={{ color: 'var(--text-secondary)' }}>Percentage of Limit:</span>
                 <span style={{ float: 'right', fontWeight: 'bold', color: statusColor }}>
@@ -141,11 +141,11 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
           </div>
 
           {metrics.status === 'critical' && (
-            <div style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#ffebee', borderRadius: '4px', borderLeft: '4px solid #f44336' }}>
-              <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#c62828', marginBottom: '0.25rem' }}>
+            <div style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: 'rgba(244, 67, 54, 0.1)', borderRadius: '4px', borderLeft: '4px solid var(--severity-critical)' }}>
+              <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--severity-critical)', marginBottom: '0.25rem' }}>
                 ⚠ Critical Alert
               </div>
-              <div style={{ fontSize: '0.8rem', color: '#d32f2f' }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--severity-critical)' }}>
                 WIP exceeds limit. Consider pausing new work or increasing team capacity.
               </div>
             </div>

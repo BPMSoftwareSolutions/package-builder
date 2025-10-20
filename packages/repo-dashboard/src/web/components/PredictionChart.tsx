@@ -36,11 +36,11 @@ export const PredictionChart: React.FC<PredictionChartProps> = ({ metrics, onDri
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#ff9800';
+        return 'var(--severity-medium)';
     }
   };
 
@@ -73,12 +73,12 @@ export const PredictionChart: React.FC<PredictionChartProps> = ({ metrics, onDri
           Average Confidence
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--border-color)', borderRadius: '4px', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', overflow: 'hidden' }}>
             <div
               style={{
                 height: '100%',
                 width: `${avgConfidence}%`,
-                backgroundColor: avgConfidence > 80 ? '#4caf50' : avgConfidence > 60 ? '#ff9800' : '#f44336',
+                backgroundColor: avgConfidence > 80 ? 'var(--severity-info)' : avgConfidence > 60 ? 'var(--severity-medium)' : 'var(--severity-critical)',
               }}
             />
           </div>
@@ -98,12 +98,12 @@ export const PredictionChart: React.FC<PredictionChartProps> = ({ metrics, onDri
               <span style={{ color: 'var(--text-primary)' }}>{pred.date}</span>
               <span style={{ color: 'var(--text-secondary)' }}>{pred.predicted.toFixed(2)} ({pred.confidence}%)</span>
             </div>
-            <div style={{ height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ height: '6px', backgroundColor: 'var(--bg-secondary)', borderRadius: '3px', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
                   width: `${pred.confidence}%`,
-                  backgroundColor: pred.confidence > 80 ? '#4caf50' : pred.confidence > 60 ? '#ff9800' : '#f44336',
+                  backgroundColor: pred.confidence > 80 ? 'var(--severity-info)' : pred.confidence > 60 ? 'var(--severity-medium)' : 'var(--severity-critical)',
                 }}
               />
             </div>
@@ -118,7 +118,7 @@ export const PredictionChart: React.FC<PredictionChartProps> = ({ metrics, onDri
               What-If Scenarios
             </h4>
             {metrics.scenarios.map((scenario, idx) => (
-              <div key={idx} style={{ marginBottom: '0.5rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+              <div key={idx} style={{ marginBottom: '0.5rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
                 <div style={{ fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
                   {scenario.name}
                 </div>
