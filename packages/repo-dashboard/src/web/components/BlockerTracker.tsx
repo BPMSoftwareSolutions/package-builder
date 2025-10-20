@@ -97,7 +97,7 @@ export const BlockerTracker: React.FC<BlockerTrackerProps> = ({ metrics, onDrill
           Recent Blockers
         </div>
         {metrics.blockers.slice(0, 3).map((blocker) => (
-          <div key={blocker.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+          <div key={blocker.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
               <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 {blocker.title}
@@ -124,7 +124,7 @@ export const BlockerTracker: React.FC<BlockerTrackerProps> = ({ metrics, onDrill
               All Blockers
             </h4>
             {metrics.blockers.map((blocker) => (
-              <div key={blocker.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+              <div key={blocker.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                   <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {blocker.title}

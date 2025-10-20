@@ -75,7 +75,7 @@ export const DeployCadenceChart: React.FC<DeployCadenceChartProps> = ({ metrics,
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', height: '60px', gap: '2px', alignItems: 'flex-end', backgroundColor: 'var(--border-color)', padding: '0.5rem', borderRadius: '4px' }}>
+        <div style={{ display: 'flex', height: '60px', gap: '2px', alignItems: 'flex-end', backgroundColor: 'var(--bg-secondary)', padding: '0.5rem', borderRadius: '4px' }}>
           {metrics.data.map((data, idx) => (
             <div
               key={idx}
@@ -94,7 +94,7 @@ export const DeployCadenceChart: React.FC<DeployCadenceChartProps> = ({ metrics,
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Avg Deploys/Day
           </div>
@@ -102,7 +102,7 @@ export const DeployCadenceChart: React.FC<DeployCadenceChartProps> = ({ metrics,
             {metrics.averageDeploysPerDay.toFixed(1)}
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Success Rate
           </div>
@@ -113,7 +113,7 @@ export const DeployCadenceChart: React.FC<DeployCadenceChartProps> = ({ metrics,
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Total Deployments
           </div>
@@ -121,7 +121,7 @@ export const DeployCadenceChart: React.FC<DeployCadenceChartProps> = ({ metrics,
             {metrics.totalDeployments}
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Rollbacks
           </div>
@@ -143,7 +143,7 @@ export const DeployCadenceChart: React.FC<DeployCadenceChartProps> = ({ metrics,
                 style={{
                   padding: '0.5rem',
                   marginBottom: '0.5rem',
-                  backgroundColor: 'var(--border-color)',
+                  backgroundColor: 'var(--bg-secondary)',
                   borderRadius: '4px',
                   display: 'flex',
                   justifyContent: 'space-between',

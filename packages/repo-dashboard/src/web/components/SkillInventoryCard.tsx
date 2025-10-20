@@ -75,7 +75,7 @@ export const SkillInventoryCard: React.FC<SkillInventoryCardProps> = ({ metrics,
                 {getLevelLabel(skill.level)} ({skill.people} people)
               </span>
             </div>
-            <div style={{ height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ height: '6px', backgroundColor: 'var(--bg-secondary)', borderRadius: '3px', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
@@ -100,7 +100,7 @@ export const SkillInventoryCard: React.FC<SkillInventoryCardProps> = ({ metrics,
                   <span style={{ color: 'var(--text-primary)' }}>{gap.skill}</span>
                   <span style={{ color: 'var(--text-secondary)' }}>{gap.gap}%</span>
                 </div>
-                <div style={{ height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '3px', overflow: 'hidden' }}>
+                <div style={{ height: '6px', backgroundColor: 'var(--bg-secondary)', borderRadius: '3px', overflow: 'hidden' }}>
                   <div
                     style={{
                       height: '100%',

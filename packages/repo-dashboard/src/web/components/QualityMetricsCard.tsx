@@ -86,7 +86,7 @@ export const QualityMetricsCard: React.FC<QualityMetricsCardProps> = ({ metrics,
           <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: getScoreColor(metrics.qualityScore) }}>
             {metrics.qualityScore.toFixed(1)}
           </div>
-          <div style={{ flex: 1, height: '12px', backgroundColor: 'var(--border-color)', borderRadius: '6px', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px', overflow: 'hidden' }}>
             <div
               style={{
                 height: '100%',
@@ -100,7 +100,7 @@ export const QualityMetricsCard: React.FC<QualityMetricsCardProps> = ({ metrics,
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Linting Issues
           </div>
@@ -111,7 +111,7 @@ export const QualityMetricsCard: React.FC<QualityMetricsCardProps> = ({ metrics,
             E: {metrics.lintingIssues.error} W: {metrics.lintingIssues.warning}
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Type Errors
           </div>
@@ -122,7 +122,7 @@ export const QualityMetricsCard: React.FC<QualityMetricsCardProps> = ({ metrics,
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Security Vulnerabilities
           </div>
@@ -130,7 +130,7 @@ export const QualityMetricsCard: React.FC<QualityMetricsCardProps> = ({ metrics,
             {totalVulnerabilities}
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Duplication
           </div>
@@ -148,7 +148,7 @@ export const QualityMetricsCard: React.FC<QualityMetricsCardProps> = ({ metrics,
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', fontSize: '0.75rem' }}>
               {Object.entries(metrics.securityVulnerabilities).map(([severity, count]) => (
-                <div key={severity} style={{ padding: '0.5rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+                <div key={severity} style={{ padding: '0.5rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
                   <div style={{ color: getSeverityColor(severity), fontWeight: 'bold', textTransform: 'capitalize' }}>
                     {severity}
                   </div>

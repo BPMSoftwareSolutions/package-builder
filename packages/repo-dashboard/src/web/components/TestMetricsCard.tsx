@@ -49,7 +49,7 @@ export const TestMetricsCard: React.FC<TestMetricsCardProps> = ({ metrics, onDri
           <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: getPassRateColor(metrics.passRate) }}>
             {(metrics.passRate * 100).toFixed(1)}%
           </div>
-          <div style={{ flex: 1, height: '12px', backgroundColor: 'var(--border-color)', borderRadius: '6px', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px', overflow: 'hidden' }}>
             <div
               style={{
                 height: '100%',
@@ -63,7 +63,7 @@ export const TestMetricsCard: React.FC<TestMetricsCardProps> = ({ metrics, onDri
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Total Tests
           </div>
@@ -71,7 +71,7 @@ export const TestMetricsCard: React.FC<TestMetricsCardProps> = ({ metrics, onDri
             {metrics.totalTests}
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Execution Time
           </div>
@@ -115,7 +115,7 @@ export const TestMetricsCard: React.FC<TestMetricsCardProps> = ({ metrics, onDri
               Test Breakdown by Type
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
-              <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+              <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
                   Unit Tests
                 </div>
@@ -126,7 +126,7 @@ export const TestMetricsCard: React.FC<TestMetricsCardProps> = ({ metrics, onDri
                   {(getTestTypePassRate(metrics.unitTests) * 100).toFixed(0)}%
                 </div>
               </div>
-              <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+              <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
                   Integration Tests
                 </div>
@@ -137,7 +137,7 @@ export const TestMetricsCard: React.FC<TestMetricsCardProps> = ({ metrics, onDri
                   {(getTestTypePassRate(metrics.integrationTests) * 100).toFixed(0)}%
                 </div>
               </div>
-              <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+              <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
                   E2E Tests
                 </div>

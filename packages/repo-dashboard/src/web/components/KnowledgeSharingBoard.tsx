@@ -68,7 +68,7 @@ export const KnowledgeSharingBoard: React.FC<KnowledgeSharingBoardProps> = ({ me
           Recent Sessions
         </div>
         {metrics.sessions.slice(0, 3).map((session) => (
-          <div key={session.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+          <div key={session.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
             <div style={{ fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
               {session.title}
             </div>
@@ -89,7 +89,7 @@ export const KnowledgeSharingBoard: React.FC<KnowledgeSharingBoardProps> = ({ me
               All Sessions
             </h4>
             {metrics.sessions.map((session) => (
-              <div key={session.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+              <div key={session.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
                 <div style={{ fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
                   {session.title}
                 </div>

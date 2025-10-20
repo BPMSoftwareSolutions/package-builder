@@ -79,7 +79,7 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
             {metrics.currentWIP} / {metrics.wipLimit}
           </span>
         </div>
-        <div style={{ height: '24px', backgroundColor: 'var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+        <div style={{ height: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', overflow: 'hidden' }}>
           <div
             style={{
               height: '100%',
@@ -100,7 +100,7 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Current WIP
           </div>
@@ -108,7 +108,7 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
             {metrics.currentWIP}
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             WIP Limit
           </div>
@@ -124,7 +124,7 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
             <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-primary)', fontSize: '0.95rem' }}>
               Status Details
             </h4>
-            <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+            <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
               <div style={{ marginBottom: '0.5rem' }}>
                 <span style={{ color: 'var(--text-secondary)' }}>Percentage of Limit:</span>
                 <span style={{ float: 'right', fontWeight: 'bold', color: statusColor }}>

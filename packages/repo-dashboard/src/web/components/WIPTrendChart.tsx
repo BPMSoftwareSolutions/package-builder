@@ -96,7 +96,7 @@ export const WIPTrendChart: React.FC<WIPTrendChartProps> = ({ metrics, onDrillDo
           style={{
             width: '100%',
             height: '200px',
-            backgroundColor: 'var(--border-color)',
+            backgroundColor: 'var(--bg-secondary)',
             borderRadius: '4px',
           }}
         >
@@ -146,7 +146,7 @@ export const WIPTrendChart: React.FC<WIPTrendChartProps> = ({ metrics, onDrillDo
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Average WIP
           </div>
@@ -154,7 +154,7 @@ export const WIPTrendChart: React.FC<WIPTrendChartProps> = ({ metrics, onDrillDo
             {metrics.averageWIP.toFixed(1)}
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Max WIP
           </div>
@@ -162,7 +162,7 @@ export const WIPTrendChart: React.FC<WIPTrendChartProps> = ({ metrics, onDrillDo
             {metrics.maxWIP}
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Min WIP
           </div>

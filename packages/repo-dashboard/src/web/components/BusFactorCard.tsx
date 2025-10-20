@@ -81,7 +81,7 @@ export const BusFactorCard: React.FC<BusFactorCardProps> = ({ metrics, onDrillDo
           Risk Level: {metrics.riskLevel.toUpperCase()}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div style={{ flex: 1, height: '12px', backgroundColor: 'var(--border-color)', borderRadius: '6px', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px', overflow: 'hidden' }}>
             <div
               style={{
                 height: '100%',
@@ -107,7 +107,7 @@ export const BusFactorCard: React.FC<BusFactorCardProps> = ({ metrics, onDrillDo
               <span style={{ color: 'var(--text-primary)' }}>{person.name}</span>
               <span style={{ color: 'var(--text-secondary)' }}>{person.riskPercentage}%</span>
             </div>
-            <div style={{ height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ height: '6px', backgroundColor: 'var(--bg-secondary)', borderRadius: '3px', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',

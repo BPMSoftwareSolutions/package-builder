@@ -133,7 +133,7 @@ export const ValueStreamCard: React.FC<ValueStreamCardProps> = ({ metrics, onDri
             </h4>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.875rem' }}>
               {metrics.stages.map((stage, idx) => (
-                <div key={idx} style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+                <div key={idx} style={{ padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
                   <div style={{ fontWeight: 'bold', marginBottom: '0.25rem', color: 'var(--text-primary)' }}>
                     {stage.name}
                   </div>

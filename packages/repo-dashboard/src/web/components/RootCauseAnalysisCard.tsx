@@ -62,7 +62,7 @@ export const RootCauseAnalysisCard: React.FC<RootCauseAnalysisCardProps> = ({ me
           Top Root Causes
         </div>
         {metrics.rootCauses.slice(0, 3).map((cause, idx) => (
-          <div key={idx} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
+          <div key={idx} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
               <span style={{ fontWeight: 'bold', color: 'var(--text-primary)', fontSize: '0.875rem' }}>
                 {cause.cause}
@@ -85,7 +85,7 @@ export const RootCauseAnalysisCard: React.FC<RootCauseAnalysisCardProps> = ({ me
               All Root Causes
             </h4>
             {metrics.rootCauses.map((cause, idx) => (
-              <div key={idx} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+              <div key={idx} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                   <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {cause.cause}

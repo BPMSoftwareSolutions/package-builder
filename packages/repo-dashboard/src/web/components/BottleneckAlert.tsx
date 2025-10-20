@@ -91,7 +91,7 @@ export const BottleneckAlert: React.FC<BottleneckAlertProps> = ({ alerts, onAckn
             key={alert.id}
             style={{
               padding: '1rem',
-              backgroundColor: 'var(--border-color)',
+              backgroundColor: 'var(--bg-secondary)',
               borderRadius: '6px',
               borderLeft: `4px solid ${getSeverityColor(alert.severity)}`,
               cursor: 'pointer',

@@ -85,7 +85,7 @@ export const ConstraintRadar: React.FC<ConstraintRadarProps> = ({ metrics, onDri
           style={{
             width: '200px',
             height: '200px',
-            backgroundColor: 'var(--border-color)',
+            backgroundColor: 'var(--bg-secondary)',
             borderRadius: '4px',
           }}
         >
@@ -172,7 +172,7 @@ export const ConstraintRadar: React.FC<ConstraintRadarProps> = ({ metrics, onDri
             key={idx}
             style={{
               padding: '0.75rem',
-              backgroundColor: 'var(--border-color)',
+              backgroundColor: 'var(--bg-secondary)',
               borderRadius: '4px',
               borderLeft: `4px solid ${getSeverityColor(constraint.severity)}`,
             }}
@@ -202,7 +202,7 @@ export const ConstraintRadar: React.FC<ConstraintRadarProps> = ({ metrics, onDri
                 style={{
                   padding: '0.5rem',
                   marginBottom: '0.5rem',
-                  backgroundColor: 'var(--border-color)',
+                  backgroundColor: 'var(--bg-secondary)',
                   borderRadius: '4px',
                   borderLeft: `3px solid ${getSeverityColor(constraint.severity)}`,
                   fontSize: '0.875rem',

@@ -79,7 +79,7 @@ export const HandoffTimeline: React.FC<HandoffTimelineProps> = ({ metrics, onDri
             Efficiency
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--border-color)', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
@@ -100,7 +100,7 @@ export const HandoffTimeline: React.FC<HandoffTimelineProps> = ({ metrics, onDri
           Recent Handoffs
         </div>
         {metrics.handoffs.slice(0, 3).map((handoff) => (
-          <div key={handoff.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+          <div key={handoff.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
               <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 {handoff.fromTeam} → {handoff.toTeam}
@@ -123,7 +123,7 @@ export const HandoffTimeline: React.FC<HandoffTimelineProps> = ({ metrics, onDri
               All Handoffs
             </h4>
             {metrics.handoffs.map((handoff) => (
-              <div key={handoff.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px', fontSize: '0.875rem' }}>
+              <div key={handoff.id} style={{ marginBottom: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', fontSize: '0.875rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                   <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {handoff.fromTeam} → {handoff.toTeam}

@@ -75,7 +75,7 @@ export const CodeOwnershipChart: React.FC<CodeOwnershipChartProps> = ({ metrics,
               <span style={{ color: 'var(--text-primary)' }}>{item.owner}</span>
               <span style={{ color: 'var(--text-secondary)' }}>{item.percentage.toFixed(1)}% ({item.filesOwned} files)</span>
             </div>
-            <div style={{ height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ height: '6px', backgroundColor: 'var(--bg-secondary)', borderRadius: '3px', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
@@ -93,7 +93,7 @@ export const CodeOwnershipChart: React.FC<CodeOwnershipChartProps> = ({ metrics,
           Concentration Level
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--border-color)', borderRadius: '4px', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', overflow: 'hidden' }}>
             <div
               style={{
                 height: '100%',
