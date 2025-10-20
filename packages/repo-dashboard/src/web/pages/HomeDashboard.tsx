@@ -224,7 +224,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           </div>
 
           {/* Containers Card */}
-          <div className="card">
+          <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('conductor-logs')}>
             <div className="card-header">🏗️ Containers</div>
             <div className="card-body" style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
