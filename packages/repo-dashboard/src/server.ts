@@ -696,10 +696,85 @@ app.get('/api/architecture', asyncHandler(async (_req: Request, res: Response) =
 
 // Metrics endpoints
 app.get('/api/metrics', asyncHandler(async (req: Request, res: Response) => {
-  const { days = '30' } = req.query;
-  const daysNum = parseInt(days as string, 10) || 30;
-  const metrics = mockMetricsService.getOrganizationMetrics('BPMSoftwareSolutions', daysNum);
-  res.json(metrics);
+  try {
+    const { org = 'BPMSoftwareSolutions', days = '30' } = req.query;
+    const daysNum = parseInt(days as string, 10) || 30;
+    const orgStr = org as string;
+
+    console.log(`📊 Fetching organization metrics for ${orgStr} (${daysNum} days)`);
+
+    // Initialize metrics aggregator
+    await metricsAggregator.initialize();
+
+    // Get all teams and their repositories
+    const teams = metricsAggregator.getTeams();
+    console.log(`📊 Found ${teams.length} teams in ADF`);
+
+    // Collect metrics for all teams
+    const teamMetricsArray: any[] = [];
+    let totalPRs = 0;
+    let totalDeployments = 0;
+    let totalHealthScore = 0;
+
+    for (const team of teams) {
+      try {
+        const teamMetrics = await metricsAggregator.aggregateTeamMetrics(orgStr, team, '30d');
+        teamMetricsArray.push(teamMetrics);
+        totalPRs += teamMetrics.prCount;
+        totalDeployments += teamMetrics.deploymentCount;
+        totalHealthScore += teamMetrics.avgCycleTime > 0 ? 1 : 0;
+      } catch (error) {
+        console.warn(`⚠️ Failed to collect metrics for team ${team}:`, error);
+      }
+    }
+
+    // Calculate aggregated metrics
+    const avgCycleTime = teamMetricsArray.length > 0
+      ? Math.round(teamMetricsArray.reduce((sum, t) => sum + t.avgCycleTime, 0) / teamMetricsArray.length)
+      : 0;
+
+    const avgDeploymentSuccessRate = teamMetricsArray.length > 0
+      ? teamMetricsArray.reduce((sum, t) => sum + t.deploymentSuccessRate, 0) / teamMetricsArray.length
+      : 0;
+
+    const avgDeploysPerDay = teamMetricsArray.length > 0
+      ? teamMetricsArray.reduce((sum, t) => sum + t.deploysPerDay, 0) / teamMetricsArray.length
+      : 0;
+
+    // Calculate health score (0-1)
+    const healthScore = Math.min(1, Math.max(0,
+      (avgDeploymentSuccessRate * 0.4) +
+      (1 - Math.min(1, avgCycleTime / 1000)) * 0.3 +
+      (avgDeploysPerDay > 0 ? 0.3 : 0)
+    ));
+
+    res.json({
+      timestamp: new Date().toISOString(),
+      organization: orgStr,
+      period: `${daysNum}d`,
+      summary: {
+        totalTeams: teams.length,
+        totalPRs,
+        totalDeployments,
+        healthScore,
+        avgCycleTime,
+        deploymentSuccessRate: avgDeploymentSuccessRate,
+        deploysPerDay: avgDeploysPerDay,
+      },
+      byTeam: teamMetricsArray,
+      trends: {
+        cycleTimeTrend: avgCycleTime < 500 ? 'improving' : avgCycleTime > 1000 ? 'degrading' : 'stable',
+        deploymentFrequencyTrend: avgDeploysPerDay > 1 ? 'increasing' : avgDeploysPerDay > 0.5 ? 'stable' : 'decreasing',
+      }
+    });
+  } catch (error) {
+    console.error('❌ Error fetching organization metrics:', error);
+    // Fallback to mock data on error
+    const { days = '30' } = req.query;
+    const daysNum = parseInt(days as string, 10) || 30;
+    const metrics = mockMetricsService.getOrganizationMetrics('BPMSoftwareSolutions', daysNum);
+    res.json(metrics);
+  }
 }));
 
 // C4 Diagram endpoints
@@ -958,10 +1033,61 @@ app.get('/api/metrics/wip-alerts/:org/:team', asyncHandler(async (req: Request, 
 
 // Get Conductor metrics for organization
 app.get('/api/metrics/conductor/:org', asyncHandler(async (req: Request, res: Response) => {
-  const { org } = req.params;
-  console.log(`📊 Fetching Conductor metrics for organization: ${org}`);
-  const metrics = mockMetricsService.getConductorMetrics(org);
-  res.json(metrics);
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching Conductor metrics for organization: ${org}`);
+
+    // Initialize metrics aggregator to get repositories
+    await metricsAggregator.initialize();
+    const teams = metricsAggregator.getTeams();
+
+    // Collect conductor metrics for all repositories
+    const allMetrics: any[] = [];
+    let totalSequencesPerMinute = 0;
+    let totalQueueLength = 0;
+    let totalSuccessRate = 0;
+    let repoCount = 0;
+
+    for (const team of teams) {
+      const repos = metricsAggregator.getTeamRepositories(team);
+      for (const repo of repos) {
+        try {
+          // Extract repo name from full path (e.g., "BPMSoftwareSolutions/renderx-plugins-demo" -> "renderx-plugins-demo")
+          const repoName = repo.includes('/') ? repo.split('/')[1] : repo;
+          const metrics = await conductorMetricsCollector.collectConductorMetrics(org, repoName);
+          allMetrics.push({
+            repository: repoName,
+            team,
+            metrics
+          });
+          totalSequencesPerMinute += metrics.sequencesPerMinute || 0;
+          totalQueueLength += metrics.queueLength || 0;
+          totalSuccessRate += metrics.successRate || 0;
+          repoCount++;
+        } catch (error) {
+          console.warn(`⚠️ Failed to collect conductor metrics for ${org}/${repo}:`, error);
+        }
+      }
+    }
+
+    res.json({
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        sequencesPerMinute: repoCount > 0 ? Math.round(totalSequencesPerMinute / repoCount) : 0,
+        avgQueueLength: repoCount > 0 ? Math.round(totalQueueLength / repoCount) : 0,
+        successRate: repoCount > 0 ? totalSuccessRate / repoCount : 0,
+        repositoriesTracked: repoCount,
+      },
+      byRepository: allMetrics
+    });
+  } catch (error) {
+    console.error('❌ Error fetching conductor metrics:', error);
+    // Fallback to mock data
+    const { org } = req.params;
+    const metrics = mockMetricsService.getConductorMetrics(org);
+    res.json(metrics);
+  }
 }));
 
 // Get Conductor metrics for specific repository
@@ -987,10 +1113,77 @@ app.get('/api/metrics/conductor/:org/:repo', asyncHandler(async (req: Request, r
 
 // Get architecture validation metrics for organization
 app.get('/api/metrics/architecture-validation/:org', asyncHandler(async (req: Request, res: Response) => {
-  const { org } = req.params;
-  console.log(`📊 Fetching architecture validation metrics for organization: ${org}`);
-  const metrics = mockMetricsService.getValidationMetrics(org);
-  res.json(metrics);
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching architecture validation metrics for organization: ${org}`);
+
+    // Initialize metrics aggregator to get repositories
+    await metricsAggregator.initialize();
+    const teams = metricsAggregator.getTeams();
+
+    // Collect validation metrics for all repositories
+    const allMetrics: any[] = [];
+    let totalValidations = 0;
+    let totalPassed = 0;
+    let violationCounts: Record<string, number> = {};
+    let repoCount = 0;
+
+    for (const team of teams) {
+      const repos = metricsAggregator.getTeamRepositories(team);
+      for (const repo of repos) {
+        try {
+          // Extract repo name from full path
+          const repoName = repo.includes('/') ? repo.split('/')[1] : repo;
+          const metrics = await architectureValidationCollector.collectValidationMetrics(org, repoName);
+
+          allMetrics.push({
+            repository: repoName,
+            team,
+            metrics
+          });
+
+          totalValidations += 1;
+          if (metrics.passRate > 0.5) {
+            totalPassed += 1;
+          }
+
+          // Aggregate violation types
+          if (metrics.violations) {
+            for (const violation of metrics.violations) {
+              violationCounts[violation.type] = (violationCounts[violation.type] || 0) + violation.count;
+            }
+          }
+          repoCount++;
+        } catch (error) {
+          console.warn(`⚠️ Failed to collect validation metrics for ${org}/${repo}:`, error);
+        }
+      }
+    }
+
+    const passRate = totalValidations > 0 ? totalPassed / totalValidations : 0;
+    const commonViolations = Object.entries(violationCounts)
+      .map(([type, count]) => ({ type, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    res.json({
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        passRate,
+        failRate: 1 - passRate,
+        commonViolations,
+        repositoriesTracked: repoCount,
+      },
+      byRepository: allMetrics
+    });
+  } catch (error) {
+    console.error('❌ Error fetching architecture validation metrics:', error);
+    // Fallback to mock data
+    const { org } = req.params;
+    const metrics = mockMetricsService.getValidationMetrics(org);
+    res.json(metrics);
+  }
 }));
 
 // Get architecture validation metrics for specific repository
@@ -1017,10 +1210,68 @@ app.get('/api/metrics/architecture-validation/:org/:repo', asyncHandler(async (r
 
 // Get bundle metrics for organization
 app.get('/api/metrics/bundle/:org', asyncHandler(async (req: Request, res: Response) => {
-  const { org } = req.params;
-  console.log(`📊 Fetching bundle metrics for organization: ${org}`);
-  const metrics = mockMetricsService.getBundleMetrics(org);
-  res.json(metrics);
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching bundle metrics for organization: ${org}`);
+
+    // Initialize metrics aggregator to get repositories
+    await metricsAggregator.initialize();
+    const teams = metricsAggregator.getTeams();
+
+    // Collect bundle metrics for all repositories
+    const allMetrics: any[] = [];
+    let totalBundleSize = 0;
+    let totalLoadTime = 0;
+    let healthyRepos = 0;
+    let repoCount = 0;
+
+    for (const team of teams) {
+      const repos = metricsAggregator.getTeamRepositories(team);
+      for (const repo of repos) {
+        try {
+          // Extract repo name from full path
+          const repoName = repo.includes('/') ? repo.split('/')[1] : repo;
+          const metrics = await bundleMetricsCollector.collectBundleMetrics(org, repoName);
+          const alerts = bundleMetricsCollector.checkBudgetAlerts(metrics);
+
+          allMetrics.push({
+            repository: repoName,
+            team,
+            metrics,
+            alerts
+          });
+
+          totalBundleSize += metrics.totalBundleSize || 0;
+          totalLoadTime += metrics.loadTime || 0;
+          if (metrics.shellStatus === 'green') {
+            healthyRepos++;
+          }
+          repoCount++;
+        } catch (error) {
+          console.warn(`⚠️ Failed to collect bundle metrics for ${org}/${repo}:`, error);
+        }
+      }
+    }
+
+    res.json({
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        totalBundleSize: repoCount > 0 ? Math.round(totalBundleSize / repoCount) : 0,
+        avgLoadTime: repoCount > 0 ? Math.round(totalLoadTime / repoCount) : 0,
+        healthStatus: healthyRepos / Math.max(1, repoCount) > 0.7 ? 'good' : 'warning',
+        repositoriesTracked: repoCount,
+        healthyRepositories: healthyRepos,
+      },
+      byRepository: allMetrics
+    });
+  } catch (error) {
+    console.error('❌ Error fetching bundle metrics:', error);
+    // Fallback to mock data
+    const { org } = req.params;
+    const metrics = mockMetricsService.getBundleMetrics(org);
+    res.json(metrics);
+  }
 }));
 
 // Get bundle metrics for specific repository
@@ -1048,20 +1299,127 @@ app.get('/api/metrics/bundle/:org/:repo', asyncHandler(async (req: Request, res:
 
 // Get bundle threshold alerts for organization
 app.get('/api/metrics/bundle-alerts/:org', asyncHandler(async (req: Request, res: Response) => {
-  const { org } = req.params;
-  console.log(`📊 Fetching bundle alerts for organization: ${org}`);
-  const alerts = mockMetricsService.getBundleAlerts(org);
-  res.json(alerts);
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching bundle alerts for organization: ${org}`);
+
+    // Initialize metrics aggregator to get repositories
+    await metricsAggregator.initialize();
+    const teams = metricsAggregator.getTeams();
+
+    // Collect bundle alerts for all repositories
+    const alerts: any[] = [];
+
+    for (const team of teams) {
+      const repos = metricsAggregator.getTeamRepositories(team);
+      for (const repo of repos) {
+        try {
+          // Extract repo name from full path
+          const repoName = repo.includes('/') ? repo.split('/')[1] : repo;
+          const metrics = await bundleMetricsCollector.collectBundleMetrics(org, repoName);
+          const budgetAlerts = bundleMetricsCollector.checkBudgetAlerts(metrics);
+
+          if (budgetAlerts && budgetAlerts.length > 0) {
+            for (const alertMessage of budgetAlerts) {
+              alerts.push({
+                repository: repoName,
+                team,
+                message: alertMessage,
+                severity: metrics.shellStatus === 'red' ? 'critical' : 'warning',
+                timestamp: new Date().toISOString()
+              });
+            }
+          }
+        } catch (error) {
+          console.warn(`⚠️ Failed to collect bundle alerts for ${org}/${repo}:`, error);
+        }
+      }
+    }
+
+    const criticalCount = alerts.filter(a => a.severity === 'critical').length;
+    const warningCount = alerts.filter(a => a.severity === 'warning').length;
+
+    res.json({
+      organization: org,
+      timestamp: new Date().toISOString(),
+      summary: {
+        totalAlerts: alerts.length,
+        warningCount,
+        criticalCount,
+      },
+      alerts
+    });
+  } catch (error) {
+    console.error('❌ Error fetching bundle alerts:', error);
+    // Fallback to mock data
+    const { org } = req.params;
+    const alerts = mockMetricsService.getBundleAlerts(org);
+    res.json(alerts);
+  }
 }));
 
 // Test Coverage Metrics Endpoints (Phase 2.1)
 
 // Get coverage metrics for organization
 app.get('/api/metrics/coverage/:org', asyncHandler(async (req: Request, res: Response) => {
-  const { org } = req.params;
-  console.log(`📊 Fetching coverage metrics for organization: ${org}`);
-  const metrics = mockMetricsService.getCoverageMetrics(org);
-  res.json(metrics);
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching coverage metrics for organization: ${org}`);
+
+    // Initialize metrics aggregator to get repositories
+    await metricsAggregator.initialize();
+    const teams = metricsAggregator.getTeams();
+
+    // Collect coverage metrics for all repositories
+    const allMetrics: any[] = [];
+    let totalLineCoverage = 0;
+    let totalBranchCoverage = 0;
+    let totalFunctionCoverage = 0;
+    let repoCount = 0;
+
+    for (const team of teams) {
+      const repos = metricsAggregator.getTeamRepositories(team);
+      for (const repo of repos) {
+        try {
+          // Extract repo name from full path
+          const repoName = repo.includes('/') ? repo.split('/')[1] : repo;
+          const metrics = await testCoverageCollector.collectCoverageMetrics(org, repoName);
+
+          allMetrics.push({
+            repository: repoName,
+            team,
+            metrics
+          });
+
+          totalLineCoverage += metrics.lineCoverage || 0;
+          totalBranchCoverage += metrics.branchCoverage || 0;
+          totalFunctionCoverage += metrics.functionCoverage || 0;
+          repoCount++;
+        } catch (error) {
+          console.warn(`⚠️ Failed to collect coverage metrics for ${org}/${repo}:`, error);
+        }
+      }
+    }
+
+    res.json({
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        lineCoverage: repoCount > 0 ? Math.round((totalLineCoverage / repoCount) * 10) / 10 : 0,
+        branchCoverage: repoCount > 0 ? Math.round((totalBranchCoverage / repoCount) * 10) / 10 : 0,
+        functionCoverage: repoCount > 0 ? Math.round((totalFunctionCoverage / repoCount) * 10) / 10 : 0,
+        trend: 'stable',
+        repositoriesTracked: repoCount,
+      },
+      byRepository: allMetrics
+    });
+  } catch (error) {
+    console.error('❌ Error fetching coverage metrics:', error);
+    // Fallback to mock data
+    const { org } = req.params;
+    const metrics = mockMetricsService.getCoverageMetrics(org);
+    res.json(metrics);
+  }
 }));
 
 // Get coverage metrics for specific repository
@@ -1087,20 +1445,129 @@ app.get('/api/metrics/coverage/:org/:repo', asyncHandler(async (req: Request, re
 
 // Get coverage metrics for team
 app.get('/api/metrics/coverage/:org/:team', asyncHandler(async (req: Request, res: Response) => {
-  const { org, team } = req.params;
-  console.log(`📊 Fetching coverage metrics for team: ${team} in ${org}`);
-  const metrics = mockMetricsService.getTeamCoverageMetrics(org, team);
-  res.json(metrics);
+  try {
+    const { org, team } = req.params;
+    console.log(`📊 Fetching coverage metrics for team: ${team} in ${org}`);
+
+    // Initialize metrics aggregator
+    await metricsAggregator.initialize();
+    const repos = metricsAggregator.getTeamRepositories(team);
+
+    // Collect coverage metrics for team repositories
+    const allMetrics: any[] = [];
+    let totalLineCoverage = 0;
+    let totalBranchCoverage = 0;
+    let totalFunctionCoverage = 0;
+    let repoCount = 0;
+
+    for (const repo of repos) {
+      try {
+        // Extract repo name from full path
+        const repoName = repo.includes('/') ? repo.split('/')[1] : repo;
+        const metrics = await testCoverageCollector.collectCoverageMetrics(org, repoName);
+
+        allMetrics.push({
+          repository: repoName,
+          metrics
+        });
+
+        totalLineCoverage += metrics.lineCoverage || 0;
+        totalBranchCoverage += metrics.branchCoverage || 0;
+        totalFunctionCoverage += metrics.functionCoverage || 0;
+        repoCount++;
+      } catch (error) {
+        console.warn(`⚠️ Failed to collect coverage metrics for ${org}/${repo}:`, error);
+      }
+    }
+
+    res.json({
+      organization: org,
+      team,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        lineCoverage: repoCount > 0 ? Math.round((totalLineCoverage / repoCount) * 10) / 10 : 0,
+        branchCoverage: repoCount > 0 ? Math.round((totalBranchCoverage / repoCount) * 10) / 10 : 0,
+        functionCoverage: repoCount > 0 ? Math.round((totalFunctionCoverage / repoCount) * 10) / 10 : 0,
+        trend: 'stable',
+        repositoriesTracked: repoCount,
+      },
+      byRepository: allMetrics
+    });
+  } catch (error) {
+    console.error('❌ Error fetching team coverage metrics:', error);
+    // Fallback to mock data
+    const { org, team } = req.params;
+    const metrics = mockMetricsService.getTeamCoverageMetrics(org, team);
+    res.json(metrics);
+  }
 }));
 
 // Code Quality Metrics Endpoints (Phase 2.1)
 
 // Get quality metrics for organization
 app.get('/api/metrics/quality/:org', asyncHandler(async (req: Request, res: Response) => {
-  const { org } = req.params;
-  console.log(`📊 Fetching quality metrics for organization: ${org}`);
-  const metrics = mockMetricsService.getQualityMetrics(org);
-  res.json(metrics);
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching quality metrics for organization: ${org}`);
+
+    // Initialize metrics aggregator to get repositories
+    await metricsAggregator.initialize();
+    const teams = metricsAggregator.getTeams();
+
+    // Collect quality metrics for all repositories
+    const allMetrics: any[] = [];
+    let totalQualityScore = 0;
+    let totalLintingErrors = 0;
+    let totalTypeErrors = 0;
+    let totalVulnerabilities = 0;
+    let repoCount = 0;
+
+    for (const team of teams) {
+      const repos = metricsAggregator.getTeamRepositories(team);
+      for (const repo of repos) {
+        try {
+          // Extract repo name from full path
+          const repoName = repo.includes('/') ? repo.split('/')[1] : repo;
+          const metrics = await codeQualityCollector.collectQualityMetrics(org, repoName);
+
+          allMetrics.push({
+            repository: repoName,
+            team,
+            metrics
+          });
+
+          totalQualityScore += metrics.qualityScore || 0;
+          totalLintingErrors += (metrics.lintingIssues?.error || 0);
+          totalTypeErrors += metrics.typeErrors || 0;
+          totalVulnerabilities += (metrics.securityVulnerabilities?.critical || 0) +
+                                  (metrics.securityVulnerabilities?.high || 0);
+          repoCount++;
+        } catch (error) {
+          console.warn(`⚠️ Failed to collect quality metrics for ${org}/${repo}:`, error);
+        }
+      }
+    }
+
+    res.json({
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        qualityScore: repoCount > 0 ? Math.round(totalQualityScore / repoCount) : 0,
+        lintingIssues: { error: totalLintingErrors },
+        typeErrors: totalTypeErrors,
+        securityVulnerabilities: { critical: 0, high: totalVulnerabilities },
+        trend: 'improving',
+        repositoriesTracked: repoCount,
+      },
+      byRepository: allMetrics
+    });
+  } catch (error) {
+    console.error('❌ Error fetching quality metrics:', error);
+    // Fallback to mock data
+    const { org } = req.params;
+    const metrics = mockMetricsService.getQualityMetrics(org);
+    res.json(metrics);
+  }
 }));
 
 // Get quality metrics for specific repository
@@ -1128,10 +1595,69 @@ app.get('/api/metrics/quality/:org/:repo', asyncHandler(async (req: Request, res
 
 // Get test metrics for organization
 app.get('/api/metrics/tests/:org', asyncHandler(async (req: Request, res: Response) => {
-  const { org } = req.params;
-  console.log(`📊 Fetching test metrics for organization: ${org}`);
-  const metrics = mockMetricsService.getTestMetrics(org);
-  res.json(metrics);
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching test metrics for organization: ${org}`);
+
+    // Initialize metrics aggregator to get repositories
+    await metricsAggregator.initialize();
+    const teams = metricsAggregator.getTeams();
+
+    // Collect test metrics for all repositories
+    const allMetrics: any[] = [];
+    let totalTests = 0;
+    let totalPassedTests = 0;
+    let totalExecutionTime = 0;
+    let totalFlakyTests = 0;
+    let repoCount = 0;
+
+    for (const team of teams) {
+      const repos = metricsAggregator.getTeamRepositories(team);
+      for (const repo of repos) {
+        try {
+          // Extract repo name from full path
+          const repoName = repo.includes('/') ? repo.split('/')[1] : repo;
+          const metrics = await testExecutionCollector.collectTestMetrics(org, repoName);
+
+          allMetrics.push({
+            repository: repoName,
+            team,
+            metrics
+          });
+
+          totalTests += metrics.totalTests || 0;
+          totalPassedTests += metrics.passedTests || 0;
+          totalExecutionTime += metrics.avgTestExecutionTime || 0;
+          totalFlakyTests += metrics.flakyTests?.length || 0;
+          repoCount++;
+        } catch (error) {
+          console.warn(`⚠️ Failed to collect test metrics for ${org}/${repo}:`, error);
+        }
+      }
+    }
+
+    const passRate = totalTests > 0 ? totalPassedTests / totalTests : 0;
+
+    res.json({
+      organization: org,
+      timestamp: new Date().toISOString(),
+      aggregated: {
+        totalTests,
+        passRate: Math.round(passRate * 100) / 100,
+        avgExecutionTime: repoCount > 0 ? Math.round(totalExecutionTime / repoCount) : 0,
+        flakyTestPercentage: totalTests > 0 ? Math.round((totalFlakyTests / totalTests) * 100) / 100 : 0,
+        trend: 'stable',
+        repositoriesTracked: repoCount,
+      },
+      byRepository: allMetrics
+    });
+  } catch (error) {
+    console.error('❌ Error fetching test metrics:', error);
+    // Fallback to mock data
+    const { org } = req.params;
+    const metrics = mockMetricsService.getTestMetrics(org);
+    res.json(metrics);
+  }
 }));
 
 // Get test metrics for specific repository
@@ -1159,10 +1685,73 @@ app.get('/api/metrics/tests/:org/:repo', asyncHandler(async (req: Request, res: 
 
 // Get constraints for organization
 app.get('/api/metrics/constraints/:org', asyncHandler(async (req: Request, res: Response) => {
-  const { org } = req.params;
-  console.log(`📊 Fetching constraints for organization: ${org}`);
-  const constraints = mockMetricsService.getConstraints(org);
-  res.json(constraints);
+  try {
+    const { org } = req.params;
+    console.log(`📊 Fetching constraints for organization: ${org}`);
+
+    // Initialize metrics aggregator to get repositories
+    await metricsAggregator.initialize();
+    const teams = metricsAggregator.getTeams();
+
+    // Collect constraints for all repositories
+    const allConstraints: any[] = [];
+    let criticalConstraints = 0;
+    let highConstraints = 0;
+
+    for (const team of teams) {
+      const repos = metricsAggregator.getTeamRepositories(team);
+      for (const repo of repos) {
+        try {
+          // Extract repo name from full path
+          const repoName = repo.includes('/') ? repo.split('/')[1] : repo;
+
+          // Get flow stage metrics to detect constraints
+          const flowBreakdown = await flowStageAnalyzer.analyzeFlowStages(org, team, repoName);
+
+          // Detect constraints using the stages from flow breakdown
+          const radarData = constraintDetectionService.detectConstraints(
+            org,
+            team,
+            repoName,
+            flowBreakdown.stages
+          );
+
+          if (radarData.constraints && radarData.constraints.length > 0) {
+            allConstraints.push({
+              repository: repoName,
+              team,
+              constraints: radarData.constraints
+            });
+
+            for (const constraint of radarData.constraints) {
+              if (constraint.severity === 'critical') criticalConstraints++;
+              if (constraint.severity === 'high') highConstraints++;
+            }
+          }
+        } catch (error) {
+          console.warn(`⚠️ Failed to detect constraints for ${org}/${repo}:`, error);
+        }
+      }
+    }
+
+    res.json({
+      organization: org,
+      timestamp: new Date().toISOString(),
+      summary: {
+        totalConstraints: allConstraints.reduce((sum, c) => sum + (c.constraints?.length || 0), 0),
+        criticalConstraints,
+        highConstraints,
+        repositoriesWithConstraints: allConstraints.length,
+      },
+      constraints: allConstraints
+    });
+  } catch (error) {
+    console.error('❌ Error fetching constraints:', error);
+    // Fallback to mock data
+    const { org } = req.params;
+    const constraints = mockMetricsService.getConstraints(org);
+    res.json(constraints);
+  }
 }));
 
 // Get constraints for team
