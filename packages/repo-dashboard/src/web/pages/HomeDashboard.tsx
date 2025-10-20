@@ -103,9 +103,9 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
   }
 
   const getHealthColor = (health: number) => {
-    if (health >= 80) return '#28a745';
-    if (health >= 60) return '#ffc107';
-    return '#dc3545';
+    if (health >= 80) return 'var(--severity-info)';
+    if (health >= 60) return 'var(--severity-medium)';
+    return 'var(--severity-critical)';
   };
 
   const handleArchitectureSelect = (org: string, repo: string) => {
@@ -138,7 +138,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               onClick={handleSwitchArchitecture}
               style={{
                 padding: '0.5rem 1rem',
-                backgroundColor: '#0366d6',
+                backgroundColor: 'var(--accent-color)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
@@ -152,7 +152,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               onClick={handleBackToOrganization}
               style={{
                 padding: '0.5rem 1rem',
-                backgroundColor: '#6c757d',
+                backgroundColor: 'var(--text-tertiary)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
@@ -167,17 +167,17 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       </div>
 
       {isArchitectureMode && summary?.architecture && (
-        <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '4px', borderLeft: '4px solid #0366d6' }}>
+        <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', borderLeft: '4px solid var(--accent-color)' }}>
           <h3 style={{ margin: '0 0 0.5rem 0' }}>{summary.architecture.name}</h3>
-          <p style={{ margin: '0 0 0.5rem 0', color: '#666' }}>Version: {summary.architecture.version}</p>
+          <p style={{ margin: '0 0 0.5rem 0', color: 'var(--text-secondary)' }}>Version: {summary.architecture.version}</p>
           {summary.architecture.description && (
-            <p style={{ margin: 0, color: '#666' }}>{summary.architecture.description}</p>
+            <p style={{ margin: 0, color: 'var(--text-secondary)' }}>{summary.architecture.description}</p>
           )}
         </div>
       )}
 
       {showArchitectureSelector && (
-        <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+        <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px' }}>
           <h3 style={{ margin: '0 0 1rem 0' }}>Select an Architecture</h3>
           <ArchitectureSelector
             org={selectedArchOrg}
@@ -187,7 +187,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
         </div>
       )}
 
-      <p style={{ marginBottom: '2rem', color: '#666' }}>
+      <p style={{ marginBottom: '2rem', color: 'var(--text-secondary)' }}>
         {isArchitectureMode
           ? 'Architecture-specific summary with filtered repositories and components'
           : 'Comprehensive summary of your organization\'s repositories, architectures, and packages'}
@@ -205,7 +205,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: getHealthColor(summary.aggregatedMetrics.overallHealth) }}>
                 {summary.aggregatedMetrics.overallHealth.toFixed(1)}%
               </div>
-              <div style={{ color: '#666' }}>architecture health</div>
+              <div style={{ color: 'var(--text-secondary)' }}>architecture health</div>
             </div>
           </div>
 
@@ -216,8 +216,8 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
                 {summary.repositories?.length || 0}
               </div>
-              <div style={{ color: '#666', marginBottom: '1rem' }}>in architecture</div>
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
+              <div style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>in architecture</div>
+              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                 {summary.aggregatedMetrics.totalIssues} issues
               </div>
             </div>
@@ -230,8 +230,8 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
                 {summary.containers?.length || 0}
               </div>
-              <div style={{ color: '#666', marginBottom: '1rem' }}>components</div>
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
+              <div style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>components</div>
+              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                 {summary.relationships?.length || 0} relationships
               </div>
             </div>
@@ -244,7 +244,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: getHealthColor(summary.aggregatedMetrics.testCoverage * 100) }}>
                 {(summary.aggregatedMetrics.testCoverage * 100).toFixed(1)}%
               </div>
-              <div style={{ color: '#666' }}>coverage</div>
+              <div style={{ color: 'var(--text-secondary)' }}>coverage</div>
             </div>
           </div>
 
@@ -252,10 +252,10 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           <div className="card">
             <div className="card-header">🔨 Build Status</div>
             <div className="card-body" style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: summary.aggregatedMetrics.buildStatus === 'success' ? '#28a745' : '#dc3545' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: summary.aggregatedMetrics.buildStatus === 'success' ? 'var(--severity-info)' : 'var(--severity-critical)' }}>
                 {summary.aggregatedMetrics.buildStatus.toUpperCase()}
               </div>
-              <div style={{ color: '#666' }}>latest build</div>
+              <div style={{ color: 'var(--text-secondary)' }}>latest build</div>
             </div>
           </div>
 
@@ -263,10 +263,10 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           <div className="card">
             <div className="card-header">⏳ Stale PRs</div>
             <div className="card-body" style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: summary.aggregatedMetrics.stalePRs > 0 ? '#ffc107' : '#28a745' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: summary.aggregatedMetrics.stalePRs > 0 ? 'var(--severity-medium)' : 'var(--severity-info)' }}>
                 {summary.aggregatedMetrics.stalePRs}
               </div>
-              <div style={{ color: '#666' }}>stale pull requests</div>
+              <div style={{ color: 'var(--text-secondary)' }}>stale pull requests</div>
             </div>
           </div>
         </div>
@@ -280,9 +280,9 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
                 {summary?.repos?.total || 0}
               </div>
-              <div style={{ color: '#666', marginBottom: '1rem' }}>repositories</div>
+              <div style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>repositories</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                <span style={{ color: '#666' }}>Health:</span>
+                <span style={{ color: 'var(--text-secondary)' }}>Health:</span>
                 <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: getHealthColor(summary?.repos?.health || 0) }}>
                   {summary?.repos?.health?.toFixed(1) || 0}%
                 </span>
@@ -297,9 +297,9 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
                 {summary?.architectures?.total || 0}
               </div>
-              <div style={{ color: '#666', marginBottom: '1rem' }}>architectures</div>
+              <div style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>architectures</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                <span style={{ color: '#666' }}>Health:</span>
+                <span style={{ color: 'var(--text-secondary)' }}>Health:</span>
                 <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: getHealthColor(summary?.architectures?.health || 0) }}>
                   {summary?.architectures?.health?.toFixed(1) || 0}%
                 </span>
@@ -314,9 +314,9 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
                 {summary?.packages?.total || 0}
               </div>
-              <div style={{ color: '#666', marginBottom: '1rem' }}>packages</div>
+              <div style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>packages</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                <span style={{ color: '#666' }}>Health:</span>
+                <span style={{ color: 'var(--text-secondary)' }}>Health:</span>
                 <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: getHealthColor(summary?.packages?.health || 0) }}>
                   {summary?.packages?.health?.toFixed(1) || 0}%
                 </span>
@@ -328,11 +328,11 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           <div className="card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('issues', { repo: 'BPMSoftwareSolutions/package-builder' })}>
             <div className="card-header">🐛 Issues</div>
             <div className="card-body" style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#0366d6' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: 'var(--accent-color)' }}>
                 {summary?.issues?.open || 0}
               </div>
-              <div style={{ color: '#666', marginBottom: '1rem' }}>open issues</div>
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
+              <div style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>open issues</div>
+              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                 {summary?.issues?.stalePRs || 0} stale PRs
               </div>
             </div>
@@ -345,7 +345,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               <div style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
                 DORA Metrics
               </div>
-              <div style={{ color: '#666', fontSize: '0.9rem' }}>
+              <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
                 View deployment frequency, lead time, MTTR, and change failure rate
               </div>
             </div>
@@ -358,7 +358,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
               <div style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
                 AI-Powered Analysis
               </div>
-              <div style={{ color: '#666', fontSize: '0.9rem' }}>
+              <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
                 Trends, anomalies, and recommendations
               </div>
             </div>
@@ -373,10 +373,10 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           <div className="card">
             <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
               {summary.recentActivity.map((activity, index) => (
-                <div key={index} style={{ padding: '0.5rem 0', borderBottom: index < summary.recentActivity.length - 1 ? '1px solid #eee' : 'none' }}>
+                <div key={index} style={{ padding: '0.5rem 0', borderBottom: index < summary.recentActivity.length - 1 ? '1px solid var(--border-color)' : 'none' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span>{activity.description}</span>
-                    <span style={{ color: '#999', fontSize: '0.85rem' }}>
+                    <span style={{ color: 'var(--text-tertiary)', fontSize: '0.85rem' }}>
                       {new Date(activity.timestamp).toLocaleDateString()}
                     </span>
                   </div>

@@ -110,7 +110,7 @@ export const FeedbackDashboard: React.FC<FeedbackDashboardProps> = ({ org = 'BPM
                 width: '8px',
                 height: '8px',
                 borderRadius: '50%',
-                backgroundColor: isConnected ? '#4caf50' : '#f44336'
+                backgroundColor: isConnected ? 'var(--severity-info)' : 'var(--severity-critical)'
               }} />
               <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
                 {isConnected ? 'Connected' : 'Disconnected'}

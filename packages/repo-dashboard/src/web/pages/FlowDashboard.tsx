@@ -36,10 +36,10 @@ export default function FlowDashboard({ onNavigate }: FlowDashboardProps) {
 
   const mockPRFlowMetrics = {
     stages: [
-      { stage: 'Review', percentage: 28.6, hours: 6, color: '#fce4ec' },
-      { stage: 'Build', percentage: 4.8, hours: 1, color: '#fff3e0' },
-      { stage: 'Test', percentage: 19.0, hours: 4, color: '#f1f8e9' },
-      { stage: 'Waiting', percentage: 47.6, hours: 10, color: '#e3f2fd' },
+      { stage: 'Review', percentage: 28.6, hours: 6, color: 'var(--stage-review)' },
+      { stage: 'Build', percentage: 4.8, hours: 1, color: 'var(--stage-build)' },
+      { stage: 'Test', percentage: 19.0, hours: 4, color: 'var(--stage-test)' },
+      { stage: 'Waiting', percentage: 47.6, hours: 10, color: 'var(--stage-waiting)' },
     ],
     totalTime: 21,
     trend: 'stable' as const,
