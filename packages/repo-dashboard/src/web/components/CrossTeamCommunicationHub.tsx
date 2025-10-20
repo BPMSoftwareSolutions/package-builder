@@ -57,7 +57,7 @@ export const CrossTeamCommunicationHub: React.FC<CrossTeamCommunicationHubProps>
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             Open Blockers
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: metrics.blockers.length > 0 ? '#f44336' : '#4caf50' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: metrics.blockers.length > 0 ? 'var(--severity-critical)' : 'var(--severity-info)' }}>
             {metrics.blockers.length}
           </div>
         </div>
@@ -73,7 +73,7 @@ export const CrossTeamCommunicationHub: React.FC<CrossTeamCommunicationHubProps>
               <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 {channel.name}
               </span>
-              <span style={{ color: channel.status === 'active' ? '#4caf50' : '#9e9e9e', fontWeight: 'bold' }}>
+              <span style={{ color: channel.status === 'active' ? 'var(--severity-info)' : 'var(--text-tertiary)', fontWeight: 'bold' }}>
                 {channel.status.toUpperCase()}
               </span>
             </div>

@@ -20,15 +20,15 @@ export const BusFactorCard: React.FC<BusFactorCardProps> = ({ metrics, onDrillDo
   const getRiskColor = (level: string) => {
     switch (level) {
       case 'low':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'medium':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'high':
-        return '#f44336';
+        return 'var(--severity-critical)';
       case 'critical':
-        return '#b71c1c';
+        return 'var(--severity-critical)';
       default:
-        return '#9e9e9e';
+        return 'var(--text-tertiary)';
     }
   };
 
@@ -46,11 +46,11 @@ export const BusFactorCard: React.FC<BusFactorCardProps> = ({ metrics, onDrillDo
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--trend-improving)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--trend-degrading)';
       default:
-        return '#ff9800';
+        return 'var(--trend-stable)';
     }
   };
 

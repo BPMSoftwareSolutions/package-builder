@@ -140,7 +140,7 @@ export const BundleSizeGauge: React.FC<BundleSizeGaugeProps> = ({ metrics, onDri
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Over Budget
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: overBudgetCount > 0 ? '#f44336' : '#4caf50' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: overBudgetCount > 0 ? 'var(--severity-critical)' : 'var(--severity-info)' }}>
             {overBudgetCount}
           </div>
         </div>

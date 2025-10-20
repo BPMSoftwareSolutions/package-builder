@@ -23,15 +23,15 @@ export const BottleneckAlert: React.FC<BottleneckAlertProps> = ({ alerts, onAckn
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return '#f44336';
+        return 'var(--severity-critical)';
       case 'high':
-        return '#ff9800';
+        return 'var(--severity-high)';
       case 'medium':
-        return '#ffc107';
+        return 'var(--severity-medium)';
       case 'low':
-        return '#4caf50';
+        return 'var(--severity-low)';
       default:
-        return '#2196f3';
+        return 'var(--severity-info)';
     }
   };
 
@@ -184,7 +184,7 @@ export const BottleneckAlert: React.FC<BottleneckAlertProps> = ({ alerts, onAckn
                       style={{
                         flex: 1,
                         padding: '0.5rem',
-                        backgroundColor: '#4caf50',
+                        backgroundColor: 'var(--severity-info)',
                         color: 'white',
                         border: 'none',
                         borderRadius: '4px',

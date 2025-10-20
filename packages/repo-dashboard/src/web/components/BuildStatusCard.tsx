@@ -45,10 +45,10 @@ export const BuildStatusCard: React.FC<BuildStatusCardProps> = ({ org, repo, onS
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'passing': return '#4caf50';
-      case 'failing': return '#f44336';
-      case 'flaky': return '#ff9800';
-      default: return '#9e9e9e';
+      case 'passing': return 'var(--severity-info)';
+      case 'failing': return 'var(--severity-critical)';
+      case 'flaky': return 'var(--severity-medium)';
+      default: return 'var(--text-tertiary)';
     }
   };
 
@@ -82,8 +82,8 @@ export const BuildStatusCard: React.FC<BuildStatusCardProps> = ({ org, repo, onS
       {error && (
         <div style={{
           padding: '1rem',
-          backgroundColor: '#ffebee',
-          color: '#c62828',
+          backgroundColor: 'rgba(244, 67, 54, 0.1)',
+          color: 'var(--severity-critical)',
           borderRadius: '4px',
           marginBottom: '1rem'
         }}>
@@ -133,7 +133,7 @@ export const BuildStatusCard: React.FC<BuildStatusCardProps> = ({ org, repo, onS
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             Flakiness
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: buildStatus.flakinessPercentage > 10 ? '#ff9800' : '#4caf50' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: buildStatus.flakinessPercentage > 10 ? 'var(--severity-medium)' : 'var(--severity-info)' }}>
             {buildStatus.flakinessPercentage.toFixed(1)}%
           </div>
         </div>

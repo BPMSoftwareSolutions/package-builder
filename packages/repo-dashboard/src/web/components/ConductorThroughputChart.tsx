@@ -124,7 +124,7 @@ export const ConductorThroughputChart: React.FC<ConductorThroughputChartProps> =
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Success Rate
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#4caf50' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'var(--severity-info)' }}>
             {metrics.successRate.toFixed(1)}%
           </div>
         </div>
@@ -150,7 +150,7 @@ export const ConductorThroughputChart: React.FC<ConductorThroughputChartProps> =
             <div style={{ padding: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: '4px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Error Rate</span>
-                <span style={{ fontWeight: 'bold', color: '#f44336', fontSize: '0.875rem' }}>
+                <span style={{ fontWeight: 'bold', color: 'var(--severity-critical)', fontSize: '0.875rem' }}>
                   {metrics.errorRate.toFixed(2)}%
                 </span>
               </div>
@@ -159,7 +159,7 @@ export const ConductorThroughputChart: React.FC<ConductorThroughputChartProps> =
                   style={{
                     height: '100%',
                     width: `${metrics.errorRate}%`,
-                    backgroundColor: '#f44336',
+                    backgroundColor: 'var(--severity-critical)',
                   }}
                 />
               </div>

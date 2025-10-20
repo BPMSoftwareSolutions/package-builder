@@ -162,7 +162,7 @@ export const ADFViewer: React.FC<ADFViewerProps> = ({
                 </h3>
                 <span
                   style={{
-                    backgroundColor: typeColors[container.type] || '#999',
+                    backgroundColor: typeColors[container.type] || 'var(--text-tertiary)',
                     color: 'white',
                     padding: '0.25rem 0.5rem',
                     borderRadius: '3px',

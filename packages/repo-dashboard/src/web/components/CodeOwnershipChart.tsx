@@ -22,9 +22,9 @@ export const CodeOwnershipChart: React.FC<CodeOwnershipChartProps> = ({ metrics,
   const [expanded, setExpanded] = useState(false);
 
   const getConcentrationColor = (concentration: number) => {
-    if (concentration < 40) return '#4caf50'; // green - good distribution
-    if (concentration < 60) return '#ff9800'; // orange - moderate
-    return '#f44336'; // red - high concentration
+    if (concentration < 40) return 'var(--severity-info)'; // green - good distribution
+    if (concentration < 60) return 'var(--severity-medium)'; // orange - moderate
+    return 'var(--severity-critical)'; // red - high concentration
   };
 
   const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f'];

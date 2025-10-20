@@ -482,7 +482,7 @@
 }
 
 .export-button:hover {
-  background-color: #0256c7;
+  background-color: var(--accent-hover);
 }
 
 .export-menu {

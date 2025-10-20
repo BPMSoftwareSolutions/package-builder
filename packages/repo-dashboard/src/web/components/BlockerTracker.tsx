@@ -78,7 +78,7 @@ export const BlockerTracker: React.FC<BlockerTrackerProps> = ({ metrics, onDrill
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             Open Blockers
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: metrics.openCount > 0 ? '#f44336' : '#4caf50' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: metrics.openCount > 0 ? 'var(--severity-critical)' : 'var(--severity-info)' }}>
             {metrics.openCount}
           </div>
         </div>

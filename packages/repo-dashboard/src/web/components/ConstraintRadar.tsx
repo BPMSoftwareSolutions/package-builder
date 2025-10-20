@@ -126,7 +126,7 @@ export const ConstraintRadar: React.FC<ConstraintRadarProps> = ({ metrics, onDri
           <polyline
             points={radarPoints}
             fill="rgba(33, 150, 243, 0.2)"
-            stroke="#2196f3"
+            stroke="var(--type-service)"
             strokeWidth="1.5"
           />
 

@@ -136,7 +136,7 @@ export const HandoffTimeline: React.FC<HandoffTimelineProps> = ({ metrics, onDri
                   {handoff.startDate} to {handoff.endDate} • {handoff.duration}h
                 </div>
                 {handoff.blockers.length > 0 && (
-                  <div style={{ color: '#f44336', fontSize: '0.75rem' }}>
+                  <div style={{ color: 'var(--severity-critical)', fontSize: '0.75rem' }}>
                     Blockers: {handoff.blockers.join(', ')}
                   </div>
                 )}

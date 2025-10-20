@@ -37,18 +37,18 @@ export const CIAGateStatus: React.FC<CIAGateStatusProps> = ({ metrics, onDrillDo
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--trend-improving)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--trend-degrading)';
       default:
-        return '#ff9800';
+        return 'var(--trend-stable)';
     }
   };
 
   const getPassRateColor = (rate: number) => {
-    if (rate >= 90) return '#4caf50';
-    if (rate >= 70) return '#ff9800';
-    return '#f44336';
+    if (rate >= 90) return 'var(--severity-info)';
+    if (rate >= 70) return 'var(--severity-medium)';
+    return 'var(--severity-critical)';
   };
 
   return (
@@ -103,12 +103,12 @@ export const CIAGateStatus: React.FC<CIAGateStatusProps> = ({ metrics, onDrillDo
               <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 {result.repository}
               </span>
-              <span style={{ color: result.status === 'passing' ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>
+              <span style={{ color: result.status === 'passing' ? 'var(--severity-info)' : 'var(--severity-critical)', fontWeight: 'bold' }}>
                 {result.status.toUpperCase()}
               </span>
             </div>
             {result.violations > 0 && (
-              <div style={{ color: '#f44336', fontSize: '0.75rem' }}>
+              <div style={{ color: 'var(--severity-critical)', fontSize: '0.75rem' }}>
                 {result.violations} violations
               </div>
             )}
@@ -128,7 +128,7 @@ export const CIAGateStatus: React.FC<CIAGateStatusProps> = ({ metrics, onDrillDo
                   <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {result.repository}
                   </span>
-                  <span style={{ color: result.status === 'passing' ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>
+                  <span style={{ color: result.status === 'passing' ? 'var(--severity-info)' : 'var(--severity-critical)', fontWeight: 'bold' }}>
                     {result.status.toUpperCase()}
                   </span>
                 </div>
