@@ -34,26 +34,31 @@ export class ContainerHealthMonitor {
 
   /**
    * Get current health status for a container
+   *
+   * NOTE: Docker API integration is not yet implemented.
+   * This method returns graceful degradation values (zeros) when real data is unavailable.
+   * In production, this would fetch real container stats from Docker daemon.
    */
   async getContainerHealth(containerId: string): Promise<ContainerHealth> {
     // TODO: Implement Docker API integration
     // This would fetch real container stats from Docker daemon
+    // For now, return graceful degradation with zero values
     return {
       timestamp: new Date(),
       containerId,
       containerName: `container-${containerId}`,
       status: 'running',
-      uptime: 3600,
-      cpuUsage: 0.25,
-      memoryUsage: 256 * 1024 * 1024,
-      memoryLimit: 512 * 1024 * 1024,
-      networkIn: 1024 * 1024,
-      networkOut: 512 * 1024,
-      healthStatus: 'healthy',
+      uptime: 0, // Data unavailable - Docker API not integrated
+      cpuUsage: 0, // Data unavailable - Docker API not integrated
+      memoryUsage: 0, // Data unavailable - Docker API not integrated
+      memoryLimit: 0, // Data unavailable - Docker API not integrated
+      networkIn: 0, // Data unavailable - Docker API not integrated
+      networkOut: 0, // Data unavailable - Docker API not integrated
+      healthStatus: 'starting', // Unknown status until Docker API available
       lastHealthCheck: new Date(),
-      recentLogCount: 100,
-      errorCount: 2,
-      warningCount: 5,
+      recentLogCount: 0, // Data unavailable - Docker API not integrated
+      errorCount: 0, // Data unavailable - Docker API not integrated
+      warningCount: 0, // Data unavailable - Docker API not integrated
     };
   }
 

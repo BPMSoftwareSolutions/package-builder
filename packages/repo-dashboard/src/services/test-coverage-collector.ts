@@ -124,13 +124,29 @@ export class TestCoverageCollector {
   }
 
   /**
-   * Calculate coverage trend direction
+   * Calculate coverage trend direction based on history
    */
   private calculateCoverageTrend(): 'improving' | 'stable' | 'degrading' {
-    const rand = Math.random();
-    if (rand < 0.4) return 'improving';
-    if (rand < 0.7) return 'stable';
-    return 'degrading';
+    // Get all metrics from history
+    const allMetrics = Array.from(this.metricsHistory.values()).flat();
+
+    // If we have less than 2 data points, we can't determine a trend
+    if (allMetrics.length < 2) {
+      return 'stable';
+    }
+
+    // Sort by timestamp and get the last two data points
+    const sorted = allMetrics.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+    const recent = sorted[sorted.length - 1];
+    const previous = sorted[sorted.length - 2];
+
+    // Calculate the change in line coverage
+    const change = recent.lineCoverage - previous.lineCoverage;
+
+    // Determine trend based on change
+    if (change > 1) return 'improving';
+    if (change < -1) return 'degrading';
+    return 'stable';
   }
 
   /**

@@ -143,23 +143,55 @@ export class ConductorMetricsCollector {
   }
 
   /**
-   * Calculate throughput trend direction
+   * Calculate throughput trend direction based on history
    */
   private calculateThroughputTrend(): 'increasing' | 'stable' | 'decreasing' {
-    const rand = Math.random();
-    if (rand < 0.33) return 'increasing';
-    if (rand < 0.66) return 'stable';
-    return 'decreasing';
+    // Get all metrics from history
+    const allMetrics = Array.from(this.metricsHistory.values()).flat();
+
+    // If we have less than 2 data points, we can't determine a trend
+    if (allMetrics.length < 2) {
+      return 'stable';
+    }
+
+    // Sort by timestamp and get the last two data points
+    const sorted = allMetrics.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+    const recent = sorted[sorted.length - 1];
+    const previous = sorted[sorted.length - 2];
+
+    // Calculate the change in throughput
+    const change = recent.sequencesPerMinute - previous.sequencesPerMinute;
+
+    // Determine trend based on change
+    if (change > 10) return 'increasing';
+    if (change < -10) return 'decreasing';
+    return 'stable';
   }
 
   /**
-   * Calculate success rate trend direction
+   * Calculate success rate trend direction based on history
    */
   private calculateSuccessRateTrend(): 'improving' | 'stable' | 'degrading' {
-    const rand = Math.random();
-    if (rand < 0.33) return 'improving';
-    if (rand < 0.66) return 'stable';
-    return 'degrading';
+    // Get all metrics from history
+    const allMetrics = Array.from(this.metricsHistory.values()).flat();
+
+    // If we have less than 2 data points, we can't determine a trend
+    if (allMetrics.length < 2) {
+      return 'stable';
+    }
+
+    // Sort by timestamp and get the last two data points
+    const sorted = allMetrics.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+    const recent = sorted[sorted.length - 1];
+    const previous = sorted[sorted.length - 2];
+
+    // Calculate the change in success rate
+    const change = recent.successRate - previous.successRate;
+
+    // Determine trend based on change
+    if (change > 0.05) return 'improving';
+    if (change < -0.05) return 'degrading';
+    return 'stable';
   }
 
   /**

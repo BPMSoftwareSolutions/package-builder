@@ -45,6 +45,9 @@ import { deploymentStatusService } from './services/deployment-status.js';
 import { feedbackAggregationService } from './services/feedback-aggregation.js';
 import { alertingService } from './services/alerting.js';
 import { ConductorLogsCollector } from './services/conductor-logs-collector.js';
+import { componentsService } from './services/components-service.js';
+import { mockMetricsService } from './services/mock-metrics-service.js';
+import { architectureDataService } from './services/architecture-data-service.js';
 // import { ContainerHealthMonitor } from './services/container-health.js';
 // import { ConductorMetricsExtractor } from './services/conductor-metrics-from-logs.js';
 
@@ -687,167 +690,34 @@ app.get('/api/adf/cache/stats', asyncHandler(async (_req: Request, res: Response
 
 // Architecture endpoints
 app.get('/api/architecture', asyncHandler(async (_req: Request, res: Response) => {
-  try {
-    // Return mock architecture data for now
-    const architecture = {
-      version: '1.0.0',
-      name: 'Enterprise CI/CD Dashboard',
-      description: 'Comprehensive dashboard for CI/CD monitoring and metrics',
-      c4Model: {
-        level: 'container',
-        containers: [
-          {
-            id: 'web-ui',
-            name: 'Web UI',
-            type: 'ui',
-            description: 'React-based web dashboard',
-            repositories: ['package-builder'],
-            packages: [{ name: '@bpm/repo-dashboard', version: '0.1.0', status: 'beta' }],
-            metrics: { healthScore: 0.85, testCoverage: 0.75, buildStatus: 'success' },
-          },
-          {
-            id: 'api-server',
-            name: 'API Server',
-            type: 'service',
-            description: 'Express.js API server',
-            repositories: ['package-builder'],
-            packages: [{ name: '@bpm/repo-dashboard', version: '0.1.0', status: 'beta' }],
-            metrics: { healthScore: 0.90, testCoverage: 0.80, buildStatus: 'success' },
-          },
-          {
-            id: 'python-scripts',
-            name: 'Python Scripts',
-            type: 'library',
-            description: 'Python data collection and analysis',
-            repositories: ['package-builder'],
-            packages: [],
-            metrics: { healthScore: 0.88, testCoverage: 0.85, buildStatus: 'success' },
-          },
-        ],
-      },
-      relationships: [
-        { from: 'web-ui', to: 'api-server', type: 'communicates_with', description: 'HTTP requests' },
-        { from: 'api-server', to: 'python-scripts', type: 'depends_on', description: 'Calls Python CLI' },
-      ],
-    };
-    res.json(architecture);
-  } catch (error) {
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch architecture'
-    });
-  }
+  const architecture = await architectureDataService.getDefaultArchitecture();
+  res.json(architecture);
 }));
 
 // Metrics endpoints
 app.get('/api/metrics', asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const { days = '30' } = req.query;
-    // Return mock metrics data
-    const metrics = {
-      timestamp: new Date().toISOString(),
-      organization: 'BPMSoftwareSolutions',
-      summary: {
-        totalRepos: 5,
-        healthScore: 0.85,
-        buildSuccessRate: 0.92,
-        testCoverageAvg: 0.78,
-        openIssuesTotal: 12,
-        stalePRsTotal: 3,
-        deploymentFrequency: 2.5,
-        leadTimeForChanges: 4.2,
-        meanTimeToRecovery: 1.5,
-        changeFailureRate: 0.08,
-      },
-      byRepository: {
-        'package-builder': {
-          healthScore: 0.88,
-          buildStatus: 'success',
-          testCoverage: 0.82,
-          openIssues: 5,
-          stalePRs: 1,
-          lastDeployment: new Date().toISOString(),
-          deploymentFrequency: 3.0,
-          leadTime: 3.5,
-          mttr: 1.2,
-          changeFailureRate: 0.05,
-        },
-      },
-      trends: {
-        healthScoreTrend: Array.from({ length: parseInt(days as string) }, () => 0.85 + Math.random() * 0.1),
-        buildSuccessRateTrend: Array.from({ length: parseInt(days as string) }, () => 0.90 + Math.random() * 0.05),
-        testCoverageTrend: Array.from({ length: parseInt(days as string) }, () => 0.75 + Math.random() * 0.1),
-        deploymentFrequencyTrend: Array.from({ length: parseInt(days as string) }, () => 2.0 + Math.random() * 1.5),
-      },
-    };
-    res.json(metrics);
-  } catch (error) {
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch metrics'
-    });
-  }
+  const { days = '30' } = req.query;
+  const daysNum = parseInt(days as string, 10) || 30;
+  const metrics = mockMetricsService.getOrganizationMetrics('BPMSoftwareSolutions', daysNum);
+  res.json(metrics);
 }));
 
 // C4 Diagram endpoints
 app.get('/api/c4/:level/mermaid', asyncHandler(async (_req: Request, res: Response) => {
-  try {
-    // const { level } = req.params;
-    const diagram = `graph TD
-    A[Web UI] -->|HTTP| B[API Server]
-    B -->|CLI| C[Python Scripts]
-    C -->|Data| D[Database]
-    B -->|Queries| D`;
-    res.json({ diagram });
-  } catch (error) {
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to generate diagram'
-    });
-  }
+  const diagram = await architectureDataService.getC4Diagram();
+  res.json({ diagram });
 }));
 
 // Components endpoints
 app.get('/api/components', asyncHandler(async (_req: Request, res: Response) => {
-  try {
-    const components = [
-      {
-        id: 'web-ui',
-        name: 'Web UI',
-        type: 'ui',
-        description: 'React-based web dashboard',
-      },
-      {
-        id: 'api-server',
-        name: 'API Server',
-        type: 'service',
-        description: 'Express.js API server',
-      },
-    ];
-    res.json(components);
-  } catch (error) {
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch components'
-    });
-  }
+  const components = componentsService.getAllComponents();
+  res.json(components);
 }));
 
 app.get('/api/components/:id', asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const component = {
-      id,
-      name: id.replace('-', ' ').toUpperCase(),
-      type: 'service',
-      description: 'Component description',
-      repositories: ['package-builder'],
-      packages: [{ name: '@bpm/repo-dashboard', version: '0.1.0', status: 'beta' }],
-      dependencies: [],
-      metrics: { healthScore: 0.85, testCoverage: 0.80, buildStatus: 'success' },
-    };
-    res.json(component);
-  } catch (error) {
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch component'
-    });
-  }
+  const { id } = req.params;
+  const component = componentsService.getComponentWithDefaults(id);
+  res.json(component);
 }));
 
 // Value Stream Metrics Endpoints
@@ -1088,30 +958,10 @@ app.get('/api/metrics/wip-alerts/:org/:team', asyncHandler(async (req: Request, 
 
 // Get Conductor metrics for organization
 app.get('/api/metrics/conductor/:org', asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const { org } = req.params;
-    console.log(`📊 Fetching Conductor metrics for organization: ${org}`);
-
-    // For now, return aggregated mock data
-    const metrics = {
-      organization: org,
-      timestamp: new Date().toISOString(),
-      aggregated: {
-        sequencesPerMinute: 250,
-        avgQueueLength: 15,
-        avgExecutionTime: 280,
-        successRate: 0.94,
-        errorRate: 0.06
-      }
-    };
-
-    res.json(metrics);
-  } catch (error) {
-    console.error('❌ Error fetching Conductor metrics:', error);
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch Conductor metrics'
-    });
-  }
+  const { org } = req.params;
+  console.log(`📊 Fetching Conductor metrics for organization: ${org}`);
+  const metrics = mockMetricsService.getConductorMetrics(org);
+  res.json(metrics);
 }));
 
 // Get Conductor metrics for specific repository
@@ -1137,32 +987,10 @@ app.get('/api/metrics/conductor/:org/:repo', asyncHandler(async (req: Request, r
 
 // Get architecture validation metrics for organization
 app.get('/api/metrics/architecture-validation/:org', asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const { org } = req.params;
-    console.log(`📊 Fetching architecture validation metrics for organization: ${org}`);
-
-    // For now, return aggregated mock data
-    const metrics = {
-      organization: org,
-      timestamp: new Date().toISOString(),
-      aggregated: {
-        passRate: 0.85,
-        failRate: 0.15,
-        commonViolations: [
-          { type: 'import-boundary', count: 12 },
-          { type: 'sequence-shape', count: 5 },
-          { type: 'dependency-cycle', count: 2 }
-        ]
-      }
-    };
-
-    res.json(metrics);
-  } catch (error) {
-    console.error('❌ Error fetching validation metrics:', error);
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch validation metrics'
-    });
-  }
+  const { org } = req.params;
+  console.log(`📊 Fetching architecture validation metrics for organization: ${org}`);
+  const metrics = mockMetricsService.getValidationMetrics(org);
+  res.json(metrics);
 }));
 
 // Get architecture validation metrics for specific repository
@@ -1189,28 +1017,10 @@ app.get('/api/metrics/architecture-validation/:org/:repo', asyncHandler(async (r
 
 // Get bundle metrics for organization
 app.get('/api/metrics/bundle/:org', asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const { org } = req.params;
-    console.log(`📊 Fetching bundle metrics for organization: ${org}`);
-
-    // For now, return aggregated mock data
-    const metrics = {
-      organization: org,
-      timestamp: new Date().toISOString(),
-      aggregated: {
-        totalBundleSize: 2500000,
-        avgLoadTime: 1500,
-        healthStatus: 'good'
-      }
-    };
-
-    res.json(metrics);
-  } catch (error) {
-    console.error('❌ Error fetching bundle metrics:', error);
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch bundle metrics'
-    });
-  }
+  const { org } = req.params;
+  console.log(`📊 Fetching bundle metrics for organization: ${org}`);
+  const metrics = mockMetricsService.getBundleMetrics(org);
+  res.json(metrics);
 }));
 
 // Get bundle metrics for specific repository
@@ -1238,60 +1048,20 @@ app.get('/api/metrics/bundle/:org/:repo', asyncHandler(async (req: Request, res:
 
 // Get bundle threshold alerts for organization
 app.get('/api/metrics/bundle-alerts/:org', asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const { org } = req.params;
-    console.log(`📊 Fetching bundle alerts for organization: ${org}`);
-
-    // For now, return mock alert data
-    const alerts = {
-      organization: org,
-      timestamp: new Date().toISOString(),
-      alerts: [
-        {
-          repository: 'renderx-plugins-canvas',
-          severity: 'warning',
-          message: 'Plugin bundle approaching budget limit'
-        }
-      ]
-    };
-
-    res.json(alerts);
-  } catch (error) {
-    console.error('❌ Error fetching bundle alerts:', error);
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch bundle alerts'
-    });
-  }
+  const { org } = req.params;
+  console.log(`📊 Fetching bundle alerts for organization: ${org}`);
+  const alerts = mockMetricsService.getBundleAlerts(org);
+  res.json(alerts);
 }));
 
 // Test Coverage Metrics Endpoints (Phase 2.1)
 
 // Get coverage metrics for organization
 app.get('/api/metrics/coverage/:org', asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const { org } = req.params;
-    console.log(`📊 Fetching coverage metrics for organization: ${org}`);
-
-    // For now, return aggregated mock data
-    const metrics = {
-      organization: org,
-      timestamp: new Date().toISOString(),
-      aggregated: {
-        lineCoverage: 82.5,
-        branchCoverage: 78.3,
-        functionCoverage: 85.1,
-        statementCoverage: 81.2,
-        trend: 'improving'
-      }
-    };
-
-    res.json(metrics);
-  } catch (error) {
-    console.error('❌ Error fetching coverage metrics:', error);
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch coverage metrics'
-    });
-  }
+  const { org } = req.params;
+  console.log(`📊 Fetching coverage metrics for organization: ${org}`);
+  const metrics = mockMetricsService.getCoverageMetrics(org);
+  res.json(metrics);
 }));
 
 // Get coverage metrics for specific repository
@@ -1317,61 +1087,20 @@ app.get('/api/metrics/coverage/:org/:repo', asyncHandler(async (req: Request, re
 
 // Get coverage metrics for team
 app.get('/api/metrics/coverage/:org/:team', asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const { org, team } = req.params;
-    console.log(`📊 Fetching coverage metrics for team: ${team} in ${org}`);
-
-    // For now, return aggregated mock data for team
-    const metrics = {
-      organization: org,
-      team,
-      timestamp: new Date().toISOString(),
-      aggregated: {
-        lineCoverage: 80.2,
-        branchCoverage: 76.8,
-        functionCoverage: 83.5,
-        statementCoverage: 79.9,
-        trend: 'stable'
-      }
-    };
-
-    res.json(metrics);
-  } catch (error) {
-    console.error('❌ Error fetching team coverage metrics:', error);
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch team coverage metrics'
-    });
-  }
+  const { org, team } = req.params;
+  console.log(`📊 Fetching coverage metrics for team: ${team} in ${org}`);
+  const metrics = mockMetricsService.getTeamCoverageMetrics(org, team);
+  res.json(metrics);
 }));
 
 // Code Quality Metrics Endpoints (Phase 2.1)
 
 // Get quality metrics for organization
 app.get('/api/metrics/quality/:org', asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const { org } = req.params;
-    console.log(`📊 Fetching quality metrics for organization: ${org}`);
-
-    // For now, return aggregated mock data
-    const metrics = {
-      organization: org,
-      timestamp: new Date().toISOString(),
-      aggregated: {
-        qualityScore: 78.5,
-        lintingIssues: { error: 5, warning: 25, info: 40 },
-        typeErrors: 8,
-        securityVulnerabilities: { critical: 0, high: 2, medium: 5, low: 12 },
-        trend: 'improving'
-      }
-    };
-
-    res.json(metrics);
-  } catch (error) {
-    console.error('❌ Error fetching quality metrics:', error);
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch quality metrics'
-    });
-  }
+  const { org } = req.params;
+  console.log(`📊 Fetching quality metrics for organization: ${org}`);
+  const metrics = mockMetricsService.getQualityMetrics(org);
+  res.json(metrics);
 }));
 
 // Get quality metrics for specific repository
@@ -1399,30 +1128,10 @@ app.get('/api/metrics/quality/:org/:repo', asyncHandler(async (req: Request, res
 
 // Get test metrics for organization
 app.get('/api/metrics/tests/:org', asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const { org } = req.params;
-    console.log(`📊 Fetching test metrics for organization: ${org}`);
-
-    // For now, return aggregated mock data
-    const metrics = {
-      organization: org,
-      timestamp: new Date().toISOString(),
-      aggregated: {
-        totalTests: 2500,
-        passRate: 0.92,
-        avgExecutionTime: 250,
-        flakyTestPercentage: 0.03,
-        trend: 'stable'
-      }
-    };
-
-    res.json(metrics);
-  } catch (error) {
-    console.error('❌ Error fetching test metrics:', error);
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch test metrics'
-    });
-  }
+  const { org } = req.params;
+  console.log(`📊 Fetching test metrics for organization: ${org}`);
+  const metrics = mockMetricsService.getTestMetrics(org);
+  res.json(metrics);
 }));
 
 // Get test metrics for specific repository
@@ -1450,24 +1159,10 @@ app.get('/api/metrics/tests/:org/:repo', asyncHandler(async (req: Request, res: 
 
 // Get constraints for organization
 app.get('/api/metrics/constraints/:org', asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const { org } = req.params;
-    console.log(`📊 Fetching constraints for organization: ${org}`);
-
-    // For now, return mock data
-    const constraints = {
-      organization: org,
-      timestamp: new Date().toISOString(),
-      constraints: []
-    };
-
-    res.json(constraints);
-  } catch (error) {
-    console.error('❌ Error fetching constraints:', error);
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch constraints'
-    });
-  }
+  const { org } = req.params;
+  console.log(`📊 Fetching constraints for organization: ${org}`);
+  const constraints = mockMetricsService.getConstraints(org);
+  res.json(constraints);
 }));
 
 // Get constraints for team
@@ -2459,14 +2154,17 @@ app.get('/api/conductor/logs/:containerId', asyncHandler(async (req: Request, re
 app.get('/api/conductor/container-health/:containerId', asyncHandler(async (req: Request, res: Response) => {
   const { containerId: _containerId } = req.params;
   try {
+    // NOTE: Docker API integration is not yet implemented.
+    // This endpoint returns graceful degradation values (zeros) when real data is unavailable.
+    // In production, this would fetch real container stats from Docker daemon.
     const health = {
       status: 'running' as const,
-      uptime: Math.floor(Math.random() * 86400 * 30), // Random uptime up to 30 days
-      cpuUsage: Math.random() * 100,
-      memoryUsage: Math.random() * 100,
-      networkIn: Math.floor(Math.random() * 1000000),
-      networkOut: Math.floor(Math.random() * 1000000),
-      healthStatus: Math.random() > 0.1 ? ('healthy' as const) : ('degraded' as const),
+      uptime: 0, // Data unavailable - Docker API not integrated
+      cpuUsage: 0, // Data unavailable - Docker API not integrated
+      memoryUsage: 0, // Data unavailable - Docker API not integrated
+      networkIn: 0, // Data unavailable - Docker API not integrated
+      networkOut: 0, // Data unavailable - Docker API not integrated
+      healthStatus: 'starting' as const, // Unknown status until Docker API available
       lastUpdated: new Date().toISOString()
     };
     res.json(health);

@@ -110,8 +110,8 @@ describe('Architecture Summary Endpoint', () => {
     // Extract repositories using the same logic as the endpoint
     const repos = extractRepositoriesFromADF(adf, 'BPMSoftwareSolutions');
 
-    // Should have 8 unique repositories (components repo removed - no package.json)
-    expect(repos).toHaveLength(8);
+    // Should have 12 unique repositories (including canvas-component, library-component, components, and digital-assets)
+    expect(repos).toHaveLength(12);
 
     // Verify all expected repositories are present
     const repoNames = repos.map(r => r.name).sort();
@@ -119,11 +119,15 @@ describe('Architecture Summary Endpoint', () => {
       'MusicalConductor',
       'renderx-host-sdk',
       'renderx-plugin-canvas',
+      'renderx-plugin-canvas-component',
+      'renderx-plugin-components',
       'renderx-plugin-control-panel',
       'renderx-plugin-header',
       'renderx-plugin-library',
+      'renderx-plugin-library-component',
       'renderx-plugin-manifest-tools',
-      'renderx-plugins-demo'
+      'renderx-plugins-demo',
+      'renderx-plugins-digital-assets'
     ]);
   });
 
@@ -154,17 +158,21 @@ describe('Architecture Summary Endpoint', () => {
       }
     };
 
-    // Verify the response has 8 repositories (components repo removed - no package.json)
-    expect(summary.repositories).toHaveLength(8);
+    // Verify the response has 12 repositories (including canvas-component, library-component, components, and digital-assets)
+    expect(summary.repositories).toHaveLength(12);
     expect(summary.repositories.map(r => r.name).sort()).toEqual([
       'MusicalConductor',
       'renderx-host-sdk',
       'renderx-plugin-canvas',
+      'renderx-plugin-canvas-component',
+      'renderx-plugin-components',
       'renderx-plugin-control-panel',
       'renderx-plugin-header',
       'renderx-plugin-library',
+      'renderx-plugin-library-component',
       'renderx-plugin-manifest-tools',
-      'renderx-plugins-demo'
+      'renderx-plugins-demo',
+      'renderx-plugins-digital-assets'
     ]);
   });
 
@@ -207,8 +215,8 @@ describe('Architecture Summary Endpoint', () => {
       }
     }));
 
-    // With the fix, we should have 8 repositories (components repo removed - no package.json)
-    expect(repositoriesWithDefaults).toHaveLength(8);
+    // With the fix, we should have 12 repositories (including canvas-component, library-component, components, and digital-assets)
+    expect(repositoriesWithDefaults).toHaveLength(12);
   });
 });
 
