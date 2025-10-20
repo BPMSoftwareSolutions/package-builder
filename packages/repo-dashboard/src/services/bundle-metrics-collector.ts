@@ -182,51 +182,6 @@ export class BundleMetricsCollector {
   }
 
   /**
-   * Generate mock bundle metrics (deprecated - use fetchBundleMetricsFromGitHub)
-   */
-  private generateMockBundleMetrics(org: string, repo: string): BundleMetrics {
-    const shellBudget = 500000; // 500KB
-    const shellBundleSize = shellBudget * (0.7 + Math.random() * 0.25);
-    
-    const pluginBudgets: Record<string, number> = {
-      'plugin-canvas': 200000,
-      'plugin-components': 250000,
-      'plugin-control-panel': 150000,
-      'plugin-header': 100000,
-      'plugin-library': 300000
-    };
-
-    const pluginBundleSizes: Record<string, number> = {};
-    const pluginStatuses: Record<string, 'green' | 'yellow' | 'red'> = {};
-
-    for (const [plugin, budget] of Object.entries(pluginBudgets)) {
-      const size = budget * (0.6 + Math.random() * 0.35);
-      pluginBundleSizes[plugin] = size;
-      pluginStatuses[plugin] = this.calculateBundleStatus(size, budget);
-    }
-
-    const totalBundleSize = shellBundleSize + Object.values(pluginBundleSizes).reduce((a, b) => a + b, 0);
-
-    return {
-      timestamp: new Date(),
-      repo: `${org}/${repo}`,
-      shellBundleSize,
-      pluginBundleSizes,
-      totalBundleSize,
-      shellBudget,
-      pluginBudgets,
-      shellStatus: this.calculateBundleStatus(shellBundleSize, shellBudget),
-      pluginStatuses,
-      loadTime: 1000 + Math.random() * 2000,
-      runtimePerformance: {
-        'fps': 55 + Math.random() * 5,
-        'memory-usage-mb': 50 + Math.random() * 100,
-        'cpu-usage-percent': 20 + Math.random() * 30
-      }
-    };
-  }
-
-  /**
    * Calculate bundle status based on size vs budget
    */
   private calculateBundleStatus(size: number, budget: number): 'green' | 'yellow' | 'red' {

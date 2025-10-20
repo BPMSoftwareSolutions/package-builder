@@ -7,7 +7,7 @@
 import { prMetricsCollector } from './pull-request-metrics-collector.js';
 import { deploymentMetricsCollector } from './deployment-metrics-collector.js';
 import { ADFTeamMapper } from './adf-team-mapper.js';
-import { adfFetcher } from './adf-fetcher.js';
+import { adfFetcher, ArchitectureDefinition } from './adf-fetcher.js';
 
 export interface TeamMetrics {
   team: string;
@@ -254,28 +254,6 @@ export class MetricsAggregator {
     if (percentChange < -5) return 'improving';
     if (percentChange > 5) return 'degrading';
     return 'stable';
-  }
-
-  /**
-   * Get all teams
-   */
-  getTeams(): string[] {
-    if (!this.initialized) {
-      console.warn('⚠️ MetricsAggregator not initialized, returning empty teams');
-      return [];
-    }
-    return this.adfTeamMapper.getTeams();
-  }
-
-  /**
-   * Get repositories for a team
-   */
-  getTeamRepositories(team: string): string[] {
-    if (!this.initialized) {
-      console.warn('⚠️ MetricsAggregator not initialized, returning empty repos');
-      return [];
-    }
-    return this.adfTeamMapper.getTeamRepositories(team);
   }
 }
 

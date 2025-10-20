@@ -154,26 +154,6 @@ export class TestExecutionCollector {
   }
 
   /**
-   * Generate list of flaky test names
-   */
-  private generateFlakyTests(): string[] {
-    const testNames = [
-      'should handle async operations',
-      'should validate user input',
-      'should render component correctly',
-      'should fetch data from API',
-      'should handle errors gracefully'
-    ];
-    
-    const count = Math.floor(Math.random() * 3);
-    const flaky: string[] = [];
-    for (let i = 0; i < count; i++) {
-      flaky.push(testNames[Math.floor(Math.random() * testNames.length)]);
-    }
-    return flaky;
-  }
-
-  /**
    * Get metrics history for trend analysis
    */
   getMetricsHistory(org: string, repo: string, days: number = 7): TestMetrics[] {
