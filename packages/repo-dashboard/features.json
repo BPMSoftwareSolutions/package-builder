@@ -10,9 +10,11 @@
       "#105",
       "#108",
       "#110",
+      "#114",
       "#115",
       "#118",
-      "#120"
+      "#120",
+      "#121"
     ]
   },
   "features": {
@@ -3000,6 +3002,136 @@
           "DeploymentMetricsCollector - Deployment frequency, success rate",
           "CodeQualityCollector - Quality score, linting issues, vulnerabilities",
           "TestCoverageCollector - Coverage trends"
+        ]
+      }
+    ]
+  },
+  "flowDashboardRealData": {
+    "description": "Flow Dashboard Real Data Integration for Issue #121 - Wire Flow Dashboard to Real GitHub Data",
+    "features": [
+      {
+        "name": "FlowDashboard page component",
+        "status": "implemented",
+        "file": "src/web/pages/FlowDashboard.tsx",
+        "relatedIssue": "#121",
+        "description": "Updated FlowDashboard to fetch real metrics from GitHub APIs instead of mock data",
+        "testCases": [
+          "Display organization selector",
+          "Display repository selector with RenderX plugin repos",
+          "Display team selector",
+          "Fetch flow stage metrics from /api/metrics/flow-stages endpoint",
+          "Fetch WIP metrics from /api/metrics/wip endpoint",
+          "Fetch deploy cadence metrics from /api/metrics/deploy-cadence endpoint",
+          "Fetch constraint metrics from /api/metrics/constraints endpoint",
+          "Fetch conductor metrics from /api/metrics/conductor endpoint",
+          "Fetch bundle metrics from /api/metrics/bundle endpoint",
+          "Display loading spinner while fetching",
+          "Display error message on fetch failure",
+          "Transform API responses to component props",
+          "Update metrics when org/team/repo selection changes"
+        ]
+      },
+      {
+        "name": "Value Stream Metrics API integration",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/metrics/flow-stages/:org/:repo - PR flow breakdown by stage",
+          "GET /api/metrics/wip/:org/:team - Work-in-progress metrics",
+          "GET /api/metrics/deploy-cadence/:org/:repo - Deployment cadence analysis",
+          "GET /api/metrics/constraints/:org - Constraint detection and radar data",
+          "GET /api/metrics/conductor/:org/:repo - Conductor orchestration throughput",
+          "GET /api/metrics/bundle/:org/:repo - Bundle size metrics"
+        ],
+        "testCases": [
+          "All endpoints return real data from collectors",
+          "All endpoints support optional days parameter",
+          "All endpoints handle missing data gracefully",
+          "All endpoints cache results for performance"
+        ]
+      },
+      {
+        "name": "Flow Stage Analyzer Service",
+        "status": "implemented",
+        "file": "src/services/flow-stage-analyzer.ts",
+        "testCases": [
+          "Analyze PR flow through different stages",
+          "Calculate median, p95, p5 times per stage",
+          "Detect flow anomalies",
+          "Calculate stage trends",
+          "Maintain history for trend analysis"
+        ]
+      },
+      {
+        "name": "WIP Tracker Service",
+        "status": "implemented",
+        "file": "src/services/wip-tracker.ts",
+        "testCases": [
+          "Calculate WIP metrics for teams",
+          "Track open PR counts",
+          "Calculate WIP trends",
+          "Check WIP threshold alerts",
+          "Maintain history for trend analysis"
+        ]
+      },
+      {
+        "name": "Deploy Cadence Service",
+        "status": "implemented",
+        "file": "src/services/deploy-cadence.ts",
+        "testCases": [
+          "Calculate deployment frequency",
+          "Track deployment success rates",
+          "Monitor rollbacks",
+          "Calculate deployment trends",
+          "Maintain history for trend analysis"
+        ]
+      },
+      {
+        "name": "Constraint Detection Service",
+        "status": "implemented",
+        "file": "src/services/constraint-detection.ts",
+        "testCases": [
+          "Detect bottlenecks in flow stages",
+          "Calculate constraint severity",
+          "Generate constraint radar data",
+          "Provide recommendations",
+          "Maintain constraint history"
+        ]
+      },
+      {
+        "name": "UI Components - Theme Aware",
+        "status": "implemented",
+        "components": [
+          "ValueStreamCard - Displays value stream metrics with stage breakdown",
+          "PRFlowChart - Shows PR flow breakdown by stage",
+          "WIPGauge - Displays current WIP with limit indicator",
+          "WIPTrendChart - Shows WIP trend over time",
+          "ConstraintRadar - Visualizes constraints and bottlenecks",
+          "BottleneckAlert - Shows high-severity bottleneck alerts",
+          "FlowStageBreakdown - Detailed flow stage metrics",
+          "DeployCadenceChart - Deployment frequency and success rate",
+          "ConductorThroughputChart - Conductor orchestration metrics",
+          "BundleSizeGauge - Bundle size vs budget"
+        ],
+        "testCases": [
+          "All components use CSS variables for theming",
+          "All components support dark mode",
+          "All components are responsive",
+          "All components have default exports",
+          "All components handle null/undefined data gracefully"
+        ]
+      },
+      {
+        "name": "Real Data Transformation",
+        "status": "implemented",
+        "description": "Transform API responses to component-compatible formats",
+        "testCases": [
+          "Transform flow stage API response to ValueStreamCard format",
+          "Transform WIP API response to WIPGauge format",
+          "Transform deploy cadence API response to DeployCadenceChart format",
+          "Transform constraint API response to ConstraintRadar format",
+          "Transform conductor API response to ConductorThroughputChart format",
+          "Transform bundle API response to BundleSizeGauge format"
         ]
       }
     ]
