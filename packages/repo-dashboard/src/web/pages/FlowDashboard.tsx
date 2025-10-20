@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ValueStreamCard from '../components/ValueStreamCard';
 import PRFlowChart from '../components/PRFlowChart';
 import WIPGauge from '../components/WIPGauge';
@@ -9,6 +9,7 @@ import FlowStageBreakdown from '../components/FlowStageBreakdown';
 import DeployCadenceChart from '../components/DeployCadenceChart';
 import ConductorThroughputChart from '../components/ConductorThroughputChart';
 import BundleSizeGauge from '../components/BundleSizeGauge';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 interface FlowDashboardProps {
   onNavigate?: (page: string, data?: any) => void;
@@ -17,135 +18,228 @@ interface FlowDashboardProps {
 export default function FlowDashboard({ onNavigate }: FlowDashboardProps) {
   const [selectedOrg, setSelectedOrg] = useState('BPMSoftwareSolutions');
   const [selectedTeam, setSelectedTeam] = useState('platform-team');
+  const [selectedRepo, setSelectedRepo] = useState('renderx-plugins-sdk');
 
-  // Mock data for demonstration
-  const mockValueStreamMetrics = {
-    stages: [
-      { name: 'Idea', medianTime: 2, p95Time: 4, p5Time: 0.5, trend: 'stable' as const },
-      { name: 'PR', medianTime: 8, p95Time: 16, p5Time: 2, trend: 'improving' as const },
-      { name: 'Review', medianTime: 6, p95Time: 12, p5Time: 1, trend: 'stable' as const },
-      { name: 'Build', medianTime: 1, p95Time: 2, p5Time: 0.5, trend: 'improving' as const },
-      { name: 'Test', medianTime: 4, p95Time: 8, p5Time: 1, trend: 'stable' as const },
-      { name: 'Deploy', medianTime: 0.5, p95Time: 1, p5Time: 0.25, trend: 'improving' as const },
-    ],
-    totalMedianTime: 21.5,
-    sevenDayTrend: 'improving' as const,
-    thirtyDayTrend: 'stable' as const,
-    timestamp: new Date().toISOString(),
-  };
+  // State for real data
+  const [valueStreamMetrics, setValueStreamMetrics] = useState<any>(null);
+  const [prFlowMetrics, setPRFlowMetrics] = useState<any>(null);
+  const [wipMetrics, setWIPMetrics] = useState<any>(null);
+  const [wipTrendMetrics, setWIPTrendMetrics] = useState<any>(null);
+  const [constraintMetrics, setConstraintMetrics] = useState<any>(null);
+  const [bottleneckAlerts, setBottleneckAlerts] = useState<any[]>([]);
+  const [flowStageMetrics, setFlowStageMetrics] = useState<any>(null);
+  const [deployCadenceMetrics, setDeployCadenceMetrics] = useState<any>(null);
+  const [conductorMetrics, setConductorMetrics] = useState<any>(null);
+  const [bundleMetrics, setBundleMetrics] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const mockPRFlowMetrics = {
-    stages: [
-      { stage: 'Review', percentage: 28.6, hours: 6, color: 'var(--stage-review)' },
-      { stage: 'Build', percentage: 4.8, hours: 1, color: 'var(--stage-build)' },
-      { stage: 'Test', percentage: 19.0, hours: 4, color: 'var(--stage-test)' },
-      { stage: 'Waiting', percentage: 47.6, hours: 10, color: 'var(--stage-waiting)' },
-    ],
-    totalTime: 21,
-    trend: 'stable' as const,
-    timestamp: new Date().toISOString(),
-  };
+  // Fetch real data from API
+  useEffect(() => {
+    const fetchFlowMetrics = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-  const mockWIPMetrics = {
-    currentWIP: 12,
-    wipLimit: 15,
-    team: selectedTeam,
-    status: 'healthy' as const,
-    percentageOfLimit: 80,
-    timestamp: new Date().toISOString(),
-  };
+        // Fetch all metrics in parallel
+        const [
+          flowStagesRes,
+          wipRes,
+          deployCadenceRes,
+          constraintsRes,
+          conductorRes,
+          bundleRes,
+        ] = await Promise.all([
+          fetch(`/api/metrics/flow-stages/${selectedOrg}/${selectedRepo}?team=${selectedTeam}&days=30`),
+          fetch(`/api/metrics/wip/${selectedOrg}/${selectedTeam}?days=30`),
+          fetch(`/api/metrics/deploy-cadence/${selectedOrg}/${selectedRepo}?team=${selectedTeam}&days=30`),
+          fetch(`/api/metrics/constraints/${selectedOrg}`),
+          fetch(`/api/metrics/conductor/${selectedOrg}/${selectedRepo}`),
+          fetch(`/api/metrics/bundle/${selectedOrg}/${selectedRepo}`),
+        ]);
 
-  const mockWIPTrendMetrics = {
-    data: Array.from({ length: 30 }, (_, i) => ({
-      date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toLocaleDateString(),
-      wip: Math.floor(Math.random() * 10) + 8,
-      limit: 15,
-    })),
-    averageWIP: 10.5,
-    maxWIP: 18,
-    minWIP: 6,
-    trend: 'stable' as const,
-    timestamp: new Date().toISOString(),
-  };
+        // Parse responses
+        const flowStagesData = await flowStagesRes.json();
+        const wipData = await wipRes.json();
+        const deployCadenceData = await deployCadenceRes.json();
+        const constraintsData = await constraintsRes.json();
+        const conductorData = await conductorRes.json();
+        const bundleData = await bundleRes.json();
 
-  const mockConstraintMetrics = {
-    constraints: [
-      { team: 'Platform', severity: 75, stage: 'Review', description: 'High review time' },
-      { team: 'Backend', severity: 45, stage: 'Test', description: 'Flaky tests' },
-      { team: 'Frontend', severity: 30, stage: 'Build', description: 'Build optimization needed' },
-      { team: 'DevOps', severity: 55, stage: 'Deploy', description: 'Deployment delays' },
-    ],
-    criticalCount: 1,
-    highCount: 2,
-    mediumCount: 1,
-    timestamp: new Date().toISOString(),
-  };
+        // Transform flow stages to value stream metrics
+        if (flowStagesData.breakdown?.stages) {
+          const stages = flowStagesData.breakdown.stages.map((stage: any) => ({
+            name: stage.stage.charAt(0).toUpperCase() + stage.stage.slice(1),
+            medianTime: stage.medianTime || 0,
+            p95Time: stage.p95Time || 0,
+            p5Time: stage.p5Time || 0,
+            trend: stage.trend || 'stable',
+          }));
+          setValueStreamMetrics({
+            stages,
+            totalMedianTime: stages.reduce((sum: number, s: any) => sum + s.medianTime, 0),
+            sevenDayTrend: 'stable',
+            thirtyDayTrend: 'stable',
+            timestamp: new Date().toISOString(),
+          });
 
-  const mockBottleneckAlerts = [
-    {
-      id: '1',
-      stage: 'Review',
-      severity: 'high' as const,
-      description: 'Review time exceeds 6 hours median',
-      affectedTeams: ['Platform', 'Backend'],
-      suggestedActions: ['Increase reviewer capacity', 'Implement code review guidelines'],
-      detectedAt: new Date().toISOString(),
-    },
-  ];
+          // Set flow stage breakdown
+          setFlowStageMetrics({
+            stages,
+            timestamp: new Date().toISOString(),
+          });
 
-  const mockFlowStageMetrics = {
-    stages: [
-      { stage: 'Review', median: 6, p95: 12, p99: 18, p5: 1, trend: 'degrading' as const },
-      { stage: 'Build', median: 1, p95: 2, p99: 3, p5: 0.5, trend: 'improving' as const },
-      { stage: 'Test', median: 4, p95: 8, p99: 12, p5: 1, trend: 'stable' as const },
-      { stage: 'Deploy', median: 0.5, p95: 1, p99: 2, p5: 0.25, trend: 'improving' as const },
-    ],
-    timestamp: new Date().toISOString(),
-  };
+          // Set PR flow metrics from stages
+          setPRFlowMetrics({
+            stages: stages.map((s: any, idx: number) => ({
+              stage: s.name,
+              percentage: (s.medianTime / (stages.reduce((sum: number, st: any) => sum + st.medianTime, 0) || 1)) * 100,
+              hours: s.medianTime / 60,
+              color: `var(--stage-${s.name.toLowerCase()})`,
+            })),
+            totalTime: stages.reduce((sum: number, s: any) => sum + s.medianTime, 0) / 60,
+            trend: 'stable',
+            timestamp: new Date().toISOString(),
+          });
+        }
 
-  const mockDeployCadenceMetrics = {
-    data: Array.from({ length: 30 }, (_, i) => ({
-      date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toLocaleDateString(),
-      deployments: Math.floor(Math.random() * 5) + 2,
-      successRate: 95 + Math.random() * 5,
-      rollbacks: Math.floor(Math.random() * 2),
-    })),
-    averageDeploysPerDay: 3.5,
-    averageSuccessRate: 97.2,
-    totalDeployments: 105,
-    totalRollbacks: 3,
-    trend: 'improving' as const,
-    timestamp: new Date().toISOString(),
-  };
+        // Set WIP metrics
+        if (wipData.metrics) {
+          setWIPMetrics({
+            currentWIP: wipData.metrics.openPRCount || 0,
+            wipLimit: 15,
+            team: selectedTeam,
+            status: (wipData.metrics.openPRCount || 0) <= 15 ? 'healthy' : 'warning',
+            percentageOfLimit: ((wipData.metrics.openPRCount || 0) / 15) * 100,
+            timestamp: new Date().toISOString(),
+          });
 
-  const mockConductorMetrics = {
-    throughput: 1250.5,
-    queueLength: 45,
-    averageExecutionTime: 125,
-    successRate: 98.5,
-    errorRate: 0.3,
-    trend: 'improving' as const,
-    timestamp: new Date().toISOString(),
-  };
+          // Set WIP trend
+          if (wipData.metrics.history) {
+            setWIPTrendMetrics({
+              data: wipData.metrics.history.map((point: any) => ({
+                date: new Date(point.timestamp).toLocaleDateString(),
+                wip: point.openPRCount,
+                limit: 15,
+              })),
+              averageWIP: wipData.metrics.openPRCount || 0,
+              maxWIP: Math.max(...(wipData.metrics.history?.map((p: any) => p.openPRCount) || [0])),
+              minWIP: Math.min(...(wipData.metrics.history?.map((p: any) => p.openPRCount) || [0])),
+              trend: wipData.metrics.trend || 'stable',
+              timestamp: new Date().toISOString(),
+            });
+          }
+        }
 
-  const mockBundleMetrics = {
-    bundles: [
-      { name: 'Main Bundle', size: 450, budget: 500, status: 'green' as const },
-      { name: 'Vendor Bundle', size: 280, budget: 300, status: 'green' as const },
-      { name: 'Styles Bundle', size: 85, budget: 100, status: 'green' as const },
-    ],
-    totalSize: 815,
-    totalBudget: 900,
-    loadTime: 2.3,
-    trend: 'improving' as const,
-    timestamp: new Date().toISOString(),
-  };
+        // Set deploy cadence metrics
+        if (deployCadenceData.metrics) {
+          setDeployCadenceMetrics({
+            data: deployCadenceData.metrics.history?.map((point: any) => ({
+              date: new Date(point.timestamp).toLocaleDateString(),
+              deployments: point.deploysPerDay || 0,
+              successRate: point.successRate || 0,
+              rollbacks: point.rollbackCount || 0,
+            })) || [],
+            averageDeploysPerDay: deployCadenceData.metrics.totalDeploysPerDay || 0,
+            averageSuccessRate: deployCadenceData.metrics.overallSuccessRate || 0,
+            totalDeployments: deployCadenceData.metrics.totalDeploysPerDay || 0,
+            totalRollbacks: deployCadenceData.metrics.totalRollbacks || 0,
+            trend: deployCadenceData.metrics.trend || 'stable',
+            timestamp: new Date().toISOString(),
+          });
+        }
+
+        // Set constraint metrics
+        if (constraintsData.constraints) {
+          setConstraintMetrics({
+            constraints: constraintsData.constraints.map((c: any) => ({
+              team: c.team || 'Unknown',
+              severity: c.severity || 'low',
+              stage: c.stage || 'Unknown',
+              description: c.description || 'No description',
+            })),
+            criticalCount: constraintsData.summary?.criticalConstraints || 0,
+            highCount: constraintsData.summary?.highConstraints || 0,
+            mediumCount: (constraintsData.summary?.totalConstraints || 0) - (constraintsData.summary?.criticalConstraints || 0) - (constraintsData.summary?.highConstraints || 0),
+            timestamp: new Date().toISOString(),
+          });
+
+          // Set bottleneck alerts
+          const alerts = constraintsData.constraints
+            .filter((c: any) => c.severity === 'high' || c.severity === 'critical')
+            .slice(0, 3)
+            .map((c: any, idx: number) => ({
+              id: `${idx}`,
+              stage: c.stage,
+              severity: c.severity,
+              description: c.description,
+              affectedTeams: [c.team],
+              suggestedActions: ['Review and optimize this stage'],
+              detectedAt: new Date().toISOString(),
+            }));
+          setBottleneckAlerts(alerts);
+        }
+
+        // Set conductor metrics
+        if (conductorData.metrics) {
+          setConductorMetrics({
+            throughput: conductorData.metrics.throughput || 0,
+            queueLength: conductorData.metrics.queueLength || 0,
+            averageExecutionTime: conductorData.metrics.averageExecutionTime || 0,
+            successRate: conductorData.metrics.successRate || 0,
+            errorRate: conductorData.metrics.errorRate || 0,
+            trend: conductorData.metrics.trend || 'stable',
+            timestamp: new Date().toISOString(),
+          });
+        }
+
+        // Set bundle metrics
+        if (bundleData.metrics) {
+          setBundleMetrics({
+            bundles: bundleData.metrics.bundles || [],
+            totalSize: bundleData.metrics.totalSize || 0,
+            totalBudget: bundleData.metrics.totalBudget || 0,
+            loadTime: bundleData.metrics.loadTime || 0,
+            trend: bundleData.metrics.trend || 'stable',
+            timestamp: new Date().toISOString(),
+          });
+        }
+
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching flow metrics:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch metrics');
+        setLoading(false);
+      }
+    };
+
+    fetchFlowMetrics();
+  }, [selectedOrg, selectedTeam, selectedRepo]);
+
+  if (loading) {
+    return (
+      <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ padding: '2rem' }}>
+        <div style={{ color: 'var(--error-color)', padding: '1rem', backgroundColor: 'var(--error-background)', borderRadius: '4px' }}>
+          <h2>Error Loading Flow Metrics</h2>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: '2rem' }}>
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ margin: '0 0 1rem 0', color: 'var(--text-primary)' }}>Flow Dashboard</h1>
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
           <div>
             <label style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginRight: '0.5rem' }}>
               Organization:
@@ -167,6 +261,31 @@ export default function FlowDashboard({ onNavigate }: FlowDashboardProps) {
           </div>
           <div>
             <label style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginRight: '0.5rem' }}>
+              Repository:
+            </label>
+            <select
+              value={selectedRepo}
+              onChange={(e) => setSelectedRepo(e.target.value)}
+              style={{
+                padding: '0.5rem',
+                borderRadius: '4px',
+                border: '1px solid var(--border-color)',
+                backgroundColor: 'var(--card-background)',
+                color: 'var(--text-primary)',
+              }}
+            >
+              <option value="renderx-plugins-sdk">renderx-plugins-sdk</option>
+              <option value="renderx-plugins-canvas">renderx-plugins-canvas</option>
+              <option value="renderx-plugins-components">renderx-plugins-components</option>
+              <option value="renderx-plugins-control-panel">renderx-plugins-control-panel</option>
+              <option value="renderx-plugins-header">renderx-plugins-header</option>
+              <option value="renderx-plugins-library">renderx-plugins-library</option>
+              <option value="renderx-manifest-tools">renderx-manifest-tools</option>
+              <option value="musical-conductor">musical-conductor</option>
+            </select>
+          </div>
+          <div>
+            <label style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginRight: '0.5rem' }}>
               Team:
             </label>
             <select
@@ -183,6 +302,7 @@ export default function FlowDashboard({ onNavigate }: FlowDashboardProps) {
               <option value="platform-team">Platform Team</option>
               <option value="backend-team">Backend Team</option>
               <option value="frontend-team">Frontend Team</option>
+              <option value="devops-team">DevOps Team</option>
             </select>
           </div>
         </div>
@@ -190,34 +310,34 @@ export default function FlowDashboard({ onNavigate }: FlowDashboardProps) {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
         {/* Value Stream */}
-        <ValueStreamCard metrics={mockValueStreamMetrics} />
+        {valueStreamMetrics && <ValueStreamCard metrics={valueStreamMetrics} />}
 
         {/* PR Flow and Constraint Radar */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-          <PRFlowChart metrics={mockPRFlowMetrics} />
-          <ConstraintRadar metrics={mockConstraintMetrics} />
+          {prFlowMetrics && <PRFlowChart metrics={prFlowMetrics} />}
+          {constraintMetrics && <ConstraintRadar metrics={constraintMetrics} />}
         </div>
 
         {/* WIP Metrics */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-          <WIPGauge metrics={mockWIPMetrics} />
-          <WIPTrendChart metrics={mockWIPTrendMetrics} />
+          {wipMetrics && <WIPGauge metrics={wipMetrics} />}
+          {wipTrendMetrics && <WIPTrendChart metrics={wipTrendMetrics} />}
         </div>
 
         {/* Bottleneck Alerts */}
-        <BottleneckAlert alerts={mockBottleneckAlerts} />
+        {bottleneckAlerts.length > 0 && <BottleneckAlert alerts={bottleneckAlerts} />}
 
         {/* Flow Stage Breakdown */}
-        <FlowStageBreakdown metrics={mockFlowStageMetrics} />
+        {flowStageMetrics && <FlowStageBreakdown metrics={flowStageMetrics} />}
 
         {/* Deploy Cadence and Conductor */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-          <DeployCadenceChart metrics={mockDeployCadenceMetrics} />
-          <ConductorThroughputChart metrics={mockConductorMetrics} />
+          {deployCadenceMetrics && <DeployCadenceChart metrics={deployCadenceMetrics} />}
+          {conductorMetrics && <ConductorThroughputChart metrics={conductorMetrics} />}
         </div>
 
         {/* Bundle Size */}
-        <BundleSizeGauge metrics={mockBundleMetrics} />
+        {bundleMetrics && <BundleSizeGauge metrics={bundleMetrics} />}
       </div>
     </div>
   );
