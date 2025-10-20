@@ -51,7 +51,7 @@ body {
 .navigation {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
-  padding: 1rem 2rem;
+  padding: 1rem 0;
   box-shadow: var(--shadow-md);
   position: sticky;
   top: 0;
@@ -60,12 +60,13 @@ body {
 }
 
 .nav-container {
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   gap: 2rem;
+  padding: 0 2rem;
 }
 
 .nav-section {
@@ -76,16 +77,21 @@ body {
 .nav-left {
   flex-grow: 0;
   flex-shrink: 0;
+  margin-right: auto;
 }
 
 .nav-middle {
-  flex-grow: 1;
-  justify-content: center;
+  flex-grow: 0;
+  flex-shrink: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .nav-right {
   flex-grow: 0;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .nav-brand {
@@ -340,21 +346,26 @@ body {
   .nav-container {
     flex-wrap: wrap;
     gap: 1rem;
+    padding: 0 1rem;
   }
 
   .nav-left {
     flex-basis: 100%;
     order: 1;
+    margin-right: 0;
   }
 
   .nav-middle {
     flex-basis: 100%;
     order: 2;
+    position: static;
+    transform: none;
   }
 
   .nav-right {
     flex-basis: 100%;
     order: 3;
+    margin-left: 0;
   }
 
   .nav-brand {
