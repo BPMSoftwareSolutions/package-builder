@@ -2,14 +2,37 @@
   "metadata": {
     "package": "repo-dashboard",
     "version": "1.0.0",
-    "lastUpdated": "2025-10-19",
+    "lastUpdated": "2025-10-20",
     "purpose": "Feature inventory for Enterprise CI/CD Dashboard with ADF Manager",
     "relatedIssues": [
       "#50",
-      "#51"
+      "#51",
+      "#105"
     ]
   },
   "features": {
+    "uiUxEnhancements": {
+      "description": "UI/UX improvements for better visual hierarchy and usability",
+      "features": [
+        {
+          "name": "Header layout refactor into three sections",
+          "status": "implemented",
+          "file": "src/web/components/Navigation.tsx",
+          "relatedIssue": "#105",
+          "description": "Reorganized header into left (brand), middle (navigation), and right (utilities) sections",
+          "testCases": [
+            "Left section displays app title prominently",
+            "Middle section displays main navigation menu centered",
+            "Right section displays settings and theme toggle",
+            "Responsive design works on mobile/tablet",
+            "All navigation links remain functional",
+            "Theme toggle works correctly",
+            "Dark mode and light mode both work correctly",
+            "No hardcoded colors (uses CSS variables)"
+          ]
+        }
+      ]
+    },
     "adfManager": {
       "description": "Architecture Definition File (ADF) Manager for managing architecture specifications",
       "features": [
