@@ -46,7 +46,8 @@ export class ADFFetcher {
   private cacheTTL: number = 3600000; // 1 hour in milliseconds
 
   /**
-   * Fetch ADF from GitHub repository
+   * Fetch ADF from local endpoint first, then GitHub, then mock data
+   * This provides resilience when GitHub API is unavailable
    */
   async fetchADF(options: ADFFetchOptions): Promise<ArchitectureDefinition> {
     const { org, repo, branch = 'main', path = 'adf.json' } = options;
@@ -62,30 +63,107 @@ export class ADFFetcher {
     try {
       console.log(`🔗 Fetching ADF from ${org}/${repo} (branch: ${branch}, path: ${path})`);
 
-      // Try to fetch the ADF file from GitHub
-      const endpoint = `/repos/${org}/${repo}/contents/${path}?ref=${branch}`;
-      const response = await fetchGitHub<any>(endpoint);
-
-      // GitHub returns base64 encoded content
-      if (response.content) {
-        const content = Buffer.from(response.content, 'base64').toString('utf-8');
-        const adf = JSON.parse(content) as ArchitectureDefinition;
-
-        // Validate ADF
-        await this.validateADF(adf);
-
-        // Cache the result
-        this.cache.set(cacheKey, { data: adf, timestamp: Date.now() });
-
-        console.log(`✅ Successfully fetched and cached ADF for ${org}/${repo}`);
-        return adf;
+      // Step 1: Try to fetch from local endpoint first
+      try {
+        const localAdf = await this.fetchFromLocalEndpoint(repo, path);
+        if (localAdf) {
+          console.log(`✅ Successfully fetched ADF from local endpoint for ${org}/${repo}`);
+          // Validate ADF
+          await this.validateADF(localAdf);
+          // Cache the result
+          this.cache.set(cacheKey, { data: localAdf, timestamp: Date.now() });
+          return localAdf;
+        }
+      } catch (localError) {
+        console.debug(`ℹ️ Local endpoint not available:`, localError instanceof Error ? localError.message : localError);
       }
 
-      throw new Error('No content found in GitHub response');
+      // Step 2: Fall back to GitHub API
+      try {
+        const githubAdf = await this.fetchFromGitHub(org, repo, branch, path);
+        // Validate ADF
+        await this.validateADF(githubAdf);
+        // Cache the result
+        this.cache.set(cacheKey, { data: githubAdf, timestamp: Date.now() });
+        console.log(`✅ Successfully fetched and cached ADF from GitHub for ${org}/${repo}`);
+        return githubAdf;
+      } catch (githubError) {
+        console.warn(`⚠️ GitHub API fetch failed:`, githubError instanceof Error ? githubError.message : githubError);
+      }
+
+      // Step 3: Fall back to mock data
+      console.warn(`⚠️ All fetch methods failed, using mock data for ${org}/${repo}`);
+      const mockAdf = this.getMockADF(org, repo);
+      // Cache the mock result
+      this.cache.set(cacheKey, { data: mockAdf, timestamp: Date.now() });
+      return mockAdf;
     } catch (error) {
       console.error(`❌ Error fetching ADF for ${org}/${repo}:`, error);
       throw error;
     }
+  }
+
+  /**
+   * Fetch ADF from local endpoint (served by Express)
+   */
+  private async fetchFromLocalEndpoint(_repo: string, path: string): Promise<ArchitectureDefinition | null> {
+    try {
+      // Extract filename from path (e.g., 'renderx-plugins-demo-adf.json' from 'docs/renderx-plugins-demo-adf.json')
+      const filename = path.split('/').pop() || path;
+      const localUrl = `/adf/${filename}`;
+
+      console.log(`📂 Trying local endpoint: ${localUrl}`);
+      const response = await fetch(localUrl);
+
+      if (!response.ok) {
+        throw new Error(`Local endpoint returned ${response.status}`);
+      }
+
+      const adf = await response.json() as ArchitectureDefinition;
+      console.log(`✅ Successfully fetched from local endpoint: ${localUrl}`);
+      return adf;
+    } catch (error) {
+      console.debug(`ℹ️ Local endpoint fetch failed:`, error instanceof Error ? error.message : error);
+      return null;
+    }
+  }
+
+  /**
+   * Fetch ADF from GitHub API
+   */
+  private async fetchFromGitHub(org: string, repo: string, branch: string, path: string): Promise<ArchitectureDefinition> {
+    const endpoint = `/repos/${org}/${repo}/contents/${path}?ref=${branch}`;
+    const response = await fetchGitHub<any>(endpoint);
+
+    // GitHub returns base64 encoded content
+    if (response.content) {
+      const content = Buffer.from(response.content, 'base64').toString('utf-8');
+      const adf = JSON.parse(content) as ArchitectureDefinition;
+      return adf;
+    }
+
+    throw new Error('No content found in GitHub response');
+  }
+
+  /**
+   * Get mock ADF data as fallback
+   */
+  private getMockADF(org: string, repo: string): ArchitectureDefinition {
+    return {
+      version: '1.0.0',
+      name: `${repo} Architecture`,
+      description: `Mock ADF for ${org}/${repo} (GitHub API unavailable)`,
+      c4Model: {
+        level: 'container',
+        containers: [],
+        relationships: []
+      },
+      metrics: {
+        healthScore: 0,
+        testCoverage: 0,
+        buildStatus: 'unknown'
+      }
+    };
   }
 
   /**
