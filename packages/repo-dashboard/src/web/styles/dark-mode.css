@@ -82,10 +82,10 @@
   --stage-build-bg: #523a1a;
   --stage-test-bg: #1a521a;
   --stage-deploy-bg: #1a3a3a;
-  --stage-review: #fce4ec;
-  --stage-build: #fff3e0;
-  --stage-test: #f1f8e9;
-  --stage-waiting: #e3f2fd;
+  --stage-review: #ff6b9d;
+  --stage-build: #ffa500;
+  --stage-test: #66bb6a;
+  --stage-waiting: #42a5f5;
 
   /* Trend colors - Dark mode */
   --trend-improving: #4caf50;
