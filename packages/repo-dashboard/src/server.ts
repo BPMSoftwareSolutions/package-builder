@@ -672,7 +672,7 @@ app.get('/api/adf/:org/:repo/metrics', asyncHandler(async (req: Request, res: Re
 }));
 
 // Cache statistics endpoint
-app.get('/api/adf/cache/stats', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/adf/cache/stats', asyncHandler(async (_req: Request, res: Response) => {
   try {
     const stats = adfCache.getStats();
     res.json(stats);
@@ -685,7 +685,7 @@ app.get('/api/adf/cache/stats', asyncHandler(async (req: Request, res: Response)
 }));
 
 // Architecture endpoints
-app.get('/api/architecture', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/architecture', asyncHandler(async (_req: Request, res: Response) => {
   try {
     // Return mock architecture data for now
     const architecture = {
@@ -804,7 +804,7 @@ app.get('/api/c4/:level/mermaid', asyncHandler(async (_req: Request, res: Respon
 }));
 
 // Components endpoints
-app.get('/api/components', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/components', asyncHandler(async (_req: Request, res: Response) => {
   try {
     const components = [
       {
@@ -929,7 +929,7 @@ app.get('/api/metrics/team/:team', asyncHandler(async (req: Request, res: Respon
 }));
 
 // Get all teams
-app.get('/api/metrics/teams', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/metrics/teams', asyncHandler(async (_req: Request, res: Response) => {
   try {
     const teams = metricsAggregator.getTeams();
     res.json({
@@ -946,7 +946,7 @@ app.get('/api/metrics/teams', asyncHandler(async (req: Request, res: Response) =
 }));
 
 // Get metrics cache statistics
-app.get('/api/metrics/cache/stats', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/metrics/cache/stats', asyncHandler(async (_req: Request, res: Response) => {
   try {
     const prStats = prMetricsCollector.getCacheStats();
     const deployStats = deploymentMetricsCollector.getCacheStats();
