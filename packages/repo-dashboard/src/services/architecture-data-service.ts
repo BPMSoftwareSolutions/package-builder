@@ -4,6 +4,13 @@
  */
 
 import { adfFetcher, ArchitectureDefinition } from './adf-fetcher.js';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export interface ArchitectureData {
   version: string;
@@ -36,7 +43,7 @@ class ArchitectureDataService {
   private readonly defaultPath = 'docs/renderx-plugins-demo-adf.json';
 
   /**
-   * Get architecture from ADF file
+   * Get architecture from ADF file (local first, then GitHub)
    */
   async getDefaultArchitecture(
     org: string = this.defaultOrg,
@@ -44,7 +51,16 @@ class ArchitectureDataService {
     path: string = this.defaultPath
   ): Promise<ArchitectureData> {
     try {
-      // Fetch ADF from GitHub
+      // Try to load from local file first (for development/offline use)
+      const localADF = this.loadLocalADF();
+      if (localADF) {
+        console.log('✅ Loaded ADF from local file');
+        this.cachedADF = localADF;
+        return this.transformADFToArchitectureData(localADF);
+      }
+
+      // Fall back to fetching from GitHub
+      console.log('🔗 Local ADF not found, fetching from GitHub...');
       const adf = await adfFetcher.fetchADF({ org, repo, branch: 'main', path });
       this.cachedADF = adf;
 
@@ -58,6 +74,22 @@ class ArchitectureDataService {
         return this.transformADFToArchitectureData(this.cachedADF);
       }
       throw error;
+    }
+  }
+
+  /**
+   * Load ADF from local file
+   */
+  private loadLocalADF(): ArchitectureDefinition | null {
+    try {
+      // Try to load from local docs directory
+      const localPath = join(__dirname, '../../docs/renderx-plugins-demo-adf.json');
+      const content = readFileSync(localPath, 'utf-8');
+      const adf = JSON.parse(content) as ArchitectureDefinition;
+      return adf;
+    } catch (error) {
+      console.debug('ℹ️ Could not load local ADF file:', error instanceof Error ? error.message : error);
+      return null;
     }
   }
 
