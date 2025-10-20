@@ -36,11 +36,11 @@ export const MetricsTrendAnalysis: React.FC<MetricsTrendAnalysisProps> = ({ metr
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#ff9800';
+        return 'var(--severity-medium)';
     }
   };
 
@@ -111,7 +111,7 @@ export const MetricsTrendAnalysis: React.FC<MetricsTrendAnalysisProps> = ({ metr
             </div>
             <div>
               <div style={{ color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>Anomalies Detected</div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: metrics.anomalies > 0 ? '#f44336' : '#4caf50' }}>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: metrics.anomalies > 0 ? 'var(--severity-critical)' : 'var(--severity-info)' }}>
                 {metrics.anomalies}
               </div>
             </div>

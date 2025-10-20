@@ -26,14 +26,14 @@ interface MetricsChartProps {
 }
 
 const DEFAULT_COLORS = [
-  '#4a9eff',
-  '#4caf50',
-  '#ff9800',
-  '#f44336',
-  '#2196f3',
-  '#9c27b0',
-  '#00bcd4',
-  '#ffc107',
+  'var(--type-service)',
+  'var(--severity-info)',
+  'var(--severity-medium)',
+  'var(--severity-critical)',
+  'var(--type-library)',
+  'var(--type-ui)',
+  'var(--type-database)',
+  'var(--severity-high)',
 ];
 
 export const MetricsChart: React.FC<MetricsChartProps> = ({

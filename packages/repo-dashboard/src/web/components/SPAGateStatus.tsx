@@ -37,18 +37,18 @@ export const SPAGateStatus: React.FC<SPAGateStatusProps> = ({ metrics, onDrillDo
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#ff9800';
+        return 'var(--severity-medium)';
     }
   };
 
   const getPassRateColor = (rate: number) => {
-    if (rate >= 90) return '#4caf50';
-    if (rate >= 70) return '#ff9800';
-    return '#f44336';
+    if (rate >= 90) return 'var(--severity-info)';
+    if (rate >= 70) return 'var(--severity-medium)';
+    return 'var(--severity-critical)';
   };
 
   return (

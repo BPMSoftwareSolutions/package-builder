@@ -25,15 +25,15 @@ export const RootCauseAnalysisCard: React.FC<RootCauseAnalysisCardProps> = ({ me
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'low':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'medium':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'high':
-        return '#f44336';
+        return 'var(--severity-critical)';
       case 'critical':
-        return '#b71c1c';
+        return 'var(--severity-critical)';
       default:
-        return '#9e9e9e';
+        return 'var(--text-tertiary)';
     }
   };
 

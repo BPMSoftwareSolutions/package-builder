@@ -26,15 +26,15 @@ export const LearningRecommendations: React.FC<LearningRecommendationsProps> = (
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'low':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'medium':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'high':
-        return '#f44336';
+        return 'var(--severity-critical)';
       case 'critical':
-        return '#b71c1c';
+        return 'var(--severity-critical)';
       default:
-        return '#9e9e9e';
+        return 'var(--text-tertiary)';
     }
   };
 
@@ -78,7 +78,7 @@ export const LearningRecommendations: React.FC<LearningRecommendationsProps> = (
               style={{
                 height: '100%',
                 width: `${(completedCount / metrics.recommendations.length) * 100}%`,
-                backgroundColor: '#4caf50',
+                backgroundColor: 'var(--severity-info)',
               }}
             />
           </div>

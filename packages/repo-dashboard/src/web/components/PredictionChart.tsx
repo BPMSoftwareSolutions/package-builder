@@ -36,11 +36,11 @@ export const PredictionChart: React.FC<PredictionChartProps> = ({ metrics, onDri
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#ff9800';
+        return 'var(--severity-medium)';
     }
   };
 
@@ -78,7 +78,7 @@ export const PredictionChart: React.FC<PredictionChartProps> = ({ metrics, onDri
               style={{
                 height: '100%',
                 width: `${avgConfidence}%`,
-                backgroundColor: avgConfidence > 80 ? '#4caf50' : avgConfidence > 60 ? '#ff9800' : '#f44336',
+                backgroundColor: avgConfidence > 80 ? 'var(--severity-info)' : avgConfidence > 60 ? 'var(--severity-medium)' : 'var(--severity-critical)',
               }}
             />
           </div>
@@ -103,7 +103,7 @@ export const PredictionChart: React.FC<PredictionChartProps> = ({ metrics, onDri
                 style={{
                   height: '100%',
                   width: `${pred.confidence}%`,
-                  backgroundColor: pred.confidence > 80 ? '#4caf50' : pred.confidence > 60 ? '#ff9800' : '#f44336',
+                  backgroundColor: pred.confidence > 80 ? 'var(--severity-info)' : pred.confidence > 60 ? 'var(--severity-medium)' : 'var(--severity-critical)',
                 }}
               />
             </div>

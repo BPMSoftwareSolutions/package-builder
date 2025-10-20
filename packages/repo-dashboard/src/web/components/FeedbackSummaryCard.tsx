@@ -100,8 +100,8 @@ export const FeedbackSummaryCard: React.FC<FeedbackSummaryCardProps> = ({ org, t
       {error && (
         <div style={{
           padding: '1rem',
-          backgroundColor: '#ffebee',
-          color: '#c62828',
+          backgroundColor: 'rgba(244, 67, 54, 0.1)',
+          color: 'var(--severity-critical)',
           borderRadius: '4px',
           marginBottom: '1rem'
         }}>
@@ -161,7 +161,7 @@ export const FeedbackSummaryCard: React.FC<FeedbackSummaryCardProps> = ({ org, t
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             Active Alerts
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: summary.alertCount > 0 ? '#f44336' : '#4caf50' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: summary.alertCount > 0 ? 'var(--severity-critical)' : 'var(--severity-info)' }}>
             {summary.alertCount}
           </div>
         </div>

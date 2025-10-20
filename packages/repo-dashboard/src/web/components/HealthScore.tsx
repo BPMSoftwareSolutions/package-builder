@@ -14,9 +14,9 @@ export const HealthScore: React.FC<HealthScoreProps> = ({
   size = 'medium',
 }) => {
   const getColor = (value: number) => {
-    if (value >= 80) return '#4caf50'; // green
-    if (value >= 60) return '#ff9800'; // orange
-    return '#f44336'; // red
+    if (value >= 80) return 'var(--severity-info)'; // green
+    if (value >= 60) return 'var(--severity-medium)'; // orange
+    return 'var(--severity-critical)'; // red
   };
 
   const getTrendIcon = () => {
@@ -33,11 +33,11 @@ export const HealthScore: React.FC<HealthScoreProps> = ({
   const getTrendColor = () => {
     switch (trend) {
       case 'up':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'down':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#ff9800';
+        return 'var(--severity-medium)';
     }
   };
 

@@ -57,7 +57,7 @@ export const KnowledgeSharingBoard: React.FC<KnowledgeSharingBoardProps> = ({ me
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             Upcoming Sessions
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#4caf50' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'var(--severity-info)' }}>
             {metrics.upcomingSessions}
           </div>
         </div>

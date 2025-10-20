@@ -29,13 +29,13 @@ export const SkillInventoryCard: React.FC<SkillInventoryCardProps> = ({ metrics,
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'beginner':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'intermediate':
-        return '#2196f3';
+        return 'var(--type-service)';
       case 'expert':
-        return '#4caf50';
+        return 'var(--severity-info)';
       default:
-        return '#9e9e9e';
+        return 'var(--text-tertiary)';
     }
   };
 
@@ -105,7 +105,7 @@ export const SkillInventoryCard: React.FC<SkillInventoryCardProps> = ({ metrics,
                     style={{
                       height: '100%',
                       width: `${gap.gap}%`,
-                      backgroundColor: gap.gap > 60 ? '#f44336' : gap.gap > 30 ? '#ff9800' : '#4caf50',
+                      backgroundColor: gap.gap > 60 ? 'var(--severity-critical)' : gap.gap > 30 ? 'var(--severity-medium)' : 'var(--severity-info)',
                     }}
                   />
                 </div>
