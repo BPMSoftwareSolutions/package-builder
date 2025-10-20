@@ -2361,8 +2361,13 @@ app.get('/api/insights', asyncHandler(async (req: Request, res: Response) => {
     res.json(insights);
   } catch (error) {
     console.error('❌ Error generating insights:', error);
-    res.status(400).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch insights'
+    // Return a valid insights response even on error
+    res.json({
+      trends: [],
+      anomalies: [],
+      recommendations: [],
+      report: `# System Analysis Report\n\nError generating insights: ${error instanceof Error ? error.message : 'Failed to fetch insights'}`,
+      timestamp: new Date().toISOString()
     });
   }
 }));

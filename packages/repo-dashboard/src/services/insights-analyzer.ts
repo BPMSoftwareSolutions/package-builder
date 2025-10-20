@@ -61,8 +61,35 @@ export class InsightsAnalyzer {
 
     try {
       // Initialize metrics aggregator to get teams and repos
-      await metricsAggregator.initialize();
+      try {
+        await metricsAggregator.initialize();
+      } catch (error) {
+        console.warn(`⚠️ Failed to initialize MetricsAggregator, will return empty insights:`, error);
+        // Return empty insights if ADF initialization fails
+        const emptyInsights: InsightsReport = {
+          trends: [],
+          anomalies: [],
+          recommendations: [],
+          report: '# System Analysis Report\n\nNo data available. Please ensure the ADF file is accessible.',
+          timestamp: new Date().toISOString()
+        };
+        return emptyInsights;
+      }
+
       const teams = metricsAggregator.getTeams();
+
+      // If no teams found, return empty insights
+      if (teams.length === 0) {
+        console.warn(`⚠️ No teams found in ADF, returning empty insights`);
+        const emptyInsights: InsightsReport = {
+          trends: [],
+          anomalies: [],
+          recommendations: [],
+          report: '# System Analysis Report\n\nNo teams configured in the Architecture Definition File.',
+          timestamp: new Date().toISOString()
+        };
+        return emptyInsights;
+      }
 
       // Collect metrics from all repositories
       const allPRMetrics: any[] = [];
@@ -116,7 +143,15 @@ export class InsightsAnalyzer {
       return insights;
     } catch (error) {
       console.error(`❌ Error generating insights:`, error);
-      throw error;
+      // Return empty insights on error instead of throwing
+      const emptyInsights: InsightsReport = {
+        trends: [],
+        anomalies: [],
+        recommendations: [],
+        report: `# System Analysis Report\n\nError generating insights: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        timestamp: new Date().toISOString()
+      };
+      return emptyInsights;
     }
   }
 
