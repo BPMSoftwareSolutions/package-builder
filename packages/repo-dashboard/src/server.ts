@@ -690,7 +690,7 @@ app.get('/api/adf/cache/stats', asyncHandler(async (_req: Request, res: Response
 
 // Architecture endpoints
 app.get('/api/architecture', asyncHandler(async (_req: Request, res: Response) => {
-  const architecture = architectureDataService.getDefaultArchitecture();
+  const architecture = await architectureDataService.getDefaultArchitecture();
   res.json(architecture);
 }));
 
@@ -704,7 +704,7 @@ app.get('/api/metrics', asyncHandler(async (req: Request, res: Response) => {
 
 // C4 Diagram endpoints
 app.get('/api/c4/:level/mermaid', asyncHandler(async (_req: Request, res: Response) => {
-  const diagram = architectureDataService.getC4Diagram();
+  const diagram = await architectureDataService.getC4Diagram();
   res.json({ diagram });
 }));
 
