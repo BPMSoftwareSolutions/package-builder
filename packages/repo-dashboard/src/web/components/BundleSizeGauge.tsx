@@ -38,24 +38,24 @@ export const BundleSizeGauge: React.FC<BundleSizeGaugeProps> = ({ metrics, onDri
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--trend-improving)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--trend-degrading)';
       default:
-        return '#ff9800';
+        return 'var(--trend-stable)';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'green':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'yellow':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'red':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#2196f3';
+        return 'var(--type-service)';
     }
   };
 

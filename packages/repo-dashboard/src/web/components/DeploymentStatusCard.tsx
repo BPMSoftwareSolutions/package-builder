@@ -60,11 +60,11 @@ export const DeploymentStatusCard: React.FC<DeploymentStatusCardProps> = ({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'success': return '#4caf50';
-      case 'failed': return '#f44336';
-      case 'in-progress': return '#2196f3';
-      case 'rolled-back': return '#ff9800';
-      default: return '#9e9e9e';
+      case 'success': return 'var(--severity-info)';
+      case 'failed': return 'var(--severity-critical)';
+      case 'in-progress': return 'var(--type-service)';
+      case 'rolled-back': return 'var(--severity-medium)';
+      default: return 'var(--text-tertiary)';
     }
   };
 

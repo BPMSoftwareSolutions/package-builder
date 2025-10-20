@@ -32,11 +32,11 @@ export const ConductorThroughputChart: React.FC<ConductorThroughputChartProps> =
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--trend-improving)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--trend-degrading)';
       default:
-        return '#ff9800';
+        return 'var(--trend-stable)';
     }
   };
 
@@ -50,13 +50,13 @@ export const ConductorThroughputChart: React.FC<ConductorThroughputChartProps> =
     const status = getHealthStatus();
     switch (status) {
       case 'healthy':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'warning':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'critical':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#2196f3';
+        return 'var(--type-service)';
     }
   };
 

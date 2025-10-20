@@ -23,32 +23,32 @@ export const QualityMetricsCard: React.FC<QualityMetricsCardProps> = ({ metrics,
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--trend-improving)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--trend-degrading)';
       default:
-        return '#ff9800';
+        return 'var(--trend-stable)';
     }
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return '#4caf50'; // green
-    if (score >= 60) return '#ff9800'; // orange
-    return '#f44336'; // red
+    if (score >= 80) return 'var(--coverage-high)'; // green
+    if (score >= 60) return 'var(--coverage-medium)'; // orange
+    return 'var(--coverage-low)'; // red
   };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return '#f44336';
+        return 'var(--severity-critical)';
       case 'high':
-        return '#ff5722';
+        return 'var(--severity-high)';
       case 'medium':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'low':
-        return '#ffc107';
+        return 'var(--severity-low)';
       default:
-        return '#4caf50';
+        return 'var(--severity-info)';
     }
   };
 
@@ -115,7 +115,7 @@ export const QualityMetricsCard: React.FC<QualityMetricsCardProps> = ({ metrics,
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Type Errors
           </div>
-          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: metrics.typeErrors > 0 ? '#ff9800' : '#4caf50' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: metrics.typeErrors > 0 ? 'var(--coverage-medium)' : 'var(--coverage-high)' }}>
             {metrics.typeErrors}
           </div>
         </div>
@@ -126,7 +126,7 @@ export const QualityMetricsCard: React.FC<QualityMetricsCardProps> = ({ metrics,
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Security Vulnerabilities
           </div>
-          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: totalVulnerabilities > 0 ? '#f44336' : '#4caf50' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: totalVulnerabilities > 0 ? 'var(--coverage-low)' : 'var(--coverage-high)' }}>
             {totalVulnerabilities}
           </div>
         </div>
@@ -134,7 +134,7 @@ export const QualityMetricsCard: React.FC<QualityMetricsCardProps> = ({ metrics,
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Duplication
           </div>
-          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: metrics.duplicationPercentage > 10 ? '#ff9800' : '#4caf50' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: metrics.duplicationPercentage > 10 ? 'var(--coverage-medium)' : 'var(--coverage-high)' }}>
             {metrics.duplicationPercentage.toFixed(1)}%
           </div>
         </div>

@@ -23,10 +23,10 @@ export const ComponentCard: React.FC<ComponentCardProps> = ({
   onClick,
 }) => {
   const typeColors: Record<string, string> = {
-    service: '#2196f3',
-    library: '#4caf50',
-    ui: '#ff9800',
-    database: '#f44336',
+    service: 'var(--type-service)',
+    library: 'var(--type-library)',
+    ui: 'var(--type-ui)',
+    database: 'var(--type-database)',
   };
 
   return (

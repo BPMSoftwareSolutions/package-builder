@@ -29,20 +29,20 @@ export const HandoffTimeline: React.FC<HandoffTimelineProps> = ({ metrics, onDri
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'in-progress':
-        return '#2196f3';
+        return 'var(--type-service)';
       case 'blocked':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#9e9e9e';
+        return 'var(--text-tertiary)';
     }
   };
 
   const getEfficiencyColor = (efficiency: number) => {
-    if (efficiency >= 80) return '#4caf50';
-    if (efficiency >= 60) return '#ff9800';
-    return '#f44336';
+    if (efficiency >= 80) return 'var(--severity-info)';
+    if (efficiency >= 60) return 'var(--severity-medium)';
+    return 'var(--severity-critical)';
   };
 
   return (

@@ -38,24 +38,24 @@ export const ValueStreamCard: React.FC<ValueStreamCardProps> = ({ metrics, onDri
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--trend-improving)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--trend-degrading)';
       default:
-        return '#ff9800';
+        return 'var(--trend-stable)';
     }
   };
 
   const getStageColor = (stage: string) => {
     const colors: { [key: string]: string } = {
-      'Idea': '#e3f2fd',
-      'PR': '#f3e5f5',
-      'Review': '#fce4ec',
-      'Build': '#fff3e0',
-      'Test': '#f1f8e9',
-      'Deploy': '#e0f2f1',
+      'Idea': 'var(--stage-idea-bg)',
+      'PR': 'var(--stage-pr-bg)',
+      'Review': 'var(--stage-review-bg)',
+      'Build': 'var(--stage-build-bg)',
+      'Test': 'var(--stage-test-bg)',
+      'Deploy': 'var(--stage-deploy-bg)',
     };
-    return colors[stage] || '#f5f5f5';
+    return colors[stage] || 'var(--bg-tertiary)';
   };
 
   const formatTime = (hours: number) => {

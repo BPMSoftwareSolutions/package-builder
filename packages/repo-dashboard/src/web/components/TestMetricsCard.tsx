@@ -10,9 +10,9 @@ export const TestMetricsCard: React.FC<TestMetricsCardProps> = ({ metrics, onDri
   const [expanded, setExpanded] = useState(false);
 
   const getPassRateColor = (rate: number) => {
-    if (rate >= 0.95) return '#4caf50'; // green
-    if (rate >= 0.85) return '#ff9800'; // orange
-    return '#f44336'; // red
+    if (rate >= 0.95) return 'var(--severity-info)'; // green
+    if (rate >= 0.85) return 'var(--severity-medium)'; // orange
+    return 'var(--severity-critical)'; // red
   };
 
   const getTestTypePassRate = (testType: { total: number; passed: number }) => {
@@ -35,7 +35,7 @@ export const TestMetricsCard: React.FC<TestMetricsCardProps> = ({ metrics, onDri
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h3 style={{ margin: 0, color: 'var(--text-primary)' }}>Test Execution</h3>
         {metrics.flakyTests.length > 0 && (
-          <div style={{ padding: '0.25rem 0.75rem', backgroundColor: '#ff9800', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold', color: 'white' }}>
+          <div style={{ padding: '0.25rem 0.75rem', backgroundColor: 'var(--severity-medium)', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold', color: 'white' }}>
             {metrics.flakyTests.length} Flaky
           </div>
         )}

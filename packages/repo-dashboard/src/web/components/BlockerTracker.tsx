@@ -28,28 +28,28 @@ export const BlockerTracker: React.FC<BlockerTrackerProps> = ({ metrics, onDrill
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'low':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'medium':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'high':
-        return '#f44336';
+        return 'var(--severity-critical)';
       case 'critical':
-        return '#b71c1c';
+        return 'var(--severity-critical)';
       default:
-        return '#9e9e9e';
+        return 'var(--text-tertiary)';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'resolved':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'in-progress':
-        return '#2196f3';
+        return 'var(--type-service)';
       case 'open':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#9e9e9e';
+        return 'var(--text-tertiary)';
     }
   };
 
