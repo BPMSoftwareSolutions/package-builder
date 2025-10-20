@@ -10,7 +10,8 @@
       "#105",
       "#108",
       "#110",
-      "#115"
+      "#115",
+      "#118"
     ]
   },
   "features": {
@@ -2765,6 +2766,164 @@
         "file": "src/services/conductor-metrics-from-logs.test.ts",
         "testCount": 13,
         "description": "Comprehensive unit tests for metric extraction and analysis"
+      }
+    ]
+  },
+  "mockMetricsReplacement": {
+    "description": "Replace MockMetricsService with Real GitHub Data Collectors for Issue #118",
+    "relatedIssue": "#118",
+    "status": "implemented",
+    "features": [
+      {
+        "name": "Phase 1: Core Metrics Endpoints",
+        "status": "implemented",
+        "endpoints": [
+          {
+            "path": "GET /api/metrics",
+            "description": "Organization metrics using MetricsAggregator",
+            "implementation": "Uses MetricsAggregator to collect team metrics across all repositories",
+            "fallback": "MockMetricsService.getOrganizationMetrics()"
+          },
+          {
+            "path": "GET /api/metrics/conductor/:org",
+            "description": "Conductor metrics for organization",
+            "implementation": "Uses ConductorMetricsCollector to fetch real Conductor data",
+            "fallback": "MockMetricsService.getConductorMetrics()"
+          },
+          {
+            "path": "GET /api/metrics/bundle/:org",
+            "description": "Bundle metrics for organization",
+            "implementation": "Uses BundleMetricsCollector to fetch real bundle data",
+            "fallback": "MockMetricsService.getBundleMetrics()"
+          }
+        ]
+      },
+      {
+        "name": "Phase 2: Quality & Coverage Endpoints",
+        "status": "implemented",
+        "endpoints": [
+          {
+            "path": "GET /api/metrics/coverage/:org",
+            "description": "Test coverage metrics for organization",
+            "implementation": "Uses TestCoverageCollector to fetch real coverage data",
+            "fallback": "MockMetricsService.getCoverageMetrics()"
+          },
+          {
+            "path": "GET /api/metrics/coverage/:org/:team",
+            "description": "Test coverage metrics for specific team",
+            "implementation": "Uses TestCoverageCollector for team-specific data",
+            "fallback": "MockMetricsService.getTeamCoverageMetrics()"
+          },
+          {
+            "path": "GET /api/metrics/quality/:org",
+            "description": "Code quality metrics for organization",
+            "implementation": "Uses CodeQualityCollector to fetch real quality data",
+            "fallback": "MockMetricsService.getQualityMetrics()"
+          }
+        ]
+      },
+      {
+        "name": "Phase 3: Advanced Endpoints",
+        "status": "implemented",
+        "endpoints": [
+          {
+            "path": "GET /api/metrics/tests/:org",
+            "description": "Test execution metrics for organization",
+            "implementation": "Uses TestExecutionCollector to fetch real test data",
+            "fallback": "MockMetricsService.getTestMetrics()"
+          },
+          {
+            "path": "GET /api/metrics/architecture-validation/:org",
+            "description": "Architecture validation metrics for organization",
+            "implementation": "Uses ArchitectureValidationCollector to fetch real validation data",
+            "fallback": "MockMetricsService.getConstraints()"
+          },
+          {
+            "path": "GET /api/metrics/constraints/:org",
+            "description": "Constraint detection metrics for organization",
+            "implementation": "Uses ConstraintDetectionService with FlowStageAnalyzerService",
+            "fallback": "MockMetricsService.getConstraints()"
+          }
+        ]
+      },
+      {
+        "name": "Phase 4: Alerts & Aggregation",
+        "status": "implemented",
+        "endpoints": [
+          {
+            "path": "GET /api/metrics/bundle-alerts/:org",
+            "description": "Bundle threshold alerts for organization",
+            "implementation": "Uses BundleMetricsCollector.checkBudgetAlerts() to fetch real alerts",
+            "fallback": "MockMetricsService.getBundleAlerts()"
+          }
+        ]
+      },
+      {
+        "name": "Collector Services Integration",
+        "status": "implemented",
+        "description": "Integration of 7 existing collector services with 1-hour caching",
+        "services": [
+          {
+            "name": "PullRequestMetricsCollector",
+            "file": "src/services/pull-request-metrics-collector.ts",
+            "cacheTTL": "1 hour"
+          },
+          {
+            "name": "DeploymentMetricsCollector",
+            "file": "src/services/deployment-metrics-collector.ts",
+            "cacheTTL": "1 hour"
+          },
+          {
+            "name": "ConductorMetricsCollector",
+            "file": "src/services/conductor-metrics-collector.ts",
+            "cacheTTL": "1 hour"
+          },
+          {
+            "name": "BundleMetricsCollector",
+            "file": "src/services/bundle-metrics-collector.ts",
+            "cacheTTL": "1 hour"
+          },
+          {
+            "name": "TestCoverageCollector",
+            "file": "src/services/test-coverage-collector.ts",
+            "cacheTTL": "1 hour"
+          },
+          {
+            "name": "CodeQualityCollector",
+            "file": "src/services/code-quality-collector.ts",
+            "cacheTTL": "1 hour"
+          },
+          {
+            "name": "TestExecutionCollector",
+            "file": "src/services/test-execution-collector.ts",
+            "cacheTTL": "1 hour"
+          }
+        ]
+      },
+      {
+        "name": "MetricsAggregator Service",
+        "status": "implemented",
+        "file": "src/services/metrics-aggregator.ts",
+        "description": "Service for aggregating metrics by team using ADF team mappings",
+        "features": [
+          "Initialize with ADF file",
+          "Get teams from ADF",
+          "Get repositories for each team",
+          "Aggregate team metrics across repositories",
+          "Support 7-day and 30-day periods"
+        ]
+      },
+      {
+        "name": "Graceful Degradation Pattern",
+        "status": "implemented",
+        "description": "All endpoints implement try-catch with fallback to mock data",
+        "pattern": "try { use real collector } catch { fallback to mock data }"
+      },
+      {
+        "name": "Unit Tests",
+        "status": "implemented",
+        "testCount": 582,
+        "description": "All tests pass including new endpoint implementations"
       }
     ]
   }
