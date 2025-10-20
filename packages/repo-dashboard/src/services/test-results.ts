@@ -96,17 +96,22 @@ export class TestResultsService {
 
   /**
    * Calculate metrics for test results
+   *
+   * NOTE: Test result parsing from GitHub Actions is not yet fully implemented.
+   * This method returns graceful degradation values (zeros) when real test data is unavailable.
+   * In production, this would parse actual test results from workflow run artifacts.
    */
   private calculateTestResults(run: any, org: string, repo: string): TestResults {
     const createdAt = new Date(run.created_at);
     const updatedAt = new Date(run.updated_at);
     const duration = Math.round((updatedAt.getTime() - createdAt.getTime()) / 1000);
 
-    // Mock test data - in production, this would parse actual test results
-    const totalTests = Math.floor(Math.random() * 500) + 100;
-    const passedTests = Math.floor(totalTests * 0.95);
-    const failedTests = totalTests - passedTests - Math.floor(totalTests * 0.02);
-    const skippedTests = Math.floor(totalTests * 0.02);
+    // Graceful degradation: return zero values when test data is unavailable
+    // In production, this would parse actual test results from GitHub Actions artifacts
+    const totalTests = 0; // Data unavailable - test artifact parsing not implemented
+    const passedTests = 0; // Data unavailable - test artifact parsing not implemented
+    const failedTests = 0; // Data unavailable - test artifact parsing not implemented
+    const skippedTests = 0; // Data unavailable - test artifact parsing not implemented
 
     return {
       timestamp: createdAt,
@@ -116,17 +121,11 @@ export class TestResultsService {
       passedTests,
       failedTests,
       skippedTests,
-      coverage: 0.85 + Math.random() * 0.1, // 85-95% coverage
+      coverage: 0, // Data unavailable - test artifact parsing not implemented
       coverageTrend: 'stable',
-      failingTests: failedTests > 0 ? [
-        {
-          name: 'test_example_failure',
-          error: 'Expected true but got false',
-          duration: 2500
-        }
-      ] : [],
+      failingTests: [], // Data unavailable - test artifact parsing not implemented
       totalDuration: duration,
-      avgTestDuration: duration / totalTests
+      avgTestDuration: duration > 0 ? duration / Math.max(totalTests, 1) : 0
     };
   }
 

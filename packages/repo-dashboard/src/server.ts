@@ -2459,14 +2459,17 @@ app.get('/api/conductor/logs/:containerId', asyncHandler(async (req: Request, re
 app.get('/api/conductor/container-health/:containerId', asyncHandler(async (req: Request, res: Response) => {
   const { containerId: _containerId } = req.params;
   try {
+    // NOTE: Docker API integration is not yet implemented.
+    // This endpoint returns graceful degradation values (zeros) when real data is unavailable.
+    // In production, this would fetch real container stats from Docker daemon.
     const health = {
       status: 'running' as const,
-      uptime: Math.floor(Math.random() * 86400 * 30), // Random uptime up to 30 days
-      cpuUsage: Math.random() * 100,
-      memoryUsage: Math.random() * 100,
-      networkIn: Math.floor(Math.random() * 1000000),
-      networkOut: Math.floor(Math.random() * 1000000),
-      healthStatus: Math.random() > 0.1 ? ('healthy' as const) : ('degraded' as const),
+      uptime: 0, // Data unavailable - Docker API not integrated
+      cpuUsage: 0, // Data unavailable - Docker API not integrated
+      memoryUsage: 0, // Data unavailable - Docker API not integrated
+      networkIn: 0, // Data unavailable - Docker API not integrated
+      networkOut: 0, // Data unavailable - Docker API not integrated
+      healthStatus: 'starting' as const, // Unknown status until Docker API available
       lastUpdated: new Date().toISOString()
     };
     res.json(health);
