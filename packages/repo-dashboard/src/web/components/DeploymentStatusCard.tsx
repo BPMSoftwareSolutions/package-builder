@@ -99,8 +99,8 @@ export const DeploymentStatusCard: React.FC<DeploymentStatusCardProps> = ({
       {error && (
         <div style={{
           padding: '1rem',
-          backgroundColor: '#ffebee',
-          color: '#c62828',
+          backgroundColor: 'rgba(244, 67, 54, 0.1)',
+          color: 'var(--severity-critical)',
           borderRadius: '4px',
           marginBottom: '1rem'
         }}>
@@ -169,7 +169,7 @@ export const DeploymentStatusCard: React.FC<DeploymentStatusCardProps> = ({
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             Rollbacks
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: deploymentStatus.rollbackCount > 0 ? '#ff9800' : '#4caf50' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: deploymentStatus.rollbackCount > 0 ? 'var(--severity-medium)' : 'var(--severity-info)' }}>
             {deploymentStatus.rollbackCount}
           </div>
         </div>

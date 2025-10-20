@@ -27,20 +27,20 @@ export const DependencyHealthChart: React.FC<DependencyHealthChartProps> = ({ me
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'up-to-date':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'outdated':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'critical':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#9e9e9e';
+        return 'var(--text-tertiary)';
     }
   };
 
   const getHealthColor = (score: number) => {
-    if (score >= 80) return '#4caf50';
-    if (score >= 60) return '#ff9800';
-    return '#f44336';
+    if (score >= 80) return 'var(--severity-info)';
+    if (score >= 60) return 'var(--severity-medium)';
+    return 'var(--severity-critical)';
   };
 
   return (
@@ -88,7 +88,7 @@ export const DependencyHealthChart: React.FC<DependencyHealthChartProps> = ({ me
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             Outdated
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#ff9800' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--severity-medium)' }}>
             {metrics.outdatedCount}
           </div>
         </div>
@@ -96,7 +96,7 @@ export const DependencyHealthChart: React.FC<DependencyHealthChartProps> = ({ me
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             Vulnerabilities
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: metrics.vulnerabilityCount > 0 ? '#f44336' : '#4caf50' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: metrics.vulnerabilityCount > 0 ? 'var(--severity-critical)' : 'var(--severity-info)' }}>
             {metrics.vulnerabilityCount}
           </div>
         </div>

@@ -106,7 +106,7 @@ export const DeployCadenceChart: React.FC<DeployCadenceChartProps> = ({ metrics,
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Success Rate
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#4caf50' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'var(--severity-info)' }}>
             {metrics.averageSuccessRate.toFixed(1)}%
           </div>
         </div>
@@ -125,7 +125,7 @@ export const DeployCadenceChart: React.FC<DeployCadenceChartProps> = ({ metrics,
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Rollbacks
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#f44336' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--severity-critical)' }}>
             {metrics.totalRollbacks}
           </div>
         </div>
@@ -156,7 +156,7 @@ export const DeployCadenceChart: React.FC<DeployCadenceChartProps> = ({ metrics,
                   <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {data.deployments} deploys
                   </span>
-                  <span style={{ color: '#4caf50', fontWeight: 'bold' }}>
+                  <span style={{ color: 'var(--severity-info)', fontWeight: 'bold' }}>
                     {data.successRate.toFixed(0)}%
                   </span>
                 </div>

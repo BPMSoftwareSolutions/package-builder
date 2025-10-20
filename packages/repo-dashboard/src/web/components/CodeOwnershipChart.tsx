@@ -27,7 +27,7 @@ export const CodeOwnershipChart: React.FC<CodeOwnershipChartProps> = ({ metrics,
     return 'var(--severity-critical)'; // red - high concentration
   };
 
-  const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f'];
+  const colors = ['var(--type-service)', 'var(--severity-medium)', 'var(--severity-info)', 'var(--severity-critical)', 'var(--type-library)', 'var(--type-database)', 'var(--type-ui)', 'var(--text-tertiary)'];
 
   return (
     <div

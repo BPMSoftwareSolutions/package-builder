@@ -96,7 +96,7 @@ export const CrossTeamCommunicationHub: React.FC<CrossTeamCommunicationHubProps>
                   <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {channel.name}
                   </span>
-                  <span style={{ color: channel.status === 'active' ? '#4caf50' : '#9e9e9e', fontWeight: 'bold' }}>
+                  <span style={{ color: channel.status === 'active' ? 'var(--severity-info)' : 'var(--text-tertiary)', fontWeight: 'bold' }}>
                     {channel.status.toUpperCase()}
                   </span>
                 </div>
@@ -116,8 +116,8 @@ export const CrossTeamCommunicationHub: React.FC<CrossTeamCommunicationHubProps>
                 Open Blockers
               </h4>
               {metrics.blockers.map((blocker, idx) => (
-                <div key={idx} style={{ marginBottom: '0.5rem', padding: '0.75rem', backgroundColor: '#ffebee', borderRadius: '4px', fontSize: '0.875rem' }}>
-                  <div style={{ fontWeight: 'bold', color: '#f44336', marginBottom: '0.25rem' }}>
+                <div key={idx} style={{ marginBottom: '0.5rem', padding: '0.75rem', backgroundColor: 'rgba(244, 67, 54, 0.1)', borderRadius: '4px', fontSize: '0.875rem' }}>
+                  <div style={{ fontWeight: 'bold', color: 'var(--severity-critical)', marginBottom: '0.25rem' }}>
                     {blocker.title}
                   </div>
                   <div style={{ color: 'var(--text-secondary)' }}>
