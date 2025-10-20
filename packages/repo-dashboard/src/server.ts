@@ -25,7 +25,7 @@ import { testCoverageCollector } from './services/test-coverage-collector.js';
 import { codeQualityCollector } from './services/code-quality-collector.js';
 import { testExecutionCollector } from './services/test-execution-collector.js';
 import { ConstraintDetectionService } from './services/constraint-detection.js';
-import { RootCauseAnalysisService } from './services/root-cause-analysis.js';
+// import { RootCauseAnalysisService } from './services/root-cause-analysis.js';
 import { PredictiveAnalysisService } from './services/predictive-analysis.js';
 import { crossTeamDependencyService } from './services/cross-team-dependency.js';
 import { handoffTrackingService } from './services/handoff-tracking.js';
@@ -45,8 +45,8 @@ import { deploymentStatusService } from './services/deployment-status.js';
 import { feedbackAggregationService } from './services/feedback-aggregation.js';
 import { alertingService } from './services/alerting.js';
 import { ConductorLogsCollector } from './services/conductor-logs-collector.js';
-import { ContainerHealthMonitor } from './services/container-health.js';
-import { ConductorMetricsExtractor } from './services/conductor-metrics-from-logs.js';
+// import { ContainerHealthMonitor } from './services/container-health.js';
+// import { ConductorMetricsExtractor } from './services/conductor-metrics-from-logs.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -64,7 +64,7 @@ const deployCadenceService = new DeployCadenceService(deploymentMetricsCollector
 
 // Initialize Phase 1.4 services (Constraint Radar & Bottleneck Detection)
 const constraintDetectionService = new ConstraintDetectionService();
-const rootCauseAnalysisService = new RootCauseAnalysisService();
+// const rootCauseAnalysisService = new RootCauseAnalysisService();
 const predictiveAnalysisService = new PredictiveAnalysisService();
 
 // Initialize Phase 1.7 services (Knowledge Sharing & Bus Factor Analysis)
@@ -75,8 +75,8 @@ const codeOwnershipService = new CodeOwnershipService();
 
 // Initialize Phase 2 services (Conductor Log Exposure)
 const conductorLogsCollector = new ConductorLogsCollector();
-const containerHealthMonitor = new ContainerHealthMonitor();
-const conductorMetricsExtractor = new ConductorMetricsExtractor();
+// const containerHealthMonitor = new ContainerHealthMonitor();
+// const conductorMetricsExtractor = new ConductorMetricsExtractor();
 
 // Middleware
 app.use(express.json());
@@ -95,7 +95,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 // Error handling middleware
-const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => Promise<void>) =>
+const asyncHandler = (fn: (req: Request, res: Response, next?: NextFunction) => Promise<any>) =>
   (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
@@ -396,7 +396,7 @@ app.get('/api/repos/architecture/:org/:repo', asyncHandler(async (req: Request, 
 // Get organization repositories
 app.get('/api/repos/:org', asyncHandler(async (req: Request, res: Response) => {
   const { org } = req.params;
-  const { limit = '50' } = req.query;
+  // const { limit = '50' } = req.query;
 
   try {
     console.log(`📊 Fetching repos for org: ${org} (ADF-filtered)`);
@@ -787,9 +787,9 @@ app.get('/api/metrics', asyncHandler(async (req: Request, res: Response) => {
 }));
 
 // C4 Diagram endpoints
-app.get('/api/c4/:level/mermaid', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/c4/:level/mermaid', asyncHandler(async (_req: Request, res: Response) => {
   try {
-    const { level } = req.params;
+    // const { level } = req.params;
     const diagram = `graph TD
     A[Web UI] -->|HTTP| B[API Server]
     B -->|CLI| C[Python Scripts]
