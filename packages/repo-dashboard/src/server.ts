@@ -11,6 +11,7 @@ import { getPackageReadiness } from './local.js';
 import { adfFetcher } from './services/adf-fetcher.js';
 import { adfCache } from './services/adf-cache.js';
 import { extractRepositoriesFromADF } from './services/adf-repository-extractor.js';
+import { validateRepoInADF, getADFRepositories, createNonCompliantRepoError } from './services/adf-validation.js';
 import { prMetricsCollector } from './services/pull-request-metrics-collector.js';
 import { deploymentMetricsCollector } from './services/deployment-metrics-collector.js';
 import { metricsAggregator } from './services/metrics-aggregator.js';
@@ -398,17 +399,17 @@ app.get('/api/repos/:org', asyncHandler(async (req: Request, res: Response) => {
   const { limit = '50' } = req.query;
 
   try {
-    console.log(`📊 Fetching repos for org: ${org}`);
-    const repos = await listRepos({
-      org,
-      limit: Math.min(parseInt(limit as string), 100)
-    });
+    console.log(`📊 Fetching repos for org: ${org} (ADF-filtered)`);
 
-    console.log(`✅ Found ${repos.length} repositories`);
+    // Load ADF to get architecture-specific repos
+    const adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    const architectureRepos = extractRepositoriesFromADF(adf, org);
 
-    // Fetch additional status for each repo
+    console.log(`✅ Found ${architectureRepos.length} architecture repositories`);
+
+    // Fetch additional status for each architecture repo
     const reposWithStatus = await Promise.all(
-      repos.map(async (repo) => {
+      architectureRepos.map(async (repo) => {
         try {
           const issues = await listIssues({
             repo: `${repo.owner}/${repo.name}`,
@@ -419,7 +420,8 @@ app.get('/api/repos/:org', asyncHandler(async (req: Request, res: Response) => {
           const workflow = await getWorkflowStatus({ repo: `${repo.owner}/${repo.name}` });
 
           return {
-            ...repo,
+            owner: repo.owner,
+            name: repo.name,
             openIssues: issues.filter(i => !i.isPullRequest).length,
             openPRs: prs.length,
             stalePRs: staleCount,
@@ -428,7 +430,8 @@ app.get('/api/repos/:org', asyncHandler(async (req: Request, res: Response) => {
         } catch (error) {
           console.warn(`⚠️ Error fetching status for ${repo.name}:`, error instanceof Error ? error.message : error);
           return {
-            ...repo,
+            owner: repo.owner,
+            name: repo.name,
             openIssues: 0,
             openPRs: 0,
             stalePRs: 0,
@@ -2182,6 +2185,17 @@ app.get('/api/metrics/high-risk-areas/:org', asyncHandler(async (req: Request, r
 app.get('/api/metrics/build-status/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
   const { org, repo } = req.params;
   try {
+    // Validate repo is in ADF
+    const adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    const validation = validateRepoInADF(org, repo, adf);
+
+    if (!validation.isValid) {
+      console.warn(`⚠️ Build status request for non-ADF repo: ${org}/${repo}`);
+      return res.status(403).json(
+        createNonCompliantRepoError(org, repo, validation.architectureRepos || [])
+      );
+    }
+
     const buildStatus = await buildStatusService.collectBuildStatus(org, repo);
     res.json({
       timestamp: new Date(),
@@ -2201,6 +2215,17 @@ app.get('/api/metrics/build-status/:org/:repo', asyncHandler(async (req: Request
 app.get('/api/metrics/test-results/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
   const { org, repo } = req.params;
   try {
+    // Validate repo is in ADF
+    const adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    const validation = validateRepoInADF(org, repo, adf);
+
+    if (!validation.isValid) {
+      console.warn(`⚠️ Test results request for non-ADF repo: ${org}/${repo}`);
+      return res.status(403).json(
+        createNonCompliantRepoError(org, repo, validation.architectureRepos || [])
+      );
+    }
+
     const testResults = await testResultsService.collectTestResults(org, repo);
     res.json({
       timestamp: new Date(),
@@ -2220,6 +2245,17 @@ app.get('/api/metrics/test-results/:org/:repo', asyncHandler(async (req: Request
 app.get('/api/metrics/deployment-status/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
   const { org, repo } = req.params;
   try {
+    // Validate repo is in ADF
+    const adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    const validation = validateRepoInADF(org, repo, adf);
+
+    if (!validation.isValid) {
+      console.warn(`⚠️ Deployment status request for non-ADF repo: ${org}/${repo}`);
+      return res.status(403).json(
+        createNonCompliantRepoError(org, repo, validation.architectureRepos || [])
+      );
+    }
+
     const deploymentStatus = await deploymentStatusService.collectDeploymentStatus(org, repo);
     res.json({
       timestamp: new Date(),

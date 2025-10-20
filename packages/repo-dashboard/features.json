@@ -9,7 +9,8 @@
       "#51",
       "#105",
       "#108",
-      "#110"
+      "#110",
+      "#115"
     ]
   },
   "features": {
@@ -1040,6 +1041,89 @@
           "Use default organization when not specified",
           "Return repository names in owner/name format",
           "Handle mixed repository sources"
+        ]
+      }
+    ]
+  },
+  "adfComplianceFiltering": {
+    "description": "ADF Compliance Filtering for Issue #115 - Filter All Pages to renderx-plugins-demo Repos Only",
+    "features": [
+      {
+        "name": "ADF Validation Service",
+        "status": "implemented",
+        "file": "src/services/adf-validation.ts",
+        "testCases": [
+          "Validate repository is in ADF",
+          "Return validation result with message",
+          "Get all ADF repositories",
+          "Create non-compliant repo error response",
+          "Handle validation errors gracefully"
+        ]
+      },
+      {
+        "name": "Fix /api/repos/:org Endpoint",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "testCases": [
+          "Load local ADF file",
+          "Extract architecture repositories",
+          "Filter repos to ADF only",
+          "Return architecture-specific repos with status",
+          "Handle errors gracefully"
+        ]
+      },
+      {
+        "name": "Fix /api/metrics/build-status/:org/:repo Endpoint",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "testCases": [
+          "Validate repo is in ADF",
+          "Return 403 error for non-ADF repos",
+          "Return build status for valid repos",
+          "Include architecture repos in error response"
+        ]
+      },
+      {
+        "name": "Fix /api/metrics/test-results/:org/:repo Endpoint",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "testCases": [
+          "Validate repo is in ADF",
+          "Return 403 error for non-ADF repos",
+          "Return test results for valid repos",
+          "Include architecture repos in error response"
+        ]
+      },
+      {
+        "name": "Fix /api/metrics/deployment-status/:org/:repo Endpoint",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "testCases": [
+          "Validate repo is in ADF",
+          "Return 403 error for non-ADF repos",
+          "Return deployment status for valid repos",
+          "Include architecture repos in error response"
+        ]
+      },
+      {
+        "name": "Update Issues Page Component",
+        "status": "implemented",
+        "file": "src/web/pages/Issues.tsx",
+        "testCases": [
+          "Handle ADF validation errors",
+          "Display error message with valid repos",
+          "Default to renderx-plugins-demo repo",
+          "Show architecture repos in error message"
+        ]
+      },
+      {
+        "name": "Update Packages Page Component",
+        "status": "implemented",
+        "file": "src/web/pages/Packages.tsx",
+        "testCases": [
+          "Default to repo-dashboard packages",
+          "Mark as ADF-aware in title",
+          "Filter packages to architecture repos"
         ]
       }
     ]

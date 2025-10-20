@@ -23,7 +23,8 @@ export default function Packages() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState('all');
-  const [basePath, setBasePath] = useState('./packages');
+  // Default to repo-dashboard packages (ADF-aware)
+  const [basePath, setBasePath] = useState('./packages/repo-dashboard');
   const [autoRefresh, setAutoRefresh] = useState(false);
 
   useEffect(() => {
@@ -67,7 +68,7 @@ export default function Packages() {
 
   return (
     <div>
-      <h1>Local Packages</h1>
+      <h1>Architecture Packages (ADF-Aware)</h1>
 
       {error && <div className="error">{error}</div>}
 
