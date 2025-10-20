@@ -470,17 +470,65 @@ app.get('/api/repos/:owner/:repo/issues', asyncHandler(async (req: Request, res:
   }
 }));
 
-// Get local packages
+// Get packages from ADF repositories and their dependencies
 app.get('/api/packages', asyncHandler(async (req: Request, res: Response) => {
-  const { basePath = './packages', includePrivate = 'false' } = req.query;
-
   try {
-    const readiness = await getPackageReadiness({
-      basePath: basePath as string,
-      includePrivate: includePrivate === 'true'
-    });
+    // Load ADF to get architecture repositories
+    const adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    const architectureRepos = extractRepositoriesFromADF(adf, 'BPMSoftwareSolutions');
 
-    res.json(readiness);
+    // Fetch package.json from each ADF repository
+    const packages: any[] = [];
+    const dependencyMap = new Map<string, string[]>(); // Track which repos depend on which
+
+    for (const repo of architectureRepos) {
+      try {
+        const packageUrl = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/package.json`;
+        const response = await fetch(packageUrl);
+
+        if (response.ok) {
+          const packageJson = await response.json();
+          const allDeps = {
+            ...packageJson.dependencies,
+            ...packageJson.devDependencies
+          };
+
+          // Track dependencies on other ADF repos
+          const internalDeps = Object.keys(allDeps).filter(dep => {
+            return architectureRepos.some(r =>
+              dep.includes(r.name) || dep.includes(r.name.replace(/-/g, ''))
+            );
+          });
+
+          if (internalDeps.length > 0) {
+            dependencyMap.set(`${repo.owner}/${repo.name}`, internalDeps);
+          }
+
+          packages.push({
+            name: packageJson.name || repo.name,
+            repository: `${repo.owner}/${repo.name}`,
+            version: packageJson.version || 'unknown',
+            description: packageJson.description || '',
+            private: packageJson.private || false,
+            main: packageJson.main || '',
+            types: packageJson.types || '',
+            dependencies: Object.keys(packageJson.dependencies || {}).length,
+            devDependencies: Object.keys(packageJson.devDependencies || {}).length,
+            internalDependencies: internalDeps,
+            isArchitecturePackage: true
+          });
+        }
+      } catch (err) {
+        // Skip repos that don't have package.json or are inaccessible
+        console.warn(`Could not fetch package.json for ${repo.owner}/${repo.name}`);
+      }
+    }
+
+    res.json({
+      total: packages.length,
+      packages: packages.sort((a, b) => a.name.localeCompare(b.name)),
+      dependencyMap: Object.fromEntries(dependencyMap)
+    });
   } catch (error) {
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch packages'
