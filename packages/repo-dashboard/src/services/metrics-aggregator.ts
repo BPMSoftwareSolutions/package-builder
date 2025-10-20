@@ -1,10 +1,13 @@
 /**
  * Metrics Aggregator Service
  * Aggregates PR and deployment metrics by team and calculates trends
+ * Uses ADFTeamMapper to get team-to-repository mappings from ADF
  */
 
 import { prMetricsCollector } from './pull-request-metrics-collector.js';
 import { deploymentMetricsCollector } from './deployment-metrics-collector.js';
+import { ADFTeamMapper } from './adf-team-mapper.js';
+import { adfFetcher } from './adf-fetcher.js';
 
 export interface TeamMetrics {
   team: string;
@@ -42,18 +45,67 @@ export interface RollingAverage {
 }
 
 export class MetricsAggregator {
-  private teamRepoMapping: { [team: string]: string[] } = {
-    'Host Team': ['renderx-plugins-demo'],
-    'SDK Team': ['renderx-plugins-sdk', 'renderx-manifest-tools'],
-    'Conductor Team': ['musical-conductor'],
-    'Plugin Teams': [
-      'renderx-plugins-canvas',
-      'renderx-plugins-components',
-      'renderx-plugins-control-panel',
-      'renderx-plugins-header',
-      'renderx-plugins-library'
-    ]
-  };
+  private adfTeamMapper: ADFTeamMapper;
+  private initialized = false;
+
+  constructor() {
+    this.adfTeamMapper = new ADFTeamMapper();
+  }
+
+  /**
+   * Initialize the aggregator with ADF data
+   * Can optionally provide ADF data directly (useful for testing)
+   */
+  async initialize(adfData?: ArchitectureDefinition): Promise<void> {
+    if (this.initialized) return;
+
+    try {
+      let adf: ArchitectureDefinition;
+
+      if (adfData) {
+        // Use provided ADF data (for testing)
+        adf = adfData;
+        console.log('✅ MetricsAggregator initialized with provided ADF data');
+      } else {
+        // Fetch the default ADF from renderx-plugins-demo repository
+        adf = await adfFetcher.fetchADF({
+          org: 'BPMSoftwareSolutions',
+          repo: 'renderx-plugins-demo',
+          branch: 'main',
+          path: 'docs/renderx-plugins-demo-adf.json'
+        });
+        console.log('✅ MetricsAggregator initialized with fetched ADF data');
+      }
+
+      await this.adfTeamMapper.initializeFromADF(adf);
+      this.initialized = true;
+    } catch (error) {
+      console.error('❌ Failed to initialize MetricsAggregator:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all teams from ADF
+   */
+  getTeams(): string[] {
+    if (!this.initialized) {
+      console.warn('⚠️ MetricsAggregator not initialized, returning empty teams');
+      return [];
+    }
+    return this.adfTeamMapper.getTeams();
+  }
+
+  /**
+   * Get repositories for a team
+   */
+  getTeamRepositories(team: string): string[] {
+    if (!this.initialized) {
+      console.warn('⚠️ MetricsAggregator not initialized, returning empty repos');
+      return [];
+    }
+    return this.adfTeamMapper.getTeamRepositories(team);
+  }
 
   /**
    * Aggregate metrics for a team
@@ -63,7 +115,11 @@ export class MetricsAggregator {
     team: string,
     period: '7d' | '30d' = '30d'
   ): Promise<TeamMetrics> {
-    const repos = this.teamRepoMapping[team] || [];
+    if (!this.initialized) {
+      await this.initialize();
+    }
+
+    const repos = this.getTeamRepositories(team);
     const days = period === '7d' ? 7 : 30;
 
     console.log(`📊 Aggregating metrics for team: ${team} (${repos.length} repos)`);
@@ -79,9 +135,12 @@ export class MetricsAggregator {
     // Collect metrics from all team repositories
     for (const repo of repos) {
       try {
+        // Extract repo name from full path (e.g., "BPMSoftwareSolutions/renderx-plugins-demo" -> "renderx-plugins-demo")
+        const repoName = repo.includes('/') ? repo.split('/')[1] : repo;
+
         // PR metrics
-        const prMetrics = await prMetricsCollector.collectPRMetrics(org, repo, days);
-        const prAgg = await prMetricsCollector.calculateAggregateMetrics(org, repo, days);
+        const prMetrics = await prMetricsCollector.collectPRMetrics(org, repoName, days);
+        const prAgg = await prMetricsCollector.calculateAggregateMetrics(org, repoName, days);
 
         totalPRCount += prAgg.prCount;
         totalMergedPRCount += prAgg.mergedCount;
@@ -89,8 +148,8 @@ export class MetricsAggregator {
         totalCycleTimes.push(...prMetrics.map(m => m.totalCycleTime));
 
         // Deployment metrics
-        await deploymentMetricsCollector.collectDeploymentMetrics(org, repo, days);
-        const deployAgg = await deploymentMetricsCollector.calculateAggregateMetrics(org, repo, days);
+        await deploymentMetricsCollector.collectDeploymentMetrics(org, repoName, days);
+        const deployAgg = await deploymentMetricsCollector.calculateAggregateMetrics(org, repoName, days);
 
         totalDeployments += deployAgg.deploymentCount;
         totalSuccessfulDeployments += deployAgg.successCount;
@@ -201,14 +260,22 @@ export class MetricsAggregator {
    * Get all teams
    */
   getTeams(): string[] {
-    return Object.keys(this.teamRepoMapping);
+    if (!this.initialized) {
+      console.warn('⚠️ MetricsAggregator not initialized, returning empty teams');
+      return [];
+    }
+    return this.adfTeamMapper.getTeams();
   }
 
   /**
    * Get repositories for a team
    */
   getTeamRepositories(team: string): string[] {
-    return this.teamRepoMapping[team] || [];
+    if (!this.initialized) {
+      console.warn('⚠️ MetricsAggregator not initialized, returning empty repos');
+      return [];
+    }
+    return this.adfTeamMapper.getTeamRepositories(team);
   }
 }
 
