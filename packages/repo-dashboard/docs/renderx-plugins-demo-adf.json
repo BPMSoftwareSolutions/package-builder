@@ -136,33 +136,6 @@
         }
       },
       {
-        "id": "plugin-components",
-        "name": "Components Plugin",
-        "type": "plugin",
-        "description": "UI components plugin for RenderX",
-        "technology": "React, TypeScript",
-        "repository": "BPMSoftwareSolutions/renderx-plugin-components",
-        "team": "Components Team",
-        "teamDescription": "Responsible for UI components plugin development",
-        "responsibilities": [
-          "Component library",
-          "Component rendering",
-          "Component orchestration"
-        ],
-        "packages": [
-          {
-            "name": "@renderx-plugins/components",
-            "version": "0.1.1",
-            "status": "active"
-          }
-        ],
-        "metrics": {
-          "healthScore": 0.82,
-          "testCoverage": 0.75,
-          "buildStatus": "success"
-        }
-      },
-      {
         "id": "plugin-control-panel",
         "name": "Control Panel Plugin",
         "type": "plugin",

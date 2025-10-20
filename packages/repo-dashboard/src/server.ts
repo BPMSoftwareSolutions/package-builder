@@ -485,9 +485,21 @@ app.get('/api/packages', asyncHandler(async (_req: Request, res: Response) => {
 
     for (const repo of architectureRepos) {
       try {
-        const packageUrl = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/package.json`;
-        console.log(`  📥 Fetching: ${packageUrl}`);
-        const response = await fetch(packageUrl);
+        // Use GitHub API to fetch package.json (works for both public and private repos with auth)
+        const apiUrl = `https://api.github.com/repos/${repo.owner}/${repo.name}/contents/package.json`;
+        console.log(`  📥 Fetching: ${apiUrl}`);
+
+        const headers: Record<string, string> = {
+          'Accept': 'application/vnd.github.v3.raw'
+        };
+
+        // Add GitHub token if available for authenticated requests (handles private repos)
+        const token = process.env.GITHUB_TOKEN;
+        if (token) {
+          headers['Authorization'] = `token ${token}`;
+        }
+
+        const response = await fetch(apiUrl, { headers });
 
         if (response.ok) {
           const packageJson = await response.json();
@@ -521,6 +533,8 @@ app.get('/api/packages', asyncHandler(async (_req: Request, res: Response) => {
             isArchitecturePackage: true
           });
           console.log(`  ✅ Fetched package: ${packageJson.name || repo.name}`);
+        } else if (response.status === 404) {
+          console.warn(`  ⚠️ No package.json found in ${repo.owner}/${repo.name}`);
         } else {
           console.warn(`  ⚠️ HTTP ${response.status} for ${repo.owner}/${repo.name}`);
         }
