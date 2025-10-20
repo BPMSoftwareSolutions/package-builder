@@ -18,6 +18,8 @@
         "description": "Thin-client React application that loads and orchestrates plugins via manifest-driven configuration",
         "technology": "React 19, TypeScript, Vite",
         "repository": "BPMSoftwareSolutions/renderx-plugins-demo",
+        "team": "Host Team",
+        "teamDescription": "Responsible for host application and plugin orchestration",
         "responsibilities": [
           "Plugin system initialization",
           "Manifest-driven plugin loading",
@@ -47,6 +49,8 @@
           "BPMSoftwareSolutions/renderx-plugins-sdk",
           "BPMSoftwareSolutions/renderx-manifest-tools"
         ],
+        "team": "SDK Team",
+        "teamDescription": "Responsible for SDK development and plugin system infrastructure",
         "responsibilities": [
           "Plugin interface definitions",
           "Manifest schema validation",
@@ -78,6 +82,8 @@
         "description": "Orchestration engine powering plugin coordination through symphonies, movements, and beats",
         "technology": "TypeScript, Node.js",
         "repository": "BPMSoftwareSolutions/musical-conductor",
+        "team": "Conductor Team",
+        "teamDescription": "Responsible for orchestration engine and workflow coordination",
         "responsibilities": [
           "Plugin coordination",
           "Workflow orchestration",
@@ -98,23 +104,18 @@
         }
       },
       {
-        "id": "plugin-examples",
-        "name": "Example Plugins",
-        "type": "library",
-        "description": "Reference implementations demonstrating plugin patterns and orchestration flows",
+        "id": "plugin-canvas",
+        "name": "Canvas Plugin",
+        "type": "plugin",
+        "description": "Canvas rendering plugin for RenderX",
         "technology": "React, TypeScript",
-        "repositories": [
-          "BPMSoftwareSolutions/renderx-plugins-canvas",
-          "BPMSoftwareSolutions/renderx-plugins-components",
-          "BPMSoftwareSolutions/renderx-plugins-control-panel",
-          "BPMSoftwareSolutions/renderx-plugins-header",
-          "BPMSoftwareSolutions/renderx-plugins-library"
-        ],
+        "repository": "BPMSoftwareSolutions/renderx-plugins-canvas",
+        "team": "Canvas Team",
+        "teamDescription": "Responsible for canvas plugin development and rendering",
         "responsibilities": [
-          "UI panel extensions",
-          "Component rendering",
-          "Orchestration flow examples",
-          "Testing sandbox"
+          "Canvas rendering",
+          "Drawing operations",
+          "Canvas orchestration"
         ],
         "packages": [
           {
@@ -126,22 +127,110 @@
             "name": "@renderx-plugins/canvas-component",
             "version": "1.0.11",
             "status": "active"
-          },
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.82,
+          "testCoverage": 0.75,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-components",
+        "name": "Components Plugin",
+        "type": "plugin",
+        "description": "UI components plugin for RenderX",
+        "technology": "React, TypeScript",
+        "repository": "BPMSoftwareSolutions/renderx-plugins-components",
+        "team": "Components Team",
+        "teamDescription": "Responsible for UI components plugin development",
+        "responsibilities": [
+          "Component library",
+          "Component rendering",
+          "Component orchestration"
+        ],
+        "packages": [
           {
             "name": "@renderx-plugins/components",
             "version": "0.1.1",
             "status": "active"
-          },
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.82,
+          "testCoverage": 0.75,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-control-panel",
+        "name": "Control Panel Plugin",
+        "type": "plugin",
+        "description": "Control panel plugin for RenderX",
+        "technology": "React, TypeScript",
+        "repository": "BPMSoftwareSolutions/renderx-plugins-control-panel",
+        "team": "Control Panel Team",
+        "teamDescription": "Responsible for control panel plugin development",
+        "responsibilities": [
+          "Control panel UI",
+          "Control operations",
+          "Panel orchestration"
+        ],
+        "packages": [
           {
             "name": "@renderx-plugins/control-panel",
             "version": "0.1.0-rc.9",
             "status": "release-candidate"
-          },
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.82,
+          "testCoverage": 0.75,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-header",
+        "name": "Header Plugin",
+        "type": "plugin",
+        "description": "Header plugin for RenderX",
+        "technology": "React, TypeScript",
+        "repository": "BPMSoftwareSolutions/renderx-plugins-header",
+        "team": "Header Team",
+        "teamDescription": "Responsible for header plugin development",
+        "responsibilities": [
+          "Header rendering",
+          "Header operations",
+          "Header orchestration"
+        ],
+        "packages": [
           {
             "name": "@renderx-plugins/header",
             "version": "0.1.1",
             "status": "active"
-          },
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.82,
+          "testCoverage": 0.75,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-library",
+        "name": "Library Plugin",
+        "type": "plugin",
+        "description": "Library plugin for RenderX",
+        "technology": "React, TypeScript",
+        "repository": "BPMSoftwareSolutions/renderx-plugins-library",
+        "team": "Library Team",
+        "teamDescription": "Responsible for library plugin development",
+        "responsibilities": [
+          "Library management",
+          "Library rendering",
+          "Library orchestration"
+        ],
+        "packages": [
           {
             "name": "@renderx-plugins/library",
             "version": "1.0.3",
@@ -166,6 +255,8 @@
         "description": "React components organized in layered architecture (core, domain, ui, infrastructure, vendor)",
         "technology": "React 19, TypeScript, CSS",
         "repository": "BPMSoftwareSolutions/renderx-plugins-demo",
+        "team": "UX/UI Team",
+        "teamDescription": "Responsible for UI components and user experience",
         "responsibilities": [
           "Plugin panel rendering",
           "Diagnostics UI",
@@ -192,6 +283,8 @@
         "description": "Manifest and artifact generation system for external plugin consumption and integrity verification",
         "technology": "Node.js, Crypto",
         "repository": "BPMSoftwareSolutions/renderx-plugins-demo",
+        "team": "DevOps Team",
+        "teamDescription": "Responsible for build systems and artifact management",
         "responsibilities": [
           "Manifest generation",
           "Artifact bundling",
@@ -229,9 +322,33 @@
       },
       {
         "from": "host-app",
-        "to": "plugin-examples",
+        "to": "plugin-canvas",
         "type": "loads",
-        "description": "Host loads and renders example plugins"
+        "description": "Host loads and renders canvas plugin"
+      },
+      {
+        "from": "host-app",
+        "to": "plugin-components",
+        "type": "loads",
+        "description": "Host loads and renders components plugin"
+      },
+      {
+        "from": "host-app",
+        "to": "plugin-control-panel",
+        "type": "loads",
+        "description": "Host loads and renders control panel plugin"
+      },
+      {
+        "from": "host-app",
+        "to": "plugin-header",
+        "type": "loads",
+        "description": "Host loads and renders header plugin"
+      },
+      {
+        "from": "host-app",
+        "to": "plugin-library",
+        "type": "loads",
+        "description": "Host loads and renders library plugin"
       },
       {
         "from": "host-app",
@@ -240,16 +357,64 @@
         "description": "Host renders UI components from UI layer"
       },
       {
-        "from": "plugin-examples",
+        "from": "plugin-canvas",
         "to": "plugin-system",
         "type": "implements",
-        "description": "Example plugins implement plugin system interfaces"
+        "description": "Canvas plugin implements plugin system interfaces"
       },
       {
-        "from": "plugin-examples",
+        "from": "plugin-canvas",
         "to": "orchestration-engine",
         "type": "uses",
-        "description": "Plugins use orchestration engine for coordination"
+        "description": "Canvas plugin uses orchestration engine for coordination"
+      },
+      {
+        "from": "plugin-components",
+        "to": "plugin-system",
+        "type": "implements",
+        "description": "Components plugin implements plugin system interfaces"
+      },
+      {
+        "from": "plugin-components",
+        "to": "orchestration-engine",
+        "type": "uses",
+        "description": "Components plugin uses orchestration engine for coordination"
+      },
+      {
+        "from": "plugin-control-panel",
+        "to": "plugin-system",
+        "type": "implements",
+        "description": "Control panel plugin implements plugin system interfaces"
+      },
+      {
+        "from": "plugin-control-panel",
+        "to": "orchestration-engine",
+        "type": "uses",
+        "description": "Control panel plugin uses orchestration engine for coordination"
+      },
+      {
+        "from": "plugin-header",
+        "to": "plugin-system",
+        "type": "implements",
+        "description": "Header plugin implements plugin system interfaces"
+      },
+      {
+        "from": "plugin-header",
+        "to": "orchestration-engine",
+        "type": "uses",
+        "description": "Header plugin uses orchestration engine for coordination"
+      },
+      {
+        "from": "plugin-library",
+        "to": "plugin-system",
+        "type": "implements",
+        "description": "Library plugin implements plugin system interfaces"
+      },
+      {
+        "from": "plugin-library",
+        "to": "orchestration-engine",
+        "type": "uses",
+        "description": "Library plugin uses orchestration engine for coordination"
       },
       {
         "from": "artifact-system",
