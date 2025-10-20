@@ -23,11 +23,80 @@ vi.mock('./deployment-metrics-collector.js', () => ({
 import { prMetricsCollector } from './pull-request-metrics-collector.js';
 import { deploymentMetricsCollector } from './deployment-metrics-collector.js';
 
+// Mock ADF data for testing
+const mockADF = {
+  version: '1.0.0',
+  name: 'RenderX Plugins Demo',
+  description: 'Test ADF',
+  c4Model: {
+    level: 'container',
+    containers: [
+      {
+        id: 'host-app',
+        name: 'RenderX Host Application',
+        team: 'Host Team',
+        repository: 'BPMSoftwareSolutions/renderx-plugins-demo'
+      },
+      {
+        id: 'sdk',
+        name: 'RenderX SDK',
+        team: 'SDK Team',
+        repository: 'BPMSoftwareSolutions/renderx-plugins-sdk'
+      },
+      {
+        id: 'manifest-tools',
+        name: 'Manifest Tools',
+        team: 'SDK Team',
+        repository: 'BPMSoftwareSolutions/renderx-manifest-tools'
+      },
+      {
+        id: 'conductor',
+        name: 'Musical Conductor',
+        team: 'Conductor Team',
+        repository: 'BPMSoftwareSolutions/musical-conductor'
+      },
+      {
+        id: 'canvas-plugin',
+        name: 'Canvas Plugin',
+        team: 'Plugin Teams',
+        repository: 'BPMSoftwareSolutions/renderx-plugins-canvas'
+      },
+      {
+        id: 'components-plugin',
+        name: 'Components Plugin',
+        team: 'Plugin Teams',
+        repository: 'BPMSoftwareSolutions/renderx-plugins-components'
+      },
+      {
+        id: 'control-panel-plugin',
+        name: 'Control Panel Plugin',
+        team: 'Plugin Teams',
+        repository: 'BPMSoftwareSolutions/renderx-plugins-control-panel'
+      },
+      {
+        id: 'header-plugin',
+        name: 'Header Plugin',
+        team: 'Plugin Teams',
+        repository: 'BPMSoftwareSolutions/renderx-plugins-header'
+      },
+      {
+        id: 'library-plugin',
+        name: 'Library Plugin',
+        team: 'Plugin Teams',
+        repository: 'BPMSoftwareSolutions/renderx-plugins-library'
+      }
+    ],
+    relationships: []
+  }
+};
+
 describe('MetricsAggregator', () => {
   let aggregator: MetricsAggregator;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     aggregator = new MetricsAggregator();
+    // Initialize with mock ADF data
+    await aggregator.initialize(mockADF);
     vi.clearAllMocks();
   });
 
@@ -60,7 +129,7 @@ describe('MetricsAggregator', () => {
       const teamMetrics = await aggregator.aggregateTeamMetrics('BPMSoftwareSolutions', 'Host Team', '30d');
 
       expect(teamMetrics.team).toBe('Host Team');
-      expect(teamMetrics.repos).toContain('renderx-plugins-demo');
+      expect(teamMetrics.repos).toContain('BPMSoftwareSolutions/renderx-plugins-demo');
       expect(teamMetrics.prCount).toBeGreaterThanOrEqual(0);
       expect(teamMetrics.deploymentCount).toBeGreaterThanOrEqual(0);
     });
@@ -87,8 +156,8 @@ describe('MetricsAggregator', () => {
       const teamMetrics = await aggregator.aggregateTeamMetrics('BPMSoftwareSolutions', 'SDK Team', '30d');
 
       expect(teamMetrics.team).toBe('SDK Team');
-      expect(teamMetrics.repos).toContain('renderx-plugins-sdk');
-      expect(teamMetrics.repos).toContain('renderx-manifest-tools');
+      expect(teamMetrics.repos).toContain('BPMSoftwareSolutions/renderx-plugins-sdk');
+      expect(teamMetrics.repos).toContain('BPMSoftwareSolutions/renderx-manifest-tools');
     });
 
     it('should use 7-day period when specified', async () => {
@@ -164,7 +233,7 @@ describe('MetricsAggregator', () => {
     it('should return repositories for a team', () => {
       const repos = aggregator.getTeamRepositories('Host Team');
 
-      expect(repos).toContain('renderx-plugins-demo');
+      expect(repos).toContain('BPMSoftwareSolutions/renderx-plugins-demo');
       expect(repos).toHaveLength(1);
     });
 
@@ -177,11 +246,11 @@ describe('MetricsAggregator', () => {
     it('should return all plugin team repositories', () => {
       const repos = aggregator.getTeamRepositories('Plugin Teams');
 
-      expect(repos).toContain('renderx-plugins-canvas');
-      expect(repos).toContain('renderx-plugins-components');
-      expect(repos).toContain('renderx-plugins-control-panel');
-      expect(repos).toContain('renderx-plugins-header');
-      expect(repos).toContain('renderx-plugins-library');
+      expect(repos).toContain('BPMSoftwareSolutions/renderx-plugins-canvas');
+      expect(repos).toContain('BPMSoftwareSolutions/renderx-plugins-components');
+      expect(repos).toContain('BPMSoftwareSolutions/renderx-plugins-control-panel');
+      expect(repos).toContain('BPMSoftwareSolutions/renderx-plugins-header');
+      expect(repos).toContain('BPMSoftwareSolutions/renderx-plugins-library');
     });
   });
 });

@@ -2337,10 +2337,35 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   });
 });
 
+// Initialize services before starting server
+async function initializeServices() {
+  try {
+    console.log('🔧 Initializing services...');
+
+    // Initialize MetricsAggregator with ADF data
+    await metricsAggregator.initialize();
+    console.log('✅ MetricsAggregator initialized');
+
+    console.log('✅ All services initialized successfully');
+  } catch (error) {
+    console.error('❌ Error initializing services:', error);
+    // Continue anyway - services will initialize on first use
+  }
+}
+
 // Start server
-app.listen(PORT, HOST, () => {
-  console.log(`🚀 Dashboard server running at http://${HOST}:${PORT}`);
-  console.log(`📊 API available at http://${HOST}:${PORT}/api`);
+async function startServer() {
+  await initializeServices();
+
+  app.listen(PORT, HOST, () => {
+    console.log(`🚀 Dashboard server running at http://${HOST}:${PORT}`);
+    console.log(`📊 API available at http://${HOST}:${PORT}/api`);
+  });
+}
+
+startServer().catch(error => {
+  console.error('❌ Failed to start server:', error);
+  process.exit(1);
 });
 
 export default app;
