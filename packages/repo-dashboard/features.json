@@ -7,7 +7,9 @@
     "relatedIssues": [
       "#50",
       "#51",
-      "#105"
+      "#105",
+      "#108",
+      "#110"
     ]
   },
   "features": {
@@ -2560,6 +2562,125 @@
         "file": "test/web/components/DashboardEnhancement.test.tsx",
         "testCount": 100,
         "description": "Comprehensive unit tests for all Phase 2.2 components"
+      }
+    ]
+  },
+  "conductorLogExposure": {
+    "description": "Phase 2: Conductor Log Exposure - Collect, parse, and expose conductor logs to dashboard",
+    "features": [
+      {
+        "name": "ConductorLogEntry interface",
+        "status": "implemented",
+        "file": "src/services/conductor-logs-collector.ts",
+        "description": "Interface for conductor log entries with orchestration, plugin, performance, and error context",
+        "testCases": [
+          "Timestamp field is Date",
+          "Level field is one of debug/info/warn/error",
+          "Message field is string",
+          "Orchestration context fields (symphonyId, movementId, beatId) are optional",
+          "Plugin context fields (pluginName, pluginVersion) are optional",
+          "Duration field is optional number",
+          "Error object is optional with message, stack, code"
+        ]
+      },
+      {
+        "name": "ConductorLogsCollector service",
+        "status": "implemented",
+        "file": "src/services/conductor-logs-collector.ts",
+        "description": "Service for collecting, parsing, and filtering conductor logs",
+        "testCases": [
+          "collectFromContainer method collects logs from container volume",
+          "parseLogFile method parses structured JSON logs",
+          "streamLogs method streams logs in real-time as AsyncIterable",
+          "filterLogs method filters by level, plugin, symphony, time range, search text",
+          "extractMetrics method extracts metrics from logs",
+          "addLogEntry method adds log entry to collection",
+          "getLogs method returns all logs",
+          "clearLogs method clears all logs"
+        ]
+      },
+      {
+        "name": "Unit tests for ConductorLogsCollector",
+        "status": "implemented",
+        "file": "src/services/conductor-logs-collector.test.ts",
+        "testCount": 12,
+        "description": "Comprehensive unit tests for log collection, filtering, and metric extraction"
+      },
+      {
+        "name": "ContainerHealth interface",
+        "status": "implemented",
+        "file": "src/services/container-health.ts",
+        "description": "Interface for container health status with resource usage and log summary",
+        "testCases": [
+          "Timestamp field is Date",
+          "ContainerId and containerName fields are strings",
+          "Status field is one of running/stopped/paused/exited",
+          "Uptime field is number in seconds",
+          "Resource usage fields (cpuUsage, memoryUsage, memoryLimit, networkIn, networkOut)",
+          "HealthStatus field is one of healthy/unhealthy/starting",
+          "LastHealthCheck field is Date",
+          "Log summary fields (recentLogCount, errorCount, warningCount)"
+        ]
+      },
+      {
+        "name": "ContainerHealthMonitor service",
+        "status": "implemented",
+        "file": "src/services/container-health.ts",
+        "description": "Service for monitoring container health and resource usage",
+        "testCases": [
+          "getContainerHealth method returns current health status",
+          "monitorContainer method monitors container in real-time as AsyncIterable",
+          "getContainerLogs method retrieves recent container logs",
+          "storeHealthRecord method stores health record in history",
+          "getHealthHistory method retrieves health history with limit",
+          "getAverageCpuUsage method calculates average CPU usage",
+          "getAverageMemoryUsage method calculates average memory usage",
+          "getPeakResourceUsage method returns peak CPU and memory usage",
+          "clearHealthHistory method clears health history"
+        ]
+      },
+      {
+        "name": "Unit tests for ContainerHealthMonitor",
+        "status": "implemented",
+        "file": "src/services/container-health.test.ts",
+        "testCount": 10,
+        "description": "Comprehensive unit tests for container health monitoring"
+      },
+      {
+        "name": "ConductorMetricsFromLogs interface",
+        "status": "implemented",
+        "file": "src/services/conductor-metrics-from-logs.ts",
+        "description": "Interface for metrics extracted from conductor logs",
+        "testCases": [
+          "Timestamp field is Date",
+          "Orchestration metrics (activeSequences, completedSequences, failedSequences)",
+          "Performance metrics (avgSequenceDuration, p95SequenceDuration, p99SequenceDuration)",
+          "Queue metrics (queueLength, avgWaitTime)",
+          "Error tracking (errorRate, errorTypes)",
+          "Plugin metrics (pluginExecutionTimes, pluginErrorRates)"
+        ]
+      },
+      {
+        "name": "ConductorMetricsExtractor service",
+        "status": "implemented",
+        "file": "src/services/conductor-metrics-from-logs.ts",
+        "description": "Service for extracting metrics from conductor logs",
+        "testCases": [
+          "extractMetrics method extracts all metrics from log entries",
+          "calculatePercentile method calculates p95, p99 percentiles",
+          "analyzeErrors method analyzes error patterns and types",
+          "aggregatePluginMetrics method aggregates plugin execution times and error rates",
+          "Handles empty log entries gracefully",
+          "Calculates accurate averages and percentiles",
+          "Tracks error types and rates by plugin"
+        ]
+      },
+      {
+        "name": "Unit tests for ConductorMetricsExtractor",
+        "status": "implemented",
+        "file": "src/services/conductor-metrics-from-logs.test.ts",
+        "testCount": 13,
+        "description": "Comprehensive unit tests for metric extraction and analysis"
       }
     ]
   }

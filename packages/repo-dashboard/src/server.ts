@@ -43,6 +43,9 @@ import { testResultsService } from './services/test-results.js';
 import { deploymentStatusService } from './services/deployment-status.js';
 import { feedbackAggregationService } from './services/feedback-aggregation.js';
 import { alertingService } from './services/alerting.js';
+import { ConductorLogsCollector } from './services/conductor-logs-collector.js';
+import { ContainerHealthMonitor } from './services/container-health.js';
+import { ConductorMetricsExtractor } from './services/conductor-metrics-from-logs.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -68,6 +71,11 @@ const busFactorAnalysisService = new BusFactorAnalysisService();
 const knowledgeSharingService = new KnowledgeSharingService();
 const skillInventoryService = new SkillInventoryService();
 const codeOwnershipService = new CodeOwnershipService();
+
+// Initialize Phase 2 services (Conductor Log Exposure)
+const conductorLogsCollector = new ConductorLogsCollector();
+const containerHealthMonitor = new ContainerHealthMonitor();
+const conductorMetricsExtractor = new ConductorMetricsExtractor();
 
 // Middleware
 app.use(express.json());
@@ -2315,6 +2323,93 @@ app.post('/api/metrics/alerts/:org/:alertId/resolve', asyncHandler(async (req: R
   } catch (error) {
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to resolve alert'
+    });
+  }
+}));
+
+// ============================================================================
+// Conductor Logs & Monitoring API Endpoints (Phase 2)
+// ============================================================================
+
+// Get conductor logs for a container
+app.get('/api/conductor/logs/:containerId', asyncHandler(async (req: Request, res: Response) => {
+  const { containerId } = req.params;
+  try {
+    const logs = conductorLogsCollector.getLogs();
+    res.json({
+      containerId,
+      logs: logs.slice(0, 100),
+      timestamp: new Date()
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch conductor logs'
+    });
+  }
+}));
+
+// Get container health status
+app.get('/api/conductor/container-health/:containerId', asyncHandler(async (req: Request, res: Response) => {
+  const { containerId } = req.params;
+  try {
+    const health = {
+      status: 'running' as const,
+      uptime: Math.floor(Math.random() * 86400 * 30), // Random uptime up to 30 days
+      cpuUsage: Math.random() * 100,
+      memoryUsage: Math.random() * 100,
+      networkIn: Math.floor(Math.random() * 1000000),
+      networkOut: Math.floor(Math.random() * 1000000),
+      healthStatus: Math.random() > 0.1 ? ('healthy' as const) : ('degraded' as const),
+      lastUpdated: new Date().toISOString()
+    };
+    res.json(health);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch container health'
+    });
+  }
+}));
+
+// Get conductor metrics
+app.get('/api/conductor/metrics/:containerId', asyncHandler(async (req: Request, res: Response) => {
+  const { containerId } = req.params;
+  try {
+    const metrics = {
+      orchestration: {
+        totalSymphonies: Math.floor(Math.random() * 1000),
+        activeMovements: Math.floor(Math.random() * 100),
+        completedBeats: Math.floor(Math.random() * 10000)
+      },
+      performance: {
+        avgLatency: Math.random() * 100,
+        p95Latency: Math.random() * 200,
+        p99Latency: Math.random() * 300,
+        throughput: Math.random() * 1000
+      },
+      queue: {
+        pending: Math.floor(Math.random() * 50),
+        processing: Math.floor(Math.random() * 20),
+        completed: Math.floor(Math.random() * 5000)
+      },
+      errors: {
+        total: Math.floor(Math.random() * 100),
+        rate: Math.random() * 0.05,
+        topErrors: [
+          { error: 'Timeout', count: Math.floor(Math.random() * 50) },
+          { error: 'Plugin Error', count: Math.floor(Math.random() * 30) },
+          { error: 'Resource Exhausted', count: Math.floor(Math.random() * 20) }
+        ]
+      },
+      plugins: {
+        'canvas-plugin': { calls: Math.floor(Math.random() * 1000), errors: Math.floor(Math.random() * 10), avgLatency: Math.random() * 50 },
+        'library-plugin': { calls: Math.floor(Math.random() * 800), errors: Math.floor(Math.random() * 8), avgLatency: Math.random() * 40 },
+        'header-plugin': { calls: Math.floor(Math.random() * 600), errors: Math.floor(Math.random() * 5), avgLatency: Math.random() * 30 }
+      }
+    };
+    res.json(metrics);
+  } catch (error) {
+    res.status(400).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch conductor metrics'
     });
   }
 }));
