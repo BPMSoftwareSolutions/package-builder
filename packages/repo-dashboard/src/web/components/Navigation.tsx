@@ -80,6 +80,14 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
             </li>
             <li>
               <a
+                className={`nav-link ${currentPage === 'conductor-logs' ? 'active' : ''}`}
+                onClick={() => onNavigate('conductor-logs')}
+              >
+                Conductor Logs
+              </a>
+            </li>
+            <li>
+              <a
                 className={`nav-link ${currentPage === 'repos' ? 'active' : ''}`}
                 onClick={() => onNavigate('repos', { org: 'BPMSoftwareSolutions' })}
               >
