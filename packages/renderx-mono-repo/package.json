@@ -1,0 +1,43 @@
+{
+  "name": "renderx-mono-repo",
+  "version": "0.1.0",
+  "description": "RenderX Mono-Repo - Unified workspace for all RenderX architecture components",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@8.0.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "install": "pnpm install",
+    "build": "turbo run build",
+    "build:affected": "turbo run build --filter=[HEAD^]",
+    "lint": "turbo run lint",
+    "lint:affected": "turbo run lint --filter=[HEAD^]",
+    "typecheck": "turbo run typecheck",
+    "typecheck:affected": "turbo run typecheck --filter=[HEAD^]",
+    "test": "turbo run test",
+    "test:affected": "turbo run test --filter=[HEAD^]",
+    "test:coverage": "turbo run test:coverage",
+    "dev": "turbo run dev --parallel",
+    "clean": "turbo run clean && rm -rf node_modules pnpm-lock.yaml",
+    "validate": "pnpm run typecheck && pnpm run lint",
+    "validate:affected": "pnpm run typecheck:affected && pnpm run lint:affected"
+  },
+  "devDependencies": {
+    "@nx/eslint-plugin": "^17.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.54.0",
+    "prettier": "^3.1.0",
+    "turbo": "^1.10.0",
+    "typescript": "^5.3.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "typescript": "^5.3.3"
+    }
+  }
+}
+

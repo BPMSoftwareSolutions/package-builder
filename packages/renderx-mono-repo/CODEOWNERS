@@ -1,0 +1,41 @@
+# RenderX Mono-Repo Code Owners
+# This file defines team ownership for different parts of the mono-repo
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Root configuration
+/pnpm-workspace.yaml @BPMSoftwareSolutions/architecture-team
+/tsconfig.json @BPMSoftwareSolutions/architecture-team
+/.eslintrc.json @BPMSoftwareSolutions/architecture-team
+/turbo.json @BPMSoftwareSolutions/architecture-team
+/renderx-adf.json @BPMSoftwareSolutions/architecture-team
+/.gitignore @BPMSoftwareSolutions/architecture-team
+/package.json @BPMSoftwareSolutions/architecture-team
+
+# Conductor - Orchestration Team
+/packages/conductor/ @BPMSoftwareSolutions/orchestration-team
+
+# SDK - SDK Team
+/packages/sdk/ @BPMSoftwareSolutions/sdk-team
+
+# Manifest Tools - SDK Team
+/packages/manifest-tools/ @BPMSoftwareSolutions/sdk-team
+
+# Shell - Shell Team
+/packages/shell/ @BPMSoftwareSolutions/shell-team
+
+# Plugins - Plugin Teams
+/packages/plugins/canvas/ @BPMSoftwareSolutions/canvas-team
+/packages/plugins/components/ @BPMSoftwareSolutions/components-team
+/packages/plugins/control-panel/ @BPMSoftwareSolutions/control-panel-team
+/packages/plugins/header/ @BPMSoftwareSolutions/header-team
+/packages/plugins/library/ @BPMSoftwareSolutions/library-team
+
+# Shared Contracts - Architecture Team
+/packages/contracts/ @BPMSoftwareSolutions/architecture-team
+
+# Tooling - Architecture Team
+/packages/tooling/ @BPMSoftwareSolutions/architecture-team
+
+# GitHub Actions and CI/CD
+/.github/ @BPMSoftwareSolutions/architecture-team
+
