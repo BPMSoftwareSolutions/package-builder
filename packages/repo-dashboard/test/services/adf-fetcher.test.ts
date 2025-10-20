@@ -2,7 +2,7 @@
  * Unit tests for ADF Fetcher Service
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { ADFFetcher, ArchitectureDefinition } from '../../src/services/adf-fetcher.js';
 
 // Mock GitHub API
@@ -11,6 +11,9 @@ vi.mock('../../src/github.js', () => ({
 }));
 
 import { fetchGitHub } from '../../src/github.js';
+
+// Mock global fetch for local endpoint testing
+global.fetch = vi.fn();
 
 describe('ADFFetcher', () => {
   let fetcher: ADFFetcher;
@@ -42,12 +45,42 @@ describe('ADFFetcher', () => {
     vi.clearAllMocks();
   });
 
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   describe('fetchADF', () => {
-    it('should fetch ADF from GitHub', async () => {
+    it('should fetch ADF from local endpoint first', async () => {
+      // Mock local endpoint success
+      vi.mocked(global.fetch).mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockADF
+      } as any);
+
+      const result = await fetcher.fetchADF({
+        org: 'BPMSoftwareSolutions',
+        repo: 'renderx-plugins-demo',
+        branch: 'main',
+        path: 'renderx-plugins-demo-adf.json'
+      });
+
+      expect(result).toEqual(mockADF);
+      expect(global.fetch).toHaveBeenCalledWith('/adf/renderx-plugins-demo-adf.json');
+      // GitHub API should not be called
+      expect(fetchGitHub).not.toHaveBeenCalled();
+    });
+
+    it('should fall back to GitHub API when local endpoint fails', async () => {
+      // Mock local endpoint failure
+      vi.mocked(global.fetch).mockResolvedValueOnce({
+        ok: false,
+        status: 404
+      } as any);
+
+      // Mock GitHub API success
       const mockResponse = {
         content: Buffer.from(JSON.stringify(mockADF)).toString('base64')
       };
-
       vi.mocked(fetchGitHub).mockResolvedValueOnce(mockResponse);
 
       const result = await fetcher.fetchADF({
@@ -63,12 +96,36 @@ describe('ADFFetcher', () => {
       );
     });
 
-    it('should cache ADF results', async () => {
-      const mockResponse = {
-        content: Buffer.from(JSON.stringify(mockADF)).toString('base64')
-      };
+    it('should fall back to mock data when both local and GitHub fail', async () => {
+      // Mock local endpoint failure
+      vi.mocked(global.fetch).mockResolvedValueOnce({
+        ok: false,
+        status: 404
+      } as any);
 
-      vi.mocked(fetchGitHub).mockResolvedValueOnce(mockResponse);
+      // Mock GitHub API failure
+      vi.mocked(fetchGitHub).mockRejectedValueOnce(new Error('GitHub API error'));
+
+      const result = await fetcher.fetchADF({
+        org: 'BPMSoftwareSolutions',
+        repo: 'test-repo',
+        branch: 'main',
+        path: 'adf.json'
+      });
+
+      // Should return mock data with basic structure
+      expect(result).toBeDefined();
+      expect(result.version).toBe('1.0.0');
+      expect(result.name).toContain('test-repo');
+      expect(result.c4Model).toBeDefined();
+    });
+
+    it('should cache ADF results', async () => {
+      // Mock local endpoint success
+      vi.mocked(global.fetch).mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockADF
+      } as any);
 
       // First call
       await fetcher.fetchADF({
@@ -82,19 +139,8 @@ describe('ADFFetcher', () => {
         repo: 'test-repo'
       });
 
-      // fetchGitHub should only be called once
-      expect(fetchGitHub).toHaveBeenCalledTimes(1);
-    });
-
-    it('should handle fetch errors', async () => {
-      vi.mocked(fetchGitHub).mockRejectedValueOnce(new Error('GitHub API error'));
-
-      await expect(
-        fetcher.fetchADF({
-          org: 'BPMSoftwareSolutions',
-          repo: 'test-repo'
-        })
-      ).rejects.toThrow('GitHub API error');
+      // fetch should only be called once (for local endpoint)
+      expect(global.fetch).toHaveBeenCalledTimes(1);
     });
   });
 
