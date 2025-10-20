@@ -11,7 +11,8 @@
       "#108",
       "#110",
       "#115",
-      "#118"
+      "#118",
+      "#120"
     ]
   },
   "features": {
@@ -2924,6 +2925,82 @@
         "status": "implemented",
         "testCount": 582,
         "description": "All tests pass including new endpoint implementations"
+      }
+    ]
+  },
+  "insightsDashboard": {
+    "description": "Insights Dashboard for Issue #120 - Wire Insights Dashboard to Real GitHub Data",
+    "features": [
+      {
+        "name": "InsightsAnalyzer service",
+        "status": "implemented",
+        "file": "src/services/insights-analyzer.ts",
+        "description": "Service for analyzing metrics and generating insights, trends, anomalies, and recommendations",
+        "features": [
+          "Generate comprehensive insights from all metrics collectors",
+          "Analyze trends from PR, deployment, quality, and coverage metrics",
+          "Detect anomalies using statistical analysis",
+          "Generate actionable recommendations based on metrics",
+          "Generate markdown reports with findings",
+          "Cache insights for 1 hour to avoid excessive API calls",
+          "Support configurable analysis period (7d, 30d, etc.)"
+        ]
+      },
+      {
+        "name": "Insights API Endpoint",
+        "status": "implemented",
+        "file": "src/server.ts",
+        "endpoints": [
+          "GET /api/insights - Generate insights for organization"
+        ],
+        "queryParameters": [
+          "org: Organization name (default: BPMSoftwareSolutions)",
+          "days: Analysis period in days (default: 30)"
+        ],
+        "testCases": [
+          "Generate insights with real data from collectors",
+          "Return trends, anomalies, recommendations, and report",
+          "Cache results for 1 hour",
+          "Handle errors gracefully with fallback"
+        ]
+      },
+      {
+        "name": "InsightsPage component",
+        "status": "implemented",
+        "file": "src/web/pages/InsightsPage.tsx",
+        "description": "UI component for displaying insights dashboard",
+        "testCases": [
+          "Display trends with direction indicators",
+          "Display anomalies with severity levels",
+          "Display recommendations with priority levels",
+          "Display full markdown report",
+          "Handle loading and error states",
+          "Responsive layout"
+        ]
+      },
+      {
+        "name": "Unit tests for InsightsAnalyzer",
+        "status": "implemented",
+        "file": "src/services/insights-analyzer.test.ts",
+        "testCount": 5,
+        "testCases": [
+          "Generate insights with trends, anomalies, and recommendations",
+          "Detect high cycle time anomaly",
+          "Detect low test coverage anomaly",
+          "Cache insights for 1 hour",
+          "Handle errors gracefully"
+        ]
+      },
+      {
+        "name": "Data Sources Integration",
+        "status": "implemented",
+        "description": "Integration with existing collector services",
+        "dataSources": [
+          "PullRequestMetricsCollector - PR cycle time, merge rate, PR size",
+          "DeploymentMetricsCollector - Deployment frequency, success rate",
+          "CodeQualityCollector - Quality score, linting issues, vulnerabilities",
+          "TestCoverageCollector - Coverage trends"
+        ]
       }
     ]
   }

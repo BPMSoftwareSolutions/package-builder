@@ -48,6 +48,7 @@ import { ConductorLogsCollector } from './services/conductor-logs-collector.js';
 import { componentsService } from './services/components-service.js';
 import { mockMetricsService } from './services/mock-metrics-service.js';
 import { architectureDataService } from './services/architecture-data-service.js';
+import { insightsAnalyzer } from './services/insights-analyzer.js';
 // import { ContainerHealthMonitor } from './services/container-health.js';
 // import { ConductorMetricsExtractor } from './services/conductor-metrics-from-logs.js';
 
@@ -2348,36 +2349,18 @@ app.get('/api/metrics/environment-consistency/:org', asyncHandler(async (req: Re
 }));
 
 // Insights endpoints
-app.get('/api/insights', asyncHandler(async (_req: Request, res: Response) => {
+app.get('/api/insights', asyncHandler(async (req: Request, res: Response) => {
   try {
-    const insights = {
-      trends: [
-        {
-          metric: 'Health Score',
-          description: 'Overall system health is improving',
-          direction: 'up',
-          change: 5.2,
-        },
-      ],
-      anomalies: [
-        {
-          metric: 'Build Success Rate',
-          description: 'Unusual drop in build success rate',
-          severity: 'high',
-        },
-      ],
-      recommendations: [
-        {
-          title: 'Improve Test Coverage',
-          description: 'Test coverage is below target',
-          priority: 'high',
-          actions: ['Add unit tests', 'Increase integration tests'],
-        },
-      ],
-      report: '# System Analysis Report\n\nOverall system health is good with room for improvement.',
-    };
+    const { org = 'BPMSoftwareSolutions', days = '30' } = req.query;
+    const daysNum = parseInt(days as string, 10) || 30;
+    const orgStr = org as string;
+
+    console.log(`📊 Generating insights for ${orgStr} (${daysNum} days)`);
+
+    const insights = await insightsAnalyzer.generateInsights(orgStr, daysNum);
     res.json(insights);
   } catch (error) {
+    console.error('❌ Error generating insights:', error);
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch insights'
     });
