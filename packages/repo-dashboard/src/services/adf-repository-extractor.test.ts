@@ -283,21 +283,20 @@ describe('ADF Repository Extractor', () => {
 
       const repos = extractRepositoriesFromADF(adf, 'BPMSoftwareSolutions');
 
-      // Should have 9 unique repositories
-      expect(repos).toHaveLength(9);
+      // Should have 8 unique repositories (components repo removed - no package.json)
+      expect(repos).toHaveLength(8);
 
       // Verify all expected repositories are present
       const repoNames = repos.map(r => r.name).sort();
       expect(repoNames).toEqual([
-        'musical-conductor',
-        'renderx-manifest-tools',
-        'renderx-plugins-canvas',
-        'renderx-plugins-components',
-        'renderx-plugins-control-panel',
-        'renderx-plugins-demo',
-        'renderx-plugins-header',
-        'renderx-plugins-library',
-        'renderx-plugins-sdk'
+        'MusicalConductor',
+        'renderx-host-sdk',
+        'renderx-plugin-canvas',
+        'renderx-plugin-control-panel',
+        'renderx-plugin-header',
+        'renderx-plugin-library',
+        'renderx-plugin-manifest-tools',
+        'renderx-plugins-demo'
       ]);
 
       // Verify all are from BPMSoftwareSolutions org

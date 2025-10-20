@@ -110,25 +110,24 @@ describe('Architecture Summary Endpoint', () => {
     // Extract repositories using the same logic as the endpoint
     const repos = extractRepositoriesFromADF(adf, 'BPMSoftwareSolutions');
 
-    // Should have 9 unique repositories
-    expect(repos).toHaveLength(9);
+    // Should have 8 unique repositories (components repo removed - no package.json)
+    expect(repos).toHaveLength(8);
 
     // Verify all expected repositories are present
     const repoNames = repos.map(r => r.name).sort();
     expect(repoNames).toEqual([
-      'musical-conductor',
-      'renderx-manifest-tools',
-      'renderx-plugins-canvas',
-      'renderx-plugins-components',
-      'renderx-plugins-control-panel',
-      'renderx-plugins-demo',
-      'renderx-plugins-header',
-      'renderx-plugins-library',
-      'renderx-plugins-sdk'
+      'MusicalConductor',
+      'renderx-host-sdk',
+      'renderx-plugin-canvas',
+      'renderx-plugin-control-panel',
+      'renderx-plugin-header',
+      'renderx-plugin-library',
+      'renderx-plugin-manifest-tools',
+      'renderx-plugins-demo'
     ]);
   });
 
-  it('should return 9 repositories in the summary response', () => {
+  it('should return 8 repositories in the summary response', () => {
     // Load the actual ADF file
     const adfPath = join(__dirname, '..', 'docs', 'renderx-plugins-demo-adf.json');
     const adfContent = readFileSync(adfPath, 'utf-8');
@@ -155,18 +154,17 @@ describe('Architecture Summary Endpoint', () => {
       }
     };
 
-    // Verify the response has 9 repositories
-    expect(summary.repositories).toHaveLength(9);
+    // Verify the response has 8 repositories (components repo removed - no package.json)
+    expect(summary.repositories).toHaveLength(8);
     expect(summary.repositories.map(r => r.name).sort()).toEqual([
-      'musical-conductor',
-      'renderx-manifest-tools',
-      'renderx-plugins-canvas',
-      'renderx-plugins-components',
-      'renderx-plugins-control-panel',
-      'renderx-plugins-demo',
-      'renderx-plugins-header',
-      'renderx-plugins-library',
-      'renderx-plugins-sdk'
+      'MusicalConductor',
+      'renderx-host-sdk',
+      'renderx-plugin-canvas',
+      'renderx-plugin-control-panel',
+      'renderx-plugin-header',
+      'renderx-plugin-library',
+      'renderx-plugin-manifest-tools',
+      'renderx-plugins-demo'
     ]);
   });
 
@@ -209,8 +207,8 @@ describe('Architecture Summary Endpoint', () => {
       }
     }));
 
-    // With the fix, we should have 9 repositories
-    expect(repositoriesWithDefaults).toHaveLength(9);
+    // With the fix, we should have 8 repositories (components repo removed - no package.json)
+    expect(repositoriesWithDefaults).toHaveLength(8);
   });
 });
 

@@ -96,7 +96,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Error handling middleware
 const asyncHandler = (fn: (req: Request, res: Response, next?: NextFunction) => Promise<any>) =>
-  (req: Request, res: Response, next: NextFunction) => {
+  (req: Request, res: Response, next: NextFunction): void => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 
@@ -164,8 +164,9 @@ app.get('/api/summary', asyncHandler(async (req: Request, res: Response) => {
         totalIssues += issues.filter(i => !i.isPullRequest).length;
         const staleCount = await countStaleIssues(`${repo.owner}/${repo.name}`);
         totalStalePRs += staleCount;
-      } catch (error) {
-        console.warn(`⚠️ Error fetching issues for ${repo.name}:`, error instanceof Error ? error.message : error);
+      } catch (err: any) {
+        const errorMsg = err instanceof Error ? err.message : String(err);
+        console.warn(`⚠️ Error fetching issues for ${repo.name}:`, errorMsg);
       }
     }
 
@@ -584,10 +585,10 @@ app.get('/api/adf/:org/:repo', asyncHandler(async (req: Request, res: Response) 
     // Cache the result
     adfCache.set(cacheKey, adf);
 
-    res.json(adf);
+    return res.json(adf);
   } catch (error) {
     console.error(`❌ Error fetching ADF for ${org}/${repo}:`, error);
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch ADF'
     });
   }
@@ -984,7 +985,7 @@ app.get('/api/metrics/wip/:org/:team', asyncHandler(async (req: Request, res: Re
 
     const metrics = await wipTracker.calculateWIPMetrics(org, team, repoList, daysNum);
 
-    res.json({
+    return res.json({
       team,
       org,
       period: `${daysNum}d`,
@@ -993,7 +994,7 @@ app.get('/api/metrics/wip/:org/:team', asyncHandler(async (req: Request, res: Re
     });
   } catch (error) {
     console.error('❌ Error fetching WIP metrics:', error);
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch WIP metrics'
     });
   }
@@ -1069,7 +1070,7 @@ app.get('/api/metrics/wip-alerts/:org/:team', asyncHandler(async (req: Request, 
 
     const alert = await wipTracker.checkWIPAlert(org, team, repoList, thresholdNum);
 
-    res.json({
+    return res.json({
       team,
       org,
       alert,
@@ -1077,7 +1078,7 @@ app.get('/api/metrics/wip-alerts/:org/:team', asyncHandler(async (req: Request, 
     });
   } catch (error) {
     console.error('❌ Error checking WIP alerts:', error);
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to check WIP alerts'
     });
   }
@@ -1754,7 +1755,7 @@ app.get('/api/metrics/handoffs/:org/:team', asyncHandler(async (req: Request, re
 
     for (const repo of teamRepos) {
       try {
-        const metrics = await prMetricsCollector.collectMetrics(`${org}/${repo}`, '30d');
+        const metrics = await prMetricsCollector.collectPRMetrics(`${org}/${repo}`, '30d');
         allPRMetrics.push(...metrics);
       } catch (error) {
         console.warn(`⚠️ Could not fetch PR metrics for ${repo}`);
@@ -1862,7 +1863,7 @@ app.get('/api/metrics/cross-team-communication/:org', asyncHandler(async (req: R
     crossTeamCommunicationService.initializeTeamMapping(teamMapping);
 
     // Get issues for all repos
-    for (const [team, repos] of Object.entries(teamMapping)) {
+    for (const [_team, repos] of Object.entries(teamMapping)) {
       for (const repo of repos) {
         try {
           const issues = await listIssues({
@@ -2063,7 +2064,7 @@ app.get('/api/metrics/environment-consistency/:org', asyncHandler(async (req: Re
 }));
 
 // Insights endpoints
-app.get('/api/insights', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/insights', asyncHandler(async (_req: Request, res: Response) => {
   try {
     const insights = {
       trends: [
@@ -2267,7 +2268,7 @@ app.get('/api/metrics/build-status/:org/:repo', asyncHandler(async (req: Request
     }
 
     const buildStatus = await buildStatusService.collectBuildStatus(org, repo);
-    res.json({
+    return res.json({
       timestamp: new Date(),
       org,
       repo,
@@ -2275,7 +2276,7 @@ app.get('/api/metrics/build-status/:org/:repo', asyncHandler(async (req: Request
       history: buildStatus.slice(0, 10)
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch build status'
     });
   }
@@ -2297,7 +2298,7 @@ app.get('/api/metrics/test-results/:org/:repo', asyncHandler(async (req: Request
     }
 
     const testResults = await testResultsService.collectTestResults(org, repo);
-    res.json({
+    return res.json({
       timestamp: new Date(),
       org,
       repo,
@@ -2305,7 +2306,7 @@ app.get('/api/metrics/test-results/:org/:repo', asyncHandler(async (req: Request
       history: testResults.slice(0, 10)
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch test results'
     });
   }
@@ -2327,7 +2328,7 @@ app.get('/api/metrics/deployment-status/:org/:repo', asyncHandler(async (req: Re
     }
 
     const deploymentStatus = await deploymentStatusService.collectDeploymentStatus(org, repo);
-    res.json({
+    return res.json({
       timestamp: new Date(),
       org,
       repo,
@@ -2335,7 +2336,7 @@ app.get('/api/metrics/deployment-status/:org/:repo', asyncHandler(async (req: Re
       history: deploymentStatus.slice(0, 10)
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch deployment status'
     });
   }
@@ -2401,13 +2402,13 @@ app.post('/api/metrics/alerts/:org/:alertId/acknowledge', asyncHandler(async (re
     if (!alert) {
       return res.status(404).json({ error: 'Alert not found' });
     }
-    res.json({
+    return res.json({
       timestamp: new Date(),
       org,
       alert
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to acknowledge alert'
     });
   }
@@ -2421,13 +2422,13 @@ app.post('/api/metrics/alerts/:org/:alertId/resolve', asyncHandler(async (req: R
     if (!alert) {
       return res.status(404).json({ error: 'Alert not found' });
     }
-    res.json({
+    return res.json({
       timestamp: new Date(),
       org,
       alert
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to resolve alert'
     });
   }
@@ -2456,7 +2457,7 @@ app.get('/api/conductor/logs/:containerId', asyncHandler(async (req: Request, re
 
 // Get container health status
 app.get('/api/conductor/container-health/:containerId', asyncHandler(async (req: Request, res: Response) => {
-  const { containerId } = req.params;
+  const { containerId: _containerId } = req.params;
   try {
     const health = {
       status: 'running' as const,
@@ -2478,7 +2479,7 @@ app.get('/api/conductor/container-health/:containerId', asyncHandler(async (req:
 
 // Get conductor metrics
 app.get('/api/conductor/metrics/:containerId', asyncHandler(async (req: Request, res: Response) => {
-  const { containerId } = req.params;
+  const { containerId: _containerId } = req.params;
   try {
     const metrics = {
       orchestration: {
