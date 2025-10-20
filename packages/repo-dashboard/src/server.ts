@@ -7,11 +7,11 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { readFileSync } from 'node:fs';
 import { listRepos, listIssues, getWorkflowStatus, countStaleIssues } from './github.js';
-import { getPackageReadiness } from './local.js';
+// import { getPackageReadiness } from './local.js'; // No longer used - packages now fetched from ADF repos
 import { adfFetcher } from './services/adf-fetcher.js';
 import { adfCache } from './services/adf-cache.js';
 import { extractRepositoriesFromADF } from './services/adf-repository-extractor.js';
-import { validateRepoInADF, getADFRepositories, createNonCompliantRepoError } from './services/adf-validation.js';
+import { validateRepoInADF, createNonCompliantRepoError } from './services/adf-validation.js';
 import { prMetricsCollector } from './services/pull-request-metrics-collector.js';
 import { deploymentMetricsCollector } from './services/deployment-metrics-collector.js';
 import { metricsAggregator } from './services/metrics-aggregator.js';
@@ -471,11 +471,13 @@ app.get('/api/repos/:owner/:repo/issues', asyncHandler(async (req: Request, res:
 }));
 
 // Get packages from ADF repositories and their dependencies
-app.get('/api/packages', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/packages', asyncHandler(async (_req: Request, res: Response) => {
   try {
     // Load ADF to get architecture repositories
     const adf = loadLocalADF('renderx-plugins-demo-adf.json');
     const architectureRepos = extractRepositoriesFromADF(adf, 'BPMSoftwareSolutions');
+
+    console.log(`📦 Fetching packages from ${architectureRepos.length} ADF repositories`);
 
     // Fetch package.json from each ADF repository
     const packages: any[] = [];
@@ -484,6 +486,7 @@ app.get('/api/packages', asyncHandler(async (req: Request, res: Response) => {
     for (const repo of architectureRepos) {
       try {
         const packageUrl = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/package.json`;
+        console.log(`  📥 Fetching: ${packageUrl}`);
         const response = await fetch(packageUrl);
 
         if (response.ok) {
@@ -517,12 +520,17 @@ app.get('/api/packages', asyncHandler(async (req: Request, res: Response) => {
             internalDependencies: internalDeps,
             isArchitecturePackage: true
           });
+          console.log(`  ✅ Fetched package: ${packageJson.name || repo.name}`);
+        } else {
+          console.warn(`  ⚠️ HTTP ${response.status} for ${repo.owner}/${repo.name}`);
         }
       } catch (err) {
         // Skip repos that don't have package.json or are inaccessible
-        console.warn(`Could not fetch package.json for ${repo.owner}/${repo.name}`);
+        console.warn(`  ❌ Could not fetch package.json for ${repo.owner}/${repo.name}: ${err instanceof Error ? err.message : String(err)}`);
       }
     }
+
+    console.log(`📦 Successfully fetched ${packages.length} packages`);
 
     res.json({
       total: packages.length,

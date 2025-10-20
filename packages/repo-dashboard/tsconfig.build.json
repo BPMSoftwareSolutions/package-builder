@@ -1,9 +1,10 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "noEmit": false
+    "noEmit": false,
+    "noEmitOnError": false
   },
   "include": ["src/**/*.ts", "!src/**/*.test.ts", "!src/**/*.spec.ts"],
-  "exclude": ["test", "**/*.test.ts", "**/*.spec.ts", "src/web", "src/server.ts", "src/bin/server.ts"]
+  "exclude": ["test", "**/*.test.ts", "**/*.spec.ts", "src/web"]
 }
 
