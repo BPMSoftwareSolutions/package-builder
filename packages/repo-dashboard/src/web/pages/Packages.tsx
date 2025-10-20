@@ -159,13 +159,13 @@ export default function Packages() {
                 <div key={pkg.name} className="card">
                   <div style={{ marginBottom: '1rem' }}>
                     <h3 style={{ marginBottom: '0.5rem' }}>{pkg.name}</h3>
-                    <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                    <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                       v{pkg.version}
                     </div>
                   </div>
 
                   {pkg.description && (
-                    <p style={{ marginBottom: '1rem', color: '#666', fontSize: '0.9rem' }}>
+                    <p style={{ marginBottom: '1rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
                       {pkg.description}
                     </p>
                   )}
@@ -182,7 +182,7 @@ export default function Packages() {
                     </span>
                   </div>
 
-                  <div style={{ fontSize: '0.85rem', color: '#999', wordBreak: 'break-all' }}>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)', wordBreak: 'break-all' }}>
                     {pkg.path}
                   </div>
                 </div>

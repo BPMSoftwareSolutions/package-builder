@@ -163,7 +163,7 @@ export default function RepoStatus({ org = DEFAULT_ORG, repo, isArchitectureMode
         <div className="loading">Loading repositories...</div>
       ) : filteredRepos.length === 0 ? (
         <div className="card">
-          <p style={{ textAlign: 'center', color: '#666' }}>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
             No repositories found matching the filter
           </p>
         </div>
