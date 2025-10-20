@@ -46,8 +46,8 @@
         "description": "Core plugin infrastructure providing base interfaces, manifest schema, and utilities for RenderX-compatible plugins",
         "technology": "TypeScript, Node.js",
         "repositories": [
-          "BPMSoftwareSolutions/renderx-plugins-sdk",
-          "BPMSoftwareSolutions/renderx-manifest-tools"
+          "BPMSoftwareSolutions/renderx-host-sdk",
+          "BPMSoftwareSolutions/renderx-plugin-manifest-tools"
         ],
         "team": "SDK Team",
         "teamDescription": "Responsible for SDK development and plugin system infrastructure",
@@ -81,7 +81,7 @@
         "type": "library",
         "description": "Orchestration engine powering plugin coordination through symphonies, movements, and beats",
         "technology": "TypeScript, Node.js",
-        "repository": "BPMSoftwareSolutions/musical-conductor",
+        "repository": "BPMSoftwareSolutions/MusicalConductor",
         "team": "Conductor Team",
         "teamDescription": "Responsible for orchestration engine and workflow coordination",
         "responsibilities": [
@@ -109,7 +109,7 @@
         "type": "plugin",
         "description": "Canvas rendering plugin for RenderX",
         "technology": "React, TypeScript",
-        "repository": "BPMSoftwareSolutions/renderx-plugins-canvas",
+        "repository": "BPMSoftwareSolutions/renderx-plugin-canvas",
         "team": "Canvas Team",
         "teamDescription": "Responsible for canvas plugin development and rendering",
         "responsibilities": [
@@ -136,39 +136,12 @@
         }
       },
       {
-        "id": "plugin-components",
-        "name": "Components Plugin",
-        "type": "plugin",
-        "description": "UI components plugin for RenderX",
-        "technology": "React, TypeScript",
-        "repository": "BPMSoftwareSolutions/renderx-plugins-components",
-        "team": "Components Team",
-        "teamDescription": "Responsible for UI components plugin development",
-        "responsibilities": [
-          "Component library",
-          "Component rendering",
-          "Component orchestration"
-        ],
-        "packages": [
-          {
-            "name": "@renderx-plugins/components",
-            "version": "0.1.1",
-            "status": "active"
-          }
-        ],
-        "metrics": {
-          "healthScore": 0.82,
-          "testCoverage": 0.75,
-          "buildStatus": "success"
-        }
-      },
-      {
         "id": "plugin-control-panel",
         "name": "Control Panel Plugin",
         "type": "plugin",
         "description": "Control panel plugin for RenderX",
         "technology": "React, TypeScript",
-        "repository": "BPMSoftwareSolutions/renderx-plugins-control-panel",
+        "repository": "BPMSoftwareSolutions/renderx-plugin-control-panel",
         "team": "Control Panel Team",
         "teamDescription": "Responsible for control panel plugin development",
         "responsibilities": [
@@ -195,7 +168,7 @@
         "type": "plugin",
         "description": "Header plugin for RenderX",
         "technology": "React, TypeScript",
-        "repository": "BPMSoftwareSolutions/renderx-plugins-header",
+        "repository": "BPMSoftwareSolutions/renderx-plugin-header",
         "team": "Header Team",
         "teamDescription": "Responsible for header plugin development",
         "responsibilities": [
@@ -222,7 +195,7 @@
         "type": "plugin",
         "description": "Library plugin for RenderX",
         "technology": "React, TypeScript",
-        "repository": "BPMSoftwareSolutions/renderx-plugins-library",
+        "repository": "BPMSoftwareSolutions/renderx-plugin-library",
         "team": "Library Team",
         "teamDescription": "Responsible for library plugin development",
         "responsibilities": [

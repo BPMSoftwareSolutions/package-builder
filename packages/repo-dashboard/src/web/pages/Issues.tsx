@@ -15,7 +15,14 @@ interface IssuesProps {
   repo?: string;
 }
 
-const DEFAULT_REPO = 'BPMSoftwareSolutions/package-builder';
+interface ValidationError {
+  error: string;
+  message: string;
+  requestedRepo: string;
+  architectureRepos: string[];
+}
+
+const DEFAULT_REPO = 'BPMSoftwareSolutions/renderx-plugins-demo';
 
 export default function Issues({ repo = DEFAULT_REPO }: IssuesProps) {
   const [issues, setIssues] = useState<Issue[]>([]);
@@ -34,11 +41,24 @@ export default function Issues({ repo = DEFAULT_REPO }: IssuesProps) {
         setError(null);
         const [owner, repoName] = repo.split('/');
         const response = await fetch(`/api/repos/${owner}/${repoName}/issues?state=${state}`);
+
         if (!response.ok) {
-          throw new Error(`Failed to fetch issues: ${response.statusText}`);
+          const errorData = await response.json();
+
+          // Check if this is an ADF validation error
+          if (response.status === 403 && errorData.error === 'Repository not in architecture') {
+            const validationError = errorData as ValidationError;
+            const repoList = validationError.architectureRepos.join(', ');
+            setError(
+              `Repository not in architecture. Valid repositories: ${repoList}`
+            );
+          } else {
+            throw new Error(`Failed to fetch issues: ${response.statusText}`);
+          }
+        } else {
+          const data = await response.json();
+          setIssues(data);
         }
-        const data = await response.json();
-        setIssues(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch issues');
       } finally {

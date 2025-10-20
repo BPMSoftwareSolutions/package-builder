@@ -7,10 +7,11 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { readFileSync } from 'node:fs';
 import { listRepos, listIssues, getWorkflowStatus, countStaleIssues } from './github.js';
-import { getPackageReadiness } from './local.js';
+// import { getPackageReadiness } from './local.js'; // No longer used - packages now fetched from ADF repos
 import { adfFetcher } from './services/adf-fetcher.js';
 import { adfCache } from './services/adf-cache.js';
 import { extractRepositoriesFromADF } from './services/adf-repository-extractor.js';
+import { validateRepoInADF, createNonCompliantRepoError } from './services/adf-validation.js';
 import { prMetricsCollector } from './services/pull-request-metrics-collector.js';
 import { deploymentMetricsCollector } from './services/deployment-metrics-collector.js';
 import { metricsAggregator } from './services/metrics-aggregator.js';
@@ -24,7 +25,7 @@ import { testCoverageCollector } from './services/test-coverage-collector.js';
 import { codeQualityCollector } from './services/code-quality-collector.js';
 import { testExecutionCollector } from './services/test-execution-collector.js';
 import { ConstraintDetectionService } from './services/constraint-detection.js';
-import { RootCauseAnalysisService } from './services/root-cause-analysis.js';
+// import { RootCauseAnalysisService } from './services/root-cause-analysis.js';
 import { PredictiveAnalysisService } from './services/predictive-analysis.js';
 import { crossTeamDependencyService } from './services/cross-team-dependency.js';
 import { handoffTrackingService } from './services/handoff-tracking.js';
@@ -44,8 +45,8 @@ import { deploymentStatusService } from './services/deployment-status.js';
 import { feedbackAggregationService } from './services/feedback-aggregation.js';
 import { alertingService } from './services/alerting.js';
 import { ConductorLogsCollector } from './services/conductor-logs-collector.js';
-import { ContainerHealthMonitor } from './services/container-health.js';
-import { ConductorMetricsExtractor } from './services/conductor-metrics-from-logs.js';
+// import { ContainerHealthMonitor } from './services/container-health.js';
+// import { ConductorMetricsExtractor } from './services/conductor-metrics-from-logs.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -63,7 +64,7 @@ const deployCadenceService = new DeployCadenceService(deploymentMetricsCollector
 
 // Initialize Phase 1.4 services (Constraint Radar & Bottleneck Detection)
 const constraintDetectionService = new ConstraintDetectionService();
-const rootCauseAnalysisService = new RootCauseAnalysisService();
+// const rootCauseAnalysisService = new RootCauseAnalysisService();
 const predictiveAnalysisService = new PredictiveAnalysisService();
 
 // Initialize Phase 1.7 services (Knowledge Sharing & Bus Factor Analysis)
@@ -74,8 +75,8 @@ const codeOwnershipService = new CodeOwnershipService();
 
 // Initialize Phase 2 services (Conductor Log Exposure)
 const conductorLogsCollector = new ConductorLogsCollector();
-const containerHealthMonitor = new ContainerHealthMonitor();
-const conductorMetricsExtractor = new ConductorMetricsExtractor();
+// const containerHealthMonitor = new ContainerHealthMonitor();
+// const conductorMetricsExtractor = new ConductorMetricsExtractor();
 
 // Middleware
 app.use(express.json());
@@ -94,8 +95,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 // Error handling middleware
-const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => Promise<void>) =>
-  (req: Request, res: Response, next: NextFunction) => {
+const asyncHandler = (fn: (req: Request, res: Response, next?: NextFunction) => Promise<any>) =>
+  (req: Request, res: Response, next: NextFunction): void => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 
@@ -163,8 +164,9 @@ app.get('/api/summary', asyncHandler(async (req: Request, res: Response) => {
         totalIssues += issues.filter(i => !i.isPullRequest).length;
         const staleCount = await countStaleIssues(`${repo.owner}/${repo.name}`);
         totalStalePRs += staleCount;
-      } catch (error) {
-        console.warn(`⚠️ Error fetching issues for ${repo.name}:`, error instanceof Error ? error.message : error);
+      } catch (err: any) {
+        const errorMsg = err instanceof Error ? err.message : String(err);
+        console.warn(`⚠️ Error fetching issues for ${repo.name}:`, errorMsg);
       }
     }
 
@@ -395,20 +397,20 @@ app.get('/api/repos/architecture/:org/:repo', asyncHandler(async (req: Request, 
 // Get organization repositories
 app.get('/api/repos/:org', asyncHandler(async (req: Request, res: Response) => {
   const { org } = req.params;
-  const { limit = '50' } = req.query;
+  // const { limit = '50' } = req.query;
 
   try {
-    console.log(`📊 Fetching repos for org: ${org}`);
-    const repos = await listRepos({
-      org,
-      limit: Math.min(parseInt(limit as string), 100)
-    });
+    console.log(`📊 Fetching repos for org: ${org} (ADF-filtered)`);
 
-    console.log(`✅ Found ${repos.length} repositories`);
+    // Load ADF to get architecture-specific repos
+    const adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    const architectureRepos = extractRepositoriesFromADF(adf, org);
 
-    // Fetch additional status for each repo
+    console.log(`✅ Found ${architectureRepos.length} architecture repositories`);
+
+    // Fetch additional status for each architecture repo
     const reposWithStatus = await Promise.all(
-      repos.map(async (repo) => {
+      architectureRepos.map(async (repo) => {
         try {
           const issues = await listIssues({
             repo: `${repo.owner}/${repo.name}`,
@@ -419,7 +421,8 @@ app.get('/api/repos/:org', asyncHandler(async (req: Request, res: Response) => {
           const workflow = await getWorkflowStatus({ repo: `${repo.owner}/${repo.name}` });
 
           return {
-            ...repo,
+            owner: repo.owner,
+            name: repo.name,
             openIssues: issues.filter(i => !i.isPullRequest).length,
             openPRs: prs.length,
             stalePRs: staleCount,
@@ -428,7 +431,8 @@ app.get('/api/repos/:org', asyncHandler(async (req: Request, res: Response) => {
         } catch (error) {
           console.warn(`⚠️ Error fetching status for ${repo.name}:`, error instanceof Error ? error.message : error);
           return {
-            ...repo,
+            owner: repo.owner,
+            name: repo.name,
             openIssues: 0,
             openPRs: 0,
             stalePRs: 0,
@@ -467,17 +471,87 @@ app.get('/api/repos/:owner/:repo/issues', asyncHandler(async (req: Request, res:
   }
 }));
 
-// Get local packages
-app.get('/api/packages', asyncHandler(async (req: Request, res: Response) => {
-  const { basePath = './packages', includePrivate = 'false' } = req.query;
-
+// Get packages from ADF repositories and their dependencies
+app.get('/api/packages', asyncHandler(async (_req: Request, res: Response) => {
   try {
-    const readiness = await getPackageReadiness({
-      basePath: basePath as string,
-      includePrivate: includePrivate === 'true'
-    });
+    // Load ADF to get architecture repositories
+    const adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    const architectureRepos = extractRepositoriesFromADF(adf, 'BPMSoftwareSolutions');
 
-    res.json(readiness);
+    console.log(`📦 Fetching packages from ${architectureRepos.length} ADF repositories`);
+
+    // Fetch package.json from each ADF repository
+    const packages: any[] = [];
+    const dependencyMap = new Map<string, string[]>(); // Track which repos depend on which
+
+    for (const repo of architectureRepos) {
+      try {
+        // Use GitHub API to fetch package.json (works for both public and private repos with auth)
+        const apiUrl = `https://api.github.com/repos/${repo.owner}/${repo.name}/contents/package.json`;
+        console.log(`  📥 Fetching: ${apiUrl}`);
+
+        const headers: Record<string, string> = {
+          'Accept': 'application/vnd.github.v3.raw'
+        };
+
+        // Add GitHub token if available for authenticated requests (handles private repos)
+        const token = process.env.GITHUB_TOKEN;
+        if (token) {
+          headers['Authorization'] = `token ${token}`;
+        }
+
+        const response = await fetch(apiUrl, { headers });
+
+        if (response.ok) {
+          const packageJson = await response.json();
+          const allDeps = {
+            ...packageJson.dependencies,
+            ...packageJson.devDependencies
+          };
+
+          // Track dependencies on other ADF repos
+          const internalDeps = Object.keys(allDeps).filter(dep => {
+            return architectureRepos.some(r =>
+              dep.includes(r.name) || dep.includes(r.name.replace(/-/g, ''))
+            );
+          });
+
+          if (internalDeps.length > 0) {
+            dependencyMap.set(`${repo.owner}/${repo.name}`, internalDeps);
+          }
+
+          packages.push({
+            name: packageJson.name || repo.name,
+            repository: `${repo.owner}/${repo.name}`,
+            version: packageJson.version || 'unknown',
+            description: packageJson.description || '',
+            private: packageJson.private || false,
+            main: packageJson.main || '',
+            types: packageJson.types || '',
+            dependencies: Object.keys(packageJson.dependencies || {}).length,
+            devDependencies: Object.keys(packageJson.devDependencies || {}).length,
+            internalDependencies: internalDeps,
+            isArchitecturePackage: true
+          });
+          console.log(`  ✅ Fetched package: ${packageJson.name || repo.name}`);
+        } else if (response.status === 404) {
+          console.warn(`  ⚠️ No package.json found in ${repo.owner}/${repo.name}`);
+        } else {
+          console.warn(`  ⚠️ HTTP ${response.status} for ${repo.owner}/${repo.name}`);
+        }
+      } catch (err) {
+        // Skip repos that don't have package.json or are inaccessible
+        console.warn(`  ❌ Could not fetch package.json for ${repo.owner}/${repo.name}: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+
+    console.log(`📦 Successfully fetched ${packages.length} packages`);
+
+    res.json({
+      total: packages.length,
+      packages: packages.sort((a, b) => a.name.localeCompare(b.name)),
+      dependencyMap: Object.fromEntries(dependencyMap)
+    });
   } catch (error) {
     res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch packages'
@@ -511,10 +585,10 @@ app.get('/api/adf/:org/:repo', asyncHandler(async (req: Request, res: Response) 
     // Cache the result
     adfCache.set(cacheKey, adf);
 
-    res.json(adf);
+    return res.json(adf);
   } catch (error) {
     console.error(`❌ Error fetching ADF for ${org}/${repo}:`, error);
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch ADF'
     });
   }
@@ -599,7 +673,7 @@ app.get('/api/adf/:org/:repo/metrics', asyncHandler(async (req: Request, res: Re
 }));
 
 // Cache statistics endpoint
-app.get('/api/adf/cache/stats', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/adf/cache/stats', asyncHandler(async (_req: Request, res: Response) => {
   try {
     const stats = adfCache.getStats();
     res.json(stats);
@@ -612,7 +686,7 @@ app.get('/api/adf/cache/stats', asyncHandler(async (req: Request, res: Response)
 }));
 
 // Architecture endpoints
-app.get('/api/architecture', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/architecture', asyncHandler(async (_req: Request, res: Response) => {
   try {
     // Return mock architecture data for now
     const architecture = {
@@ -714,9 +788,9 @@ app.get('/api/metrics', asyncHandler(async (req: Request, res: Response) => {
 }));
 
 // C4 Diagram endpoints
-app.get('/api/c4/:level/mermaid', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/c4/:level/mermaid', asyncHandler(async (_req: Request, res: Response) => {
   try {
-    const { level } = req.params;
+    // const { level } = req.params;
     const diagram = `graph TD
     A[Web UI] -->|HTTP| B[API Server]
     B -->|CLI| C[Python Scripts]
@@ -731,7 +805,7 @@ app.get('/api/c4/:level/mermaid', asyncHandler(async (req: Request, res: Respons
 }));
 
 // Components endpoints
-app.get('/api/components', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/components', asyncHandler(async (_req: Request, res: Response) => {
   try {
     const components = [
       {
@@ -856,7 +930,7 @@ app.get('/api/metrics/team/:team', asyncHandler(async (req: Request, res: Respon
 }));
 
 // Get all teams
-app.get('/api/metrics/teams', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/metrics/teams', asyncHandler(async (_req: Request, res: Response) => {
   try {
     const teams = metricsAggregator.getTeams();
     res.json({
@@ -873,7 +947,7 @@ app.get('/api/metrics/teams', asyncHandler(async (req: Request, res: Response) =
 }));
 
 // Get metrics cache statistics
-app.get('/api/metrics/cache/stats', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/metrics/cache/stats', asyncHandler(async (_req: Request, res: Response) => {
   try {
     const prStats = prMetricsCollector.getCacheStats();
     const deployStats = deploymentMetricsCollector.getCacheStats();
@@ -911,7 +985,7 @@ app.get('/api/metrics/wip/:org/:team', asyncHandler(async (req: Request, res: Re
 
     const metrics = await wipTracker.calculateWIPMetrics(org, team, repoList, daysNum);
 
-    res.json({
+    return res.json({
       team,
       org,
       period: `${daysNum}d`,
@@ -920,7 +994,7 @@ app.get('/api/metrics/wip/:org/:team', asyncHandler(async (req: Request, res: Re
     });
   } catch (error) {
     console.error('❌ Error fetching WIP metrics:', error);
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch WIP metrics'
     });
   }
@@ -996,7 +1070,7 @@ app.get('/api/metrics/wip-alerts/:org/:team', asyncHandler(async (req: Request, 
 
     const alert = await wipTracker.checkWIPAlert(org, team, repoList, thresholdNum);
 
-    res.json({
+    return res.json({
       team,
       org,
       alert,
@@ -1004,7 +1078,7 @@ app.get('/api/metrics/wip-alerts/:org/:team', asyncHandler(async (req: Request, 
     });
   } catch (error) {
     console.error('❌ Error checking WIP alerts:', error);
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to check WIP alerts'
     });
   }
@@ -1681,7 +1755,7 @@ app.get('/api/metrics/handoffs/:org/:team', asyncHandler(async (req: Request, re
 
     for (const repo of teamRepos) {
       try {
-        const metrics = await prMetricsCollector.collectMetrics(`${org}/${repo}`, '30d');
+        const metrics = await prMetricsCollector.collectPRMetrics(`${org}/${repo}`, '30d');
         allPRMetrics.push(...metrics);
       } catch (error) {
         console.warn(`⚠️ Could not fetch PR metrics for ${repo}`);
@@ -1789,7 +1863,7 @@ app.get('/api/metrics/cross-team-communication/:org', asyncHandler(async (req: R
     crossTeamCommunicationService.initializeTeamMapping(teamMapping);
 
     // Get issues for all repos
-    for (const [team, repos] of Object.entries(teamMapping)) {
+    for (const [_team, repos] of Object.entries(teamMapping)) {
       for (const repo of repos) {
         try {
           const issues = await listIssues({
@@ -1990,7 +2064,7 @@ app.get('/api/metrics/environment-consistency/:org', asyncHandler(async (req: Re
 }));
 
 // Insights endpoints
-app.get('/api/insights', asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/insights', asyncHandler(async (_req: Request, res: Response) => {
   try {
     const insights = {
       trends: [
@@ -2182,8 +2256,19 @@ app.get('/api/metrics/high-risk-areas/:org', asyncHandler(async (req: Request, r
 app.get('/api/metrics/build-status/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
   const { org, repo } = req.params;
   try {
+    // Validate repo is in ADF
+    const adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    const validation = validateRepoInADF(org, repo, adf);
+
+    if (!validation.isValid) {
+      console.warn(`⚠️ Build status request for non-ADF repo: ${org}/${repo}`);
+      return res.status(403).json(
+        createNonCompliantRepoError(org, repo, validation.architectureRepos || [])
+      );
+    }
+
     const buildStatus = await buildStatusService.collectBuildStatus(org, repo);
-    res.json({
+    return res.json({
       timestamp: new Date(),
       org,
       repo,
@@ -2191,7 +2276,7 @@ app.get('/api/metrics/build-status/:org/:repo', asyncHandler(async (req: Request
       history: buildStatus.slice(0, 10)
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch build status'
     });
   }
@@ -2201,8 +2286,19 @@ app.get('/api/metrics/build-status/:org/:repo', asyncHandler(async (req: Request
 app.get('/api/metrics/test-results/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
   const { org, repo } = req.params;
   try {
+    // Validate repo is in ADF
+    const adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    const validation = validateRepoInADF(org, repo, adf);
+
+    if (!validation.isValid) {
+      console.warn(`⚠️ Test results request for non-ADF repo: ${org}/${repo}`);
+      return res.status(403).json(
+        createNonCompliantRepoError(org, repo, validation.architectureRepos || [])
+      );
+    }
+
     const testResults = await testResultsService.collectTestResults(org, repo);
-    res.json({
+    return res.json({
       timestamp: new Date(),
       org,
       repo,
@@ -2210,7 +2306,7 @@ app.get('/api/metrics/test-results/:org/:repo', asyncHandler(async (req: Request
       history: testResults.slice(0, 10)
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch test results'
     });
   }
@@ -2220,8 +2316,19 @@ app.get('/api/metrics/test-results/:org/:repo', asyncHandler(async (req: Request
 app.get('/api/metrics/deployment-status/:org/:repo', asyncHandler(async (req: Request, res: Response) => {
   const { org, repo } = req.params;
   try {
+    // Validate repo is in ADF
+    const adf = loadLocalADF('renderx-plugins-demo-adf.json');
+    const validation = validateRepoInADF(org, repo, adf);
+
+    if (!validation.isValid) {
+      console.warn(`⚠️ Deployment status request for non-ADF repo: ${org}/${repo}`);
+      return res.status(403).json(
+        createNonCompliantRepoError(org, repo, validation.architectureRepos || [])
+      );
+    }
+
     const deploymentStatus = await deploymentStatusService.collectDeploymentStatus(org, repo);
-    res.json({
+    return res.json({
       timestamp: new Date(),
       org,
       repo,
@@ -2229,7 +2336,7 @@ app.get('/api/metrics/deployment-status/:org/:repo', asyncHandler(async (req: Re
       history: deploymentStatus.slice(0, 10)
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to fetch deployment status'
     });
   }
@@ -2295,13 +2402,13 @@ app.post('/api/metrics/alerts/:org/:alertId/acknowledge', asyncHandler(async (re
     if (!alert) {
       return res.status(404).json({ error: 'Alert not found' });
     }
-    res.json({
+    return res.json({
       timestamp: new Date(),
       org,
       alert
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to acknowledge alert'
     });
   }
@@ -2315,13 +2422,13 @@ app.post('/api/metrics/alerts/:org/:alertId/resolve', asyncHandler(async (req: R
     if (!alert) {
       return res.status(404).json({ error: 'Alert not found' });
     }
-    res.json({
+    return res.json({
       timestamp: new Date(),
       org,
       alert
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: error instanceof Error ? error.message : 'Failed to resolve alert'
     });
   }
@@ -2350,7 +2457,7 @@ app.get('/api/conductor/logs/:containerId', asyncHandler(async (req: Request, re
 
 // Get container health status
 app.get('/api/conductor/container-health/:containerId', asyncHandler(async (req: Request, res: Response) => {
-  const { containerId } = req.params;
+  const { containerId: _containerId } = req.params;
   try {
     const health = {
       status: 'running' as const,
@@ -2372,7 +2479,7 @@ app.get('/api/conductor/container-health/:containerId', asyncHandler(async (req:
 
 // Get conductor metrics
 app.get('/api/conductor/metrics/:containerId', asyncHandler(async (req: Request, res: Response) => {
-  const { containerId } = req.params;
+  const { containerId: _containerId } = req.params;
   try {
     const metrics = {
       orchestration: {
