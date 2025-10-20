@@ -21,13 +21,13 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'healthy':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'warning':
-        return '#ff9800';
+        return 'var(--severity-medium)';
       case 'critical':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#2196f3';
+        return 'var(--type-service)';
     }
   };
 
@@ -141,11 +141,11 @@ export const WIPGauge: React.FC<WIPGaugeProps> = ({ metrics, onViewPRs, onAdjust
           </div>
 
           {metrics.status === 'critical' && (
-            <div style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#ffebee', borderRadius: '4px', borderLeft: '4px solid #f44336' }}>
-              <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#c62828', marginBottom: '0.25rem' }}>
+            <div style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: 'rgba(244, 67, 54, 0.1)', borderRadius: '4px', borderLeft: '4px solid var(--severity-critical)' }}>
+              <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--severity-critical)', marginBottom: '0.25rem' }}>
                 ⚠ Critical Alert
               </div>
-              <div style={{ fontSize: '0.8rem', color: '#d32f2f' }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--severity-critical)' }}>
                 WIP exceeds limit. Consider pausing new work or increasing team capacity.
               </div>
             </div>

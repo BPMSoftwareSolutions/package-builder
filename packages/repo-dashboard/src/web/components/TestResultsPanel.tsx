@@ -47,9 +47,9 @@ export const TestResultsPanel: React.FC<TestResultsPanelProps> = ({ org, repo, o
   }, [org, repo, onCoverageChange]);
 
   const getCoverageColor = (coverage: number) => {
-    if (coverage >= 80) return '#4caf50';
-    if (coverage >= 60) return '#ff9800';
-    return '#f44336';
+    if (coverage >= 80) return 'var(--severity-info)';
+    if (coverage >= 60) return 'var(--severity-medium)';
+    return 'var(--severity-critical)';
   };
 
   const getTrendIcon = (trend: string) => {
@@ -62,9 +62,9 @@ export const TestResultsPanel: React.FC<TestResultsPanelProps> = ({ org, repo, o
 
   const getTrendColor = (trend: string) => {
     switch (trend) {
-      case 'improving': return '#4caf50';
-      case 'degrading': return '#f44336';
-      default: return '#ff9800';
+      case 'improving': return 'var(--severity-info)';
+      case 'degrading': return 'var(--severity-critical)';
+      default: return 'var(--severity-medium)';
     }
   };
 
@@ -92,8 +92,8 @@ export const TestResultsPanel: React.FC<TestResultsPanelProps> = ({ org, repo, o
       {error && (
         <div style={{
           padding: '1rem',
-          backgroundColor: '#ffebee',
-          color: '#c62828',
+          backgroundColor: 'rgba(244, 67, 54, 0.1)',
+          color: 'var(--severity-critical)',
           borderRadius: '4px',
           marginBottom: '1rem'
         }}>
@@ -144,13 +144,13 @@ export const TestResultsPanel: React.FC<TestResultsPanelProps> = ({ org, repo, o
             {testResults.failedTests.slice(0, 3).map((test, idx) => (
               <div key={idx} style={{
                 padding: '0.5rem',
-                backgroundColor: '#ffebee',
-                borderLeft: '3px solid #f44336',
+                backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                borderLeft: '3px solid var(--severity-critical)',
                 borderRadius: '2px',
                 fontSize: '0.75rem'
               }}>
-                <div style={{ fontWeight: 'bold', color: '#c62828' }}>{test.name}</div>
-                <div style={{ color: '#d32f2f', marginTop: '0.25rem' }}>{test.error}</div>
+                <div style={{ fontWeight: 'bold', color: 'var(--severity-critical)' }}>{test.name}</div>
+                <div style={{ color: 'var(--severity-critical)', marginTop: '0.25rem' }}>{test.error}</div>
               </div>
             ))}
           </div>

@@ -82,27 +82,27 @@ export const TestMetricsCard: React.FC<TestMetricsCardProps> = ({ metrics, onDri
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
-        <div style={{ padding: '0.75rem', backgroundColor: '#4caf5033', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'rgba(76, 175, 80, 0.2)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Passed
           </div>
-          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#4caf50' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--severity-info)' }}>
             {metrics.passedTests}
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: '#f4433633', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'rgba(244, 67, 54, 0.2)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Failed
           </div>
-          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#f44336' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--severity-critical)' }}>
             {metrics.failedTests}
           </div>
         </div>
-        <div style={{ padding: '0.75rem', backgroundColor: '#ff980033', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '0.75rem', backgroundColor: 'rgba(255, 152, 0, 0.2)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Skipped
           </div>
-          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#ff9800' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--severity-medium)' }}>
             {metrics.skippedTests}
           </div>
         </div>
@@ -152,8 +152,8 @@ export const TestMetricsCard: React.FC<TestMetricsCardProps> = ({ metrics, onDri
           </div>
 
           {metrics.flakyTests.length > 0 && (
-            <div style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#ff980033', borderRadius: '4px' }}>
-              <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#ff9800', marginBottom: '0.5rem' }}>
+            <div style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: 'rgba(255, 152, 0, 0.2)', borderRadius: '4px' }}>
+              <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--severity-medium)', marginBottom: '0.5rem' }}>
                 ⚠️ Flaky Tests ({metrics.flakyTests.length})
               </div>
               <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
@@ -173,7 +173,7 @@ export const TestMetricsCard: React.FC<TestMetricsCardProps> = ({ metrics, onDri
             </div>
             <div>
               <div style={{ color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>Flaky Test %</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: metrics.flakyTestPercentage > 0.05 ? '#ff9800' : '#4caf50' }}>
+              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: metrics.flakyTestPercentage > 0.05 ? 'var(--severity-medium)' : 'var(--severity-info)' }}>
                 {(metrics.flakyTestPercentage * 100).toFixed(2)}%
               </div>
             </div>

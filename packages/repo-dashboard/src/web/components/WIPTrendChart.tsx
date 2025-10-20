@@ -37,11 +37,11 @@ export const WIPTrendChart: React.FC<WIPTrendChartProps> = ({ metrics, onDrillDo
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#ff9800';
+        return 'var(--severity-medium)';
     }
   };
 
@@ -118,7 +118,7 @@ export const WIPTrendChart: React.FC<WIPTrendChartProps> = ({ metrics, onDrillDo
           <polyline
             points={limitPathData}
             fill="none"
-            stroke="#ff9800"
+            stroke="var(--severity-medium)"
             strokeWidth="1.5"
             opacity="0.6"
             strokeDasharray="2,2"
@@ -158,7 +158,7 @@ export const WIPTrendChart: React.FC<WIPTrendChartProps> = ({ metrics, onDrillDo
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Max WIP
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#f44336' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--severity-critical)' }}>
             {metrics.maxWIP}
           </div>
         </div>
@@ -166,7 +166,7 @@ export const WIPTrendChart: React.FC<WIPTrendChartProps> = ({ metrics, onDrillDo
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
             Min WIP
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#4caf50' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--severity-info)' }}>
             {metrics.minWIP}
           </div>
         </div>
@@ -184,7 +184,7 @@ export const WIPTrendChart: React.FC<WIPTrendChartProps> = ({ metrics, onDrillDo
                 <span>Current WIP</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '12px', height: '2px', backgroundColor: '#ff9800', opacity: '0.6' }} />
+                <div style={{ width: '12px', height: '2px', backgroundColor: 'var(--severity-medium)', opacity: '0.6' }} />
                 <span>WIP Limit</span>
               </div>
             </div>

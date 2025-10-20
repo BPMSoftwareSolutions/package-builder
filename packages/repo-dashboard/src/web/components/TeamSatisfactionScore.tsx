@@ -24,9 +24,9 @@ export const TeamSatisfactionScore: React.FC<TeamSatisfactionScoreProps> = ({ me
   const [expanded, setExpanded] = useState(false);
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return '#4caf50';
-    if (score >= 60) return '#ff9800';
-    return '#f44336';
+    if (score >= 80) return 'var(--severity-info)';
+    if (score >= 60) return 'var(--severity-medium)';
+    return 'var(--severity-critical)';
   };
 
   const getTrendIcon = (trend: string) => {
@@ -43,11 +43,11 @@ export const TeamSatisfactionScore: React.FC<TeamSatisfactionScoreProps> = ({ me
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return '#4caf50';
+        return 'var(--severity-info)';
       case 'degrading':
-        return '#f44336';
+        return 'var(--severity-critical)';
       default:
-        return '#ff9800';
+        return 'var(--severity-medium)';
     }
   };
 

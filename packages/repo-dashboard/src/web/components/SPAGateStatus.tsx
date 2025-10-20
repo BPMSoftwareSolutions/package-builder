@@ -103,12 +103,12 @@ export const SPAGateStatus: React.FC<SPAGateStatusProps> = ({ metrics, onDrillDo
               <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 {result.repository}
               </span>
-              <span style={{ color: result.status === 'passing' ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>
+              <span style={{ color: result.status === 'passing' ? 'var(--severity-info)' : 'var(--severity-critical)', fontWeight: 'bold' }}>
                 {result.status.toUpperCase()}
               </span>
             </div>
             {result.violations > 0 && (
-              <div style={{ color: '#f44336', fontSize: '0.75rem' }}>
+              <div style={{ color: 'var(--severity-critical)', fontSize: '0.75rem' }}>
                 {result.violations} violations
               </div>
             )}
@@ -128,7 +128,7 @@ export const SPAGateStatus: React.FC<SPAGateStatusProps> = ({ metrics, onDrillDo
                   <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {result.repository}
                   </span>
-                  <span style={{ color: result.status === 'passing' ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>
+                  <span style={{ color: result.status === 'passing' ? 'var(--severity-info)' : 'var(--severity-critical)', fontWeight: 'bold' }}>
                     {result.status.toUpperCase()}
                   </span>
                 </div>
