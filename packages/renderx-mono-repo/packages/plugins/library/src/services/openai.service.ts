@@ -3,7 +3,7 @@
  * Uses Host SDK Config Service for secure API key management
  */
 
-import { getConfigValue, hasConfigValue } from '@renderx-plugins/host-sdk';
+import { getConfigValue, hasConfigValue } from '@renderx/host-sdk';
 import {
   OpenAIMessage,
   OpenAICompletionRequest,
@@ -289,3 +289,4 @@ class ChatError extends Error {
 }
 
 export { ChatError };
+

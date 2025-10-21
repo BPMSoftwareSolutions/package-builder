@@ -1,6 +1,6 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, vi } from "vitest";
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   resolveInteraction: (key: string) => {
     if (key === "canvas.component.create") {
       return { pluginId: "CanvasComponentPlugin", sequenceId: "canvas-component-create-symphony" };
@@ -11,14 +11,14 @@ vi.mock("@renderx-plugins/host-sdk", () => ({
   isFlagEnabled: () => false,
   useConductor: () => ({ play: () => {} }),
 }));
-import { resolveInteraction } from "@renderx-plugins/host-sdk";
+import { resolveInteraction } from "@renderx/host-sdk";
 
 
-import { parseUiFile } from "@renderx-plugins/canvas-component/symphonies/import/import.parse.pure.ts";
-import { injectCssClasses } from "@renderx-plugins/canvas-component/symphonies/import/import.css.stage-crew.ts";
-import { applyHierarchyAndOrder } from "@renderx-plugins/canvas-component/symphonies/import/import.nodes.stage-crew.ts";
-import { registerInstances } from "@renderx-plugins/canvas-component/symphonies/import/import.io.ts";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
+import { parseUiFile } from "@renderx/canvas-component/symphonies/import/import.parse.pure.ts";
+import { injectCssClasses } from "@renderx/canvas-component/symphonies/import/import.css.stage-crew.ts";
+import { applyHierarchyAndOrder } from "@renderx/canvas-component/symphonies/import/import.nodes.stage-crew.ts";
+import { registerInstances } from "@renderx/canvas-component/symphonies/import/import.io.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
 async function createComponentsSequentiallyTest(_data: any, ctx: any) {
   const components: any[] = ctx.payload.importComponents || [];
   for (const comp of components) {
@@ -154,4 +154,5 @@ describe("canvas-component import integration (migrated)", () => {
     expect(puts.length).toBeGreaterThanOrEqual(2);
   });
 });
+
 

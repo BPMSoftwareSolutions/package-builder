@@ -1,5 +1,5 @@
 import { getCanvasOrThrow } from "./select.overlay.dom.stage-crew";
-import { resolveInteraction, EventRouter } from "@renderx-plugins/host-sdk";
+import { resolveInteraction, EventRouter } from "@renderx/host-sdk";
 
 function ensureLineCss() {
   if (typeof document === "undefined") return;
@@ -172,3 +172,4 @@ export function attachLineResizeHandlers(ov: HTMLDivElement, conductor?: any) {
     document.addEventListener("mouseup", onUp);
   });
 }
+

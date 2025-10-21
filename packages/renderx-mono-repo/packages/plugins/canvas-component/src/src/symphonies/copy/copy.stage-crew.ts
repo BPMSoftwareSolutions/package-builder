@@ -1,4 +1,4 @@
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 import { setClipboardText } from "../_clipboard";
 
 function getSelectedId(data: any): string | undefined {
@@ -83,4 +83,5 @@ export async function notifyCopyComplete(_data: any, ctx: any) {
 }
 
 export const handlers = { serializeSelectedComponent, copyToClipboard, notifyCopyComplete };
+
 

@@ -1,4 +1,4 @@
-import { resolveInteraction, EventRouter } from "@renderx-plugins/host-sdk";
+import { resolveInteraction, EventRouter } from "@renderx/host-sdk";
 import { transformImportToCreatePayload, attachStandardImportInteractions } from "../create/create.from-import";
 
 
@@ -70,3 +70,4 @@ export function applyHierarchyAndOrder(_data: any, ctx: any) {
     }
   } catch {}
 }
+

@@ -1,4 +1,4 @@
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 
 export async function openUiFile(_data: any, ctx: any) {
   try {
@@ -46,3 +46,4 @@ export async function openUiFile(_data: any, ctx: any) {
     ctx.logger?.error?.("openUiFile failed:", e);
   }
 }
+

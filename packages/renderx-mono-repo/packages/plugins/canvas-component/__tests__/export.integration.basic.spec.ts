@@ -1,10 +1,10 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { queryAllComponents } from "@renderx-plugins/canvas-component/symphonies/export/export.io.ts";
-import { collectCssClasses } from "@renderx-plugins/canvas-component/symphonies/export/export.css.stage-crew.ts";
-import { collectLayoutData } from "@renderx-plugins/canvas-component/symphonies/export/export.stage-crew.ts";
-import { buildUiFileContent } from "@renderx-plugins/canvas-component/symphonies/export/export.pure.ts";
-import { downloadUiFile } from "@renderx-plugins/canvas-component/symphonies/export/export.download.stage-crew.ts";
+import { queryAllComponents } from "@renderx/canvas-component/symphonies/export/export.io.ts";
+import { collectCssClasses } from "@renderx/canvas-component/symphonies/export/export.css.stage-crew.ts";
+import { collectLayoutData } from "@renderx/canvas-component/symphonies/export/export.stage-crew.ts";
+import { buildUiFileContent } from "@renderx/canvas-component/symphonies/export/export.pure.ts";
+import { downloadUiFile } from "@renderx/canvas-component/symphonies/export/export.download.stage-crew.ts";
 
 function makeIntegrationCtx() {
   const ops: any[] = [];
@@ -107,4 +107,5 @@ describe("canvas-component export integration (basic)", () => {
     expect(ctx.payload.uiFileContent.cssClasses).toEqual({});
   });
 });
+
 

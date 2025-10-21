@@ -1,4 +1,4 @@
-import { EventRouter, resolveInteraction } from "@renderx-plugins/host-sdk";
+import { EventRouter, resolveInteraction } from "@renderx/host-sdk";
 import { getClipboardText } from "../_clipboard";
 import { toCreatePayloadFromData, attachStandardImportInteractions } from "../create/create.from-import";
 
@@ -136,4 +136,5 @@ export async function notifyPasteComplete(_data: any, ctx: any) {
 }
 
 export const handlers = { readFromClipboard, deserializeComponentData, calculatePastePosition, createPastedComponent, notifyPasteComplete };
+
 

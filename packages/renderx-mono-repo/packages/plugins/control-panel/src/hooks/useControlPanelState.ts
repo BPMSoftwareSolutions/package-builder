@@ -1,5 +1,5 @@
 import React from "react";
-import { EventRouter as SdkEventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter as SdkEventRouter } from "@renderx/host-sdk";
 import {
   controlPanelReducer,
   initialControlPanelState,
@@ -104,3 +104,4 @@ export function useControlPanelState() {
 
   return { state, dispatch };
 }
+

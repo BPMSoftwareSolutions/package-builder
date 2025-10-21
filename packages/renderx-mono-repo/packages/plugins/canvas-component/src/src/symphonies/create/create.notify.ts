@@ -1,4 +1,4 @@
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 
 export const notifyUi = (data: any, ctx: any) => {
   const created = ctx.payload?.createdNode;
@@ -15,3 +15,4 @@ export const notifyUi = (data: any, ctx: any) => {
     );
   }
 };
+

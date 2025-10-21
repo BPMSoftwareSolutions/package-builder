@@ -2,14 +2,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock host SDK with spy for EventRouter.publish
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   EventRouter: {
     publish: vi.fn().mockResolvedValue(undefined),
   },
   resolveInteraction: (key: string) => ({ pluginId: "CanvasComponentPlugin", sequenceId: key }),
 }));
 
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 import { createPastedComponent } from "../src/symphonies/paste/paste.stage-crew";
 
 describe("paste interactions attach and publish drag events", () => {
@@ -46,4 +46,5 @@ describe("paste interactions attach and publish drag events", () => {
     );
   });
 });
+
 

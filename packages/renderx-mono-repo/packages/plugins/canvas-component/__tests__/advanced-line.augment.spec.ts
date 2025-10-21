@@ -1,12 +1,12 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 // Ensure lineAdvanced flag path is honored in package by mocking host-sdk flag check
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   isFlagEnabled: (k: string) => (k === "lineAdvanced" ? true : false),
   useConductor: () => ({ play: () => {} }),
 }));
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { enhanceLine } from "@renderx-plugins/canvas-component/symphonies/augment/augment.line.stage-crew.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { enhanceLine } from "@renderx/canvas-component/symphonies/augment/augment.line.stage-crew.ts";
 import {
   setFlagOverride,
   clearFlagOverrides,
@@ -65,4 +65,5 @@ describe("Advanced Line augmentation (Phase 1)", () => {
     expect(second.length).toBe(1);
   });
 });
+
 

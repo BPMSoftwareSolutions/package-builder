@@ -1,4 +1,4 @@
-import { EventRouter, resolveInteraction } from "@renderx-plugins/host-sdk";
+import { EventRouter, resolveInteraction } from "@renderx/host-sdk";
 
 // Transform a single import component record into a canvas.component.create payload
 export function transformImportToCreatePayload(importComponent: any) {
@@ -106,3 +106,4 @@ export function toCreatePayloadFromData(input: any) {
   // Fallback to empty template
   return { component: { template: {} }, position: { x: 0, y: 0 } };
 }
+

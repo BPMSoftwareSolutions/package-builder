@@ -1,5 +1,5 @@
 // Stage-crew handler for updating Canvas component attributes from Control Panel changes
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 // TODO: ComponentRuleEngine needs to be added to Host SDK or replaced with SDK equivalent
 import { ComponentRuleEngine } from "../../temp-deps/rule-engine";
 
@@ -73,3 +73,4 @@ export function refreshControlPanel(_data: any, ctx: any) {
     }
   }
 }
+

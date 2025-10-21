@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, vi } from "vitest";
 // Mutable mock flag with setter so the mocked module reads latest value
-vi.mock("@renderx-plugins/host-sdk", () => {
+vi.mock("@renderx/host-sdk", () => {
   const state = { transform: false };
   return {
     isFlagEnabled: (k: string) =>
@@ -12,8 +12,8 @@ vi.mock("@renderx-plugins/host-sdk", () => {
     },
   };
 });
-import { handlers } from "@renderx-plugins/canvas-component/symphonies/drag/drag.stage-crew.ts";
-import * as HostSdk from "@renderx-plugins/host-sdk";
+import { handlers } from "@renderx/canvas-component/symphonies/drag/drag.stage-crew.ts";
+import * as HostSdk from "@renderx/host-sdk";
 
 function makeCtx() {
   return { payload: {} } as any;
@@ -66,4 +66,5 @@ describe("canvas-component drag — transform path (flag)", () => {
     perfTransformFlag = false;
   });
 });
+
 

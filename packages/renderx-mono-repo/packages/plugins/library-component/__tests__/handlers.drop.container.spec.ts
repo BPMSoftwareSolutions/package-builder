@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { handlers } from '../src/symphonies/drop.container.symphony';
-import { EventRouter } from '@renderx-plugins/host-sdk';
+import { EventRouter } from '@renderx/host-sdk';
 
-vi.mock('@renderx-plugins/host-sdk', () => {
+vi.mock('@renderx/host-sdk', () => {
   return {
     EventRouter: {
       publish: vi.fn(async () => undefined),
@@ -32,4 +32,5 @@ describe('library-component container drop handlers (package)', () => {
     expect(conductor).toBe(ctx.conductor);
   });
 });
+
 

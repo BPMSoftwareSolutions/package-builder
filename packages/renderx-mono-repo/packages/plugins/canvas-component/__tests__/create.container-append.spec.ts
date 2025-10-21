@@ -1,6 +1,6 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
 
 function makeContainerTemplate() {
   return {
@@ -56,4 +56,5 @@ describe("create: appends under container when containerId provided", () => {
     expect(childEl.style.top).toBe("30px");
   });
 });
+
 

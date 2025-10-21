@@ -1,4 +1,4 @@
-import { getTagForType } from "@renderx-plugins/host-sdk";
+import { getTagForType } from "@renderx/host-sdk";
 
 export const buildUiFileContent = (data: any, ctx: any) => {
   try {
@@ -90,3 +90,4 @@ export const buildUiFileContent = (data: any, ctx: any) => {
     };
   }
 };
+

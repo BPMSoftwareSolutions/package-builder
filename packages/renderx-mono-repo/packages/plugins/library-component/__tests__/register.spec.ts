@@ -55,8 +55,9 @@ describe('renderx-plugin-library-component: register()', () => {
 
     // Verify all handlersPath point to the bare package specifier
     catalog.sequences.forEach((seq: any) => {
-      expect(seq.handlersPath).toBe('@renderx-plugins/library-component');
+      expect(seq.handlersPath).toBe('@renderx/library-component');
     });
   });
 });
+
 

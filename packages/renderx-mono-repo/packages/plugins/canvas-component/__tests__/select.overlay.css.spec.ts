@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { showSelectionOverlay } from "@renderx-plugins/canvas-component/symphonies/select/select.stage-crew.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { showSelectionOverlay } from "@renderx/canvas-component/symphonies/select/select.stage-crew.ts";
 
 function makeTemplate() {
   return {
@@ -34,4 +34,5 @@ describe("selection overlay CSS ensures box-sizing border-box for accurate align
     expect(overlay.style.boxSizing).toBe("border-box");
   });
 });
+
 

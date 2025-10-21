@@ -4,7 +4,7 @@ import { ESLint } from "eslint";
 
 const cwd = path.resolve(__dirname, "..");
 
-describe("@renderx-plugins/canvas-component: ESLint guardrails", () => {
+describe("@renderx/canvas-component: ESLint guardrails", () => {
   it("src is clean under local ESLint config", async () => {
     const eslint = new ESLint({ cwd });
     const results = await eslint.lintFiles(["src/**/*.{ts,tsx,js,jsx}"]);
@@ -22,4 +22,5 @@ describe("@renderx-plugins/canvas-component: ESLint guardrails", () => {
     expect(messages.some((m) => /no-restricted-imports/.test(String(m.ruleId)))).toBe(true);
   }, 30000);
 });
+
 

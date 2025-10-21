@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { JSDOM } from "jsdom";
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 import { handlers as selectHandlers } from "../src/symphonies/select/select.stage-crew";
 
 // Mock EventRouter
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   EventRouter: {
     publish: vi.fn(),
   },
@@ -294,3 +294,4 @@ describe("Selection ID derivation and baton flow", () => {
     });
   });
 });
+

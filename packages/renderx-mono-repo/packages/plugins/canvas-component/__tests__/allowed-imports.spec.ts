@@ -4,12 +4,12 @@ import { ESLint } from "eslint";
 
 const cwd = path.resolve(__dirname, "..");
 
-describe("@renderx-plugins/canvas-component: allowed-imports rule", () => {
+describe("@renderx/canvas-component: allowed-imports rule", () => {
   it("allows relative and approved bare imports", async () => {
     const eslint = new ESLint({ cwd });
     const code = [
       "import x from './local';",
-      "import { useConductor } from '@renderx-plugins/host-sdk';",
+      "import { useConductor } from '@renderx/host-sdk';",
       "import React from 'react';",
       "import 'gif.js.optimized';",
     ].join("\n");
@@ -34,4 +34,5 @@ describe("@renderx-plugins/canvas-component: allowed-imports rule", () => {
     expect(messages.some((m) => String(m.ruleId) === "allowed-imports/only-allowed")).toBe(true);
   }, 30000);
 });
+
 

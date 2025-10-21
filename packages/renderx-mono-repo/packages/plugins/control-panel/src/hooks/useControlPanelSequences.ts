@@ -3,7 +3,7 @@ import {
   useConductor,
   resolveInteraction,
   EventRouter,
-} from "@renderx-plugins/host-sdk";
+} from "@renderx/host-sdk";
 import type { SelectedElement } from "../types/control-panel.types";
 
 // Global guards to dedupe init across multiple hook instances/mounts
@@ -211,3 +211,4 @@ export function useControlPanelSequences() {
     handleSectionToggle,
   };
 }
+

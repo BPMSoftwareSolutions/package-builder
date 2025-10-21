@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { registerInstance } from "@renderx-plugins/canvas-component/symphonies/create/create.io.ts";
+import { registerInstance } from "@renderx/canvas-component/symphonies/create/create.io.ts";
 
 describe("canvas-component create.io", () => {
   function makeCtx() {
@@ -38,4 +38,5 @@ describe("canvas-component create.io", () => {
     expect(() => (ctx as any).io.kv.put("k", "v")).toThrow();
   });
 });
+
 

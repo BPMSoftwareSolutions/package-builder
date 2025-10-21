@@ -1,9 +1,9 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { queryAllComponents } from "@renderx-plugins/canvas-component/symphonies/export/export.io.ts";
-import { collectCssClasses } from "@renderx-plugins/canvas-component/symphonies/export/export.css.stage-crew.ts";
-import { collectLayoutData } from "@renderx-plugins/canvas-component/symphonies/export/export.stage-crew.ts";
-import { buildUiFileContent } from "@renderx-plugins/canvas-component/symphonies/export/export.pure.ts";
+import { queryAllComponents } from "@renderx/canvas-component/symphonies/export/export.io.ts";
+import { collectCssClasses } from "@renderx/canvas-component/symphonies/export/export.css.stage-crew.ts";
+import { collectLayoutData } from "@renderx/canvas-component/symphonies/export/export.stage-crew.ts";
+import { buildUiFileContent } from "@renderx/canvas-component/symphonies/export/export.pure.ts";
 import { cssRegistry } from "../src/temp-deps/css-registry.store.ts";
 
 function setupCanvas() {
@@ -53,4 +53,5 @@ describe("Export includes JSON component CSS end-to-end (migrated)", () => {
     expect(uiFile.components[0].template.classRefs).toContain("rx-button");
   });
 });
+
 

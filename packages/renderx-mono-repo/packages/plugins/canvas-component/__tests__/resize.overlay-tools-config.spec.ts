@@ -1,8 +1,8 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { showSelectionOverlay } from "@renderx-plugins/canvas-component/symphonies/select/select.stage-crew.ts";
-import { handlers as resizeHandlers } from "@renderx-plugins/canvas-component/symphonies/resize/resize.symphony.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { showSelectionOverlay } from "@renderx/canvas-component/symphonies/select/select.stage-crew.ts";
+import { handlers as resizeHandlers } from "@renderx/canvas-component/symphonies/resize/resize.symphony.ts";
 
 function dispatchMouse(el: Element | Document, type: string, opts: any) {
   const ev = new MouseEvent(type, { bubbles: true, cancelable: true, ...opts });
@@ -159,4 +159,5 @@ describe("resize overlay driven by template tools config", () => {
     expect(el.style.height).toBe("70px");
   });
 });
+
 

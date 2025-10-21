@@ -31,5 +31,3 @@ export interface PluginManifest {
   exports?: string[];
 }
 
-export type { PluginManifest };
-

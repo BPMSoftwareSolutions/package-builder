@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
 
 export default [
   {
@@ -36,6 +37,13 @@ export default [
       'no-console': 'off'
     }
   },
+  ...tseslint.configs.recommended.map(config => ({
+    ...config,
+    rules: {
+      ...config.rules,
+      '@typescript-eslint/no-explicit-any': 'off'
+    }
+  })),
   {
     files: ['packages/plugins/**/*.{ts,tsx}'],
     rules: {

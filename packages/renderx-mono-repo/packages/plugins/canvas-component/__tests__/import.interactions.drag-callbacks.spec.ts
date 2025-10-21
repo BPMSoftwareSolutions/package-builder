@@ -2,13 +2,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock host SDK with spy for EventRouter.publish
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   EventRouter: {
     publish: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 import { attachStandardImportInteractions } from "../src/symphonies/create/create.from-import";
 
 describe("attachStandardImportInteractions forwards drag positions", () => {
@@ -49,4 +49,5 @@ describe("attachStandardImportInteractions forwards drag positions", () => {
     );
   });
 });
+
 

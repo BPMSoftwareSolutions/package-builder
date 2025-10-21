@@ -1,4 +1,4 @@
-import { isFlagEnabled } from "@renderx-plugins/host-sdk";
+import { isFlagEnabled } from "@renderx/host-sdk";
 
 // Cache element references to avoid repeated DOM lookups during drag
 const elCache: Record<string, HTMLElement> = {};
@@ -115,3 +115,4 @@ export const forwardToControlPanel = (_data?: any, _ctx?: any) => {
 
 // Export handlers for JSON sequence mounting
 export const handlers = { startDrag, updatePosition, endDrag, forwardToControlPanel };
+

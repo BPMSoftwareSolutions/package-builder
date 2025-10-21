@@ -1,6 +1,6 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { parseUiFile } from "@renderx-plugins/canvas-component/symphonies/import/import.parse.pure.ts";
+import { parseUiFile } from "@renderx/canvas-component/symphonies/import/import.parse.pure.ts";
 
 function setupCanvas() {
   const root = document.createElement("div");
@@ -71,4 +71,5 @@ describe("import.parse adds default base classes", () => {
     ]);
   });
 });
+
 

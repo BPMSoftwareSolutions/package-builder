@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock host SDK with spies for EventRouter.publish and resolveInteraction
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   EventRouter: {
     publish: vi.fn().mockResolvedValue(undefined),
   },
@@ -15,7 +15,7 @@ vi.mock("@renderx-plugins/host-sdk", () => ({
   useConductor: () => ({ play: () => {} }),
 }));
 
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 import { handlers as deleteHandlers } from "../src/symphonies/delete/delete.stage-crew.ts";
 
 function ensureOverlays() {
@@ -110,4 +110,5 @@ describe("Canvas component delete", () => {
     );
   });
 });
+
 

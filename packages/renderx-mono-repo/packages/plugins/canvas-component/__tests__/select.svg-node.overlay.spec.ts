@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony";
-import { showSvgNodeOverlay } from "@renderx-plugins/canvas-component/symphonies/select/select.svg-node.stage-crew";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony";
+import { showSvgNodeOverlay } from "@renderx/canvas-component/symphonies/select/select.svg-node.stage-crew";
 
 function makeCtx() {
   return { payload: {} } as any;
@@ -51,4 +51,5 @@ describe("SVG sub-node selection overlay (TDD)", () => {
     expect(parseFloat(overlay.style.height || "0")).toBeGreaterThan(0);
   });
 });
+
 

@@ -1,8 +1,8 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { showSelectionOverlay } from "@renderx-plugins/canvas-component/symphonies/select/select.stage-crew.ts";
-import { handlers as resizeHandlers } from "@renderx-plugins/canvas-component/symphonies/resize/resize.symphony.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { showSelectionOverlay } from "@renderx/canvas-component/symphonies/select/select.stage-crew.ts";
+import { handlers as resizeHandlers } from "@renderx/canvas-component/symphonies/resize/resize.symphony.ts";
 
 function makeTemplate() {
   return {
@@ -70,4 +70,5 @@ describe("selection overlay remains aligned with component after resize (conduct
     expect(overlay.style.top).toBe(el.style.top);
   });
 });
+
 

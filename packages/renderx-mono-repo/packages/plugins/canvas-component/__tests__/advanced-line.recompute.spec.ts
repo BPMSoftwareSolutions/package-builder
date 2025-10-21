@@ -1,8 +1,8 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { enhanceLine } from "@renderx-plugins/canvas-component/symphonies/augment/augment.line.stage-crew.ts";
-import { recomputeLineSvg } from "@renderx-plugins/canvas-component/symphonies/augment/line.recompute.stage-crew.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { enhanceLine } from "@renderx/canvas-component/symphonies/augment/augment.line.stage-crew.ts";
+import { recomputeLineSvg } from "@renderx/canvas-component/symphonies/augment/line.recompute.stage-crew.ts";
 import {
   setFlagOverride,
   clearFlagOverrides,
@@ -145,4 +145,5 @@ describe("Advanced Line recompute (Phase 2+3)", () => {
     expect(line.getAttribute("transform") || "").toContain("rotate(45");
   });
 });
+
 

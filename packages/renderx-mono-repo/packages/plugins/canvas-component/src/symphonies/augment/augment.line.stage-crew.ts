@@ -1,4 +1,4 @@
-import { isFlagEnabled } from "@renderx-plugins/host-sdk";
+import { isFlagEnabled } from "@renderx/host-sdk";
 
 // Add basic SVG defs (arrow markers). Keep minimal; more will be added in later phases.
 function ensureLineMarkers(svg: SVGSVGElement) {
@@ -50,4 +50,5 @@ export function enhanceLine(_data: any, ctx: any) {
     ensureLineMarkers(el);
   } catch {}
 }
+
 

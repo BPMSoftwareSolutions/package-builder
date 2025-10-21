@@ -1,7 +1,7 @@
 import { ensureOverlay } from "./select.overlay.dom.stage-crew";
 import { attachResizeHandlers } from "./select.overlay.resize.stage-crew";
 import { applyOverlayRectForEl } from "./select.overlay.dom.stage-crew";
-import { useConductor, isFlagEnabled, EventRouter, resolveInteraction } from "@renderx-plugins/host-sdk";
+import { useConductor, isFlagEnabled, EventRouter, resolveInteraction } from "@renderx/host-sdk";
 import {
   ensureAdvancedLineOverlayFor,
   attachAdvancedLineManipHandlers,
@@ -146,3 +146,4 @@ export async function publishSelectionChanged(data: any, ctx: any) {
 
 // Export handlers for JSON sequence mounting
 export const handlers = { routeSelectionRequest, showSelectionOverlay, hideSelectionOverlay, notifyUi, publishSelectionChanged };
+

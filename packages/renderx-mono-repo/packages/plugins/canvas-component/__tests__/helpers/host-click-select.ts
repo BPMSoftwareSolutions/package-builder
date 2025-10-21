@@ -1,4 +1,4 @@
-import { resolveInteraction, EventRouter } from "@renderx-plugins/host-sdk";
+import { resolveInteraction, EventRouter } from "@renderx/host-sdk";
 
 // Minimal host-like click-to-select bridge for package tests
 export function setupHostClickToSelect(getConductor: () => any) {
@@ -87,4 +87,5 @@ export function setupHostClickToSelectLegacy(getConductor: () => any) {
   document.body.addEventListener("click", handler, true);
   return () => document.body.removeEventListener("click", handler, true);
 }
+
 

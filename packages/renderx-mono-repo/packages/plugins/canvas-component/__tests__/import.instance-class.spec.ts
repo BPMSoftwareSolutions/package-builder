@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, vi } from "vitest";
 // Mock host SDK routing and conductor for package-level tests (must be before importing modules that consume it)
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   resolveInteraction: (key: string) => {
     if (key === "canvas.component.create") {
       return { pluginId: "CanvasComponentPlugin", sequenceId: "canvas-component-create-symphony" };
@@ -13,10 +13,10 @@ vi.mock("@renderx-plugins/host-sdk", () => ({
   useConductor: () => ({ play: () => {} }),
 }));
 
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { parseUiFile } from "@renderx-plugins/canvas-component/symphonies/import/import.parse.pure.ts";
-import { injectCssClasses } from "@renderx-plugins/canvas-component/symphonies/import/import.css.stage-crew.ts";
-import { createComponentsSequentially, applyHierarchyAndOrder } from "@renderx-plugins/canvas-component/symphonies/import/import.nodes.stage-crew.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { parseUiFile } from "@renderx/canvas-component/symphonies/import/import.parse.pure.ts";
+import { injectCssClasses } from "@renderx/canvas-component/symphonies/import/import.css.stage-crew.ts";
+import { createComponentsSequentially, applyHierarchyAndOrder } from "@renderx/canvas-component/symphonies/import/import.nodes.stage-crew.ts";
 
 // Backwards-compatible handlers aggregator for minimal test changes
 const handlers = { parseUiFile, injectCssClasses, createComponentsSequentially, applyHierarchyAndOrder };
@@ -161,4 +161,5 @@ describe("import flow injects instance class on DOM elements", () => {
     expect(button.classList.contains(buttonInstance)).toBe(true);
   });
 });
+
 

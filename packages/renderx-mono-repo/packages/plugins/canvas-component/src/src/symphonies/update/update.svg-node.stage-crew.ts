@@ -1,4 +1,4 @@
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 
 // Whitelist of allowed SVG attributes that can be safely updated
 const ALLOWED_SVG_ATTRIBUTES = new Set([
@@ -130,3 +130,4 @@ export function refreshControlPanel(data: any, ctx: any) {
     ctx?.logger?.warn?.("Failed to refresh Control Panel after SVG node update:", error);
   }
 }
+

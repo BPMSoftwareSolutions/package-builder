@@ -1,12 +1,12 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, vi } from "vitest";
 // Force-enable advanced line code paths for this test
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   isFlagEnabled: (k: string) => (k === "lineAdvanced" ? true : false),
   useConductor: () => ({ play: () => {} }),
 }));
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { handlers as selectHandlers } from "@renderx-plugins/canvas-component/symphonies/select/select.stage-crew.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { handlers as selectHandlers } from "@renderx/canvas-component/symphonies/select/select.stage-crew.ts";
 import { setFlagOverride, clearFlagOverrides } from "../src/temp-deps/feature-flags";
 
 function makeSvgLineTemplate() {
@@ -53,4 +53,5 @@ describe("Advanced Line overlay attaches on selection (flag ON)", () => {
     clearFlagOverrides();
   });
 });
+
 

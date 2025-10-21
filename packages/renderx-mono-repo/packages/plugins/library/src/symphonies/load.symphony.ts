@@ -1,5 +1,5 @@
 // NOTE: Runtime sequences are mounted from JSON (see json-sequences/*). This file exports handlers for those sequences.
-import { mapJsonComponentToTemplate } from "@renderx-plugins/host-sdk";
+import { mapJsonComponentToTemplate } from "@renderx/host-sdk";
 import { loadCustomComponents } from "../utils/storage.utils";
 
 function mapJsonComponentToTemplateCompat(json: any) {
@@ -64,3 +64,4 @@ export const handlers = {
     data?.onComponentsLoaded?.(ctx.payload.components);
   },
 };
+

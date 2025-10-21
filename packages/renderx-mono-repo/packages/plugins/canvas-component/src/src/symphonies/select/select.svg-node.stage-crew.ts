@@ -1,4 +1,4 @@
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 import {
   ensureOverlay,
   applyOverlayRectForEl,
@@ -168,3 +168,4 @@ export async function showSvgNodeOverlay(data: any, ctx?: any) {
 
 // Export handlers for JSON sequence mounting
 export const handlers = { showSvgNodeOverlay };
+

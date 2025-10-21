@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony";
-import { handlers as resizeHandlers } from "@renderx-plugins/canvas-component/symphonies/resize/resize.stage-crew";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony";
+import { handlers as resizeHandlers } from "@renderx/canvas-component/symphonies/resize/resize.stage-crew";
 
 function makeSvgLineTemplate() {
   return {
@@ -84,4 +84,5 @@ describe("SVG Line component", () => {
     expect(line!.getAttribute("vector-effect")).toBe("non-scaling-stroke");
   });
 });
+
 

@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { showSelectionOverlay } from "@renderx-plugins/canvas-component/symphonies/select/select.stage-crew.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { showSelectionOverlay } from "@renderx/canvas-component/symphonies/select/select.stage-crew.ts";
 
 describe("selection overlay positions correctly for children inside container", () => {
   beforeEach(() => {
@@ -58,4 +58,5 @@ describe("selection overlay positions correctly for children inside container", 
     expect(overlay.style.height).toBe(childEl.style.height);
   });
 });
+
 

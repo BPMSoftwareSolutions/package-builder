@@ -1,5 +1,5 @@
 import { getCanvasOrThrow } from "./select.overlay.dom.stage-crew";
-import { resolveInteraction, EventRouter } from "@renderx-plugins/host-sdk";
+import { resolveInteraction, EventRouter } from "@renderx/host-sdk";
 import { recomputeLineSvg } from "../augment/line.recompute.stage-crew";
 
 function ensureAdvancedLineCss() {
@@ -319,3 +319,4 @@ export function attachAdvancedLineManipHandlers(
     document.addEventListener("mouseup", onUp);
   });
 }
+

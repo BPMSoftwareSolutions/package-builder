@@ -1,6 +1,6 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
 
 function makeSvgTemplate() {
   return {
@@ -43,4 +43,5 @@ describe("SVG component (basic)", () => {
     expect(styleEl?.textContent || "").toContain(".rx-svg * { vector-effect: non-scaling-stroke;");
   });
 });
+
 

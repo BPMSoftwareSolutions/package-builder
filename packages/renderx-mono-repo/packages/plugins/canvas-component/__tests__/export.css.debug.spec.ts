@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { collectCssClasses } from "@renderx-plugins/canvas-component/symphonies/export/export.css.stage-crew.ts";
+import { collectCssClasses } from "@renderx/canvas-component/symphonies/export/export.css.stage-crew.ts";
 import { cssRegistry } from "../src/temp-deps/css-registry.store.ts";
 
 describe("Debug CSS collection in export (migrated)", () => {
@@ -37,4 +37,5 @@ describe("Debug CSS collection in export (migrated)", () => {
     expect(Object.keys(ctx.payload.cssClasses || {}).length).toBeGreaterThan(0);
   });
 });
+
 

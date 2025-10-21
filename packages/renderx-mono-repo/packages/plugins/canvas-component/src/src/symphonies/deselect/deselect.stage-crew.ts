@@ -1,4 +1,4 @@
-import { EventRouter, resolveInteraction, useConductor } from "@renderx-plugins/host-sdk";
+import { EventRouter, resolveInteraction, useConductor } from "@renderx/host-sdk";
 
 function hideOverlayById(id: string) {
   const el = document.getElementById(id) as HTMLDivElement | null;
@@ -80,4 +80,5 @@ export const handlers = {
   clearAllSelections,
   routeDeselectionRequest,
 };
+
 

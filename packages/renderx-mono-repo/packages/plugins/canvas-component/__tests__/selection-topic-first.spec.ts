@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock host SDK
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   EventRouter: {
     publish: vi.fn().mockResolvedValue(undefined),
   },
@@ -26,7 +26,7 @@ vi.mock("@renderx-plugins/host-sdk", () => ({
 }));
 
 import { handlers as selectHandlers } from "../src/symphonies/select/select.stage-crew.ts";
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 
 describe("Topic-first selection approach", () => {
   let mockConductor: any;
@@ -185,3 +185,4 @@ describe("Topic-first selection approach", () => {
     });
   });
 });
+

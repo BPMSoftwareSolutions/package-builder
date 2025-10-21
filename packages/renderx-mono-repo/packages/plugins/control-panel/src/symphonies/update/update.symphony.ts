@@ -1,5 +1,5 @@
 import { updateFromElement } from "./update.stage-crew";
-import { isFlagEnabled } from "@renderx-plugins/host-sdk";
+import { isFlagEnabled } from "@renderx/host-sdk";
 
 // NOTE: Runtime sequences are mounted from JSON (see json-sequences/*). This file only exports handlers.
 
@@ -77,3 +77,4 @@ export const handlers = {
     }
   },
 };
+

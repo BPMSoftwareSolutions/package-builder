@@ -1,5 +1,5 @@
 import { getCanvasRect } from "./select.overlay.dom.stage-crew";
-import { resolveInteraction, EventRouter } from "@renderx-plugins/host-sdk";
+import { resolveInteraction, EventRouter } from "@renderx/host-sdk";
 
 function readNumericPx(value: string): number | null {
   const n = parseFloat(value || "");
@@ -120,3 +120,4 @@ export function attachResizeHandlers(ov: HTMLDivElement, conductor?: any) {
 
   ov.addEventListener("mousedown", onMouseDown);
 }
+

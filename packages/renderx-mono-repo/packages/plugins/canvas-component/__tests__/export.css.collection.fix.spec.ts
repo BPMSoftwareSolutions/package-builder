@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { collectCssClasses } from "@renderx-plugins/canvas-component/symphonies/export/export.css.stage-crew.ts";
+import { collectCssClasses } from "@renderx/canvas-component/symphonies/export/export.css.stage-crew.ts";
 import { cssRegistry } from "../src/temp-deps/css-registry.store.ts";
 
 describe("CSS collection fix for classRefs vs classes mismatch (migrated)", () => {
@@ -61,4 +61,5 @@ describe("CSS collection fix for classRefs vs classes mismatch (migrated)", () =
     expect(ctx.payload.cssClassCount).toBeGreaterThan(0);
   });
 });
+
 

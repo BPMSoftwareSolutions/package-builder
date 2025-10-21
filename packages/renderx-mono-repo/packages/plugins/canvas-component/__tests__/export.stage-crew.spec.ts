@@ -1,6 +1,6 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { collectLayoutData } from "@renderx-plugins/canvas-component/symphonies/export/export.stage-crew.ts";
+import { collectLayoutData } from "@renderx/canvas-component/symphonies/export/export.stage-crew.ts";
 
 function makeCtx() {
   return {
@@ -166,4 +166,5 @@ describe("canvas-component export.stage-crew", () => {
     });
   });
 });
+
 

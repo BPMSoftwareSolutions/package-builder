@@ -14,7 +14,7 @@ describe('package manifest contribution', () => {
     
     const entry = plugins.find((p: { id?: string }) => p?.id === 'LibraryComponentPlugin');
     expect(entry).toBeDefined();
-    expect(entry?.runtime?.module).toBe('@renderx-plugins/library-component');
+    expect(entry?.runtime?.module).toBe('@renderx/library-component');
     expect(entry?.runtime?.export).toBe('register');
     
     // Verify existing renderx.sequences is preserved
@@ -25,7 +25,7 @@ describe('package manifest contribution', () => {
     const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
 
     // Verify essential package properties are maintained
-    expect(pkg.name).toBe('@renderx-plugins/library-component');
+    expect(pkg.name).toBe('@renderx/library-component');
     expect(pkg.main).toBe('./dist/index.js');
     expect(pkg.exports['.']).toBe('./dist/index.js');
 
@@ -64,3 +64,4 @@ describe('package manifest contribution', () => {
     expect(containerDropContent).not.toContain('LibraryComponentDropPlugin');
   });
 });
+

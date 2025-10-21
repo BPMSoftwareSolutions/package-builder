@@ -12,7 +12,7 @@ function createFakeConductor() {
   } as any;
 }
 
-describe('@renderx-plugins/canvas-component: package surface + register()', () => {
+describe('@renderx/canvas-component: package surface + register()', () => {
   it('exposes handlers and a register(conductor) function', async () => {
     expect(typeof (pkg as any).handlers).toBe('object');
     expect(typeof (pkg as any).register).toBe('function');
@@ -27,4 +27,5 @@ describe('@renderx-plugins/canvas-component: package surface + register()', () =
     expect((c as any)._canvasComponentRegistered).toBe(true);
   });
 });
+
 

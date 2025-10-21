@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock host SDK with spy for EventRouter.publish
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   EventRouter: {
     publish: vi.fn().mockResolvedValue(undefined),
   },
@@ -21,7 +21,7 @@ vi.mock("@renderx-plugins/host-sdk", () => ({
 
 // Import from package's own select handlers
 import { handlers as selectHandlers } from "../src/symphonies/select/select.stage-crew.ts";
-import { EventRouter } from "@renderx-plugins/host-sdk";
+import { EventRouter } from "@renderx/host-sdk";
 
 describe("Canvas selection publishes selection.changed topic", () => {
   beforeEach(() => {
@@ -112,3 +112,4 @@ describe("Canvas selection publishes selection.changed topic", () => {
     }).not.toThrow();
   });
 });
+

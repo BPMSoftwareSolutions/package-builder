@@ -1,8 +1,8 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { handlers as resizeHandlers } from "@renderx-plugins/canvas-component/symphonies/resize/resize.symphony.ts";
-import { recomputeLineSvg } from "@renderx-plugins/canvas-component/symphonies/augment/line.recompute.stage-crew.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { handlers as resizeHandlers } from "@renderx/canvas-component/symphonies/resize/resize.symphony.ts";
+import { recomputeLineSvg } from "@renderx/canvas-component/symphonies/augment/line.recompute.stage-crew.ts";
 
 function makeSvgLineTemplate() {
   return {
@@ -89,4 +89,5 @@ describe("Advanced Line — endpoints scale with resize", () => {
     expect(x2AttrNext).toBeCloseTo(x2AttrInitial, 5);
   });
 });
+
 

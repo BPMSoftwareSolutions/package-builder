@@ -2,7 +2,7 @@
 import { describe, it, expect, vi } from "vitest";
 
 // Force fallback path inside select.symphony by making EventRouter.publish throw
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   EventRouter: {
     publish: () => {
       throw new Error("router not initialized");
@@ -51,4 +51,5 @@ describe("Canvas selection forwards to Control Panel (package)", () => {
     }).not.toThrow();
   });
 });
+
 

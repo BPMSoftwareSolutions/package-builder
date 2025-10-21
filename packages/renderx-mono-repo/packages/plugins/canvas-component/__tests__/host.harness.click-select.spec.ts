@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   resolveInteraction: (key: string) => {
     if (key === "canvas.component.select") {
       return {
@@ -46,4 +46,5 @@ describe("Host-like click-to-select harness forwards to canvas.component.select"
     );
   });
 });
+
 

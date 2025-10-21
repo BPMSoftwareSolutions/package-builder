@@ -11,7 +11,7 @@ describe.skip("runtime.register — canvas-component (TODO: stabilize JSON catal
     (process as any).env.HOST_ARTIFACTS_DIR = "public";
 
     const { initConductor, loadJsonSequenceCatalogs } = await import("../src/temp-deps/conductor");
-    const { register } = await import("@renderx-plugins/canvas-component");
+    const { register } = await import("@renderx/canvas-component");
 
     const conductor = await initConductor();
 
@@ -28,4 +28,5 @@ describe.skip("runtime.register — canvas-component (TODO: stabilize JSON catal
     expect(mounted.size).toBeGreaterThan(0);
   });
 });
+
 

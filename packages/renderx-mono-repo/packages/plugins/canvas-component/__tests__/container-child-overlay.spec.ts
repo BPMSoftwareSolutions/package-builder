@@ -2,15 +2,15 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 // Mock host SDK to provide conductor functionality
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   useConductor: () => ({ play: vi.fn() }),
   isFlagEnabled: () => false,
   resolveInteraction: (key: string) => ({ pluginId: "test", sequenceId: key }),
   EventRouter: { publish: vi.fn() },
 }));
 
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { showSelectionOverlay } from "@renderx-plugins/canvas-component/symphonies/select/select.stage-crew.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { showSelectionOverlay } from "@renderx/canvas-component/symphonies/select/select.stage-crew.ts";
 
 function makeContainerTemplate() {
   return {
@@ -168,4 +168,5 @@ describe("Container child overlay positioning issues (migrated)", () => {
     expect(overlay.dataset.targetId).toBe(childId);
   });
 });
+
 

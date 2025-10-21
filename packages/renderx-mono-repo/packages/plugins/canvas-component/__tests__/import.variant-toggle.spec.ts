@@ -1,6 +1,6 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, vi } from "vitest";
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   resolveInteraction: (key: string) => {
     if (key === "canvas.component.create") {
       return { pluginId: "CanvasComponentPlugin", sequenceId: "canvas-component-create-symphony" };
@@ -11,10 +11,10 @@ vi.mock("@renderx-plugins/host-sdk", () => ({
   isFlagEnabled: () => false,
   useConductor: () => ({ play: () => {} }),
 }));
-import { parseUiFile } from "@renderx-plugins/canvas-component/symphonies/import/import.parse.pure.ts";
-import { injectCssClasses } from "@renderx-plugins/canvas-component/symphonies/import/import.css.stage-crew.ts";
-import { applyHierarchyAndOrder } from "@renderx-plugins/canvas-component/symphonies/import/import.nodes.stage-crew.ts";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
+import { parseUiFile } from "@renderx/canvas-component/symphonies/import/import.parse.pure.ts";
+import { injectCssClasses } from "@renderx/canvas-component/symphonies/import/import.css.stage-crew.ts";
+import { applyHierarchyAndOrder } from "@renderx/canvas-component/symphonies/import/import.nodes.stage-crew.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
 
 function setupCanvas() {
   const root = document.createElement("div");
@@ -109,4 +109,5 @@ describe("import variant toggle applies via rule engine", () => {
     expect(btn.classList.contains("rx-button--primary")).toBe(true);
   });
 });
+
 

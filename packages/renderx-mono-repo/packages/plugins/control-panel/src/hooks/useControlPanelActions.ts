@@ -3,7 +3,7 @@ import {
   useConductor,
   resolveInteraction,
   EventRouter,
-} from "@renderx-plugins/host-sdk";
+} from "@renderx/host-sdk";
 import { useControlPanelSequences } from "./useControlPanelSequences";
 import type {
   SelectedElement,
@@ -80,3 +80,4 @@ export function useControlPanelActions(
     },
   };
 }
+

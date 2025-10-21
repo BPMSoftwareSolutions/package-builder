@@ -1,6 +1,6 @@
 /* @vitest-environment jsdom */
 import { describe, it, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
 
 function makeContainerTemplate() {
   return {
@@ -51,4 +51,5 @@ describe("Container child selection and drag issues (migrated; known failing exp
     // This one often passes but is not critical to this migration; skipping for parity with bubbling fixes work
   });
 });
+
 

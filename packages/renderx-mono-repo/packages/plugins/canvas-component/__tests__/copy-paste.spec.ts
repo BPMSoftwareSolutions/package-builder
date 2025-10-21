@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 // Mock host SDK helpers used by handlers/sequences
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   resolveInteraction: (key: string) => {
     if (key === "canvas.component.create") {
       return { pluginId: "CanvasComponentPlugin", sequenceId: "canvas-component-create-symphony" };
@@ -13,12 +13,12 @@ vi.mock("@renderx-plugins/host-sdk", () => ({
   isFlagEnabled: () => false,
   useConductor: () => ({ play: () => {} }),
 }));
-import { resolveInteraction, EventRouter } from "@renderx-plugins/host-sdk";
+import { resolveInteraction, EventRouter } from "@renderx/host-sdk";
 
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { handlers as selectHandlers } from "@renderx-plugins/canvas-component/symphonies/select/select.symphony.ts";
-import { handlers as copyHandlers } from "@renderx-plugins/canvas-component/symphonies/copy/copy.symphony.ts";
-import { handlers as pasteHandlers } from "@renderx-plugins/canvas-component/symphonies/paste/paste.symphony.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { handlers as selectHandlers } from "@renderx/canvas-component/symphonies/select/select.symphony.ts";
+import { handlers as copyHandlers } from "@renderx/canvas-component/symphonies/copy/copy.symphony.ts";
+import { handlers as pasteHandlers } from "@renderx/canvas-component/symphonies/paste/paste.symphony.ts";
 
 
 function setupCanvas() {
@@ -214,4 +214,5 @@ describe("canvas-component copy/paste", () => {
   });
 
 });
+
 

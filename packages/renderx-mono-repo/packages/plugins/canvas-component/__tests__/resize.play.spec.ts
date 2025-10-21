@@ -1,6 +1,6 @@
 import { vi } from "vitest";
-vi.mock("@renderx-plugins/host-sdk", async (orig) => {
-  const actual = await (orig as any).importActual?.("@renderx-plugins/host-sdk");
+vi.mock("@renderx/host-sdk", async (orig) => {
+  const actual = await (orig as any).importActual?.("@renderx/host-sdk");
   return {
     ...actual,
     EventRouter: {
@@ -18,9 +18,9 @@ vi.mock("@renderx-plugins/host-sdk", async (orig) => {
 
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { showSelectionOverlay } from "@renderx-plugins/canvas-component/symphonies/select/select.stage-crew.ts";
-import { handlers as resizeHandlers } from "@renderx-plugins/canvas-component/symphonies/resize/resize.symphony.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { showSelectionOverlay } from "@renderx/canvas-component/symphonies/select/select.stage-crew.ts";
+import { handlers as resizeHandlers } from "@renderx/canvas-component/symphonies/resize/resize.symphony.ts";
 
 function makeTemplate() {
   return {
@@ -80,4 +80,5 @@ describe("canvas-component resize via conductor.play", () => {
     expect(el.style.height).toBe("80px");
   });
 });
+
 

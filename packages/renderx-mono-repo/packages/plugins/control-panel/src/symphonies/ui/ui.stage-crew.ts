@@ -3,7 +3,7 @@
 
 import { SchemaResolverService } from "../../services/schema-resolver.service";
 import type { ControlPanelConfig } from "../../types/control-panel.types";
-import { resolveInteraction } from "@renderx-plugins/host-sdk";
+import { resolveInteraction } from "@renderx/host-sdk";
 
 // Global state for UI sequences - this will be managed by the sequences
 const uiState: {
@@ -437,3 +437,4 @@ export function toggleSection(data: any, ctx: any) {
     ctx.logger?.error?.("Failed to toggle section:", error);
   }
 }
+

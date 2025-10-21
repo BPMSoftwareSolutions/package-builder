@@ -1,8 +1,8 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from "vitest";
-import { handlers as createHandlers } from "@renderx-plugins/canvas-component/symphonies/create/create.symphony.ts";
-import { moveLineManip } from "@renderx-plugins/canvas-component/symphonies/line-advanced/line.manip.stage-crew.ts";
-import { recomputeLineSvg } from "@renderx-plugins/canvas-component/symphonies/augment/line.recompute.stage-crew.ts";
+import { handlers as createHandlers } from "@renderx/canvas-component/symphonies/create/create.symphony.ts";
+import { moveLineManip } from "@renderx/canvas-component/symphonies/line-advanced/line.manip.stage-crew.ts";
+import { recomputeLineSvg } from "@renderx/canvas-component/symphonies/augment/line.recompute.stage-crew.ts";
 import {
   setFlagOverride,
   clearFlagOverrides,
@@ -71,4 +71,5 @@ describe("Advanced Line handlers — moveLineManip", () => {
     clearFlagOverrides();
   });
 });
+
 

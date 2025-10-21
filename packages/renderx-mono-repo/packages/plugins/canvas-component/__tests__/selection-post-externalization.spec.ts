@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { JSDOM } from "jsdom";
-import { EventRouter, useConductor } from "@renderx-plugins/host-sdk";
+import { EventRouter, useConductor } from "@renderx/host-sdk";
 import { handlers as selectHandlers } from "../src/symphonies/select/select.stage-crew";
 
 // Mock Host SDK
-vi.mock("@renderx-plugins/host-sdk", () => ({
+vi.mock("@renderx/host-sdk", () => ({
   EventRouter: {
     publish: vi.fn(),
   },
@@ -332,3 +332,4 @@ describe("Selection after externalization - comprehensive tests", () => {
     });
   });
 });
+

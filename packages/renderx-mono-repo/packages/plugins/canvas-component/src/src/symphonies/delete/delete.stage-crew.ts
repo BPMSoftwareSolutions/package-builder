@@ -1,4 +1,4 @@
-import { EventRouter, resolveInteraction, useConductor } from "@renderx-plugins/host-sdk";
+import { EventRouter, resolveInteraction, useConductor } from "@renderx/host-sdk";
 
 function resolveId(data: any, ctx: any): string | undefined {
   const fromData = data?.id;
@@ -60,4 +60,5 @@ export async function routeDeleteRequest(data: any, ctx: any) {
 }
 
 export const handlers = { deleteComponent, publishDeleted, routeDeleteRequest };
+
 
