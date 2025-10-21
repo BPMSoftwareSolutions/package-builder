@@ -1,0 +1,325 @@
+<svg viewBox="0 0 1200 1600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="30%">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#0f0f1a"/>
+    </radialGradient>
+    
+    <linearGradient id="flowGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="100%" stop-color="#0099cc"/>
+    </linearGradient>
+    
+    <linearGradient id="flowGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b6b"/>
+      <stop offset="100%" stop-color="#cc5555"/>
+    </linearGradient>
+    
+    <linearGradient id="flowGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4ecdc4"/>
+      <stop offset="100%" stop-color="#3ba99c"/>
+    </linearGradient>
+    
+    <linearGradient id="flowGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe66d"/>
+      <stop offset="100%" stop-color="#ccb85a"/>
+    </linearGradient>
+    
+    <linearGradient id="flowGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a8e6cf"/>
+      <stop offset="100%" stop-color="#86b8a6"/>
+    </linearGradient>
+    
+    <!-- Flow particle effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <rect width="1200" height="1600" fill="url(#bgGrad)"/>
+  
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="28" font-weight="bold">
+    Outsourced Flow: 5 AI Business Models
+  </text>
+  
+  <!-- 1. Flow as a Service (FaaS) -->
+  <g transform="translate(50, 80)">
+    <rect x="0" y="0" width="500" height="280" rx="15" fill="url(#flowGrad1)" opacity="0.1" stroke="url(#flowGrad1)" stroke-width="2"/>
+    
+    <text x="250" y="30" text-anchor="middle" fill="url(#flowGrad1)" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+      1. Flow as a Service (FaaS)
+    </text>
+    
+    <!-- Central user icon -->
+    <circle cx="250" cy="120" r="25" fill="url(#flowGrad1)" opacity="0.8"/>
+    <text x="250" y="127" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16">👤</text>
+    
+    <!-- Service bubbles around user -->
+    <circle cx="150" cy="80" r="20" fill="url(#flowGrad1)" opacity="0.6"/>
+    <text x="150" y="85" text-anchor="middle" fill="#ffffff" font-size="12">🏢</text>
+    <text x="150" y="105" text-anchor="middle" fill="#ffffff" font-size="10">Workspace</text>
+    
+    <circle cx="350" cy="80" r="20" fill="url(#flowGrad1)" opacity="0.6"/>
+    <text x="350" y="85" text-anchor="middle" fill="#ffffff" font-size="12">🤖</text>
+    <text x="350" y="105" text-anchor="middle" fill="#ffffff" font-size="10">AI Assistant</text>
+    
+    <circle cx="150" cy="160" r="20" fill="url(#flowGrad1)" opacity="0.6"/>
+    <text x="150" y="165" text-anchor="middle" fill="#ffffff" font-size="12">🎵</text>
+    <text x="150" y="185" text-anchor="middle" fill="#ffffff" font-size="10">Curated Audio</text>
+    
+    <circle cx="350" cy="160" r="20" fill="url(#flowGrad1)" opacity="0.6"/>
+    <text x="350" y="165" text-anchor="middle" fill="#ffffff" font-size="12">⚡</text>
+    <text x="350" y="185" text-anchor="middle" fill="#ffffff" font-size="10">Challenge Tuning</text>
+    
+    <!-- Connection lines -->
+    <line x1="170" y1="88" x2="228" y2="108" stroke="url(#flowGrad1)" stroke-width="2" opacity="0.6"/>
+    <line x1="330" y1="88" x2="272" y2="108" stroke="url(#flowGrad1)" stroke-width="2" opacity="0.6"/>
+    <line x1="170" y1="152" x2="228" y2="132" stroke="url(#flowGrad1)" stroke-width="2" opacity="0.6"/>
+    <line x1="330" y1="152" x2="272" y2="132" stroke="url(#flowGrad1)" stroke-width="2" opacity="0.6"/>
+    
+    <text x="250" y="220" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      Pre-structured environments optimized for flow
+    </text>
+    <text x="250" y="240" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      AI removes cognitive clutter
+    </text>
+  </g>
+  
+  <!-- 2. Shared Flow Networks -->
+  <g transform="translate(650, 80)">
+    <rect x="0" y="0" width="500" height="280" rx="15" fill="url(#flowGrad2)" opacity="0.1" stroke="url(#flowGrad2)" stroke-width="2"/>
+    
+    <text x="250" y="30" text-anchor="middle" fill="url(#flowGrad2)" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+      2. Shared Flow Networks
+    </text>
+    
+    <!-- Network of connected users -->
+    <circle cx="150" cy="100" r="20" fill="url(#flowGrad2)" opacity="0.8"/>
+    <text x="150" y="107" text-anchor="middle" fill="#ffffff" font-size="14">A</text>
+    
+    <circle cx="350" cy="100" r="20" fill="url(#flowGrad2)" opacity="0.8"/>
+    <text x="350" y="107" text-anchor="middle" fill="#ffffff" font-size="14">B</text>
+    
+    <circle cx="100" cy="160" r="20" fill="url(#flowGrad2)" opacity="0.8"/>
+    <text x="100" y="167" text-anchor="middle" fill="#ffffff" font-size="14">C</text>
+    
+    <circle cx="250" cy="160" r="20" fill="url(#flowGrad2)" opacity="0.8"/>
+    <text x="250" y="167" text-anchor="middle" fill="#ffffff" font-size="14">D</text>
+    
+    <circle cx="400" cy="160" r="20" fill="url(#flowGrad2)" opacity="0.8"/>
+    <text x="400" y="167" text-anchor="middle" fill="#ffffff" font-size="14">E</text>
+    
+    <!-- Flow connections -->
+    <path d="M 150 100 Q 200 80 350 100" stroke="url(#flowGrad2)" stroke-width="3" fill="none" opacity="0.7"/>
+    <path d="M 150 100 Q 125 130 100 160" stroke="url(#flowGrad2)" stroke-width="3" fill="none" opacity="0.7"/>
+    <path d="M 350 100 Q 375 130 400 160" stroke="url(#flowGrad2)" stroke-width="3" fill="none" opacity="0.7"/>
+    <path d="M 100 160 Q 175 160 250 160" stroke="url(#flowGrad2)" stroke-width="3" fill="none" opacity="0.7"/>
+    <path d="M 250 160 Q 325 160 400 160" stroke="url(#flowGrad2)" stroke-width="3" fill="none" opacity="0.7"/>
+    
+    <!-- Flow particles -->
+    <circle cx="200" cy="90" r="3" fill="url(#flowGrad2)" opacity="0.8">
+      <animateMotion dur="2s" repeatCount="indefinite">
+        <mpath href="#flowPath1"/>
+      </animateMotion>
+    </circle>
+    
+    <text x="250" y="220" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      Collective flow systems like developer teams
+    </text>
+    <text x="250" y="240" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      Flow pods that amplify each member
+    </text>
+  </g>
+  
+  <!-- 3. Flow Orchestration with AI -->
+  <g transform="translate(50, 400)">
+    <rect x="0" y="0" width="500" height="280" rx="15" fill="url(#flowGrad3)" opacity="0.1" stroke="url(#flowGrad3)" stroke-width="2"/>
+    
+    <text x="250" y="30" text-anchor="middle" fill="url(#flowGrad3)" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+      3. Flow Orchestration with AI
+    </text>
+    
+    <!-- Conductor AI -->
+    <rect x="200" y="60" width="100" height="60" rx="10" fill="url(#flowGrad3)" opacity="0.8"/>
+    <text x="250" y="85" text-anchor="middle" fill="#ffffff" font-size="14">🎭</text>
+    <text x="250" y="105" text-anchor="middle" fill="#ffffff" font-size="10">AI Conductor</text>
+    
+    <!-- User activity timeline -->
+    <rect x="50" y="140" width="400" height="40" rx="5" fill="#ffffff" opacity="0.1" stroke="url(#flowGrad3)" stroke-width="1"/>
+    
+    <!-- Time blocks -->
+    <rect x="60" y="145" width="80" height="30" rx="3" fill="url(#flowGrad3)" opacity="0.6"/>
+    <text x="100" y="163" text-anchor="middle" fill="#ffffff" font-size="10">Deep Work</text>
+    
+    <rect x="150" y="145" width="60" height="30" rx="3" fill="url(#flowGrad3)" opacity="0.4"/>
+    <text x="180" y="163" text-anchor="middle" fill="#ffffff" font-size="10">Transition</text>
+    
+    <rect x="220" y="145" width="100" height="30" rx="3" fill="url(#flowGrad3)" opacity="0.6"/>
+    <text x="270" y="163" text-anchor="middle" fill="#ffffff" font-size="10">Creative Block</text>
+    
+    <rect x="330" y="145" width="60" height="30" rx="3" fill="url(#flowGrad3)" opacity="0.4"/>
+    <text x="360" y="163" text-anchor="middle" fill="#ffffff" font-size="10">Recovery</text>
+    
+    <!-- Orchestration arrows -->
+    <path d="M 250 120 L 100 140" stroke="url(#flowGrad3)" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <path d="M 250 120 L 180 140" stroke="url(#flowGrad3)" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <path d="M 250 120 L 270 140" stroke="url(#flowGrad3)" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <path d="M 250 120 L 360 140" stroke="url(#flowGrad3)" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <text x="250" y="220" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      AI manages transitions, timing, and energy
+    </text>
+    <text x="250" y="240" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      Beat management for sustained focus
+    </text>
+  </g>
+  
+  <!-- 4. Flow Offloading in Personal Life -->
+  <g transform="translate(650, 400)">
+    <rect x="0" y="0" width="500" height="280" rx="15" fill="url(#flowGrad4)" opacity="0.1" stroke="url(#flowGrad4)" stroke-width="2"/>
+    
+    <text x="250" y="30" text-anchor="middle" fill="url(#flowGrad4)" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+      4. Flow Offloading in Personal Life
+    </text>
+    
+    <!-- Central person -->
+    <circle cx="250" cy="130" r="30" fill="url(#flowGrad4)" opacity="0.8"/>
+    <text x="250" y="138" text-anchor="middle" fill="#ffffff" font-size="18">😌</text>
+    
+    <!-- Offloaded tasks floating away -->
+    <g opacity="0.6">
+      <circle cx="120" cy="80" r="15" fill="url(#flowGrad4)"/>
+      <text x="120" y="85" text-anchor="middle" fill="#ffffff" font-size="10">🛒</text>
+      <text x="120" y="100" text-anchor="middle" fill="#ffffff" font-size="8">Groceries</text>
+    </g>
+    
+    <g opacity="0.6">
+      <circle cx="380" cy="80" r="15" fill="url(#flowGrad4)"/>
+      <text x="380" y="85" text-anchor="middle" fill="#ffffff" font-size="10">📅</text>
+      <text x="380" y="100" text-anchor="middle" fill="#ffffff" font-size="8">Scheduling</text>
+    </g>
+    
+    <g opacity="0.6">
+      <circle cx="120" cy="180" r="15" fill="url(#flowGrad4)"/>
+      <text x="120" y="185" text-anchor="middle" fill="#ffffff" font-size="10">💳</text>
+      <text x="120" y="200" text-anchor="middle" fill="#ffffff" font-size="8">Bills</text>
+    </g>
+    
+    <g opacity="0.6">
+      <circle cx="380" cy="180" r="15" fill="url(#flowGrad4)"/>
+      <text x="380" y="185" text-anchor="middle" fill="#ffffff" font-size="10">📞</text>
+      <text x="380" y="200" text-anchor="middle" fill="#ffffff" font-size="8">Calls</text>
+    </g>
+    
+    <!-- Flow arrows showing offloading -->
+    <path d="M 220 110 Q 170 95 135 85" stroke="url(#flowGrad4)" stroke-width="2" stroke-dasharray="5,5"/>
+    <path d="M 280 110 Q 330 95 365 85" stroke="url(#flowGrad4)" stroke-width="2" stroke-dasharray="5,5"/>
+    <path d="M 220 150 Q 170 165 135 175" stroke="url(#flowGrad4)" stroke-width="2" stroke-dasharray="5,5"/>
+    <path d="M 280 150 Q 330 165 365 175" stroke="url(#flowGrad4)" stroke-width="2" stroke-dasharray="5,5"/>
+    
+    <text x="250" y="220" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      Life admin handled by AI + humans
+    </text>
+    <text x="250" y="240" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      Bandwidth preserved for flow activities
+    </text>
+  </g>
+  
+  <!-- 5. Flow Insurance -->
+  <g transform="translate(350, 720)">
+    <rect x="0" y="0" width="500" height="280" rx="15" fill="url(#flowGrad5)" opacity="0.1" stroke="url(#flowGrad5)" stroke-width="2"/>
+    
+    <text x="250" y="30" text-anchor="middle" fill="url(#flowGrad5)" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+      5. Flow Insurance
+    </text>
+    
+    <!-- Insurance shield -->
+    <path d="M 250 70 L 220 90 L 220 140 Q 220 160 250 170 Q 280 160 280 140 L 280 90 Z" fill="url(#flowGrad5)" opacity="0.8"/>
+    <text x="250" y="125" text-anchor="middle" fill="#ffffff" font-size="20">🛡️</text>
+    
+    <!-- Protected elements -->
+    <g transform="translate(100, 100)">
+      <rect x="0" y="0" width="60" height="40" rx="5" fill="url(#flowGrad5)" opacity="0.6"/>
+      <text x="30" y="15" text-anchor="middle" fill="#ffffff" font-size="8">Calendar</text>
+      <text x="30" y="25" text-anchor="middle" fill="#ffffff" font-size="8">Protection</text>
+      <text x="30" y="35" text-anchor="middle" fill="#ffffff" font-size="10">📅</text>
+    </g>
+    
+    <g transform="translate(340, 100)">
+      <rect x="0" y="0" width="60" height="40" rx="5" fill="url(#flowGrad5)" opacity="0.6"/>
+      <text x="30" y="15" text-anchor="middle" fill="#ffffff" font-size="8">Noise</text>
+      <text x="30" y="25" text-anchor="middle" fill="#ffffff" font-size="8">Filtering</text>
+      <text x="30" y="35" text-anchor="middle" fill="#ffffff" font-size="10">🔇</text>
+    </g>
+    
+    <g transform="translate(100, 160)">
+      <rect x="0" y="0" width="60" height="40" rx="5" fill="url(#flowGrad5)" opacity="0.6"/>
+      <text x="30" y="15" text-anchor="middle" fill="#ffffff" font-size="8">Challenge</text>
+      <text x="30" y="25" text-anchor="middle" fill="#ffffff" font-size="8">Scaffolding</text>
+      <text x="30" y="35" text-anchor="middle" fill="#ffffff" font-size="10">🎯</text>
+    </g>
+    
+    <g transform="translate(340, 160)">
+      <rect x="0" y="0" width="60" height="40" rx="5" fill="url(#flowGrad5)" opacity="0.6"/>
+      <text x="30" y="15" text-anchor="middle" fill="#ffffff" font-size="8">State</text>
+      <text x="30" y="25" text-anchor="middle" fill="#ffffff" font-size="8">Continuity</text>
+      <text x="30" y="35" text-anchor="middle" fill="#ffffff" font-size="10">🌊</text>
+    </g>
+    
+    <!-- Protection lines -->
+    <line x1="195" y1="120" x2="130" y2="120" stroke="url(#flowGrad5)" stroke-width="2" opacity="0.6"/>
+    <line x1="305" y1="120" x2="370" y2="120" stroke="url(#flowGrad5)" stroke-width="2" opacity="0.6"/>
+    <line x1="195" y1="140" x2="130" y2="180" stroke="url(#flowGrad5)" stroke-width="2" opacity="0.6"/>
+    <line x1="305" y1="140" x2="370" y2="180" stroke="url(#flowGrad5)" stroke-width="2" opacity="0.6"/>
+    
+    <text x="250" y="230" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      Subscription service for flow state protection
+    </text>
+    <text x="250" y="250" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      "20 hours/week guaranteed flow coverage"
+    </text>
+  </g>
+  
+  <!-- Bottom summary -->
+  <g transform="translate(0, 1050)">
+    <rect x="50" y="0" width="1100" height="120" rx="15" fill="#ffffff" opacity="0.05" stroke="#ffffff" stroke-width="1"/>
+    <text x="600" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+      The Meta-Business: Selling Cognitive Optimization, Not Just Task Completion
+    </text>
+    <text x="600" y="55" text-anchor="middle" fill="#ffffff" font-size="14" opacity="0.9">
+      From outsourcing labor to outsourcing the conditions that enable peak human performance
+    </text>
+    <text x="600" y="80" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      • FaaS: Pre-structured environments • Networks: Collective flow amplification • Orchestration: AI-managed focus sequences
+    </text>
+    <text x="600" y="100" text-anchor="middle" fill="#ffffff" font-size="12" opacity="0.8">
+      • Offloading: Life admin automation • Insurance: Flow state protection subscriptions
+    </text>
+  </g>
+  
+  <!-- Flowing particles background animation -->
+  <g opacity="0.2">
+    <circle cx="100" cy="200" r="2" fill="#00d4ff">
+      <animate attributeName="cy" values="200;1400;200" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="300" cy="300" r="2" fill="#ff6b6b">
+      <animate attributeName="cy" values="300;1500;300" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="800" cy="150" r="2" fill="#4ecdc4">
+      <animate attributeName="cy" values="150;1350;150" dur="12s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="12s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1000" cy="250" r="2" fill="#ffe66d">
+      <animate attributeName="cy" values="250;1450;250" dur="9s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="9s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

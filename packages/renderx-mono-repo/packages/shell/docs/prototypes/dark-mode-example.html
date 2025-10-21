@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RenderX Component Library - Dark Mode</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0b;
+            color: #f8fafc;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: #0a0a0b;
+        }
+        
+        /* Top Navigation Bar */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #1e1e2e, #2a2a3a);
+            border-bottom: 1px solid #333344;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .app-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #f8fafc;
+        }
+        
+        .theme-toggle {
+            background: #fbbf24;
+            color: #1f2937;
+            border-color: #f59e0b;
+        }
+        
+        .theme-toggle:hover {
+            background: #f59e0b;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        /* Component Library Sidebar */
+        .component-library {
+            width: 320px;
+            background: linear-gradient(180deg, #6366f1, #4f46e5);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #444455;
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .library-header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .library-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+        
+        .library-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .library-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .library-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .library-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        
+        .library-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+        
+        .component-category {
+            margin-bottom: 32px;
+        }
+        
+        .category-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .component-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .component-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .component-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .component-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+        
+        .component-description {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+        }
+        
+        /* Canvas Area */
+        .canvas-container {
+            flex: 1;
+            background: #111827;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .canvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: #1f2937;
+            border-bottom: 1px solid #374151;
+        }
+        
+        .canvas-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f9fafb;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .canvas-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .canvas-tool {
+            background: #374151;
+            border: 1px solid #4b5563;
+            color: #d1d5db;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .canvas-tool:hover {
+            background: #4b5563;
+            color: #f9fafb;
+        }
+        
+        .canvas-tool.active {
+            background: #3b82f6;
+            border-color: #2563eb;
+            color: white;
+        }
+        
+        .tool-divider {
+            width: 1px;
+            height: 24px;
+            background: #4b5563;
+            margin: 0 4px;
+        }
+        
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            background: #374151;
+            border: 1px solid #4b5563;
+            border-radius: 6px;
+            padding: 4px;
+            gap: 4px;
+        }
+        
+        .zoom-btn {
+            background: none;
+            border: none;
+            color: #d1d5db;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .zoom-btn:hover {
+            background: #4b5563;
+            color: #f9fafb;
+        }
+        
+        .zoom-level {
+            font-size: 11px;
+            color: #9ca3af;
+            min-width: 40px;
+            text-align: center;
+            font-family: 'SF Mono', monospace;
+        }
+        
+        .canvas-content {
+            flex: 1;
+            background: #0f172a;
+            background-image: 
+                radial-gradient(circle at 20px 20px, #1e293b 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: relative;
+            overflow: auto;
+        }
+        
+        /* Properties Panel */
+        .properties-panel {
+            width: 320px;
+            background: linear-gradient(180deg, #8b5cf6, #7c3aed);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #444455;
+            box-shadow: -2px 0 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .properties-header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .properties-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .properties-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+        
+        .properties-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .properties-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        
+        .properties-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+        
+        .no-selection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .no-selection-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.6;
+            filter: grayscale(1);
+        }
+        
+        .no-selection h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .no-selection p {
+            font-size: 13px;
+            margin: 0;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Dark mode specific enhancements */
+        .glow-effect {
+            position: relative;
+        }
+        
+        .glow-effect::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6, #06b6d4, #10b981);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .glow-effect:hover::before {
+            opacity: 0.3;
+        }
+        
+        /* Animated background for canvas */
+        .canvas-content::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        
+        /* Subtle animations */
+        .component-item {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .component-item:nth-child(2n) {
+            animation-delay: -3s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-2px); }
+        }
+        
+        /* Glass morphism effects */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .component-library,
+            .properties-panel {
+                width: 280px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .component-library,
+            .properties-panel {
+                width: 100%;
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="app-title">
+                <span>🔧</span>
+                RenderX Plugins Demo
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn">New</button>
+                <button class="nav-btn">Open</button>
+                <button class="nav-btn">Save</button>
+                <button class="nav-btn theme-toggle">☀️ Light</button>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Component Library -->
+            <div class="component-library">
+                <div class="library-header">
+                    <div class="library-title">🧩 Component Library</div>
+                    <div class="library-subtitle">Drag components to the canvas</div>
+                </div>
+                
+                <div class="library-content">
+                    <div class="component-category">
+                        <div class="category-title">Basic Components</div>
+                        <div class="component-grid">
+                            <div class="component-item glow-effect" draggable="true">
+                                <div class="component-icon">⭕</div>
+                                <div class="component-name">Button</div>
+                                <div class="component-description">Interactive button component with click handling - JSON replacement for built-in button</div>
+                            </div>
+                            
+                            <div class="component-item glow-effect" draggable="true">
+                                <div class="component-icon">📄</div>
+                                <div class="component-name">Input</div>
+                                <div class="component-description">Text input component with validation and focus handling - JSON replacement for built-in input</div>
+                            </div>
+                            
+                            <div class="component-item glow-effect" draggable="true">
+                                <div class="component-icon">📏</div>
+                                <div class="component-name">Line</div>
+                                <div class="component-description">Line component rendered via CSS variables controlling endpoints/angle/length</div>
+                            </div>
+                            
+                            <div class="component-item glow-effect" draggable="true">
+                                <div class="component-icon">📄</div>
+                                <div class="component-name">Heading</div>
+                                <div class="component-description">Heading component with multiple levels and typography controls - JSON replacement for built-in heading</div>
+                            </div>
+                            
+                            <div class="component-item glow-effect" draggable="true">
+                                <div class="component-icon">🖼️</div>
+                                <div class="component-name">Image</div>
+                                <div class="component-description">Image component with src, alt text, and aspect ratio controls - JSON replacement for built-in image</div>
+                            </div>
+                            
+                            <div class="component-item glow-effect" draggable="true">
+                                <div class="component-icon">📄</div>
+                                <div class="component-name">Paragraph</div>
+                                <div class="component-description">Paragraph component with rich text content and formatting options - JSON replacement for built-in paragraph</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component-category">
+                        <div class="category-title">Layout Components</div>
+                        <div class="component-grid">
+                            <div class="component-item glow-effect" draggable="true">
+                                <div class="component-icon">📦</div>
+                                <div class="component-name">Container</div>
+                                <div class="component-description">Container that can hold child components and provides relative positioning context</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Canvas Area -->
+            <div class="canvas-container">
+                <div class="canvas-header">
+                    <div class="canvas-title">
+                        <span>🎯</span>
+                        Design Canvas
+                    </div>
+                    <div class="canvas-controls">
+                        <div class="canvas-tool active" title="Select Tool">
+                            <span>🔍</span>
+                        </div>
+                        <div class="canvas-tool" title="Lock Tool">
+                            <span>🔒</span>
+                        </div>
+                        <div class="canvas-tool" title="Edit Tool">
+                            <span>✏️</span>
+                        </div>
+                        <div class="canvas-tool" title="Rectangle Tool">
+                            <span>⬛</span>
+                        </div>
+                        <div class="canvas-tool" title="Folder Tool">
+                            <span>📁</span>
+                        </div>
+                        
+                        <div class="tool-divider"></div>
+                        
+                        <div class="zoom-controls">
+                            <button class="zoom-btn">−</button>
+                            <span class="zoom-level">100%</span>
+                            <button class="zoom-btn">+</button>
+                        </div>
+                        
+                        <div class="canvas-tool" title="Preview Mode">
+                            <span>👁️</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="canvas-content">
+                    <!-- Canvas content will be rendered here -->
+                </div>
+            </div>
+            
+            <!-- Properties Panel -->
+            <div class="properties-panel">
+                <div class="properties-header">
+                    <div class="properties-title">⚙️ Properties Panel</div>
+                </div>
+                
+                <div class="properties-content">
+                    <div class="no-selection glass-panel" style="border-radius: 12px; padding: 32px;">
+                        <div class="no-selection-icon">🎯</div>
+                        <h4>No Element Selected</h4>
+                        <p>Click on a component in the canvas to edit its properties and styling options.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add interactivity for demo purposes
+        document.querySelectorAll('.canvas-tool').forEach(tool => {
+            tool.addEventListener('click', () => {
+                document.querySelectorAll('.canvas-tool').forEach(t => t.classList.remove('active'));
+                tool.classList.add('active');
+            });
+        });
+        
+        // Zoom functionality
+        let zoomLevel = 100;
+        const zoomDisplay = document.querySelector('.zoom-level');
+        const zoomIn = document.querySelectorAll('.zoom-btn')[1];
+        const zoomOut = document.querySelectorAll('.zoom-btn')[0];
+        
+        zoomIn.addEventListener('click', () => {
+            zoomLevel = Math.min(200, zoomLevel + 10);
+            zoomDisplay.textContent = zoomLevel + '%';
+        });
+        
+        zoomOut.addEventListener('click', () => {
+            zoomLevel = Math.max(25, zoomLevel - 10);
+            zoomDisplay.textContent = zoomLevel + '%';
+        });
+        
+        // Theme toggle (placeholder)
+        document.querySelector('.theme-toggle').addEventListener('click', () => {
+            alert('Theme toggle functionality would switch to light mode here!');
+        });
+        
+        // Component drag simulation
+        document.querySelectorAll('.component-item').forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', item.querySelector('.component-name').textContent);
+            });
+        });
+        
+        // Canvas drop simulation
+        const canvas = document.querySelector('.canvas-content');
+        canvas.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            canvas.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+        });
+        
+        canvas.addEventListener('dragleave', () => {
+            canvas.style.backgroundColor = '';
+        });
+        
+        canvas.addEventListener('drop', (e) => {
+            e.preventDefault();
+            canvas.style.backgroundColor = '';
+            
+            const componentName = e.dataTransfer.getData('text/plain');
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Create dropped component element
+            const component = document.createElement('div');
+            component.style.cssText = `
+                position: absolute;
+                left: ${x}px;
+                top: ${y}px;
+                background: rgba(59, 130, 246, 0.2);
+                border: 2px solid #3b82f6;
+                border-radius: 8px;
+                padding: 12px 16px;
+                color: #60a5fa;
+                font-weight: 500;
+                cursor: move;
+                backdrop-filter: blur(10px);
+            `;
+            component.textContent = componentName;
+            canvas.appendChild(component);
+            
+            // Make it draggable within canvas
+            let isDragging = false;
+            let offsetX, offsetY;
+            
+            component.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offsetX = e.clientX - component.offsetLeft;
+                offsetY = e.clientY - component.offsetTop;
+                component.style.zIndex = '1000';
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    component.style.left = (e.clientX - offsetX) + 'px';
+                    component.style.top = (e.clientY - offsetY) + 'px';
+                }
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    component.style.zIndex = 'auto';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="300" viewBox="0 0 560 300" font-family="'Segoe UI', system-ui" role="img" aria-label="Animated JSON contract flow to runtime behavior">
+  <defs>
+    <linearGradient id="gDoc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fafafa"/>
+      <stop offset="100%" stop-color="#e0f2f1"/>
+    </linearGradient>
+    <linearGradient id="gShield" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#42a5f5"/>
+      <stop offset="100%" stop-color="#1565c0"/>
+    </linearGradient>
+    <linearGradient id="gApp" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#bbdefb"/>
+      <stop offset="100%" stop-color="#90caf9"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="c"/>
+      <feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style>
+      .doc { fill:url(#gDoc); stroke:#455a64; stroke-width:2; rx:6; }
+      .doc-title { fill:#37474f; font-size:12px; font-weight:600; text-anchor:middle; }
+      .shield { fill:url(#gShield); stroke:#0d47a1; stroke-width:2; }
+      .shield-text { fill:#fff; font-size:24px; font-weight:700; text-anchor:middle; }
+      .edge { stroke:#26c6da; stroke-width:2.5; marker-end:url(#arrow); stroke-linecap:round; stroke-dasharray:6 14; }
+      .app { fill:url(#gApp); stroke:#1565c0; stroke-width:2; rx:12; }
+      .app-title { fill:#0d47a1; font-size:14px; font-weight:600; text-anchor:middle; }
+      @media (prefers-color-scheme: dark) {
+        .doc-title { fill:#e0f2f1; }
+        .app-title { fill:#e3f2fd; }
+      }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <polygon points="0 0 10 5 0 10" fill="#26c6da"/>
+    </marker>
+  </defs>
+
+  <rect width="560" height="300" fill="#0b1722"/>
+  <rect width="560" height="300" fill="url(#bg)" opacity="0.25"/>
+  <defs>
+    <pattern id="bg" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M30 0H0V30" stroke="#1e3950" stroke-width="1" opacity="0.5"/>
+    </pattern>
+  </defs>
+
+  <!-- Documents -->
+  <g class="doc" filter="url(#glow)">
+    <rect x="40" y="40" width="120" height="80" />
+    <text x="100" y="74" class="doc-title">component.mapper.json</text>
+  </g>
+  <g class="doc" filter="url(#glow)">
+    <rect x="40" y="160" width="120" height="80" />
+    <text x="100" y="194" class="doc-title">feature-flags.json</text>
+  </g>
+  <g class="doc" filter="url(#glow)">
+    <rect x="200" y="100" width="120" height="80" />
+    <text x="260" y="134" class="doc-title">topics.json</text>
+  </g>
+
+  <!-- Shield (API Contract Layer) -->
+  <g filter="url(#glow)">
+    <path class="shield" d="M420 60 l70 20 v70 c0 50 -40 80 -70 90 c-30 -10 -70 -40 -70 -90 v-70z">
+      <animate attributeName="d" dur="8s" repeatCount="indefinite" values="M420 60 l70 20 v70 c0 50 -40 80 -70 90 c-30 -10 -70 -40 -70 -90 v-70z;M420 60 l70 18 v72 c0 52 -40 82 -70 92 c-30 -10 -70 -40 -70 -92 v-72z;M420 60 l70 20 v70 c0 50 -40 80 -70 90 c-30 -10 -70 -40 -70 -90 v-70z"/>
+    </path>
+    <text x="420" y="150" class="shield-text">API</text>
+    <circle cx="420" cy="150" r="75" fill="none" stroke="#64b5f6" stroke-width="1" opacity="0.6">
+      <animate attributeName="r" values="70;85;70" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.6;0.15;0.6" dur="6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Runtime behavior -->
+  <g filter="url(#glow)">
+    <rect x="340" y="220" width="160" height="60" class="app" />
+    <text x="420" y="255" class="app-title">Runtime Behavior</text>
+  </g>
+
+  <!-- Animated edges -->
+  <g>
+    <line x1="160" y1="80" x2="350" y2="120" class="edge">
+      <animate attributeName="stroke-dashoffset" values="0;120" dur="4s" repeatCount="indefinite"/>
+    </line>
+    <line x1="160" y1="200" x2="350" y2="160" class="edge">
+      <animate attributeName="stroke-dashoffset" values="120;0" dur="4.5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="320" y1="140" x2="385" y2="140" class="edge">
+      <animate attributeName="stroke-dashoffset" values="0;60" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line x1="420" y1="240" x2="420" y2="200" class="edge">
+      <animate attributeName="stroke-dashoffset" values="0;60" dur="2.5s" repeatCount="indefinite"/>
+    </line>
+  </g>
+
+  <desc>Animated diagram showing JSON documents flowing through an API contract shield into runtime behavior.</desc>
+</svg>

@@ -1,0 +1,301 @@
+<svg width="1000" height="700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- CSS for theme awareness -->
+    <style>
+      <![CDATA[
+      /* Light theme (default) */
+      .bg-primary { fill: #ffffff; }
+      .bg-secondary { fill: #f8fafc; }
+      .text-primary { fill: #0f172a; }
+      .text-secondary { fill: #334155; }
+      .text-muted { fill: #64748b; }
+      .border-light { stroke: #e2e8f0; }
+      
+      /* Plugin theme colors */
+      .ui-bg { fill: #e0f2fe; stroke: #0369a1; }
+      .ui-text { fill: #0c4a6e; }
+      .symphony-bg { fill: #faf5ff; stroke: #7c3aed; }
+      .symphony-text { fill: #4c1d95; }
+      .domain-bg { fill: #ecfdf5; stroke: #059669; }
+      .domain-text { fill: #064e3b; }
+      .config-bg { fill: #fef3c7; stroke: #d97706; }
+      .config-text { fill: #92400e; }
+      
+      /* Dark theme */
+      @media (prefers-color-scheme: dark) {
+        .bg-primary { fill: #0f172a; }
+        .bg-secondary { fill: #1e293b; }
+        .text-primary { fill: #f1f5f9; }
+        .text-secondary { fill: #cbd5e1; }
+        .text-muted { fill: #94a3b8; }
+        .border-light { stroke: #334155; }
+        
+        .ui-bg { fill: #0c4a6e; stroke: #0ea5e9; }
+        .ui-text { fill: #bae6fd; }
+        .symphony-bg { fill: #4c1d95; stroke: #8b5cf6; }
+        .symphony-text { fill: #ddd6fe; }
+        .domain-bg { fill: #064e3b; stroke: #10b981; }
+        .domain-text { fill: #bbf7d0; }
+        .config-bg { fill: #92400e; stroke: #f59e0b; }
+        .config-text { fill: #fcd34d; }
+      }
+      
+      /* Animation for scalability */
+      @keyframes scale {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+      }
+      
+      .scalable { animation: scale 3s infinite ease-in-out; }
+      ]]>
+    </style>
+    
+    <!-- Background pattern -->
+    <pattern id="pluginGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" class="border-light" stroke-width="0.3" opacity="0.4"/>
+      <circle cx="15" cy="15" r="1" class="text-muted" opacity="0.2"/>
+    </pattern>
+    
+    <!-- Shadow filter -->
+    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1000" height="700" class="bg-primary"/>
+  <rect width="1000" height="700" fill="url(#pluginGrid)"/>
+  
+  <!-- Title -->
+  <text x="500" y="40" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="24" font-weight="700" class="text-primary">
+    Plugins Architecture (Scalability)
+  </text>
+  <text x="500" y="65" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="14" class="text-muted" font-style="italic">
+    "Domain-oriented plugin structure"
+  </text>
+  
+  <!-- Main plugins container -->
+  <rect x="30" y="90" width="940" height="520" rx="15" class="domain-bg" 
+        stroke-width="3" filter="url(#dropShadow)"/>
+  
+  <text x="50" y="120" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="18" font-weight="700" class="text-primary">
+    📁 plugins/ (Domain-oriented structure)
+  </text>
+  
+  <!-- Library plugin -->
+  <rect x="60" y="140" width="200" height="140" rx="10" class="ui-bg" 
+        stroke-width="2" filter="url(#dropShadow)" class="scalable"/>
+  
+  <text x="70" y="165" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="14" font-weight="700" class="ui-text">
+    📁 library/
+  </text>
+  <text x="70" y="180" font-family="'Segoe UI', sans-serif" font-size="10" class="text-muted">
+    UI + load symphony
+  </text>
+  
+  <rect x="80" y="190" width="160" height="30" rx="5" class="ui-bg" stroke-width="1"/>
+  <text x="85" y="210" font-family="'JetBrains Mono', monospace" font-size="11" class="ui-text">
+    📄 ui/LibraryPanel.tsx
+  </text>
+  
+  <rect x="80" y="230" width="160" height="40" rx="5" class="symphony-bg" stroke-width="1"/>
+  <text x="85" y="245" font-family="'JetBrains Mono', monospace" font-size="10" class="symphony-text">
+    📄 symphonies/
+  </text>
+  <text x="85" y="260" font-family="'JetBrains Mono', monospace" font-size="10" class="symphony-text">
+    load.symphony.ts
+  </text>
+  
+  <!-- Library component plugin -->
+  <rect x="280" y="140" width="200" height="140" rx="10" class="symphony-bg" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="290" y="165" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="14" font-weight="700" class="symphony-text">
+    📁 library-component/
+  </text>
+  <text x="290" y="180" font-family="'Segoe UI', sans-serif" font-size="10" class="text-muted">
+    Drag/drop coordination
+  </text>
+  
+  <rect x="300" y="190" width="160" height="25" rx="5" class="symphony-bg" stroke-width="1"/>
+  <text x="305" y="207" font-family="'JetBrains Mono', monospace" font-size="10" class="symphony-text">
+    📄 drag.symphony.ts
+  </text>
+  
+  <rect x="300" y="220" width="160" height="25" rx="5" class="symphony-bg" stroke-width="1"/>
+  <text x="305" y="237" font-family="'JetBrains Mono', monospace" font-size="10" class="symphony-text">
+    📄 drop.symphony.ts
+  </text>
+  
+  <rect x="300" y="250" width="160" height="20" rx="5" class="ui-bg" stroke-width="1"/>
+  <text x="305" y="263" font-family="'JetBrains Mono', monospace" font-size="9" class="ui-text">
+    UI coordination only
+  </text>
+  
+  <!-- Canvas plugin -->
+  <rect x="500" y="140" width="200" height="140" rx="10" class="ui-bg" 
+        stroke-width="2" filter="url(#dropShadow)" class="scalable"/>
+  
+  <text x="510" y="165" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="14" font-weight="700" class="ui-text">
+    📁 canvas/
+  </text>
+  <text x="510" y="180" font-family="'Segoe UI', sans-serif" font-size="10" class="text-muted">
+    Pure rendering
+  </text>
+  
+  <rect x="520" y="190" width="160" height="80" rx="5" class="ui-bg" stroke-width="1"/>
+  <text x="525" y="210" font-family="'JetBrains Mono', monospace" font-size="11" class="ui-text">
+    📄 ui/CanvasPage.tsx
+  </text>
+  <text x="525" y="230" font-family="'Segoe UI', sans-serif" font-size="9" class="text-secondary">
+    View-only canvas
+  </text>
+  <text x="525" y="245" font-family="'Segoe UI', sans-serif" font-size="9" class="text-secondary">
+    No side effects
+  </text>
+  <text x="525" y="260" font-family="'Segoe UI', sans-serif" font-size="9" class="text-secondary">
+    Pure rendering logic
+  </text>
+  
+  <!-- Canvas component plugin -->
+  <rect x="720" y="140" width="220" height="140" rx="10" class="symphony-bg" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="730" y="165" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="14" font-weight="700" class="symphony-text">
+    📁 canvas-component/
+  </text>
+  <text x="730" y="180" font-family="'Segoe UI', sans-serif" font-size="10" class="text-muted">
+    Side-effects and creation
+  </text>
+  
+  <rect x="740" y="190" width="180" height="80" rx="5" class="symphony-bg" stroke-width="1"/>
+  <text x="745" y="210" font-family="'JetBrains Mono', monospace" font-size="11" class="symphony-text">
+    📄 symphonies/
+  </text>
+  <text x="745" y="225" font-family="'JetBrains Mono', monospace" font-size="10" class="symphony-text">
+    create.symphony.ts
+  </text>
+  <text x="745" y="245" font-family="'Segoe UI', sans-serif" font-size="9" class="text-secondary">
+    Component creation logic
+  </text>
+  <text x="745" y="260" font-family="'Segoe UI', sans-serif" font-size="9" class="text-secondary">
+    State management
+  </text>
+  
+  <!-- Control panel plugin -->
+  <rect x="60" y="300" width="420" height="150" rx="10" class="config-bg" 
+        stroke-width="2" filter="url(#dropShadow)" class="scalable"/>
+  
+  <text x="70" y="325" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="14" font-weight="700" class="config-text">
+    📁 control-panel/ (Configuration UI)
+  </text>
+  
+  <rect x="80" y="335" width="120" height="50" rx="5" class="ui-bg" stroke-width="1"/>
+  <text x="85" y="350" font-family="'JetBrains Mono', monospace" font-size="10" class="ui-text">
+    📄 ui/
+  </text>
+  <text x="85" y="365" font-family="'JetBrains Mono', monospace" font-size="10" class="ui-text">
+    ControlPanel.tsx
+  </text>
+  <text x="85" y="375" font-family="'Segoe UI', sans-serif" font-size="8" class="text-muted">
+    Pure view
+  </text>
+  
+  <rect x="220" y="335" width="120" height="50" rx="5" class="config-bg" stroke-width="1"/>
+  <text x="225" y="350" font-family="'JetBrains Mono', monospace" font-size="10" class="config-text">
+    📄 config/
+  </text>
+  <text x="225" y="365" font-family="'JetBrains Mono', monospace" font-size="9" class="config-text">
+    component.mapper.json
+  </text>
+  <text x="225" y="375" font-family="'Segoe UI', sans-serif" font-size="8" class="text-muted">
+    JSON-driven fields
+  </text>
+  
+  <rect x="360" y="335" width="110" height="50" rx="5" class="symphony-bg" stroke-width="1"/>
+  <text x="365" y="350" font-family="'JetBrains Mono', monospace" font-size="10" class="symphony-text">
+    📄 symphonies/
+  </text>
+  <text x="365" y="365" font-family="'JetBrains Mono', monospace" font-size="9" class="symphony-text">
+    update.symphony.ts
+  </text>
+  <text x="365" y="375" font-family="'Segoe UI', sans-serif" font-size="8" class="text-muted">
+    Property updates
+  </text>
+  
+  <!-- JSON config example -->
+  <rect x="80" y="395" width="380" height="45" rx="5" class="bg-secondary border-light" 
+        stroke-width="1"/>
+  <text x="90" y="410" font-family="'JetBrains Mono', monospace" font-size="9" class="text-primary">
+    { "Button": { "fields": [
+  </text>
+  <text x="90" y="422" font-family="'JetBrains Mono', monospace" font-size="9" class="text-secondary">
+      { "name": "text", "type": "text", "default": "Click me" }
+  </text>
+  <text x="90" y="434" font-family="'JetBrains Mono', monospace" font-size="9" class="text-primary">
+    ] } }
+  </text>
+  
+  <!-- Plugin benefits -->
+  <rect x="500" y="300" width="440" height="150" rx="10" class="bg-secondary border-light" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="510" y="325" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="16" font-weight="700" class="text-primary">
+    🚀 Plugin Independence Benefits
+  </text>
+  
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="11" class="text-secondary">
+    <text x="520" y="345">• Domain-oriented structure (library vs canvas vs control)</text>
+    <text x="520" y="365">• Pure UI components separated from side-effect handlers</text>
+    <text x="520" y="385">• Plugins developed, tested, deployed independently</text>
+    <text x="520" y="405">• Manifest-driven loading = no host code changes</text>
+    <text x="520" y="425">• Symphony-based orchestration for complex flows</text>
+  </g>
+  
+  <!-- Architecture flow -->
+  <rect x="500" y="460" width="440" height="140" rx="10" class="domain-bg" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="510" y="485" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="16" font-weight="700" class="domain-text">
+    🔄 Plugin Communication Flow
+  </text>
+  
+  <g font-family="'JetBrains Mono', monospace" font-size="10" class="text-secondary">
+    <text x="520" y="505">1. LibraryPanel → conductor.play('load') → Symphony</text>
+    <text x="520" y="520">2. DragStart → conductor.play('drag') → Coordination</text>
+    <text x="520" y="535">3. Drop → conductor.play('create') → CanvasComponent</text>
+    <text x="520" y="550">4. ControlPanel → conductor.play('update') → Properties</text>
+  </g>
+  
+  <text x="520" y="570" font-family="'Segoe UI', sans-serif" font-size="10" class="text-muted" font-style="italic">
+    All communication through Musical Conductor - no direct dependencies
+  </text>
+  
+  <text x="520" y="585" font-family="'Segoe UI', sans-serif" font-size="10" class="domain-text" font-weight="600">
+    Result: True plugin scalability and independence
+  </text>
+  
+  <!-- Bottom stats -->
+  <rect x="30" y="630" width="940" height="50" rx="12" class="bg-secondary border-light" 
+        stroke-width="1" filter="url(#dropShadow)"/>
+  
+  <text x="500" y="650" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="14" font-weight="700" class="text-primary">
+    📊 Scalability Stats
+  </text>
+  
+  <text x="500" y="665" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="11" class="text-secondary">
+    5 Domain Plugins • UI/Symphony Separation • Independent Development • JSON-Driven Config • Zero Host Dependencies
+  </text>
+</svg>

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active CSS Editor - Component Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .app-container {
+            display: flex;
+            height: 100vh;
+            gap: 2px;
+        }
+        
+        .sidebar {
+            width: 320px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+            color: white;
+            text-align: center;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .sidebar-header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .component-library {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .component-category {
+            margin-bottom: 24px;
+        }
+        
+        .category-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .component-item {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .component-item:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+        }
+        
+        .component-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .component-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+        
+        .component-description {
+            font-size: 10px;
+            color: #6b7280;
+            line-height: 1.3;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            gap: 2px;
+        }
+        
+        .canvas-area {
+            flex: 1;
+            background: #f8fafc;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .canvas-header {
+            background: white;
+            padding: 12px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .canvas-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .canvas-content {
+            flex: 1;
+            position: relative;
+            padding: 20px;
+            background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.8;
+        }
+        
+        .control-panel {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -2px 0 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .control-panel-header {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .control-panel-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+        
+        .element-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            opacity: 0.9;
+        }
+        
+        .element-type {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .element-id {
+            font-family: 'SF Mono', 'Monaco', monospace;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .control-panel-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .property-section {
+            margin-bottom: 20px;
+        }
+        
+        .property-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .property-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+        
+        .css-classes-container {
+            margin-bottom: 12px;
+        }
+        
+        .css-class-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            font-size: 11px;
+            font-family: 'SF Mono', 'Monaco', monospace;
+            transition: all 0.2s;
+        }
+        
+        .css-class-item:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        
+        .css-class-item.selected {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+        
+        .css-class-name {
+            flex: 1;
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
+        }
+        
+        .css-class-actions {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .css-action-btn {
+            background: none;
+            border: none;
+            padding: 2px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 12px;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        
+        .css-action-btn:hover {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        
+        .css-action-btn.remove:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .add-class-form {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        
+        .add-class-input {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        
+        .add-class-btn {
+            padding: 6px 12px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        /* CSS Editor Modal - VISIBLE BY DEFAULT */
+        .css-editor-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 1;
+            visibility: visible;
+            backdrop-filter: blur(8px);
+        }
+        
+        .css-editor {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            width: 800px;
+            max-width: 90vw;
+            max-height: 90vh;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .css-editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .css-editor-title-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .css-editor-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .css-class-selector {
+            font-family: 'SF Mono', 'Monaco', monospace;
+            font-size: 14px;
+            color: #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(96, 165, 250, 0.2);
+        }
+        
+        .css-editor-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .css-editor-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .css-editor-content {
+            flex: 1;
+            padding: 24px;
+            background: #fafbfc;
+            min-height: 500px;
+        }
+        
+        .css-textarea {
+            width: 100%;
+            height: 500px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            background: #ffffff;
+            color: #1e293b;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+        
+        .css-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+        }
+        
+        .css-editor-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .css-editor-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .css-editor-stats {
+            font-size: 12px;
+            color: #6b7280;
+            font-family: 'SF Mono', monospace;
+        }
+        
+        .css-editor-tip {
+            font-size: 11px;
+            color: #8b5cf6;
+        }
+        
+        .css-editor-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .css-editor-btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .css-editor-btn.secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .css-editor-btn.secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-1px);
+        }
+        
+        .css-editor-btn.primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: 1px solid #2563eb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .css-editor-btn.primary:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.15);
+        }
+        
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 50px;
+            background: #f1f5f9;
+            border-right: 1px solid #e2e8f0;
+            padding: 20px 8px;
+            font-family: 'SF Mono', 'Monaco', monospace;
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.6;
+            user-select: none;
+            overflow: hidden;
+        }
+        
+        .textarea-container {
+            position: relative;
+        }
+        
+        .css-textarea {
+            padding-left: 70px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>🧩 Component Library</h2>
+                <p>Drag components to the canvas</p>
+            </div>
+            
+            <div class="component-library">
+                <div class="component-category">
+                    <div class="category-title">Basic Components</div>
+                    <div class="component-grid">
+                        <div class="component-item">
+                            <span class="component-icon">📘</span>
+                            <div class="component-name">Button</div>
+                            <div class="component-description">Interactive button</div>
+                        </div>
+                        
+                        <div class="component-item">
+                            <span class="component-icon">📝</span>
+                            <div class="component-name">Input</div>
+                            <div class="component-description">Text input field</div>
+                        </div>
+                        
+                        <div class="component-item">
+                            <span class="component-icon">📏</span>
+                            <div class="component-name">Line</div>
+                            <div class="component-description">Line element</div>
+                        </div>
+                        
+                        <div class="component-item">
+                            <span class="component-icon">🧱</span>
+                            <div class="component-name">Container</div>
+                            <div class="component-description">Layout container</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="canvas-area">
+                <div class="canvas-header">
+                    <div class="canvas-title">🎨 Design Canvas</div>
+                </div>
+                <div class="canvas-content"></div>
+            </div>
+            
+            <div class="control-panel">
+                <div class="control-panel-header">
+                    <h3>⚙️ Properties Panel</h3>
+                    <div class="element-info">
+                        <span class="element-type">Button</span>
+                        <span class="element-id">#button_1</span>
+                    </div>
+                </div>
+                
+                <div class="control-panel-content">
+                    <div class="property-section">
+                        <div class="property-section-title">🎨 CSS Classes</div>
+                        <div class="css-classes-container">
+                            <div class="css-class-item selected">
+                                <span class="css-class-name">rx-button</span>
+                                <div class="css-class-actions">
+                                    <button class="css-action-btn" title="Edit class">✏️</button>
+                                    <button class="css-action-btn remove" title="Remove class">❌</button>
+                                </div>
+                            </div>
+                            <div class="css-class-item">
+                                <span class="css-class-name">rx-container</span>
+                                <div class="css-class-actions">
+                                    <button class="css-action-btn" title="Edit class">✏️</button>
+                                    <button class="css-action-btn remove" title="Remove class">❌</button>
+                                </div>
+                            </div>
+                            <div class="css-class-item">
+                                <span class="css-class-name">rx-comp-div</span>
+                                <div class="css-class-actions">
+                                    <button class="css-action-btn" title="Edit class">✏️</button>
+                                    <button class="css-action-btn remove" title="Remove class">❌</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="add-class-form">
+                            <input class="add-class-input" type="text" placeholder="Enter class name...">
+                            <button class="add-class-btn">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- CSS Editor Modal - ACTIVE STATE -->
+    <div class="css-editor-modal">
+        <div class="css-editor">
+            <div class="css-editor-header">
+                <div class="css-editor-title-section">
+                    <h3 class="css-editor-title">✏️ Edit CSS Class</h3>
+                    <div class="css-class-selector">.rx-button</div>
+                </div>
+                <button class="css-editor-close">×</button>
+            </div>
+            
+            <div class="css-editor-content">
+                <div class="textarea-container">
+                    <div class="line-numbers">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49</div>
+                    <textarea class="css-textarea" spellcheck="false">.rx-button {
+    background-color: var(--bg-color, #3b82f6);
+    color: var(--text-color, #ffffff);
+    border: var(--border, none);
+    padding: var(--padding, 12px 24px);
+    border-radius: var(--border-radius, 8px);
+    cursor: pointer;
+    font-size: var(--font-size, 14px);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    user-select: none;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.rx-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.rx-button:hover {
+    background-color: var(--hover-bg, #2563eb);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.rx-button:hover::before {
+    left: 100%;
+}
+
+.rx-button:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition-duration: 0.1s;
+}
+
+.rx-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}</textarea>
+                </div>
+            </div>
+            
+            <div class="css-editor-footer">
+                <div class="css-editor-info">
+                    <div class="css-editor-stats">📊 Lines: 49 • Characters: 1,387 • CSS Variables: 6</div>
+                    <div class="css-editor-tip">💡 Use CSS variables for dynamic theming: var(--variable-name, fallback)</div>
+                </div>
+                <div class="css-editor-actions">
+                    <button class="css-editor-btn secondary">
+                        ↩️ Cancel
+                    </button>
+                    <button class="css-editor-btn primary">
+                        💾 Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Simulate real CSS editing experience
+        const textarea = document.querySelector('.css-textarea');
+        let cursorPosition = 0;
+        
+        // Auto-update line numbers
+        function updateLineNumbers() {
+            const lines = textarea.value.split('\n').length;
+            const lineNumbers = document.querySelector('.line-numbers');
+            let numbersHTML = '';
+            
+            for (let i = 1; i <= lines; i++) {
+                numbersHTML += i + '\n';
+            }
+            
+            lineNumbers.textContent = numbersHTML.trim();
+        }
+        
+        // Update stats in real-time
+        function updateStats() {
+            const content = textarea.value;
+            const lines = content.split('\n').length;
+            const chars = content.length;
+            const variables = (content.match(/var\(--[^,)]+/g) || []).length;
+            
+            document.querySelector('.css-editor-stats').innerHTML = 
+                `📊 Lines: ${lines} • Characters: ${chars} • CSS Variables: ${variables}`;
+        }
+        
+        textarea.addEventListener('input', () => {
+            updateLineNumbers();
+            updateStats();
+        });
+        
+        textarea.addEventListener('scroll', () => {
+            const lineNumbers = document.querySelector('.line-numbers');
+            lineNumbers.scrollTop = textarea.scrollTop;
+        });
+        
+        // Initialize
+        updateLineNumbers();
+        updateStats();
+        
+        // Focus the textarea to show active editing
+        setTimeout(() => {
+            textarea.focus();
+            textarea.setSelectionRange(100, 100); // Position cursor in the CSS
+        }, 500);
+        
+        // Add some visual feedback for editing
+        textarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                textarea.value = textarea.value.substring(0, start) + '    ' + textarea.value.substring(end);
+                textarea.selectionStart = textarea.selectionEnd = start + 4;
+                updateLineNumbers();
+                updateStats();
+            }
+        });
+    </script>
+</body>
+</html>

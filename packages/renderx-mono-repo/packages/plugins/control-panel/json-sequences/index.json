@@ -1,0 +1,57 @@
+{
+  "version": "1.0.0",
+  "sequences": [
+    {
+      "file": "selection.show.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/selection/selection.symphony"
+    },
+    {
+      "file": "classes.add.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/classes/classes.symphony"
+    },
+    {
+      "file": "classes.remove.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/classes/classes.symphony"
+    },
+    {
+      "file": "update.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/update/update.symphony"
+    },
+    {
+      "file": "css.create.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/css-management/css-management.symphony"
+    },
+    {
+      "file": "css.edit.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/css-management/css-management.symphony"
+    },
+    {
+      "file": "css.delete.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/css-management/css-management.symphony"
+    },
+    {
+      "file": "ui.init.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/ui/ui.symphony"
+    },
+    {
+      "file": "ui.init.batched.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/ui/ui.symphony"
+    },
+    {
+      "file": "ui.render.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/ui/ui.symphony"
+    },
+    {
+      "file": "ui.field.change.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/ui/ui.symphony"
+    },
+    {
+      "file": "ui.field.validate.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/ui/ui.symphony"
+    },
+    {
+      "file": "ui.section.toggle.json",
+      "handlersPath": "@renderx-plugins/control-panel/symphonies/ui/ui.symphony"
+    }
+  ]
+}

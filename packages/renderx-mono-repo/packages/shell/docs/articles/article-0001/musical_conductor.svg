@@ -1,0 +1,277 @@
+<svg width="900" height="650" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- CSS for theme awareness -->
+    <style>
+      <![CDATA[
+      /* Light theme (default) */
+      .bg-primary { fill: #ffffff; }
+      .bg-secondary { fill: #f8fafc; }
+      .text-primary { fill: #0f172a; }
+      .text-secondary { fill: #334155; }
+      .text-muted { fill: #64748b; }
+      .border-light { stroke: #e2e8f0; }
+      
+      /* Musical theme colors */
+      .conductor-bg { fill: #faf5ff; stroke: #7c3aed; }
+      .conductor-text { fill: #4c1d95; }
+      .reliability-bg { fill: #ecfdf5; stroke: #059669; }
+      .reliability-text { fill: #064e3b; }
+      .orchestration-bg { fill: #fef3c7; stroke: #d97706; }
+      .orchestration-text { fill: #92400e; }
+      .consistency-bg { fill: #e0f2fe; stroke: #0369a1; }
+      .consistency-text { fill: #0c4a6e; }
+      
+      /* Dark theme */
+      @media (prefers-color-scheme: dark) {
+        .bg-primary { fill: #0f172a; }
+        .bg-secondary { fill: #1e293b; }
+        .text-primary { fill: #f1f5f9; }
+        .text-secondary { fill: #cbd5e1; }
+        .text-muted { fill: #94a3b8; }
+        .border-light { stroke: #334155; }
+        
+        .conductor-bg { fill: #4c1d95; stroke: #8b5cf6; }
+        .conductor-text { fill: #ddd6fe; }
+        .reliability-bg { fill: #064e3b; stroke: #10b981; }
+        .reliability-text { fill: #bbf7d0; }
+        .orchestration-bg { fill: #92400e; stroke: #f59e0b; }
+        .orchestration-text { fill: #fcd34d; }
+        .consistency-bg { fill: #0c4a6e; stroke: #0ea5e9; }
+        .consistency-text { fill: #bae6fd; }
+      }
+      
+      /* Musical animations */
+      @keyframes conduct {
+        0%, 100% { transform: rotate(-2deg); }
+        50% { transform: rotate(2deg); }
+      }
+      
+      .conducting { animation: conduct 2s infinite ease-in-out; }
+      
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+      }
+      
+      .pulse { animation: pulse 1.5s infinite; }
+      ]]>
+    </style>
+    
+    <!-- Musical background pattern -->
+    <pattern id="musicGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" class="border-light" stroke-width="0.3" opacity="0.3"/>
+      <circle cx="20" cy="10" r="2" class="conductor-text" opacity="0.1"/>
+      <circle cx="10" cy="30" r="1.5" class="conductor-text" opacity="0.1"/>
+    </pattern>
+    
+    <!-- Shadow filter -->
+    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+    
+    <!-- Glow effect -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="650" class="bg-primary"/>
+  <rect width="900" height="650" fill="url(#musicGrid)"/>
+  
+  <!-- Title with conductor baton -->
+  <text x="450" y="40" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="24" font-weight="700" class="text-primary">
+    🎼 Musical Conductor (Reliability & Consistency)
+  </text>
+  <text x="450" y="65" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="14" class="text-muted" font-style="italic">
+    "External orchestration engine"
+  </text>
+  
+  <!-- Conductor's podium (main container) -->
+  <rect x="50" y="90" width="800" height="460" rx="15" class="conductor-bg" 
+        stroke-width="3" filter="url(#dropShadow)" class="conducting"/>
+  
+  <text x="70" y="120" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="18" font-weight="700" class="text-primary">
+    📁 musical-conductor/ (External Package)
+  </text>
+  
+  <!-- Main src folder -->
+  <rect x="80" y="140" width="350" height="200" rx="10" class="reliability-bg" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="90" y="165" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="14" font-weight="700" class="reliability-text">
+    📁 src/
+  </text>
+  
+  <!-- ConductorClient -->
+  <rect x="100" y="180" width="150" height="50" rx="5" class="orchestration-bg" stroke-width="1"/>
+  <text x="105" y="195" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" class="orchestration-text">
+    🎯 ConductorClient.ts
+  </text>
+  <text x="105" y="210" font-family="'Segoe UI', sans-serif" font-size="9" class="text-secondary">
+    Main orchestration API
+  </text>
+  <text x="105" y="222" font-family="'JetBrains Mono', monospace" font-size="8" class="text-muted">
+    conductor.play()
+  </text>
+  
+  <!-- SequenceEngine -->
+  <rect x="260" y="180" width="150" height="50" rx="5" class="conductor-bg" stroke-width="1"/>
+  <text x="265" y="195" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" class="conductor-text">
+    ⚙️ SequenceEngine.ts
+  </text>
+  <text x="265" y="210" font-family="'Segoe UI', sans-serif" font-size="9" class="text-secondary">
+    Symphony execution
+  </text>
+  <text x="265" y="222" font-family="'JetBrains Mono', monospace" font-size="8" class="text-muted">
+    JSON → Execution
+  </text>
+  
+  <!-- EventBus -->
+  <rect x="100" y="240" width="150" height="50" rx="5" class="consistency-bg" stroke-width="1"/>
+  <text x="105" y="255" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" class="consistency-text">
+    📡 EventBus.ts
+  </text>
+  <text x="105" y="270" font-family="'Segoe UI', sans-serif" font-size="9" class="text-secondary">
+    Pub/sub coordination
+  </text>
+  <text x="105" y="282" font-family="'JetBrains Mono', monospace" font-size="8" class="text-muted">
+    publish/subscribe
+  </text>
+  
+  <!-- Logger -->
+  <rect x="260" y="240" width="150" height="50" rx="5" class="reliability-bg" stroke-width="1"/>
+  <text x="265" y="255" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" class="reliability-text">
+    📋 Logger.ts
+  </text>
+  <text x="265" y="270" font-family="'Segoe UI', sans-serif" font-size="9" class="text-secondary">
+    Centralized logging
+  </text>
+  <text x="265" y="282" font-family="'JetBrains Mono', monospace" font-size="8" class="text-muted">
+    correlation IDs
+  </text>
+  
+  <!-- Connection lines between components -->
+  <g stroke-width="2" opacity="0.6" class="pulse">
+    <path d="M 175 230 L 335 230" class="conductor-text" marker-end="url(#arrow)"/>
+    <path d="M 175 240 L 175 280" class="consistency-text"/>
+    <path d="M 335 240 L 335 280" class="reliability-text"/>
+  </g>
+  
+  <!-- Types folder -->
+  <rect x="80" y="360" width="350" height="120" rx="10" class="consistency-bg" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="90" y="385" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="14" font-weight="700" class="consistency-text">
+    📁 types/
+  </text>
+  
+  <!-- Symphony.ts -->
+  <rect x="100" y="400" width="140" height="60" rx="5" class="conductor-bg" stroke-width="1"/>
+  <text x="105" y="415" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" class="conductor-text">
+    🎼 Symphony.ts
+  </text>
+  <text x="105" y="430" font-family="'Segoe UI', sans-serif" font-size="9" class="text-secondary">
+    Sequence definitions
+  </text>
+  <text x="105" y="445" font-family="'JetBrains Mono', monospace" font-size="8" class="text-muted">
+    JSON schema types
+  </text>
+  <text x="105" y="455" font-family="'JetBrains Mono', monospace" font-size="8" class="text-muted">
+    Movement[] → Beat[]
+  </text>
+  
+  <!-- Beat.ts -->
+  <rect x="260" y="400" width="140" height="60" rx="5" class="orchestration-bg" stroke-width="1"/>
+  <text x="265" y="415" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" class="orchestration-text">
+    🥁 Beat.ts
+  </text>
+  <text x="265" y="430" font-family="'Segoe UI', sans-serif" font-size="9" class="text-secondary">
+    Execution units
+  </text>
+  <text x="265" y="445" font-family="'JetBrains Mono', monospace" font-size="8" class="text-muted">
+    api-call, callback
+  </text>
+  <text x="265" y="455" font-family="'JetBrains Mono', monospace" font-size="8" class="text-muted">
+    data-transform, etc
+  </text>
+  
+  <!-- Key benefits panel -->
+  <rect x="450" y="140" width="380" height="200" rx="10" class="bg-secondary border-light" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="460" y="165" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="16" font-weight="700" class="text-primary">
+    🎯 Conductor Benefits
+  </text>
+  
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="11" class="text-secondary">
+    <text x="470" y="185">✅ Centralized orchestration prevents race conditions</text>
+    <text x="470" y="205">✅ Symphony sequences provide self-documenting flows</text>
+    <text x="470" y="225">✅ Correlation IDs make debugging traceable</text>
+    <text x="470" y="245">✅ Single communication protocol across plugins</text>
+    <text x="470" y="265">✅ External package = independent development</text>
+    <text x="470" y="285">✅ JSON-driven configuration for predictability</text>
+    <text x="470" y="305">✅ Consistent logging with structured context</text>
+    <text x="470" y="325">✅ Event-driven architecture without tight coupling</text>
+  </g>
+  
+  <!-- Symphony execution flow -->
+  <rect x="450" y="360" width="380" height="120" rx="10" class="orchestration-bg" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="460" y="385" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="16" font-weight="700" class="orchestration-text">
+    🎼 Symphony Execution Flow
+  </text>
+  
+  <g font-family="'JetBrains Mono', monospace" font-size="10" class="text-secondary">
+    <text x="470" y="405">1. Plugin calls: conductor.play('LibraryPlugin', 'load')</text>
+    <text x="470" y="420">2. SequenceEngine loads: load.symphony.json</text>
+    <text x="470" y="435">3. Execute movements: [fetch → transform → notify]</text>
+    <text x="470" y="450">4. Logger records: correlationId + structured context</text>
+    <text x="470" y="465">5. EventBus publishes: callbacks to subscribing plugins</text>
+  </g>
+  
+  <!-- Real example log output -->
+  <rect x="80" y="500" width="750" height="40" rx="8" class="bg-secondary border-light" 
+        stroke-width="1"/>
+  
+  <text x="90" y="515" font-family="'JetBrains Mono', monospace" font-size="9" class="text-primary">
+    [2024-01-15T10:30:15.123Z] INFO correlationId=abc-123
+  </text>
+  <text x="90" y="527" font-family="'JetBrains Mono', monospace" font-size="9" class="text-secondary">
+    topic=library.load plugin=LibraryPlugin context=load-symphony
+  </text>
+  <text x="90" y="535" font-family="'JetBrains Mono', monospace" font-size="8" class="text-muted">
+    → Every action traceable across plugin boundaries
+  </text>
+  
+  <!-- Bottom stats -->
+  <rect x="50" y="570" width="800" height="60" rx="12" class="bg-secondary border-light" 
+        stroke-width="1" filter="url(#dropShadow)"/>
+  
+  <text x="450" y="590" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="16" font-weight="700" class="text-primary">
+    🎵 Orchestration Stats
+  </text>
+  
+  <text x="450" y="610" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="12" class="text-secondary">
+    External NPM Package • TypeScript Types • JSON Schema Validation • Correlation Tracking • Centralized Logging
+  </text>
+  
+  <text x="450" y="625" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="11" class="text-muted" font-style="italic">
+    "Single source of truth for all plugin coordination and side-effect management"
+  </text>
+</svg>

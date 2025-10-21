@@ -1,0 +1,53 @@
+[
+  {
+    "id": "canvas.deselect.onCanvasClick",
+    "target": { "selector": "#rx-canvas" },
+    "event": "click",
+    "options": true,
+    "guard": { "notClosestMatch": ".rx-comp,[id^='rx-node-']" },
+    "publish": { "topic": "canvas.component.deselect.requested", "payload": {} }
+  },
+  {
+    "id": "canvas.deselect.onEscape",
+    "target": { "window": true },
+    "event": "keydown",
+    "guard": { "key": "Escape" },
+    "publish": { "topic": "canvas.component.deselect.requested", "payload": {} }
+  },
+  {
+    "id": "canvas.delete.onDelete",
+    "target": { "window": true },
+    "event": "keydown",
+    "guard": { "key": "Delete" },
+    "publish": { "topic": "canvas.component.delete.requested", "payload": {} }
+  },
+  {
+    "id": "canvas.copy.onCtrlC",
+    "target": { "window": true },
+    "event": "keydown",
+    "guard": { "key": "c", "ctrlKey": true, "metaKey": false },
+    "publish": { "topic": "canvas.component.copy", "payload": {} }
+  },
+  {
+    "id": "canvas.copy.onCmdC",
+    "target": { "window": true },
+    "event": "keydown",
+    "guard": { "key": "c", "metaKey": true, "ctrlKey": false },
+    "publish": { "topic": "canvas.component.copy", "payload": {} }
+  },
+  {
+    "id": "canvas.paste.onCtrlV",
+    "target": { "window": true },
+    "event": "keydown",
+    "guard": { "key": "v", "ctrlKey": true, "metaKey": false },
+    "publish": { "topic": "canvas.component.paste", "payload": {} }
+  },
+  {
+    "id": "canvas.paste.onCmdV",
+    "target": { "window": true },
+    "event": "keydown",
+    "guard": { "key": "v", "metaKey": true, "ctrlKey": false },
+    "publish": { "topic": "canvas.component.paste", "payload": {} }
+  }
+]
+

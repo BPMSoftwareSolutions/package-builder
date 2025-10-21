@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MP4 Export Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .test-section {
+        margin: 30px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+
+      .controls {
+        margin: 20px 0;
+      }
+
+      button {
+        margin: 5px;
+        padding: 10px 20px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #0056b3;
+      }
+
+      button:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+      }
+
+      .status {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+
+      .status.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .status.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .status.info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+
+      svg {
+        border: 1px solid #ccc;
+        margin: 10px 0;
+      }
+
+      .gear {
+        transform-origin: center;
+      }
+
+      .pulse {
+        transform-origin: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MP4 Export Test Page</h1>
+
+    <div class="test-section">
+      <h2>Browser Compatibility Check</h2>
+      <div id="compatibility-status"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>Simple Rotation Animation</h2>
+      <svg id="simple-rotation" width="200" height="200" viewBox="0 0 200 200">
+        <defs>
+          <style>
+            .rotating-rect {
+              fill: #ff6b6b;
+            }
+          </style>
+        </defs>
+        <rect class="rotating-rect" x="75" y="75" width="50" height="50" />
+      </svg>
+
+      <div class="controls">
+        <button onclick="exportSimpleRotation()">Export MP4 (3s, 30fps)</button>
+        <button onclick="exportSimpleRotationGif()">Compare with GIF</button>
+      </div>
+      <div id="simple-status" class="status" style="display: none"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>Complex Multi-Element Animation</h2>
+      <svg
+        id="complex-animation"
+        width="400"
+        height="300"
+        viewBox="0 0 400 300"
+      >
+        <defs>
+          <style>
+            .gear-1 {
+              fill: #4ecdc4;
+            }
+            .gear-2 {
+              fill: #45b7aa;
+            }
+            .pulse {
+              fill: #ffe66d;
+            }
+            .slider {
+              fill: #ff6b6b;
+            }
+            .animated-path {
+              stroke: #4ecdc4;
+              stroke-width: 3;
+              fill: none;
+              stroke-dasharray: 20;
+            }
+          </style>
+        </defs>
+
+        <!-- Rotating gears -->
+        <g class="gear-1" transform="translate(100,100)">
+          <circle r="30" />
+          <rect x="-5" y="-35" width="10" height="10" />
+          <rect x="-5" y="25" width="10" height="10" />
+          <rect x="-35" y="-5" width="10" height="10" />
+          <rect x="25" y="-5" width="10" height="10" />
+        </g>
+
+        <g class="gear-2" transform="translate(200,100)">
+          <circle r="25" />
+          <rect x="-3" y="-28" width="6" height="8" />
+          <rect x="-3" y="20" width="6" height="8" />
+          <rect x="-28" y="-3" width="8" height="6" />
+          <rect x="20" y="-3" width="8" height="6" />
+        </g>
+
+        <!-- Pulsing circle -->
+        <circle class="pulse" cx="300" cy="100" r="20" />
+
+        <!-- Moving slider -->
+        <rect class="slider" x="50" y="200" width="20" height="20" />
+
+        <!-- Animated path -->
+        <path
+          class="animated-path"
+          d="M 50 250 Q 200 200 350 250"
+          stroke-dashoffset="20"
+        />
+      </svg>
+
+      <div class="controls">
+        <button onclick="exportComplexAnimation()">
+          Export MP4 (5s, 30fps)
+        </button>
+        <button onclick="exportComplexAnimationHighQuality()">
+          Export High Quality (60fps)
+        </button>
+      </div>
+      <div id="complex-status" class="status" style="display: none"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>Custom Settings Test</h2>
+      <svg id="custom-test" width="300" height="200" viewBox="0 0 300 200">
+        <defs>
+          <style>
+            .custom-element {
+              fill: #a8e6cf;
+            }
+          </style>
+        </defs>
+        <rect class="custom-element" x="125" y="75" width="50" height="50" />
+      </svg>
+
+      <div class="controls">
+        <label
+          >FPS:
+          <input type="number" id="custom-fps" value="24" min="1" max="60"
+        /></label>
+        <label
+          >Duration (ms):
+          <input
+            type="number"
+            id="custom-duration"
+            value="2000"
+            min="500"
+            max="10000"
+        /></label>
+        <label
+          >Bitrate (bps):
+          <input
+            type="number"
+            id="custom-bitrate"
+            value="1500000"
+            min="500000"
+            max="5000000"
+        /></label>
+        <br /><br />
+        <button onclick="exportCustomSettings()">
+          Export with Custom Settings
+        </button>
+      </div>
+      <div id="custom-status" class="status" style="display: none"></div>
+    </div>
+
+    <script type="module">
+      // Mock conductor for testing
+      window.conductor = {
+        async play(pluginId, sequenceId, data) {
+          console.log("Mock conductor.play called:", {
+            pluginId,
+            sequenceId,
+            data,
+          });
+
+          // Simulate the MP4 export process
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              // Mock successful export
+              console.log("Mock export completed");
+              resolve({
+                success: true,
+                size: Math.floor(Math.random() * 500000) + 100000,
+              });
+            }, 2000);
+          });
+        },
+      };
+
+      // Check browser compatibility
+      function checkCompatibility() {
+        const status = document.getElementById("compatibility-status");
+        const hasWebCodecs = "VideoEncoder" in window;
+        const hasMediaRecorder = "MediaRecorder" in window;
+
+        let html = "<h3>Browser Support Status:</h3><ul>";
+
+        if (hasWebCodecs) {
+          html +=
+            '<li style="color: green;">✅ WebCodecs API supported (optimal quality)</li>';
+        } else {
+          html +=
+            '<li style="color: orange;">⚠️ WebCodecs API not supported</li>';
+        }
+
+        if (hasMediaRecorder) {
+          html +=
+            '<li style="color: green;">✅ MediaRecorder API supported (fallback)</li>';
+        } else {
+          html +=
+            '<li style="color: red;">❌ MediaRecorder API not supported</li>';
+        }
+
+        if (!hasWebCodecs && !hasMediaRecorder) {
+          html +=
+            '<li style="color: red;">❌ MP4 export not available in this browser</li>';
+        }
+
+        html += "</ul>";
+        status.innerHTML = html;
+      }
+
+      // Export functions
+      window.exportSimpleRotation = async function () {
+        const statusEl = document.getElementById("simple-status");
+        statusEl.style.display = "block";
+        statusEl.className = "status info";
+        statusEl.textContent = "Exporting MP4...";
+
+        try {
+          const result = await conductor.play(
+            "CanvasComponentExportMp4Plugin",
+            "canvas-component-export-mp4-symphony",
+            {
+              targetId: "simple-rotation",
+              options: {
+                width: 200,
+                height: 200,
+                fps: 30,
+                durationMs: 3000,
+                animation: {
+                  keyframes: [
+                    {
+                      selector: ".rotating-rect",
+                      attr: "transform",
+                      from: 0,
+                      to: 360,
+                      kind: "rotate",
+                    },
+                  ],
+                },
+              },
+            }
+          );
+
+          statusEl.className = "status success";
+          statusEl.textContent = `MP4 export completed! File size: ${Math.round(
+            result.size / 1024
+          )}KB`;
+        } catch (error) {
+          statusEl.className = "status error";
+          statusEl.textContent = `Export failed: ${error.message}`;
+        }
+      };
+
+      window.exportComplexAnimation = async function () {
+        const statusEl = document.getElementById("complex-status");
+        statusEl.style.display = "block";
+        statusEl.className = "status info";
+        statusEl.textContent = "Exporting complex animation...";
+
+        try {
+          const result = await conductor.play(
+            "CanvasComponentExportMp4Plugin",
+            "canvas-component-export-mp4-symphony",
+            {
+              targetId: "complex-animation",
+              options: {
+                width: 400,
+                height: 300,
+                fps: 30,
+                durationMs: 5000,
+                bitrate: 2500000,
+                animation: {
+                  keyframes: [
+                    {
+                      selector: ".gear-1",
+                      attr: "transform",
+                      from: 0,
+                      to: 360,
+                      kind: "rotate",
+                    },
+                    {
+                      selector: ".gear-2",
+                      attr: "transform",
+                      from: 0,
+                      to: -360,
+                      kind: "rotate",
+                    },
+                    {
+                      selector: ".pulse",
+                      attr: "transform",
+                      from: 1.0,
+                      to: 1.5,
+                      kind: "scale",
+                    },
+                    { selector: ".pulse", attr: "opacity", from: 1.0, to: 0.5 },
+                    { selector: ".slider", attr: "x", from: 50, to: 300 },
+                    {
+                      selector: ".animated-path",
+                      attr: "stroke-dashoffset",
+                      from: 20,
+                      to: -20,
+                    },
+                  ],
+                },
+              },
+            }
+          );
+
+          statusEl.className = "status success";
+          statusEl.textContent = `Complex animation exported! File size: ${Math.round(
+            result.size / 1024
+          )}KB`;
+        } catch (error) {
+          statusEl.className = "status error";
+          statusEl.textContent = `Export failed: ${error.message}`;
+        }
+      };
+
+      window.exportCustomSettings = async function () {
+        const fps = parseInt(document.getElementById("custom-fps").value);
+        const duration = parseInt(
+          document.getElementById("custom-duration").value
+        );
+        const bitrate = parseInt(
+          document.getElementById("custom-bitrate").value
+        );
+
+        const statusEl = document.getElementById("custom-status");
+        statusEl.style.display = "block";
+        statusEl.className = "status info";
+        statusEl.textContent = `Exporting with custom settings (${fps}fps, ${duration}ms, ${Math.round(
+          bitrate / 1000
+        )}kbps)...`;
+
+        try {
+          const result = await conductor.play(
+            "CanvasComponentExportMp4Plugin",
+            "canvas-component-export-mp4-symphony",
+            {
+              targetId: "custom-test",
+              options: {
+                width: 300,
+                height: 200,
+                fps: fps,
+                durationMs: duration,
+                bitrate: bitrate,
+                animation: {
+                  keyframes: [
+                    {
+                      selector: ".custom-element",
+                      attr: "transform",
+                      from: 1.0,
+                      to: 2.0,
+                      kind: "scale",
+                    },
+                  ],
+                },
+              },
+            }
+          );
+
+          statusEl.className = "status success";
+          statusEl.textContent = `Custom export completed! File size: ${Math.round(
+            result.size / 1024
+          )}KB`;
+        } catch (error) {
+          statusEl.className = "status error";
+          statusEl.textContent = `Export failed: ${error.message}`;
+        }
+      };
+
+      // Initialize compatibility check
+      checkCompatibility();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,349 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <ns0:defs>
+    
+    <ns0:linearGradient id="darkBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <ns0:stop offset="0%" style="stop-color:#0c1420;stop-opacity:1" />
+      <ns0:stop offset="50%" style="stop-color:#1e2532;stop-opacity:1" />
+      <ns0:stop offset="100%" style="stop-color:#0c1420;stop-opacity:1" />
+    </ns0:linearGradient>
+    
+    
+    <ns0:radialGradient id="compassGrad" cx="50%" cy="50%">
+      <ns0:stop offset="0%" style="stop-color:#f59e0b;stop-opacity:0.8" />
+      <ns0:stop offset="100%" style="stop-color:#d97706;stop-opacity:0.3" />
+    </ns0:radialGradient>
+    
+    
+    <ns0:linearGradient id="balanceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <ns0:stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <ns0:stop offset="100%" style="stop-color:#0891b2;stop-opacity:1" />
+    </ns0:linearGradient>
+    
+    
+    <ns0:linearGradient id="cultureGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <ns0:stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <ns0:stop offset="50%" style="stop-color:#059669;stop-opacity:1" />
+      <ns0:stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
+    </ns0:linearGradient>
+    
+    
+    <ns0:linearGradient id="securityGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <ns0:stop offset="0%" style="stop-color:#dc2626;stop-opacity:1" />
+      <ns0:stop offset="50%" style="stop-color:#b91c1c;stop-opacity:1" />
+      <ns0:stop offset="100%" style="stop-color:#991b1b;stop-opacity:1" />
+    </ns0:linearGradient>
+    
+    
+    <ns0:filter id="glow">
+      <ns0:feGaussianBlur stdDeviation="4" result="coloredBlur" />
+      <ns0:feMerge> 
+        <ns0:feMergeNode in="coloredBlur" />
+        <ns0:feMergeNode in="SourceGraphic" />
+      </ns0:feMerge>
+    </ns0:filter>
+    
+    <ns0:filter id="strongGlow">
+      <ns0:feGaussianBlur stdDeviation="6" result="coloredBlur" />
+      <ns0:feMerge> 
+        <ns0:feMergeNode in="coloredBlur" />
+        <ns0:feMergeNode in="SourceGraphic" />
+      </ns0:feMerge>
+    </ns0:filter>
+    
+    
+    <ns0:filter id="shadow">
+      <ns0:feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000" flood-opacity="0.3" />
+    </ns0:filter>
+    
+    
+    <ns0:filter id="textGlow">
+      <ns0:feGaussianBlur stdDeviation="3" result="coloredBlur" />
+      <ns0:feMerge> 
+        <ns0:feMergeNode in="coloredBlur" />
+        <ns0:feMergeNode in="SourceGraphic" />
+      </ns0:feMerge>
+    </ns0:filter>
+  </ns0:defs>
+  
+  
+  <ns0:rect width="800" height="600" fill="url(#darkBg)" />
+  
+  
+  <ns0:defs>
+    <ns0:pattern id="hexPattern" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse">
+      <ns0:polygon points="30,0 50,15 50,37 30,52 10,37 10,15" fill="none" stroke="#1f2937" stroke-width="0.5" opacity="0.3" />
+    </ns0:pattern>
+  </ns0:defs>
+  <ns0:rect width="800" height="600" fill="url(#hexPattern)" />
+  
+  
+  <ns0:g opacity="0.4">
+    <ns0:circle cx="120" cy="80" r="2" fill="#f59e0b">
+      <ns0:animate attributeName="opacity" values="0.2;0.6;0.2" dur="4s" repeatCount="indefinite" />
+      <ns0:animateTransform attributeName="transform" type="translate" values="0,0; 40,30; 0,0" dur="6s" repeatCount="indefinite" />
+    </ns0:circle>
+    <ns0:circle cx="680" cy="120" r="1.5" fill="#06b6d4">
+      <ns0:animate attributeName="opacity" values="0.4;0.8;0.4" dur="3.5s" repeatCount="indefinite" />
+      <ns0:animateTransform attributeName="transform" type="translate" values="0,0; -35,45; 0,0" dur="5.5s" repeatCount="indefinite" />
+    </ns0:circle>
+    <ns0:circle cx="720" cy="420" r="2" fill="#10b981">
+      <ns0:animate attributeName="opacity" values="0.3;0.7;0.3" dur="4.2s" repeatCount="indefinite" />
+      <ns0:animateTransform attributeName="transform" type="translate" values="0,0; -30,-40; 0,0" dur="6.2s" repeatCount="indefinite" />
+    </ns0:circle>
+    <ns0:circle cx="100" cy="480" r="1.8" fill="#dc2626">
+      <ns0:animate attributeName="opacity" values="0.5;0.3;0.5" dur="3.8s" repeatCount="indefinite" />
+      <ns0:animateTransform attributeName="transform" type="translate" values="0,0; 50,-35; 0,0" dur="5.8s" repeatCount="indefinite" />
+    </ns0:circle>
+  </ns0:g>
+  
+  
+  <ns0:g transform="translate(400, 300)">
+    <ns0:circle cx="0" cy="0" r="40" fill="none" stroke="#64748b" stroke-width="2" opacity="0.3">
+      <ns0:animate attributeName="r" values="35;45;35" dur="4s" repeatCount="indefinite" />
+      <ns0:animate attributeName="opacity" values="0.2;0.5;0.2" dur="4s" repeatCount="indefinite" />
+    </ns0:circle>
+    <ns0:circle cx="0" cy="0" r="25" fill="#1e293b" stroke="#f59e0b" stroke-width="2" filter="url(#glow)">
+      <ns0:animate attributeName="opacity" values="0;1" dur="1.5s" begin="0.5s" fill="freeze" />
+    </ns0:circle>
+    <ns0:text x="6.0" y="6" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#f59e0b" filter="url(#textGlow)"><ns0:tspan x="6.0" y="15.0">LEAD</ns0:tspan></ns0:text>
+  </ns0:g>
+  
+  
+  <ns0:g transform="translate(80, 100)">
+    <ns0:rect x="0" y="0" width="280" height="120" rx="15" fill="#1e293b" stroke="#f59e0b" stroke-width="2" opacity="0.9" filter="url(#shadow)">
+      <ns0:animate attributeName="opacity" values="0;0.9" dur="1.2s" begin="2s" fill="freeze" />
+      <ns0:animate attributeName="stroke-opacity" values="0;1" dur="1.2s" begin="2s" fill="freeze" />
+    </ns0:rect>
+    
+    
+    <ns0:g transform="translate(20, 25)">
+      <ns0:circle cx="35" cy="35" r="30" fill="none" stroke="url(#compassGrad)" stroke-width="2" opacity="0.3">
+        <ns0:animate attributeName="opacity" values="0;0.3" dur="1s" begin="2.5s" fill="freeze" />
+      </ns0:circle>
+      
+      <ns0:g>
+        <ns0:path d="M35,15 L40,35 L35,55 L30,35 Z" fill="url(#compassGrad)" filter="url(#glow)">
+          <ns0:animate attributeName="opacity" values="0;1" dur="1s" begin="3s" fill="freeze" />
+          <ns0:animateTransform attributeName="transform" type="rotate" values="0 35 35; 15 35 35; -10 35 35; 5 35 35" dur="6s" begin="3.5s" repeatCount="indefinite" />
+        </ns0:path>
+        
+        <ns0:text x="35.0" y="36.166666666666664" font-family="Arial, sans-serif" font-size="8" font-weight="bold" text-anchor="middle" fill="#f59e0b">N</ns0:text>
+      </ns0:g>
+      
+      
+      <ns0:g opacity="0.4">
+        <ns0:ellipse cx="20" cy="25" rx="8" ry="5" fill="#64748b">
+          <ns0:animate attributeName="opacity" values="0;0.4;0.2;0.4" dur="3s" begin="3.5s" repeatCount="indefinite" />
+          <ns0:animateTransform attributeName="transform" type="translate" values="0,0; 10,5; 0,0" dur="4s" begin="3.5s" repeatCount="indefinite" />
+        </ns0:ellipse>
+        <ns0:ellipse cx="50" cy="45" rx="6" ry="4" fill="#64748b">
+          <ns0:animate attributeName="opacity" values="0.4;0.2;0.4;0.6" dur="2.5s" begin="4s" repeatCount="indefinite" />
+          <ns0:animateTransform attributeName="transform" type="translate" values="0,0; -8,3; 0,0" dur="3.5s" begin="4s" repeatCount="indefinite" />
+        </ns0:ellipse>
+      </ns0:g>
+    </ns0:g>
+    
+    <ns0:text x="62.0" y="45" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="20" font-weight="bold" fill="#f1f5f9" filter="url(#textGlow)" text-anchor="middle"><ns0:tspan x="62.0" y="14.5">Leadi</ns0:tspan><ns0:tspan x="62.0" y="39.5">ng</ns0:tspan><ns0:tspan x="62.0" y="64.5">teams</ns0:tspan><ns0:tspan x="62.0" y="89.5">through</ns0:tspan><ns0:tspan x="62.0" y="114.5">ambiguity</ns0:tspan></ns0:text>
+    <ns0:text x="62.0" y="70" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle"><ns0:tspan x="62.0" y="13.125">Navig</ns0:tspan><ns0:tspan x="62.0" y="29.375">ate</ns0:tspan><ns0:tspan x="62.0" y="45.625">uncertainty</ns0:tspan><ns0:tspan x="62.0" y="61.875">•</ns0:tspan><ns0:tspan x="62.0" y="78.125">Provide</ns0:tspan><ns0:tspan x="62.0" y="94.375">clear</ns0:tspan><ns0:tspan x="62.0" y="110.625">direction</ns0:tspan></ns0:text>
+    <ns0:text x="62.0" y="90" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle"><ns0:tspan x="62.0" y="13.125">Foste</ns0:tspan><ns0:tspan x="62.0" y="29.375">r</ns0:tspan><ns0:tspan x="62.0" y="45.625">psychological</ns0:tspan><ns0:tspan x="62.0" y="61.875">safety</ns0:tspan><ns0:tspan x="62.0" y="78.125">in</ns0:tspan><ns0:tspan x="62.0" y="94.375">unknown</ns0:tspan><ns0:tspan x="62.0" y="110.625">terrain</ns0:tspan></ns0:text>
+  </ns0:g>
+  
+  
+  <ns0:line x1="370" y1="270" x2="220" y2="220" stroke="#f59e0b" stroke-width="2" opacity="0.5" stroke-dasharray="5,5">
+    <ns0:animate attributeName="opacity" values="0;0.5" dur="1s" begin="3.5s" fill="freeze" />
+    <ns0:animate attributeName="stroke-dashoffset" values="0;10" dur="2s" begin="4s" repeatCount="indefinite" />
+  </ns0:line>
+  
+  
+  <ns0:g transform="translate(440, 100)">
+    <ns0:rect x="0" y="0" width="280" height="120" rx="15" fill="#1e293b" stroke="#06b6d4" stroke-width="2" opacity="0.9" filter="url(#shadow)">
+      <ns0:animate attributeName="opacity" values="0;0.9" dur="1.2s" begin="4s" fill="freeze" />
+      <ns0:animate attributeName="stroke-opacity" values="0;1" dur="1.2s" begin="4s" fill="freeze" />
+    </ns0:rect>
+    
+    
+    <ns0:g transform="translate(20, 25)">
+      
+      <ns0:rect x="32" y="55" width="6" height="15" fill="#64748b">
+        <ns0:animate attributeName="opacity" values="0;1" dur="1s" begin="4.5s" fill="freeze" />
+      </ns0:rect>
+      
+      <ns0:rect x="15" y="32" width="40" height="3" fill="url(#balanceGrad)" filter="url(#glow)">
+        <ns0:animate attributeName="opacity" values="0;1" dur="1s" begin="5s" fill="freeze" />
+        <ns0:animateTransform attributeName="transform" type="rotate" values="0 35 35; 3 35 35; -2 35 35; 1 35 35" dur="4s" begin="5.5s" repeatCount="indefinite" />
+      </ns0:rect>
+      
+      
+      <ns0:g transform="translate(10, 30)">
+        <ns0:path d="M10,5 L20,5 L18,12 L12,12 Z" fill="#06b6d4" opacity="0.8">
+          <ns0:animate attributeName="opacity" values="0;0.8" dur="1s" begin="5.2s" fill="freeze" />
+        </ns0:path>
+        
+        <ns0:text x="8.0" y="9" font-family="monospace" font-size="6" text-anchor="middle" fill="#f1f5f9"><ns0:tspan x="8.0" y="15.25">&lt;/&gt;</ns0:tspan></ns0:text>
+      </ns0:g>
+      
+      
+      <ns0:g transform="translate(40, 30)">
+        <ns0:path d="M10,5 L20,5 L18,12 L12,12 Z" fill="#0891b2" opacity="0.8">
+          <ns0:animate attributeName="opacity" values="0;0.8" dur="1s" begin="5.4s" fill="freeze" />
+        </ns0:path>
+        
+        <ns0:text x="8.0" y="9" font-family="Arial" font-size="6" text-anchor="middle" fill="#f1f5f9"><ns0:tspan x="8.0" y="15.25">$</ns0:tspan></ns0:text>
+      </ns0:g>
+    </ns0:g>
+    
+    <ns0:text x="62.0" y="45" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="20" font-weight="bold" fill="#f1f5f9" filter="url(#textGlow)" text-anchor="middle"><ns0:tspan x="62.0" y="27.0">Balan</ns0:tspan><ns0:tspan x="62.0" y="52.0">cing</ns0:tspan><ns0:tspan x="62.0" y="77.0">technical</ns0:tspan><ns0:tspan x="62.0" y="102.0">excellence</ns0:tspan></ns0:text>
+    <ns0:text x="62.0" y="65" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="20" font-weight="bold" fill="#f1f5f9" filter="url(#textGlow)" text-anchor="middle"><ns0:tspan x="62.0" y="39.5">with</ns0:tspan><ns0:tspan x="62.0" y="64.5">business</ns0:tspan><ns0:tspan x="62.0" y="89.5">impact</ns0:tspan></ns0:text>
+    <ns0:text x="62.0" y="85" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle"><ns0:tspan x="62.0" y="21.25">Strat</ns0:tspan><ns0:tspan x="62.0" y="37.5">egic</ns0:tspan><ns0:tspan x="62.0" y="53.75">trade-offs</ns0:tspan><ns0:tspan x="62.0" y="70.0">•</ns0:tspan><ns0:tspan x="62.0" y="86.25">ROI-driven</ns0:tspan><ns0:tspan x="62.0" y="102.5">decisions</ns0:tspan></ns0:text>
+  </ns0:g>
+  
+  
+  <ns0:line x1="430" y1="270" x2="580" y2="220" stroke="#06b6d4" stroke-width="2" opacity="0.5" stroke-dasharray="5,5">
+    <ns0:animate attributeName="opacity" values="0;0.5" dur="1s" begin="5.5s" fill="freeze" />
+    <ns0:animate attributeName="stroke-dashoffset" values="0;10" dur="2s" begin="6s" repeatCount="indefinite" />
+  </ns0:line>
+  
+  
+  <ns0:g transform="translate(80, 380)">
+    <ns0:rect x="0" y="0" width="280" height="120" rx="15" fill="#1e293b" stroke="#10b981" stroke-width="2" opacity="0.9" filter="url(#shadow)">
+      <ns0:animate attributeName="opacity" values="0;0.9" dur="1.2s" begin="6s" fill="freeze" />
+      <ns0:animate attributeName="stroke-opacity" values="0;1" dur="1.2s" begin="6s" fill="freeze" />
+    </ns0:rect>
+    
+    
+    <ns0:g transform="translate(20, 25)">
+      
+      <ns0:circle cx="20" cy="25" r="8" fill="#10b981" opacity="0.8">
+        <ns0:animate attributeName="opacity" values="0;0.8" dur="0.5s" begin="6.5s" fill="freeze" />
+        <ns0:animate attributeName="r" values="6;8;7" dur="2s" begin="7s" repeatCount="indefinite" />
+      </ns0:circle>
+      <ns0:circle cx="35" cy="15" r="8" fill="#059669" opacity="0.8">
+        <ns0:animate attributeName="opacity" values="0;0.8" dur="0.5s" begin="6.7s" fill="freeze" />
+        <ns0:animate attributeName="r" values="6;8;7" dur="2s" begin="7.2s" repeatCount="indefinite" />
+      </ns0:circle>
+      <ns0:circle cx="50" cy="25" r="8" fill="#047857" opacity="0.8">
+        <ns0:animate attributeName="opacity" values="0;0.8" dur="0.5s" begin="6.9s" fill="freeze" />
+        <ns0:animate attributeName="r" values="6;8;7" dur="2s" begin="7.4s" repeatCount="indefinite" />
+      </ns0:circle>
+      <ns0:circle cx="35" cy="40" r="8" fill="#065f46" opacity="0.8">
+        <ns0:animate attributeName="opacity" values="0;0.8" dur="0.5s" begin="7.1s" fill="freeze" />
+        <ns0:animate attributeName="r" values="6;8;7" dur="2s" begin="7.6s" repeatCount="indefinite" />
+      </ns0:circle>
+      
+      
+      <ns0:g opacity="0.6">
+        <ns0:line x1="20" y1="25" x2="35" y2="15" stroke="#10b981" stroke-width="1.5">
+          <ns0:animate attributeName="opacity" values="0;0.6" dur="0.5s" begin="7.3s" fill="freeze" />
+        </ns0:line>
+        <ns0:line x1="35" y1="15" x2="50" y2="25" stroke="#10b981" stroke-width="1.5">
+          <ns0:animate attributeName="opacity" values="0;0.6" dur="0.5s" begin="7.5s" fill="freeze" />
+        </ns0:line>
+        <ns0:line x1="35" y1="40" x2="20" y2="25" stroke="#10b981" stroke-width="1.5">
+          <ns0:animate attributeName="opacity" values="0;0.6" dur="0.5s" begin="7.7s" fill="freeze" />
+        </ns0:line>
+        <ns0:line x1="35" y1="40" x2="50" y2="25" stroke="#10b981" stroke-width="1.5">
+          <ns0:animate attributeName="opacity" values="0;0.6" dur="0.5s" begin="7.9s" fill="freeze" />
+        </ns0:line>
+      </ns0:g>
+      
+      
+      <ns0:g transform="translate(55, 5)">
+        <ns0:path d="M8,2 L2,5 L2,12 C2,16 8,18 8,18 C8,18 14,16 14,12 L14,5 Z" fill="none" stroke="#10b981" stroke-width="2" filter="url(#glow)">
+          <ns0:animate attributeName="opacity" values="0;1" dur="1s" begin="8s" fill="freeze" />
+        </ns0:path>
+        <ns0:path d="M5,9 L7,11 L11,7" stroke="#10b981" stroke-width="1.5" fill="none">
+          <ns0:animate attributeName="opacity" values="0;1" dur="0.5s" begin="8.5s" fill="freeze" />
+        </ns0:path>
+      </ns0:g>
+    </ns0:g>
+    
+    <ns0:text x="62.0" y="45" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="20" font-weight="bold" fill="#f1f5f9" filter="url(#textGlow)" text-anchor="middle"><ns0:tspan x="62.0" y="14.5">Culti</ns0:tspan><ns0:tspan x="62.0" y="39.5">vatin</ns0:tspan><ns0:tspan x="62.0" y="64.5">g</ns0:tspan><ns0:tspan x="62.0" y="89.5">diverse,</ns0:tspan><ns0:tspan x="62.0" y="114.5">resilient</ns0:tspan></ns0:text>
+    <ns0:text x="62.0" y="65" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="20" font-weight="bold" fill="#f1f5f9" filter="url(#textGlow)" text-anchor="middle"><ns0:tspan x="62.0" y="27.0">engin</ns0:tspan><ns0:tspan x="62.0" y="52.0">eerin</ns0:tspan><ns0:tspan x="62.0" y="77.0">g</ns0:tspan><ns0:tspan x="62.0" y="102.0">cultures</ns0:tspan></ns0:text>
+    <ns0:text x="62.0" y="85" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle"><ns0:tspan x="62.0" y="5.0">Inclu</ns0:tspan><ns0:tspan x="62.0" y="21.25">sive</ns0:tspan><ns0:tspan x="62.0" y="37.5">teams</ns0:tspan><ns0:tspan x="62.0" y="53.75">•</ns0:tspan><ns0:tspan x="62.0" y="70.0">Growth</ns0:tspan><ns0:tspan x="62.0" y="86.25">mindset</ns0:tspan><ns0:tspan x="62.0" y="102.5">•</ns0:tspan><ns0:tspan x="62.0" y="118.75">Adaptability</ns0:tspan></ns0:text>
+  </ns0:g>
+  
+  
+  <ns0:line x1="370" y1="330" x2="220" y2="380" stroke="#10b981" stroke-width="2" opacity="0.5" stroke-dasharray="5,5">
+    <ns0:animate attributeName="opacity" values="0;0.5" dur="1s" begin="7.5s" fill="freeze" />
+    <ns0:animate attributeName="stroke-dashoffset" values="0;10" dur="2s" begin="8s" repeatCount="indefinite" />
+  </ns0:line>
+  
+  
+  <ns0:g transform="translate(440, 380)">
+    <ns0:rect x="0" y="0" width="280" height="120" rx="15" fill="#1e293b" stroke="#dc2626" stroke-width="2" opacity="0.9" filter="url(#shadow)">
+      <ns0:animate attributeName="opacity" values="0;0.9" dur="1.2s" begin="8s" fill="freeze" />
+      <ns0:animate attributeName="stroke-opacity" values="0;1" dur="1.2s" begin="8s" fill="freeze" />
+    </ns0:rect>
+    
+    
+    <ns0:g transform="translate(20, 25)">
+      
+      <ns0:circle cx="35" cy="35" r="12" fill="none" stroke="url(#securityGrad)" stroke-width="3" filter="url(#strongGlow)">
+        <ns0:animate attributeName="opacity" values="0;1" dur="1s" begin="8.5s" fill="freeze" />
+      </ns0:circle>
+      <ns0:circle cx="35" cy="35" r="6" fill="#dc2626" opacity="0.6">
+        <ns0:animate attributeName="opacity" values="0;0.6" dur="1s" begin="9s" fill="freeze" />
+      </ns0:circle>
+      
+      
+      <ns0:circle cx="35" cy="35" r="20" fill="none" stroke="#dc2626" stroke-width="1.5" opacity="0.4" stroke-dasharray="3,2">
+        <ns0:animate attributeName="opacity" values="0;0.4" dur="1s" begin="9.2s" fill="freeze" />
+        <ns0:animateTransform attributeName="transform" type="rotate" values="0 35 35; 360 35 35" dur="10s" begin="9.5s" repeatCount="indefinite" />
+      </ns0:circle>
+      <ns0:circle cx="35" cy="35" r="28" fill="none" stroke="#b91c1c" stroke-width="1" opacity="0.3" stroke-dasharray="2,3">
+        <ns0:animate attributeName="opacity" values="0;0.3" dur="1s" begin="9.4s" fill="freeze" />
+        <ns0:animateTransform attributeName="transform" type="rotate" values="360 35 35; 0 35 35" dur="15s" begin="9.7s" repeatCount="indefinite" />
+      </ns0:circle>
+      
+      
+      <ns0:g transform="translate(30, 30)">
+        <ns0:rect x="2" y="6" width="8" height="6" rx="1" fill="#dc2626" opacity="0.8">
+          <ns0:animate attributeName="opacity" values="0;0.8" dur="0.5s" begin="9.5s" fill="freeze" />
+        </ns0:rect>
+        <ns0:path d="M4,6 L4,4 C4,2 6,2 8,2 C10,2 10,4 10,4 L10,6" fill="none" stroke="#dc2626" stroke-width="1.5">
+          <ns0:animate attributeName="opacity" values="0;1" dur="0.5s" begin="9.7s" fill="freeze" />
+        </ns0:path>
+      </ns0:g>
+      
+      
+      <ns0:g opacity="0.7">
+        <ns0:rect x="5" y="10" width="6" height="6" fill="#ef4444" rx="1">
+          <ns0:animate attributeName="opacity" values="0;1" dur="0.3s" begin="10s" fill="freeze" />
+        </ns0:rect>
+        <ns0:rect x="59" y="10" width="6" height="6" fill="#ef4444" rx="1">
+          <ns0:animate attributeName="opacity" values="0;1" dur="0.3s" begin="10.2s" fill="freeze" />
+        </ns0:rect>
+        <ns0:rect x="5" y="54" width="6" height="6" fill="#ef4444" rx="1">
+          <ns0:animate attributeName="opacity" values="0;1" dur="0.3s" begin="10.4s" fill="freeze" />
+        </ns0:rect>
+        <ns0:rect x="59" y="54" width="6" height="6" fill="#ef4444" rx="1">
+          <ns0:animate attributeName="opacity" values="0;1" dur="0.3s" begin="10.6s" fill="freeze" />
+        </ns0:rect>
+        
+        
+        <ns0:line x1="11" y1="13" x2="25" y2="25" stroke="#dc2626" stroke-width="1" opacity="0.5">
+          <ns0:animate attributeName="opacity" values="0;0.5" dur="0.5s" begin="10.8s" fill="freeze" />
+        </ns0:line>
+        <ns0:line x1="59" y1="13" x2="45" y2="25" stroke="#dc2626" stroke-width="1" opacity="0.5">
+          <ns0:animate attributeName="opacity" values="0;0.5" dur="0.5s" begin="11s" fill="freeze" />
+        </ns0:line>
+      </ns0:g>
+    </ns0:g>
+    
+    <ns0:text x="62.0" y="45" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="20" font-weight="bold" fill="#f1f5f9" filter="url(#textGlow)" text-anchor="middle"><ns0:tspan x="62.0" y="14.5">Influ</ns0:tspan><ns0:tspan x="62.0" y="39.5">encin</ns0:tspan><ns0:tspan x="62.0" y="64.5">g</ns0:tspan><ns0:tspan x="62.0" y="89.5">long-term</ns0:tspan><ns0:tspan x="62.0" y="114.5">architectural</ns0:tspan></ns0:text>
+    <ns0:text x="62.0" y="65" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="20" font-weight="bold" fill="#f1f5f9" filter="url(#textGlow)" text-anchor="middle"><ns0:tspan x="62.0" y="27.0">decis</ns0:tspan><ns0:tspan x="62.0" y="52.0">ions</ns0:tspan><ns0:tspan x="62.0" y="77.0">in</ns0:tspan><ns0:tspan x="62.0" y="102.0">security</ns0:tspan></ns0:text>
+    <ns0:text x="62.0" y="85" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle"><ns0:tspan x="62.0" y="-3.125">Secur</ns0:tspan><ns0:tspan x="62.0" y="13.125">ity-f</ns0:tspan><ns0:tspan x="62.0" y="29.375">irst</ns0:tspan><ns0:tspan x="62.0" y="45.625">design</ns0:tspan><ns0:tspan x="62.0" y="61.875">•</ns0:tspan><ns0:tspan x="62.0" y="78.125">Risk</ns0:tspan><ns0:tspan x="62.0" y="94.375">assessment</ns0:tspan><ns0:tspan x="62.0" y="110.625">•</ns0:tspan><ns0:tspan x="62.0" y="126.875">Compliance</ns0:tspan></ns0:text>
+  </ns0:g>
+  
+  
+  <ns0:line x1="430" y1="330" x2="580" y2="380" stroke="#dc2626" stroke-width="2" opacity="0.5" stroke-dasharray="5,5">
+    <ns0:animate attributeName="opacity" values="0;0.5" dur="1s" begin="9.5s" fill="freeze" />
+    <ns0:animate attributeName="stroke-dashoffset" values="0;10" dur="2s" begin="10s" repeatCount="indefinite" />
+  </ns0:line>
+  
+  
+  <ns0:rect x="5" y="5" width="790" height="590" rx="25" fill="none" stroke="#374151" stroke-width="1" opacity="0.3">
+    <ns0:animate attributeName="opacity" values="0.1;0.5;0.1" dur="6s" repeatCount="indefinite" />
+  </ns0:rect>
+</ns0:svg>

@@ -1,0 +1,504 @@
+{
+  "transfers": [
+    [
+      "transfer-1754588505452-b7x3iao9m",
+      {
+        "transferId": "transfer-1754588505452-b7x3iao9m",
+        "fromAgentId": "primary-development-agent",
+        "toAgentId": "event-types-refactoring-agent",
+        "knowledgeFile": "event-types-refactoring-knowledge.json",
+        "priority": "high",
+        "state": "consumed",
+        "metadata": {
+          "title": "Event-Types Refactoring: Remove Unused App-Specific Events",
+          "description": "Comprehensive refactoring plan to clean up unused event-type files (canvas, element-library, control-panel, layout) while preserving core MusicalConductor functionality. Includes testing strategy, risk assessment, and implementation phases.",
+          "knowledgeType": [
+            "refactoring",
+            "cleanup",
+            "event-types",
+            "testing-strategy",
+            "architecture"
+          ],
+          "estimatedSize": 6651,
+          "createdAt": 1754588505452,
+          "updatedAt": 1754588505456,
+          "expiresAt": 1754602905452
+        },
+        "progress": {
+          "sent": true,
+          "received": false,
+          "consumed": false,
+          "validated": false
+        },
+        "history": [
+          {
+            "timestamp": 1754588505452,
+            "state": "pending",
+            "agentId": "primary-development-agent",
+            "message": "Transfer request created"
+          },
+          {
+            "timestamp": 1754588505456,
+            "state": "sent",
+            "agentId": "primary-development-agent",
+            "message": "Knowledge file sent"
+          }
+        ]
+      }
+    ],
+    [
+      "transfer-1754589920952-ot8hi9co5",
+      {
+        "transferId": "transfer-1754589920952-ot8hi9co5",
+        "fromAgentId": "agent-a-senior-dev",
+        "toAgentId": "agent-b-junior-dev",
+        "knowledgeFile": "demo-plugin-knowledge.json",
+        "priority": "high",
+        "state": "consumed",
+        "metadata": {
+          "title": "Plugin Development Best Practices",
+          "description": "Comprehensive plugin development knowledge including patterns and examples",
+          "knowledgeType": [
+            "plugins",
+            "best-practices",
+            "examples"
+          ],
+          "estimatedSize": 0,
+          "createdAt": 1754589920952,
+          "updatedAt": 1754589920967,
+          "expiresAt": 1754676320952
+        },
+        "progress": {
+          "sent": true,
+          "received": true,
+          "consumed": true,
+          "validated": false
+        },
+        "history": [
+          {
+            "timestamp": 1754589920952,
+            "state": "pending",
+            "agentId": "agent-a-senior-dev",
+            "message": "Transfer request created"
+          },
+          {
+            "timestamp": 1754589920959,
+            "state": "sent",
+            "agentId": "agent-a-senior-dev",
+            "message": "Knowledge file sent"
+          },
+          {
+            "timestamp": 1754589920961,
+            "state": "received",
+            "agentId": "agent-b-junior-dev",
+            "message": "Knowledge file received"
+          },
+          {
+            "timestamp": 1754589920967,
+            "state": "consumed",
+            "agentId": "agent-b-junior-dev",
+            "message": "Knowledge successfully imported and processed",
+            "details": {
+              "importedPlugins": 3,
+              "newBestPractices": 12,
+              "successfulImport": true
+            }
+          }
+        ]
+      }
+    ],
+    [
+      "transfer-1754589920955-pjzw6u0s3",
+      {
+        "transferId": "transfer-1754589920955-pjzw6u0s3",
+        "fromAgentId": "agent-c-test-expert",
+        "toAgentId": "agent-a-senior-dev",
+        "knowledgeFile": "demo-testing-knowledge.json",
+        "priority": "normal",
+        "state": "consumed",
+        "metadata": {
+          "title": "Advanced Testing Strategies",
+          "description": "Unit testing, integration testing, and test automation knowledge",
+          "knowledgeType": [
+            "testing",
+            "automation",
+            "strategies"
+          ],
+          "estimatedSize": 0,
+          "createdAt": 1754589920955,
+          "updatedAt": 1754589920969
+        },
+        "progress": {
+          "sent": true,
+          "received": false,
+          "consumed": false,
+          "validated": false
+        },
+        "history": [
+          {
+            "timestamp": 1754589920955,
+            "state": "pending",
+            "agentId": "agent-c-test-expert",
+            "message": "Transfer request created"
+          },
+          {
+            "timestamp": 1754589920969,
+            "state": "sent",
+            "agentId": "agent-c-test-expert",
+            "message": "Knowledge file sent"
+          }
+        ]
+      }
+    ],
+    [
+      "transfer-1754590237802-2lt8wy9l5",
+      {
+        "transferId": "transfer-1754590237802-2lt8wy9l5",
+        "fromAgentId": "event-types-refactoring-agent",
+        "toAgentId": "cli-improvement-agent",
+        "knowledgeFile": "queue-cli-improvement-knowledge.json",
+        "priority": "high",
+        "state": "consumed",
+        "metadata": {
+          "title": "Knowledge Transfer Queue CLI Usability Issues",
+          "description": "Identified usability issues and missing functionality in the knowledge transfer queue CLI system. Includes missing consumed command implementation, agent ID inference issues, and proposed solutions for better agent coordination.",
+          "knowledgeType": [
+            "cli-improvement",
+            "usability",
+            "bug-fixes",
+            "missing-functionality",
+            "agent-coordination"
+          ],
+          "estimatedSize": 8651,
+          "createdAt": 1754590237802,
+          "updatedAt": 1754591097122,
+          "expiresAt": 1754763037802
+        },
+        "progress": {
+          "sent": true,
+          "received": false,
+          "consumed": true,
+          "validated": false
+        },
+        "history": [
+          {
+            "timestamp": 1754590237802,
+            "state": "pending",
+            "agentId": "event-types-refactoring-agent",
+            "message": "Transfer request created"
+          },
+          {
+            "timestamp": 1754590237804,
+            "state": "sent",
+            "agentId": "event-types-refactoring-agent",
+            "message": "Knowledge file sent"
+          },
+          {
+            "timestamp": 1754591097122,
+            "state": "consumed",
+            "agentId": "cli-improvement-agent",
+            "message": "Knowledge successfully imported and processed"
+          }
+        ]
+      }
+    ],
+    [
+      "transfer-1754592484272-alt3f03p0",
+      {
+        "transferId": "transfer-1754592484272-alt3f03p0",
+        "fromAgentId": "development-team",
+        "toAgentId": "e2e-testing-agent",
+        "knowledgeFile": "e2e-testing-knowledge.json",
+        "priority": "high",
+        "state": "sent",
+        "metadata": {
+          "title": "E2E Testing Setup for MusicalConductor React SPA Integration",
+          "description": "Complete knowledge transfer for setting up E2E testing using Playwright with headless browser capabilities, console logging, and musical-conductor npm package integration. Includes React SPA examples, plugin validation, and architectural boundary testing.",
+          "knowledgeType": [
+            "e2e-testing",
+            "playwright",
+            "react-spa",
+            "musical-conductor",
+            "console-logging",
+            "plugin-validation"
+          ],
+          "estimatedSize": 1755,
+          "createdAt": 1754592484272,
+          "updatedAt": 1754592484276
+        },
+        "progress": {
+          "sent": true,
+          "received": false,
+          "consumed": false,
+          "validated": false
+        },
+        "history": [
+          {
+            "timestamp": 1754592484272,
+            "state": "pending",
+            "agentId": "development-team",
+            "message": "Transfer request created"
+          },
+          {
+            "timestamp": 1754592484276,
+            "state": "sent",
+            "agentId": "development-team",
+            "message": "Knowledge file sent"
+          }
+        ]
+      }
+    ],
+    [
+      "transfer-1754592556758-gsq64hnzn",
+      {
+        "transferId": "transfer-1754592556758-gsq64hnzn",
+        "fromAgentId": "development-team",
+        "toAgentId": "e2e-testing-agent",
+        "knowledgeFile": "e2e-testing-knowledge.json",
+        "priority": "high",
+        "state": "consumed",
+        "metadata": {
+          "title": "E2E Testing Setup for MusicalConductor React SPA Integration",
+          "description": "Complete knowledge transfer for setting up E2E testing using Playwright with headless browser capabilities, console logging, and musical-conductor npm package integration. Includes React SPA examples, plugin validation, and architectural boundary testing.",
+          "knowledgeType": [
+            "e2e-testing",
+            "playwright",
+            "react-spa",
+            "musical-conductor",
+            "console-logging",
+            "plugin-validation"
+          ],
+          "estimatedSize": 1755,
+          "createdAt": 1754592556758,
+          "updatedAt": 1754592556763
+        },
+        "progress": {
+          "sent": true,
+          "received": false,
+          "consumed": false,
+          "validated": false
+        },
+        "history": [
+          {
+            "timestamp": 1754592556758,
+            "state": "pending",
+            "agentId": "development-team",
+            "message": "Transfer request created"
+          },
+          {
+            "timestamp": 1754592556763,
+            "state": "sent",
+            "agentId": "development-team",
+            "message": "Knowledge file sent"
+          }
+        ]
+      }
+    ],
+    [
+      "transfer-1754595130240-nnjc7mu6t",
+      {
+        "transferId": "transfer-1754595130240-nnjc7mu6t",
+        "fromAgentId": "e2e-testing-agent",
+        "toAgentId": "module-resolution-agent",
+        "knowledgeFile": "e2e-module-resolution-transfer.json",
+        "priority": "high",
+        "state": "received",
+        "metadata": {
+          "title": "E2E Testing Module Resolution Issue - Browser ES Module Loading",
+          "description": "Complete E2E testing infrastructure working perfectly, needs module resolution fix for browser ES module loading of musical-conductor package",
+          "knowledgeType": [
+            "e2e-testing",
+            "module-resolution",
+            "playwright",
+            "browser-modules",
+            "es-modules"
+          ],
+          "estimatedSize": 8899,
+          "createdAt": 1754595130240,
+          "updatedAt": 1754595130244
+        },
+        "progress": {
+          "sent": true,
+          "received": false,
+          "consumed": false,
+          "validated": false
+        },
+        "history": [
+          {
+            "timestamp": 1754595130240,
+            "state": "pending",
+            "agentId": "e2e-testing-agent",
+            "message": "Transfer request created"
+          },
+          {
+            "timestamp": 1754595130244,
+            "state": "sent",
+            "agentId": "e2e-testing-agent",
+            "message": "Knowledge file sent"
+          }
+        ]
+      }
+    ],
+    [
+      "transfer-1754597660099-pr8grj2e3",
+      {
+        "transferId": "transfer-1754597660099-pr8grj2e3",
+        "fromAgentId": "module-resolution-agent",
+        "toAgentId": "browser-compatibility-agent",
+        "knowledgeFile": "browser-compatibility-fix-transfer.json",
+        "priority": "normal",
+        "state": "received",
+        "metadata": {
+          "title": "ES Module Import Extension Fix Required",
+          "description": "Critical browser compatibility issue: compiled JS files missing .js extensions",
+          "knowledgeType": [
+            "browser-compatibility",
+            "es-modules"
+          ],
+          "estimatedSize": 3799,
+          "createdAt": 1754597660099,
+          "updatedAt": 1754597992187
+        },
+        "progress": {
+          "sent": true,
+          "received": true,
+          "consumed": false,
+          "validated": false
+        },
+        "history": [
+          {
+            "timestamp": 1754597660099,
+            "state": "pending",
+            "agentId": "module-resolution-agent",
+            "message": "Transfer request created"
+          },
+          {
+            "timestamp": 1754597660103,
+            "state": "sent",
+            "agentId": "module-resolution-agent",
+            "message": "Knowledge file sent"
+          },
+          {
+            "timestamp": 1754597992187,
+            "state": "received",
+            "agentId": "browser-compatibility-agent",
+            "message": "Knowledge file received"
+          }
+        ]
+      }
+    ]
+  ],
+  "agents": [
+    [
+      "primary-development-agent",
+      {
+        "agentId": "primary-development-agent",
+        "lastSeen": 1754588505456,
+        "isOnline": true,
+        "pendingReceives": 0,
+        "pendingConsumes": 0,
+        "totalTransfers": 1
+      }
+    ],
+    [
+      "agent-a-senior-dev",
+      {
+        "agentId": "agent-a-senior-dev",
+        "lastSeen": 1754589920959,
+        "isOnline": true,
+        "pendingReceives": 0,
+        "pendingConsumes": 0,
+        "totalTransfers": 2
+      }
+    ],
+    [
+      "agent-c-test-expert",
+      {
+        "agentId": "agent-c-test-expert",
+        "lastSeen": 1754589920969,
+        "isOnline": true,
+        "pendingReceives": 0,
+        "pendingConsumes": 0,
+        "totalTransfers": 1
+      }
+    ],
+    [
+      "agent-b-junior-dev",
+      {
+        "agentId": "agent-b-junior-dev",
+        "lastSeen": 1754589920967,
+        "isOnline": true,
+        "pendingReceives": 0,
+        "pendingConsumes": 0,
+        "totalTransfers": 1
+      }
+    ],
+    [
+      "event-types-refactoring-agent",
+      {
+        "agentId": "event-types-refactoring-agent",
+        "lastSeen": 1754590237804,
+        "isOnline": true,
+        "pendingReceives": 1,
+        "pendingConsumes": 0,
+        "totalTransfers": 2
+      }
+    ],
+    [
+      "cli-improvement-agent",
+      {
+        "agentId": "cli-improvement-agent",
+        "lastSeen": 1754591097122,
+        "isOnline": true,
+        "pendingReceives": 0,
+        "pendingConsumes": 0,
+        "totalTransfers": 1
+      }
+    ],
+    [
+      "development-team",
+      {
+        "agentId": "development-team",
+        "lastSeen": 1754592556763,
+        "isOnline": true,
+        "pendingReceives": 0,
+        "pendingConsumes": 0,
+        "totalTransfers": 2
+      }
+    ],
+    [
+      "e2e-testing-agent",
+      {
+        "agentId": "e2e-testing-agent",
+        "lastSeen": 1754595130244,
+        "isOnline": true,
+        "pendingReceives": 2,
+        "pendingConsumes": 0,
+        "totalTransfers": 3
+      }
+    ],
+    [
+      "module-resolution-agent",
+      {
+        "agentId": "module-resolution-agent",
+        "lastSeen": 1754597660103,
+        "isOnline": true,
+        "pendingReceives": 0,
+        "pendingConsumes": 1,
+        "totalTransfers": 2
+      }
+    ],
+    [
+      "browser-compatibility-agent",
+      {
+        "agentId": "browser-compatibility-agent",
+        "lastSeen": 1754597992187,
+        "isOnline": true,
+        "pendingReceives": 0,
+        "pendingConsumes": 1,
+        "totalTransfers": 1
+      }
+    ]
+  ],
+  "lastUpdated": 1754597992187
+}

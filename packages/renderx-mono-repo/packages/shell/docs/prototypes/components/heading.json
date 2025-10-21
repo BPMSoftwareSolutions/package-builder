@@ -1,0 +1,177 @@
+{
+  "metadata": {
+    "type": "heading",
+    "name": "Heading",
+    "version": "1.0.0",
+    "author": "RenderX Team",
+    "description": "Heading component with multiple levels and typography controls - JSON replacement for built-in heading",
+    "category": "basic",
+    "tags": ["heading", "typography", "text", "ui"],
+    "replaces": "heading"
+  },
+  "ui": {
+    "template": "<{{level}} class=\"rx-heading rx-heading--{{variant}} rx-heading--level-{{level}}\">{{content}}</{{level}}>",
+    "styles": {
+      "css": ".rx-heading { color: var(--text-color); font-family: var(--font-family); font-weight: var(--font-weight); line-height: var(--line-height); margin: var(--margin); text-align: var(--text-align); } .rx-heading--default { --text-color: #1a1a1a; --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; --font-weight: 600; --line-height: 1.2; --margin: 0; --text-align: left; } .rx-heading--center { --text-align: center; } .rx-heading--right { --text-align: right; } .rx-heading--level-h1 { font-size: 2.5rem; } .rx-heading--level-h2 { font-size: 2rem; } .rx-heading--level-h3 { font-size: 1.75rem; } .rx-heading--level-h4 { font-size: 1.5rem; } .rx-heading--level-h5 { font-size: 1.25rem; } .rx-heading--level-h6 { font-size: 1rem; }",
+      "variables": {
+        "text-color": "#1a1a1a",
+        "font-family": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        "font-weight": "600",
+        "line-height": "1.2",
+        "margin": "0",
+        "text-align": "left"
+      }
+    }
+  },
+  "integration": {
+    "properties": {
+      "schema": {
+        "content": {
+          "type": "string",
+          "default": "Heading Text",
+          "description": "Heading text content",
+          "required": true
+        },
+        "level": {
+          "type": "string",
+          "default": "h2",
+          "description": "Heading level (h1-h6)",
+          "enum": ["h1", "h2", "h3", "h4", "h5", "h6"]
+        },
+        "variant": {
+          "type": "string",
+          "default": "default",
+          "description": "Heading style variant",
+          "enum": ["default", "center", "right"]
+        },
+        "color": {
+          "type": "string",
+          "default": "#1a1a1a",
+          "description": "Text color",
+          "format": "color"
+        },
+        "fontSize": {
+          "type": "string",
+          "default": "auto",
+          "description": "Custom font size (overrides level default)"
+        }
+      },
+      "defaultValues": {
+        "content": "Heading Text",
+        "level": "h2",
+        "variant": "default",
+        "color": "#1a1a1a",
+        "fontSize": "auto"
+      }
+    },
+    "canvasIntegration": {
+      "resizable": true,
+      "draggable": true,
+      "selectable": true,
+      "minWidth": 50,
+      "minHeight": 20,
+      "maxWidth": 800,
+      "maxHeight": 200,
+      "defaultWidth": 200,
+      "defaultHeight": 50,
+      "snapToGrid": true,
+      "allowChildElements": false
+    },
+    "events": {
+      "click": {
+        "description": "Triggered when the heading is clicked",
+        "parameters": ["event", "elementData"]
+      },
+      "dblclick": {
+        "description": "Triggered when the heading is double-clicked for editing",
+        "parameters": ["event", "elementData"]
+      }
+    }
+  },
+  "musicalSequences": {
+    "componentInteraction": {
+      "sequenceName": "JSON Heading Component Interaction Symphony No. 1",
+      "description": "Handles user interactions with the JSON heading component",
+      "key": "B♭ Major",
+      "tempo": 115,
+      "measures": [
+        {
+          "beat": 1,
+          "action": "capture-interaction",
+          "dynamics": "forte"
+        },
+        {
+          "beat": 2,
+          "action": "validate-content",
+          "dynamics": "mezzo-forte"
+        },
+        {
+          "beat": 3,
+          "action": "update-typography",
+          "dynamics": "mezzo-piano"
+        },
+        {
+          "beat": 4,
+          "action": "emit-completion",
+          "dynamics": "piano"
+        }
+      ]
+    },
+    "resizeOperation": {
+      "sequenceName": "JSON Heading Resize Symphony No. 2",
+      "description": "Handles resizing operations for the JSON heading",
+      "key": "E♭ Major",
+      "tempo": 95,
+      "measures": [
+        {
+          "beat": 1,
+          "action": "capture-resize-start",
+          "dynamics": "forte"
+        },
+        {
+          "beat": 2,
+          "action": "apply-constraints",
+          "dynamics": "mezzo-forte"
+        },
+        {
+          "beat": 3,
+          "action": "update-dimensions",
+          "dynamics": "mezzo-piano"
+        },
+        {
+          "beat": 4,
+          "action": "finalize-resize",
+          "dynamics": "piano"
+        }
+      ]
+    },
+    "positionUpdate": {
+      "sequenceName": "JSON Heading Position Update Symphony No. 3",
+      "description": "Handles position updates for the JSON heading",
+      "key": "F Major",
+      "tempo": 108,
+      "measures": [
+        {
+          "beat": 1,
+          "action": "capture-position-change",
+          "dynamics": "forte"
+        },
+        {
+          "beat": 2,
+          "action": "validate-boundaries",
+          "dynamics": "mezzo-forte"
+        },
+        {
+          "beat": 3,
+          "action": "update-coordinates",
+          "dynamics": "mezzo-piano"
+        },
+        {
+          "beat": 4,
+          "action": "emit-position-updated",
+          "dynamics": "piano"
+        }
+      ]
+    }
+  }
+}

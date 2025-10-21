@@ -1,0 +1,384 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": 1754586004297,
+  "categories": [
+    "testing",
+    "architecture",
+    "documentation",
+    "development",
+    "deployment",
+    "troubleshooting",
+    "api",
+    "examples"
+  ],
+  "shortcuts": [
+    {
+      "keyword": "testing",
+      "aliases": [
+        "test",
+        "tests",
+        "unit-test",
+        "integration-test"
+      ],
+      "description": "Testing documentation and examples",
+      "category": "testing",
+      "lastUpdated": 1754586004297,
+      "resources": [
+        {
+          "type": "documentation",
+          "title": "Testing Guide",
+          "description": "Comprehensive testing documentation for MusicalConductor",
+          "filePath": "docs/testing/README.md",
+          "priority": 10,
+          "tags": [
+            "testing",
+            "guide",
+            "documentation"
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Unit Test Examples",
+          "description": "Example unit tests for sequences and plugins",
+          "filePath": "tests/examples/",
+          "priority": 9,
+          "tags": [
+            "testing",
+            "examples",
+            "unit-tests"
+          ]
+        },
+        {
+          "type": "code",
+          "title": "Test Utilities",
+          "description": "Helper utilities for testing MusicalConductor components",
+          "filePath": "tests/utils/TestUtilities.ts",
+          "priority": 8,
+          "tags": [
+            "testing",
+            "utilities",
+            "helpers"
+          ]
+        }
+      ]
+    },
+    {
+      "keyword": "architecture",
+      "aliases": [
+        "arch",
+        "design",
+        "structure",
+        "components"
+      ],
+      "description": "System architecture and design documentation",
+      "category": "architecture",
+      "lastUpdated": 1754586004297,
+      "resources": [
+        {
+          "type": "architecture",
+          "title": "MusicalConductor Architecture",
+          "description": "Core architecture overview and component relationships",
+          "filePath": "docs/architecture/README.md",
+          "priority": 10,
+          "tags": [
+            "architecture",
+            "overview",
+            "components"
+          ]
+        },
+        {
+          "type": "architecture",
+          "title": "Event System Architecture",
+          "description": "Detailed event bus and communication system design",
+          "filePath": "docs/architecture/event-system.md",
+          "priority": 9,
+          "tags": [
+            "architecture",
+            "events",
+            "communication"
+          ]
+        },
+        {
+          "type": "code",
+          "title": "Core Components",
+          "description": "Main MusicalConductor implementation",
+          "filePath": "modules/communication/sequences/MusicalConductor.ts",
+          "lineRange": [
+            1,
+            100
+          ],
+          "priority": 8,
+          "tags": [
+            "architecture",
+            "code",
+            "core"
+          ]
+        }
+      ]
+    },
+    {
+      "keyword": "sequences",
+      "aliases": [
+        "sequence",
+        "musical-sequence",
+        "beats",
+        "movements"
+      ],
+      "description": "Musical sequence system documentation and examples",
+      "category": "development",
+      "lastUpdated": 1754586004297,
+      "resources": [
+        {
+          "type": "documentation",
+          "title": "Sequence Development Guide",
+          "description": "How to create and manage musical sequences",
+          "filePath": "docs/sequences/development-guide.md",
+          "priority": 10,
+          "tags": [
+            "sequences",
+            "development",
+            "guide"
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Sequence Examples",
+          "description": "Example sequence implementations",
+          "filePath": "modules/communication/sequences/examples/",
+          "priority": 9,
+          "tags": [
+            "sequences",
+            "examples",
+            "implementation"
+          ]
+        },
+        {
+          "type": "api",
+          "title": "Sequence API Reference",
+          "description": "Complete API reference for sequence operations",
+          "filePath": "docs/api/sequences.md",
+          "priority": 8,
+          "tags": [
+            "sequences",
+            "api",
+            "reference"
+          ]
+        },
+        {
+          "type": "code",
+          "title": "MusicalConductor Core",
+          "description": "Main conductor implementation with sequence management",
+          "filePath": "modules/communication/sequences/MusicalConductor.ts",
+          "lineRange": [
+            1,
+            200
+          ],
+          "priority": 7,
+          "tags": [
+            "sequences",
+            "conductor",
+            "core"
+          ]
+        }
+      ]
+    },
+    {
+      "keyword": "plugins",
+      "aliases": [
+        "plugin",
+        "extensions",
+        "mounting"
+      ],
+      "description": "Plugin system documentation and development",
+      "category": "development",
+      "lastUpdated": 1754586004297,
+      "resources": [
+        {
+          "type": "documentation",
+          "title": "Plugin Development Guide",
+          "description": "Complete guide to developing MusicalConductor plugins",
+          "filePath": "docs/plugins/development.md",
+          "priority": 10,
+          "tags": [
+            "plugins",
+            "development",
+            "guide"
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Plugin Examples",
+          "description": "Example plugin implementations",
+          "filePath": "examples/plugins/",
+          "priority": 9,
+          "tags": [
+            "plugins",
+            "examples",
+            "implementation"
+          ]
+        },
+        {
+          "type": "api",
+          "title": "Plugin Interface",
+          "description": "Plugin interface and mounting system",
+          "filePath": "modules/communication/sequences/plugins/PluginInterfaceFacade.ts",
+          "priority": 8,
+          "tags": [
+            "plugins",
+            "api",
+            "interface"
+          ]
+        }
+      ]
+    },
+    {
+      "keyword": "events",
+      "aliases": [
+        "event",
+        "eventbus",
+        "communication",
+        "messaging"
+      ],
+      "description": "Event system and communication documentation",
+      "category": "architecture",
+      "lastUpdated": 1754586004297,
+      "resources": [
+        {
+          "type": "architecture",
+          "title": "Event System Architecture",
+          "description": "Detailed event bus and communication system design",
+          "filePath": "docs/architecture/event-system.md",
+          "priority": 10,
+          "tags": [
+            "events",
+            "architecture",
+            "communication"
+          ]
+        },
+        {
+          "type": "code",
+          "title": "EventBus Implementation",
+          "description": "Core event bus implementation",
+          "filePath": "modules/communication/EventBus.ts",
+          "priority": 9,
+          "tags": [
+            "events",
+            "eventbus",
+            "implementation"
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Event Usage Examples",
+          "description": "Examples of event subscription and emission",
+          "filePath": "examples/events/",
+          "priority": 8,
+          "tags": [
+            "events",
+            "examples",
+            "usage"
+          ]
+        }
+      ]
+    },
+    {
+      "keyword": "cli",
+      "aliases": [
+        "command-line",
+        "knowledge-cli",
+        "shortcuts"
+      ],
+      "description": "CLI tools and knowledge management system",
+      "category": "development",
+      "lastUpdated": 1754586004298,
+      "resources": [
+        {
+          "type": "documentation",
+          "title": "CLI Documentation",
+          "description": "Complete CLI documentation and usage guide",
+          "filePath": "tools/cli/README.md",
+          "priority": 10,
+          "tags": [
+            "cli",
+            "documentation",
+            "tools"
+          ]
+        },
+        {
+          "type": "code",
+          "title": "CLI Implementation",
+          "description": "Main CLI implementation with all commands",
+          "filePath": "tools/cli/knowledge-cli.ts",
+          "priority": 9,
+          "tags": [
+            "cli",
+            "implementation",
+            "typescript"
+          ]
+        },
+        {
+          "type": "example",
+          "title": "CLI Demo",
+          "description": "Working demo of CLI functionality",
+          "filePath": "tools/cli/demo.ts",
+          "priority": 8,
+          "tags": [
+            "cli",
+            "demo",
+            "examples"
+          ]
+        }
+      ]
+    },
+    {
+      "keyword": "onboarding",
+      "aliases": [
+        "getting-started",
+        "quickstart",
+        "agent-guide",
+        "new-agent"
+      ],
+      "description": "Agent onboarding guide and getting started resources",
+      "category": "documentation",
+      "lastUpdated": 1754586004298,
+      "resources": [
+        {
+          "type": "guide",
+          "title": "Agent Onboarding Guide",
+          "description": "Complete step-by-step guide for new AI agents",
+          "filePath": "tools/cli/AGENT_ONBOARDING_GUIDE.md",
+          "priority": 10,
+          "tags": [
+            "onboarding",
+            "getting-started",
+            "guide"
+          ]
+        },
+        {
+          "type": "documentation",
+          "title": "CLI Documentation",
+          "description": "Complete CLI documentation and usage guide",
+          "filePath": "tools/cli/README.md",
+          "priority": 9,
+          "tags": [
+            "cli",
+            "documentation",
+            "reference"
+          ]
+        },
+        {
+          "type": "example",
+          "title": "CLI Demo",
+          "description": "Working demo of CLI functionality",
+          "filePath": "tools/cli/demo.ts",
+          "priority": 8,
+          "tags": [
+            "cli",
+            "demo",
+            "examples"
+          ]
+        }
+      ]
+    }
+  ]
+}

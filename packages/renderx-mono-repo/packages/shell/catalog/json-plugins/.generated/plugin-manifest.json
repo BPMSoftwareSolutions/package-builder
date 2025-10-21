@@ -1,0 +1,90 @@
+{
+  "plugins": [
+    {
+      "id": "HeaderTitlePlugin",
+      "ui": {
+        "slot": "headerLeft",
+        "module": "@renderx-plugins/header",
+        "export": "HeaderTitle"
+      },
+      "runtime": {
+        "module": "@renderx-plugins/header",
+        "export": "register"
+      }
+    },
+    {
+      "id": "HeaderControlsPlugin",
+      "ui": {
+        "slot": "headerCenter",
+        "module": "@renderx-plugins/header",
+        "export": "HeaderControls"
+      },
+      "runtime": {
+        "module": "@renderx-plugins/header",
+        "export": "register"
+      }
+    },
+    {
+      "id": "HeaderThemePlugin",
+      "ui": {
+        "slot": "headerRight",
+        "module": "@renderx-plugins/header",
+        "export": "HeaderThemeToggle"
+      },
+      "runtime": {
+        "module": "@renderx-plugins/header",
+        "export": "register"
+      }
+    },
+    {
+      "id": "LibraryPlugin",
+      "ui": {
+        "slot": "library",
+        "module": "@renderx-plugins/library",
+        "export": "LibraryPanel"
+      },
+      "runtime": {
+        "module": "@renderx-plugins/library",
+        "export": "register"
+      }
+    },
+    {
+      "id": "CanvasPlugin",
+      "ui": {
+        "slot": "canvas",
+        "module": "@renderx-plugins/canvas",
+        "export": "CanvasPage"
+      },
+      "runtime": {
+        "module": "@renderx-plugins/canvas",
+        "export": "register"
+      }
+    },
+    {
+      "id": "ControlPanelPlugin",
+      "ui": {
+        "slot": "controlPanel",
+        "module": "@renderx-plugins/control-panel",
+        "export": "ControlPanel"
+      },
+      "runtime": {
+        "module": "@renderx-plugins/control-panel",
+        "export": "register"
+      }
+    },
+    {
+      "id": "LibraryComponentPlugin",
+      "runtime": {
+        "module": "@renderx-plugins/library-component",
+        "export": "register"
+      }
+    },
+    {
+      "id": "CanvasComponentPlugin",
+      "runtime": {
+        "module": "@renderx-plugins/canvas-component",
+        "export": "register"
+      }
+    }
+  ]
+}

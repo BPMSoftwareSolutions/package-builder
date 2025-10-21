@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="320" viewBox="0 0 620 320" font-family="'Segoe UI', system-ui" role="img" aria-label="Plugin ownership boundaries with animated event bus">
+  <defs>
+    <linearGradient id="gPlugin" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fafafa"/>
+      <stop offset="100%" stop-color="#e0f2f1"/>
+    </linearGradient>
+    <linearGradient id="gBus" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#bbdefb"/>
+      <stop offset="100%" stop-color="#64b5f6"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="4" result="c"/><feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <style>
+      .plugin { fill:url(#gPlugin); stroke:#607d8b; stroke-width:2; rx:10; }
+      .label { font-size:12px; font-weight:600; fill:#37474f; }
+      .lock { fill:#ffeb3b; stroke:#fbc02d; stroke-width:2; }
+      .bus { fill:url(#gBus); stroke:#1565c0; stroke-width:2; rx:20; }
+      .bus-label { font-size:14px; font-weight:700; fill:#0d47a1; }
+      .edge { stroke:#26c6da; stroke-width:2.2; marker-end:url(#a); stroke-dasharray:5 14; }
+      @media (prefers-color-scheme: dark) { .label { fill:#e3f2fd; } .bus-label { fill:#e3f2fd; } }
+    </style>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <polygon points="0 0 10 5 0 10" fill="#26c6da"/>
+    </marker>
+  </defs>
+  <rect width="620" height="320" fill="#071720"/>
+  <rect x="250" y="130" width="120" height="60" class="bus" filter="url(#glow)" />
+  <text x="310" y="165" class="bus-label" text-anchor="middle">Event Bus</text>
+  <circle cx="310" cy="160" r="70" fill="none" stroke="#64b5f6" stroke-width="1" opacity="0.6">
+    <animate attributeName="r" values="70;90;70" dur="9s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;0.2;0.6" dur="9s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Plugins left -->
+  <g filter="url(#glow)">
+    <rect x="60" y="40" width="120" height="70" class="plugin" />
+    <text x="120" y="80" class="label" text-anchor="middle">library</text>
+    <circle cx="85" cy="55" r="12" class="lock" />
+  </g>
+  <g filter="url(#glow)">
+    <rect x="60" y="140" width="120" height="70" class="plugin" />
+    <text x="120" y="180" class="label" text-anchor="middle">canvas</text>
+    <circle cx="85" cy="155" r="12" class="lock" />
+  </g>
+  <g filter="url(#glow)">
+    <rect x="60" y="240" width="120" height="70" class="plugin" />
+    <text x="120" y="280" class="label" text-anchor="middle">control</text>
+    <circle cx="85" cy="255" r="12" class="lock" />
+  </g>
+  <!-- Plugins right -->
+  <g filter="url(#glow)">
+    <rect x="440" y="90" width="120" height="70" class="plugin" />
+    <text x="500" y="130" class="label" text-anchor="middle">analytics</text>
+    <circle cx="465" cy="105" r="12" class="lock" />
+  </g>
+  <g filter="url(#glow)">
+    <rect x="440" y="200" width="120" height="70" class="plugin" />
+    <text x="500" y="240" class="label" text-anchor="middle">experiments</text>
+    <circle cx="465" cy="215" r="12" class="lock" />
+  </g>
+
+  <!-- Edges with animated dashoffset -->
+  <g>
+    <line x1="180" y1="75" x2="250" y2="160" class="edge">
+      <animate attributeName="stroke-dashoffset" values="0;40" dur="3.5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="180" y1="175" x2="250" y2="160" class="edge">
+      <animate attributeName="stroke-dashoffset" values="40;0" dur="3.5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="180" y1="275" x2="250" y2="160" class="edge">
+      <animate attributeName="stroke-dashoffset" values="0;40" dur="4s" repeatCount="indefinite"/>
+    </line>
+    <line x1="440" y1="125" x2="370" y2="160" class="edge">
+      <animate attributeName="stroke-dashoffset" values="40;0" dur="3.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="440" y1="235" x2="370" y2="160" class="edge">
+      <animate attributeName="stroke-dashoffset" values="0;40" dur="3.8s" repeatCount="indefinite"/>
+    </line>
+  </g>
+
+  <!-- Data pulse traveling left to bus -->
+  <circle r="6" fill="#00bcd4">
+    <animateMotion dur="3.5s" repeatCount="indefinite" path="M180 75 L250 160"/>
+    <animate attributeName="r" values="6;9;6" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="6" fill="#00bcd4">
+    <animateMotion dur="3.2s" repeatCount="indefinite" path="M440 125 L370 160" begin="1s"/>
+    <animate attributeName="r" values="6;9;6" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+
+  <desc>Animated diagram showing isolated plugins communicating only through an event bus with pulsing connections.</desc>
+</svg>

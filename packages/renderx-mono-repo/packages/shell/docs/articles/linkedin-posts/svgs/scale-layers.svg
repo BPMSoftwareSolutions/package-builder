@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" font-family="'Segoe UI', system-ui" text-anchor="middle" role="img" aria-label="Animated concentric architecture layers diagram">
+  <defs>
+    <radialGradient id="gHost" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#bbdefb"/>
+      <stop offset="100%" stop-color="#1565c0"/>
+    </radialGradient>
+    <radialGradient id="gSeq" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#d1c4e9"/>
+      <stop offset="100%" stop-color="#5e35b1"/>
+    </radialGradient>
+    <radialGradient id="gPlugin" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#c8e6c9"/>
+      <stop offset="100%" stop-color="#2e7d32"/>
+    </radialGradient>
+    <radialGradient id="gContract" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#fff9c4"/>
+      <stop offset="100%" stop-color="#f9a825"/>
+    </radialGradient>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <polygon points="0 0 10 5 0 10" fill="#546e7a"/>
+    </marker>
+    <filter id="glow"><feGaussianBlur stdDeviation="5" result="c"/><feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <style>
+      .label { font-size:14px; font-weight:600; fill:#263238; }
+      .title { font-size:18px; font-weight:700; fill:#1565c0; }
+      .arrow { stroke:#546e7a; stroke-width:2; marker-end:url(#a); }
+      @media (prefers-color-scheme: dark) { .label { fill:#e3f2fd; } .title { fill:#90caf9; } }
+    </style>
+  </defs>
+  <rect width="560" height="360" fill="#071720"/>
+  <text x="280" y="36" class="title" filter="url(#glow)">Scaling Surfaces via Concentric Responsibilities</text>
+
+  <!-- Concentric rings with subtle pulsing / rotation -->
+  <g filter="url(#glow)">
+    <circle cx="280" cy="190" r="60" fill="url(#gHost)" stroke="#0d47a1" stroke-width="2"/>
+    <circle cx="280" cy="190" r="110" fill="url(#gSeq)" stroke="#4527a0" stroke-width="2" opacity="0.9">
+      <animate attributeName="opacity" values="0.9;0.6;0.9" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="280" cy="190" r="155" fill="url(#gPlugin)" stroke="#1b5e20" stroke-width="2" opacity="0.85">
+      <animate attributeName="opacity" values="0.85;0.5;0.85" dur="10s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="280" cy="190" r="185" fill="url(#gContract)" stroke="#f57f17" stroke-width="2" opacity="0.75">
+      <animate attributeName="r" values="185;195;185" dur="12s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.75;0.55;0.75" dur="12s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <text x="280" y="190" class="label">Host Core</text>
+  <text x="280" y="130" class="label">Sequences</text>
+  <text x="280" y="85" class="label">Plugins</text>
+  <text x="280" y="55" class="label">Manifests & Contracts</text>
+
+  <!-- Orbiting marker representing new plugin add -->
+  <g>
+    <circle cx="280" cy="190" r="170" fill="none" stroke="#64b5f6" stroke-width="1" stroke-dasharray="6 10">
+      <animate attributeName="stroke-dashoffset" values="0;64" dur="9s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="10" fill="#00acc1" stroke="#004d40" stroke-width="2">
+      <animateMotion dur="9s" repeatCount="indefinite" rotate="auto">
+        <mpath xlink:href="#orbitPath" />
+      </animateMotion>
+    </circle>
+    <path id="orbitPath" d="M 280 20 A 170 170 0 1 1 279.9 20" fill="none" />
+  </g>
+
+  <g>
+    <line x1="470" y1="300" x2="510" y2="320" class="arrow" />
+    <text x="450" y="300" font-size="12" fill="#90a4ae">Add new plugin → outer ring only</text>
+  </g>
+  <desc>Animated concentric layer diagram showing scaling model where new plugins attach at outer ring.</desc>
+</svg>

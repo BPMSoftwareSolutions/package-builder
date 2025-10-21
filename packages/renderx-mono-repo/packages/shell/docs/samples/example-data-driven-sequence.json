@@ -1,0 +1,63 @@
+{
+  "pluginId": "ExamplePlugin", 
+  "id": "example-create-symphony",
+  "name": "Example Create Operation",
+  "movements": [
+    {
+      "id": "create",
+      "name": "Create",
+      "beats": [
+        {
+          "beat": 1,
+          "event": "example:create:validate",
+          "title": "Validate Input",
+          "handler": "validateInput",
+          "timing": "immediate",
+          "dynamics": "mf",
+          "kind": "pure"
+        },
+        {
+          "beat": 2,
+          "event": "example:create:execute",
+          "title": "Execute Creation",
+          "handler": "executeCreation", 
+          "timing": "immediate",
+          "dynamics": "mf",
+          "kind": "stage-crew"
+        }
+      ]
+    }
+  ],
+  "lifecycleTopics": [
+    {
+      "name": "example.create.started",
+      "notes": "Fired when creation process begins",
+      "type": "notify-only"
+    },
+    {
+      "name": "example.create.validated", 
+      "notes": "Fired when input validation completes",
+      "type": "notify-only"
+    },
+    {
+      "name": "example.create.completed",
+      "notes": "Fired when creation completes successfully", 
+      "type": "notify-only"
+    },
+    {
+      "name": "example.create.failed",
+      "notes": "Fired when creation fails",
+      "type": "notify-only"  
+    }
+  ],
+  "notificationTopics": [
+    {
+      "name": "example.created",
+      "notes": "General notification that an item was created"
+    },
+    {
+      "name": "example.inventory.changed", 
+      "notes": "Inventory state changed due to creation"
+    }
+  ]
+}

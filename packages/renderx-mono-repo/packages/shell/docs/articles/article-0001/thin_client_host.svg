@@ -1,0 +1,209 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- CSS for theme awareness -->
+    <style>
+      <![CDATA[
+      /* Light theme (default) */
+      .bg-primary { fill: #ffffff; }
+      .bg-secondary { fill: #f8fafc; }
+      .text-primary { fill: #0f172a; }
+      .text-secondary { fill: #334155; }
+      .text-muted { fill: #64748b; }
+      .border-light { stroke: #e2e8f0; }
+      
+      /* Simplicity theme colors */
+      .simple-bg { fill: #f0f9ff; stroke: #0284c7; }
+      .simple-text { fill: #0c4a6e; }
+      .clean-bg { fill: #ecfdf5; stroke: #059669; }
+      .clean-text { fill: #064e3b; }
+      .minimal-bg { fill: #fef3c7; stroke: #d97706; }
+      .minimal-text { fill: #92400e; }
+      
+      /* Dark theme */
+      @media (prefers-color-scheme: dark) {
+        .bg-primary { fill: #0f172a; }
+        .bg-secondary { fill: #1e293b; }
+        .text-primary { fill: #f1f5f9; }
+        .text-secondary { fill: #cbd5e1; }
+        .text-muted { fill: #94a3b8; }
+        .border-light { stroke: #334155; }
+        
+        .simple-bg { fill: #0c4a6e; stroke: #0ea5e9; }
+        .simple-text { fill: #bae6fd; }
+        .clean-bg { fill: #064e3b; stroke: #10b981; }
+        .clean-text { fill: #bbf7d0; }
+        .minimal-bg { fill: #92400e; stroke: #f59e0b; }
+        .minimal-text { fill: #fcd34d; }
+      }
+      ]]>
+    </style>
+    
+    <!-- Background pattern -->
+    <pattern id="minimalistGrid" width="25" height="25" patternUnits="userSpaceOnUse">
+      <path d="M 25 0 L 0 0 0 25" fill="none" class="border-light" stroke-width="0.5" opacity="0.2"/>
+    </pattern>
+    
+    <!-- Shadow filter -->
+    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" class="bg-primary"/>
+  <rect width="800" height="600" fill="url(#minimalistGrid)"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="24" font-weight="700" class="text-primary">
+    Thin-Client Host (Simplicity)
+  </text>
+  <text x="400" y="65" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="14" class="text-muted" font-style="italic">
+    "Minimal shell - just slots"
+  </text>
+  
+  <!-- File structure representation -->
+  <rect x="50" y="100" width="700" height="400" rx="15" class="simple-bg" 
+        stroke-width="3" filter="url(#dropShadow)"/>
+  
+  <text x="70" y="130" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="18" font-weight="700" class="text-primary">
+    📁 src/ (Under 200 lines total)
+  </text>
+  
+  <!-- App.tsx -->
+  <rect x="80" y="150" width="300" height="80" rx="8" class="clean-bg" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="90" y="170" font-size="14" font-weight="700" class="clean-text">
+      📄 App.tsx
+    </text>
+    <text x="90" y="185" font-size="11" class="text-secondary">
+      Three panel slots with Suspense
+    </text>
+    <text x="90" y="200" font-size="10" class="text-muted">
+      &lt;SlotContainer slot="library" /&gt;
+    </text>
+    <text x="90" y="215" font-size="10" class="text-muted">
+      &lt;SlotContainer slot="canvas" /&gt;
+    </text>
+  </g>
+  
+  <!-- conductor.ts -->
+  <rect x="400" y="150" width="320" height="80" rx="8" class="minimal-bg" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="410" y="170" font-size="14" font-weight="700" class="minimal-text">
+      ⚡ conductor.ts
+    </text>
+    <text x="410" y="185" font-size="11" class="text-secondary">
+      Initializes communication system
+    </text>
+    <text x="410" y="200" font-size="10" class="text-muted">
+      initCommunicationSystem()
+    </text>
+    <text x="410" y="215" font-size="10" class="text-muted">
+      window.RenderX = { conductor }
+    </text>
+  </g>
+  
+  <!-- components folder -->
+  <rect x="80" y="250" width="280" height="100" rx="8" class="simple-bg" 
+        stroke-width="2"/>
+  
+  <text x="90" y="270" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="14" font-weight="700" class="simple-text">
+    📁 components/
+  </text>
+  
+  <rect x="100" y="280" width="240" height="60" rx="6" class="clean-bg" stroke-width="1"/>
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="110" y="300" font-size="12" font-weight="700" class="clean-text">
+      📄 PanelSlot.tsx
+    </text>
+    <text x="110" y="315" font-size="10" class="text-secondary">
+      Manifest-driven plugin loader
+    </text>
+    <text x="110" y="330" font-size="9" class="text-muted">
+      Dynamic import based on manifest
+    </text>
+  </g>
+  
+  <!-- layout folder -->
+  <rect x="380" y="250" width="320" height="100" rx="8" class="simple-bg" 
+        stroke-width="2"/>
+  
+  <text x="390" y="270" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="14" font-weight="700" class="simple-text">
+    📁 layout/
+  </text>
+  
+  <rect x="400" y="280" width="130" height="60" rx="6" class="clean-bg" stroke-width="1"/>
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="410" y="300" font-size="11" font-weight="700" class="clean-text">
+      LayoutEngine.tsx
+    </text>
+    <text x="410" y="315" font-size="9" class="text-secondary">
+      Data-driven layout
+    </text>
+  </g>
+  
+  <rect x="550" y="280" width="130" height="60" rx="6" class="clean-bg" stroke-width="1"/>
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="560" y="300" font-size="11" font-weight="700" class="clean-text">
+      SlotContainer.tsx
+    </text>
+    <text x="560" y="315" font-size="9" class="text-secondary">
+      Drop-capable wrapper
+    </text>
+  </g>
+  
+  <!-- main.tsx -->
+  <rect x="80" y="370" width="300" height="60" rx="8" class="minimal-bg" 
+        stroke-width="2"/>
+  
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="90" y="390" font-size="14" font-weight="700" class="minimal-text">
+      🚀 main.tsx
+    </text>
+    <text x="90" y="405" font-size="11" class="text-secondary">
+      Bootstrap conductor + mount
+    </text>
+    <text x="90" y="420" font-size="9" class="text-muted">
+      Entry point initialization
+    </text>
+  </g>
+  
+  <!-- Key benefits -->
+  <rect x="400" y="370" width="320" height="110" rx="8" class="bg-secondary border-light" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="410" y="390" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="14" font-weight="700" class="text-primary">
+    🎯 Key Benefits
+  </text>
+  
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="11" class="text-secondary">
+    <text x="420" y="410">• Zero business logic in host</text>
+    <text x="420" y="425">• Manifest-driven plugin loading</text>
+    <text x="420" y="440">• No coupling to plugin internals</text>
+    <text x="420" y="455">• Layout is data-driven via JSON</text>
+    <text x="420" y="470">• Pure plugin loader responsibility</text>
+  </g>
+  
+  <!-- Bottom stats -->
+  <rect x="50" y="520" width="700" height="60" rx="12" class="bg-secondary border-light" 
+        stroke-width="1" filter="url(#dropShadow)"/>
+  
+  <text x="400" y="545" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="16" font-weight="700" class="text-primary">
+    📊 Architecture Stats
+  </text>
+  
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="12" class="text-secondary">
+    <text x="70" y="565">Total lines: &lt;200 • Files: 6 • Responsibilities: Plugin loading only • Business logic: 0%</text>
+  </g>
+</svg>

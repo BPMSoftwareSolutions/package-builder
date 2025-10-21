@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="160" viewBox="0 0 600 160" font-family="'Segoe UI', system-ui" text-anchor="middle" role="img" aria-label="Animated sequence of beats showing baton flow">
+  <defs>
+    <linearGradient id="gBeat" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2e7d32"/>
+      <stop offset="100%" stop-color="#1b5e20"/>
+    </linearGradient>
+    <radialGradient id="gBaton" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff9c4"/>
+      <stop offset="100%" stop-color="#fdd835"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="c"/>
+      <feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style>
+      .title { fill:#1b5e20; font-size:16px; font-weight:700; }
+      .beat { stroke:#0d3d12; stroke-width:2; rx:10; fill:url(#gBeat); }
+      .beat text { fill:#fff; font-size:12px; font-weight:600; }
+      .arrow { stroke:#66bb6a; stroke-width:3; marker-end:url(#arrowHead); stroke-dasharray:40 16; }
+      .baton { fill:url(#gBaton); stroke:#f9a825; stroke-width:2; }
+      .baton-label { fill:#4e342e; font-size:10px; font-weight:600; }
+      @media (prefers-color-scheme: dark) {
+        .title { fill:#a5d6a7; }
+      }
+    </style>
+    <marker id="arrowHead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <polygon points="0 0 10 5 0 10" fill="#66bb6a"/>
+    </marker>
+    <!-- Motion path for baton -->
+    <path id="motion" d="M110 80 C180 80 300 80 300 80 S490 80 490 80" fill="none" />
+  </defs>
+
+  <rect width="600" height="160" fill="#f1f8f4"/>
+  <text x="300" y="26" class="title">Sequence: Library.load</text>
+
+  <!-- Beats -->
+  <g class="beat" filter="url(#glow)">
+    <rect x="40" y="50" width="140" height="70"/>
+    <text x="110" y="87">resolveData</text>
+    <rect x="230" y="50" width="140" height="70" opacity="0.85">
+      <animate attributeName="opacity" values="0.5;0.85;0.5" dur="6s" repeatCount="indefinite" begin="1.5s"/>
+    </rect>
+    <text x="300" y="87">normalize</text>
+    <rect x="420" y="50" width="140" height="70" opacity="0.75">
+      <animate attributeName="opacity" values="0.4;0.75;0.4" dur="6s" repeatCount="indefinite" begin="3s"/>
+    </rect>
+    <text x="490" y="87">publish</text>
+  </g>
+
+  <!-- Animated arrows between beats -->
+  <line x1="180" y1="85" x2="230" y2="85" class="arrow">
+    <animate attributeName="stroke-dashoffset" values="0;56" dur="2.2s" repeatCount="indefinite"/>
+  </line>
+  <line x1="370" y1="85" x2="420" y2="85" class="arrow">
+    <animate attributeName="stroke-dashoffset" values="56;0" dur="2.2s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- Baton moving along path -->
+  <g>
+    <circle r="16" class="baton" filter="url(#glow)">
+      <animateMotion dur="8s" repeatCount="indefinite" rotate="auto">
+        <mpath xlink:href="#motion" />
+      </animateMotion>
+      <animate attributeName="r" values="16;22;16" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  <text x="300" y="148" class="baton-label">baton (immutable hand‑off)</text>
+
+  <desc>Animated sequence diagram showing baton traveling left to right across beats indicating deterministic orchestration.</desc>
+</svg>

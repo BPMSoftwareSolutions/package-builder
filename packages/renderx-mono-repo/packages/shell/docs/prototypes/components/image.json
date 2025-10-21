@@ -1,0 +1,181 @@
+{
+  "metadata": {
+    "type": "image",
+    "name": "Image",
+    "version": "1.0.0",
+    "author": "RenderX Team",
+    "description": "Image component with src, alt text, and aspect ratio controls - JSON replacement for built-in image",
+    "category": "basic",
+    "tags": ["image", "media", "visual", "ui"],
+    "replaces": "image"
+  },
+  "ui": {
+    "template": "<img class=\"rx-image rx-image--{{variant}}\" src=\"{{src}}\" alt=\"{{alt}}\" {{#if loading}}loading=\"{{loading}}\"{{/if}} />",
+    "styles": {
+      "css": ".rx-image { max-width: 100%; height: auto; border-radius: var(--border-radius); border: var(--border); object-fit: var(--object-fit); transition: all 0.2s ease; } .rx-image--default { --border-radius: 0; --border: none; --object-fit: cover; } .rx-image--rounded { --border-radius: 8px; } .rx-image--circle { --border-radius: 50%; --object-fit: cover; } .rx-image--bordered { --border: 1px solid #e1e5e9; } .rx-image--shadow { box-shadow: 0 2px 8px rgba(0,0,0,0.1); } .rx-image:hover { transform: var(--hover-transform); } .rx-image--default:hover { --hover-transform: none; } .rx-image--zoom:hover { --hover-transform: scale(1.05); } .rx-image--lift:hover { --hover-transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }",
+      "variables": {
+        "border-radius": "0",
+        "border": "none",
+        "object-fit": "cover",
+        "hover-transform": "none"
+      }
+    }
+  },
+  "integration": {
+    "properties": {
+      "schema": {
+        "src": {
+          "type": "string",
+          "default": "https://via.placeholder.com/300x200?text=Image",
+          "description": "Image source URL",
+          "required": true
+        },
+        "alt": {
+          "type": "string",
+          "default": "Image description",
+          "description": "Alternative text for accessibility",
+          "required": true
+        },
+        "variant": {
+          "type": "string",
+          "default": "default",
+          "description": "Image style variant",
+          "enum": ["default", "rounded", "circle", "bordered", "shadow", "zoom", "lift"]
+        },
+        "loading": {
+          "type": "string",
+          "default": "lazy",
+          "description": "Image loading behavior",
+          "enum": ["lazy", "eager"]
+        },
+        "objectFit": {
+          "type": "string",
+          "default": "cover",
+          "description": "How the image should fit within its container",
+          "enum": ["cover", "contain", "fill", "scale-down", "none"]
+        }
+      },
+      "defaultValues": {
+        "src": "https://via.placeholder.com/300x200?text=Image",
+        "alt": "Image description",
+        "variant": "default",
+        "loading": "lazy",
+        "objectFit": "cover"
+      }
+    },
+    "canvasIntegration": {
+      "resizable": true,
+      "draggable": true,
+      "selectable": true,
+      "minWidth": 50,
+      "minHeight": 50,
+      "maxWidth": 1200,
+      "maxHeight": 800,
+      "defaultWidth": 300,
+      "defaultHeight": 200,
+      "snapToGrid": true,
+      "allowChildElements": false,
+      "maintainAspectRatio": true
+    },
+    "events": {
+      "load": {
+        "description": "Triggered when the image loads successfully",
+        "parameters": ["event", "elementData"]
+      },
+      "error": {
+        "description": "Triggered when the image fails to load",
+        "parameters": ["event", "elementData"]
+      },
+      "click": {
+        "description": "Triggered when the image is clicked",
+        "parameters": ["event", "elementData"]
+      }
+    }
+  },
+  "musicalSequences": {
+    "componentInteraction": {
+      "sequenceName": "JSON Image Component Interaction Symphony No. 1",
+      "description": "Handles user interactions with the JSON image component",
+      "key": "A♭ Major",
+      "tempo": 100,
+      "measures": [
+        {
+          "beat": 1,
+          "action": "capture-interaction",
+          "dynamics": "forte"
+        },
+        {
+          "beat": 2,
+          "action": "validate-source",
+          "dynamics": "mezzo-forte"
+        },
+        {
+          "beat": 3,
+          "action": "update-display",
+          "dynamics": "mezzo-piano"
+        },
+        {
+          "beat": 4,
+          "action": "emit-completion",
+          "dynamics": "piano"
+        }
+      ]
+    },
+    "resizeOperation": {
+      "sequenceName": "JSON Image Resize Symphony No. 2",
+      "description": "Handles resizing operations for the JSON image",
+      "key": "D♭ Major",
+      "tempo": 85,
+      "measures": [
+        {
+          "beat": 1,
+          "action": "capture-resize-start",
+          "dynamics": "forte"
+        },
+        {
+          "beat": 2,
+          "action": "apply-aspect-ratio",
+          "dynamics": "mezzo-forte"
+        },
+        {
+          "beat": 3,
+          "action": "update-dimensions",
+          "dynamics": "mezzo-piano"
+        },
+        {
+          "beat": 4,
+          "action": "finalize-resize",
+          "dynamics": "piano"
+        }
+      ]
+    },
+    "positionUpdate": {
+      "sequenceName": "JSON Image Position Update Symphony No. 3",
+      "description": "Handles position updates for the JSON image",
+      "key": "F♯ Major",
+      "tempo": 95,
+      "measures": [
+        {
+          "beat": 1,
+          "action": "capture-position-change",
+          "dynamics": "forte"
+        },
+        {
+          "beat": 2,
+          "action": "validate-boundaries",
+          "dynamics": "mezzo-forte"
+        },
+        {
+          "beat": 3,
+          "action": "update-coordinates",
+          "dynamics": "mezzo-piano"
+        },
+        {
+          "beat": 4,
+          "action": "emit-position-updated",
+          "dynamics": "piano"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+/* Canonical legacy layout styles (moved from src/layout/legacyLayout.css) */
+.legacy-grid {
+	display: grid;
+	grid-template-columns: 320px 1fr 360px;
+	height: 100vh;
+}
+
+.slot-wrapper {
+	position: relative;
+}

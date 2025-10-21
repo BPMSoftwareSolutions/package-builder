@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Library Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .app-container {
+            display: flex;
+            height: 100vh;
+            gap: 2px;
+        }
+        
+        .sidebar {
+            width: 320px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+            color: white;
+            text-align: center;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .sidebar-header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .component-library {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .component-category {
+            margin-bottom: 24px;
+        }
+        
+        .category-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .component-item {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .component-item:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+        }
+        
+        .component-item:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+        
+        .component-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .component-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+        
+        .component-description {
+            font-size: 10px;
+            color: #6b7280;
+            line-height: 1.3;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            gap: 2px;
+        }
+        
+        .canvas-area {
+            flex: 1;
+            background: #f8fafc;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .canvas-header {
+            background: white;
+            padding: 12px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .canvas-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .canvas-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .canvas-control {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .canvas-control:hover {
+            background: #e5e7eb;
+            border-color: #9ca3af;
+        }
+        
+        .canvas-control.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #2563eb;
+        }
+        
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #f9fafb;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 4px;
+        }
+        
+        .zoom-btn {
+            background: none;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .zoom-btn:hover {
+            background: #e5e7eb;
+        }
+        
+        .zoom-level {
+            font-size: 11px;
+            color: #6b7280;
+            min-width: 35px;
+            text-align: center;
+        }
+        
+        .canvas-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle, #e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.5;
+        }
+        
+        .canvas-content {
+            flex: 1;
+            position: relative;
+            padding: 20px;
+            overflow: auto;
+        }
+        
+        .control-panel {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -2px 0 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .control-panel-header {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .control-panel-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+        
+        .element-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            opacity: 0.9;
+        }
+        
+        .element-type {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .element-id {
+            font-family: 'SF Mono', 'Monaco', monospace;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .control-panel-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .no-selection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            text-align: center;
+            color: #6b7280;
+        }
+        
+        .no-selection-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .no-selection h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0 0 8px 0;
+            color: #374151;
+        }
+        
+        .no-selection p {
+            font-size: 12px;
+            margin: 0;
+            line-height: 1.4;
+        }
+        
+        .property-section {
+            margin-bottom: 20px;
+        }
+        
+        .property-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .property-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+        
+        .property-grid {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .property-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .property-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .property-item.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .property-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+        
+        .property-input {
+            padding: 8px 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .property-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .property-select {
+            padding: 8px 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 12px;
+            background: white;
+        }
+        
+        .property-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .property-checkbox input {
+            margin: 0;
+        }
+        
+        .property-checkbox label {
+            font-size: 12px;
+            color: #374151;
+            margin: 0;
+        }
+        
+        .property-color {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .color-swatch {
+            width: 24px;
+            height: 24px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: white;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            background: #f3f4f6;
+        }
+        
+        .action-btn.primary {
+            background: #3b82f6;
+            color: white;
+            border-color: #2563eb;
+        }
+        
+        .action-btn.primary:hover {
+            background: #2563eb;
+        }
+        
+        .action-btn.danger {
+            background: #ef4444;
+            color: white;
+            border-color: #dc2626;
+        }
+        
+        .css-class-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            font-size: 11px;
+            font-family: 'SF Mono', 'Monaco', monospace;
+            transition: all 0.2s;
+        }
+        
+        .css-class-item:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        
+        .css-class-item.selected {
+            background: #dbeafe;
+            border-color: #3b82f6;
+        }
+        
+        .css-class-name {
+            flex: 1;
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
+        }
+        
+        .css-class-actions {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .css-action-btn {
+            background: none;
+            border: none;
+            padding: 2px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 12px;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        
+        .css-action-btn:hover {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        
+        .css-action-btn.remove:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .add-class-form {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        
+        .add-class-input {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        
+        .add-class-btn {
+            padding: 6px 12px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .add-class-btn:hover {
+            background: #2563eb;
+        }
+        
+        .css-editor-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .css-editor-modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .css-editor {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 600px;
+            max-width: 90vw;
+            max-height: 80vh;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        
+        .css-editor-modal.visible .css-editor {
+            transform: scale(1);
+        }
+        
+        .css-editor-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .css-editor-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+            margin: 0;
+        }
+        
+        .css-class-selector {
+            font-family: 'SF Mono', 'Monaco', monospace;
+            font-size: 14px;
+            color: #6366f1;
+            background: #f0f9ff;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid #e0f2fe;
+        }
+        
+        .css-editor-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 4px;
+            border-radius: 6px;
+        }
+        
+        .css-editor-close:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .css-editor-content {
+            flex: 1;
+            min-height: 400px;
+        }
+        
+        .css-textarea {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'SF Mono', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            resize: vertical;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .css-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            background: #ffffff;
+        }
+        
+        .css-editor-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .css-editor-info {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .css-editor-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .css-editor-btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .css-editor-btn.secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .css-editor-btn.secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .css-editor-btn.primary {
+            background: #3b82f6;
+            color: white;
+            border: 1px solid #2563eb;
+        }
+        
+        .css-editor-btn.primary:hover {
+            background: #2563eb;
+        }
+        
+        .dropped-component {
+            position: absolute;
+            background: white;
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            cursor: move;
+            min-width: 120px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .dropped-component:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dropped-component.selected {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+        }
+        
+        .drag-preview {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            background: white;
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transform: rotate(3deg);
+            opacity: 0.9;
+        }
+        
+        .drop-indicator {
+            position: absolute;
+            border: 2px dashed #3b82f6;
+            border-radius: 8px;
+            background: rgba(59, 130, 246, 0.1);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .drop-indicator.active {
+            opacity: 1;
+        }
+        
+        .properties-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 280px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            transform: translateX(320px);
+            transition: transform 0.3s ease;
+        }
+        
+        .properties-panel.visible {
+            transform: translateX(0);
+        }
+        
+        .properties-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #111827;
+        }
+        
+        .property-group {
+            margin-bottom: 16px;
+        }
+        
+        .property-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 4px;
+            display: block;
+        }
+        
+        .property-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(17, 24, 39, 0.95);
+            color: white;
+            padding: 8px 24px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>🧩 Component Library</h2>
+                <p>Drag components to the canvas</p>
+            </div>
+            
+            <div class="component-library">
+                <div class="component-category">
+                    <div class="category-title">Basic Components</div>
+                    <div class="component-grid">
+                        <div class="component-item" draggable="true" data-type="button">
+                            <span class="component-icon">📘</span>
+                            <div class="component-name">Button</div>
+                            <div class="component-description">Interactive button with click handling</div>
+                        </div>
+                        
+                        <div class="component-item" draggable="true" data-type="input">
+                            <span class="component-icon">📝</span>
+                            <div class="component-name">Input</div>
+                            <div class="component-description">Text input with validation</div>
+                        </div>
+                        
+                        <div class="component-item" draggable="true" data-type="line">
+                            <span class="component-icon">📏</span>
+                            <div class="component-name">Line</div>
+                            <div class="component-description">Line shape with endpoints</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-category">
+                    <div class="category-title">Layout Components</div>
+                    <div class="component-grid">
+                        <div class="component-item" draggable="true" data-type="container">
+                            <span class="component-icon">🧱</span>
+                            <div class="component-name">Container</div>
+                            <div class="component-description">Container for nested components</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="canvas-area">
+                <div class="canvas-header">
+                    <div class="canvas-title">🎨 Design Canvas</div>
+                    <div class="canvas-controls">
+                        <div class="canvas-control active" data-mode="select">
+                            <span>🔍</span>
+                        </div>
+                        <div class="canvas-control" data-mode="move">
+                            <span>✋</span>
+                        </div>
+                        <div class="canvas-control" data-mode="draw">
+                            <span>✏️</span>
+                        </div>
+                        <div style="width: 1px; height: 20px; background: #d1d5db; margin: 0 4px;"></div>
+                        <div class="zoom-controls">
+                            <button class="zoom-btn" data-zoom="out">−</button>
+                            <span class="zoom-level">100%</span>
+                            <button class="zoom-btn" data-zoom="in">+</button>
+                        </div>
+                        <div class="canvas-control" data-action="preview">
+                            <span>👁️</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="canvas-content">
+                    <div class="canvas-grid"></div>
+                    <div class="drop-indicator"></div>
+                    <!-- Demo selected component -->
+                    <div class="dropped-component selected" style="left: 160px; top: 120px;" id="button_1">
+                        <span style="margin-right: 8px;">📘</span>
+                        <span>Button 1</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-panel">
+                <div class="control-panel-header">
+                    <h3>⚙️ Properties Panel</h3>
+                    <div class="element-info" id="elementInfo" style="display: flex;">
+                        <span class="element-type" id="elementType">Button</span>
+                        <span class="element-id" id="elementId">#button_1</span>
+                    </div>
+                </div>
+                
+                <div class="control-panel-content" id="controlPanelContent">
+                    <div class="property-section">
+                        <div class="property-section-title">📝 Content</div>
+                        <div class="property-grid">
+                            <div class="property-item full-width">
+                                <label class="property-label">Button Text</label>
+                                <input class="property-input" type="text" value="Click me" placeholder="Button text">
+                            </div>
+                            <div class="property-item">
+                                <label class="property-label">Variant</label>
+                                <select class="property-select">
+                                    <option value="primary" selected>Primary</option>
+                                    <option value="secondary">Secondary</option>
+                                    <option value="danger">Danger</option>
+                                </select>
+                            </div>
+                            <div class="property-item">
+                                <label class="property-label">Size</label>
+                                <select class="property-select">
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                </select>
+                            </div>
+                            <div class="property-checkbox">
+                                <input type="checkbox" id="disabled">
+                                <label for="disabled">Disabled</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="property-section">
+                        <div class="property-section-title">📐 Layout</div>
+                        <div class="property-grid">
+                            <div class="property-row">
+                                <div class="property-item">
+                                    <label class="property-label">X Position</label>
+                                    <input class="property-input" type="number" value="160">
+                                </div>
+                                <div class="property-item">
+                                    <label class="property-label">Y Position</label>
+                                    <input class="property-input" type="number" value="120">
+                                </div>
+                            </div>
+                            <div class="property-row">
+                                <div class="property-item">
+                                    <label class="property-label">Width</label>
+                                    <input class="property-input" type="number" value="120">
+                                </div>
+                                <div class="property-item">
+                                    <label class="property-label">Height</label>
+                                    <input class="property-input" type="number" value="40">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="property-section">
+                        <div class="property-section-title">🎨 Styling</div>
+                        <div class="property-grid">
+                            <div class="property-item">
+                                <label class="property-label">Background Color</label>
+                                <div class="property-color">
+                                    <div class="color-swatch" style="background: #3b82f6;"></div>
+                                    <input class="property-input" type="text" value="#3b82f6" style="flex: 1;">
+                                </div>
+                            </div>
+                            <div class="property-item">
+                                <label class="property-label">Text Color</label>
+                                <div class="property-color">
+                                    <div class="color-swatch" style="background: #ffffff;"></div>
+                                    <input class="property-input" type="text" value="#ffffff" style="flex: 1;">
+                                </div>
+                            </div>
+                            <div class="property-row">
+                                <div class="property-item">
+                                    <label class="property-label">Border Radius</label>
+                                    <input class="property-input" type="number" value="6">
+                                </div>
+                                <div class="property-item">
+                                    <label class="property-label">Font Size</label>
+                                    <input class="property-input" type="number" value="14">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="property-section">
+                        <div class="property-section-title">🎨 CSS Classes</div>
+                        <div class="property-grid">
+                            <div class="property-item full-width">
+                                <label class="property-label">Current Classes</label>
+                                <div class="css-classes-container">
+                                    <div class="css-class-item">
+                                        <span class="css-class-name" onclick="cssManager.editClass('rx-button')">rx-button</span>
+                                        <div class="css-class-actions">
+                                            <button class="css-action-btn" onclick="cssManager.editClass('rx-button')" title="Edit class">
+                                                ✏️
+                                            </button>
+                                            <button class="css-action-btn remove" onclick="cssManager.removeClass('rx-button')" title="Remove class">
+                                                ❌
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="css-class-item">
+                                        <span class="css-class-name" onclick="cssManager.editClass('rx-container')">rx-container</span>
+                                        <div class="css-class-actions">
+                                            <button class="css-action-btn" onclick="cssManager.editClass('rx-container')" title="Edit class">
+                                                ✏️
+                                            </button>
+                                            <button class="css-action-btn remove" onclick="cssManager.removeClass('rx-container')" title="Remove class">
+                                                ❌
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="css-class-item">
+                                        <span class="css-class-name" onclick="cssManager.editClass('rx-comp-div')">rx-comp-div</span>
+                                        <div class="css-class-actions">
+                                            <button class="css-action-btn" onclick="cssManager.editClass('rx-comp-div')" title="Edit class">
+                                                ✏️
+                                            </button>
+                                            <button class="css-action-btn remove" onclick="cssManager.removeClass('rx-comp-div')" title="Remove class">
+                                                ❌
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="property-item full-width">
+                                <label class="property-label">Add New Class</label>
+                                <div class="add-class-form">
+                                    <input class="add-class-input" type="text" placeholder="Enter class name..." id="newClassName">
+                                    <button class="add-class-btn" onclick="cssManager.addClass()">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="componentLibrary.duplicateComponent()">
+                            📋 Duplicate
+                        </button>
+                        <button class="action-btn" onclick="componentLibrary.copyComponent()">
+                            📄 Copy
+                        </button>
+                        <button class="action-btn danger" onclick="componentLibrary.deleteComponent()">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="status-bar">
+        <div>Components: <span id="componentCount">0</span></div>
+        <div>Canvas: Ready</div>
+        <div>Selection: <span id="selectionInfo">None</span></div>
+    </div>
+    
+    <script>
+        class CSSManager {
+            constructor() {
+                this.cssClasses = new Map();
+                this.currentEditingClass = null;
+                this.loadDefaultClasses();
+            }
+            
+            loadDefaultClasses() {
+                // Load default CSS classes from the component manifest
+                this.cssClasses.set('rx-button', `.rx-button {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: var(--border);
+    padding: var(--padding);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: var(--font-size);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    user-select: none;
+}`);
+
+                this.cssClasses.set('rx-container', `.rx-container {
+    position: relative;
+    background: var(--bg, #fafafa);
+    border: 1px dashed #9ca3af;
+    border-radius: 8px;
+    min-height: 120px;
+    min-width: 200px;
+}`);
+
+                this.cssClasses.set('rx-comp-div', `.rx-comp-div {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+}`);
+            }
+            
+            editClass(className) {
+                this.currentEditingClass = className;
+                const modal = document.getElementById('cssEditorModal');
+                const classNameDisplay = document.getElementById('currentClassName');
+                const cssContent = document.getElementById('cssContent');
+                
+                classNameDisplay.textContent = `.${className}`;
+                cssContent.value = this.cssClasses.get(className) || '';
+                
+                modal.classList.add('visible');
+                
+                // Focus the textarea after animation
+                setTimeout(() => cssContent.focus(), 300);
+            }
+            
+            closeCssEditor() {
+                const modal = document.getElementById('cssEditorModal');
+                modal.classList.remove('visible');
+                this.currentEditingClass = null;
+            }
+            
+            saveCssClass() {
+                const cssContent = document.getElementById('cssContent');
+                const cssText = cssContent.value.trim();
+                
+                if (this.currentEditingClass && cssText) {
+                    this.cssClasses.set(this.currentEditingClass, cssText);
+                    
+                    // Apply CSS to the page (in a real implementation, this would update the stylesheet)
+                    this.applyCssClass(this.currentEditingClass, cssText);
+                    
+                    // Show success feedback
+                    this.showNotification(`✅ CSS class ".${this.currentEditingClass}" saved successfully!`);
+                    
+                    this.closeCssEditor();
+                    this.updateClassList();
+                }
+            }
+            
+            addClass() {
+                const input = document.getElementById('newClassName');
+                const className = input.value.trim();
+                
+                if (className && !this.cssClasses.has(className)) {
+                    // Create new class with basic template
+                    const newClassCSS = `.${className} {
+    /* Add your CSS properties here */
+    display: block;
+    position: relative;
+}`;
+                    
+                    this.cssClasses.set(className, newClassCSS);
+                    input.value = '';
+                    
+                    // Add to UI
+                    this.addClassToUI(className);
+                    
+                    // Show success
+                    this.showNotification(`✅ New CSS class ".${className}" created!`);
+                    
+                    // Auto-open editor for the new class
+                    setTimeout(() => this.editClass(className), 100);
+                } else if (this.cssClasses.has(className)) {
+                    this.showNotification(`⚠️ CSS class ".${className}" already exists!`, 'warning');
+                }
+            }
+            
+            removeClass(className) {
+                if (confirm(`Are you sure you want to remove the CSS class ".${className}"?`)) {
+                    this.cssClasses.delete(className);
+                    this.removeClassFromUI(className);
+                    this.showNotification(`🗑️ CSS class ".${className}" removed.`, 'info');
+                }
+            }
+            
+            addClassToUI(className) {
+                const container = document.querySelector('.css-classes-container');
+                const classItem = document.createElement('div');
+                classItem.className = 'css-class-item';
+                classItem.innerHTML = `
+                    <span class="css-class-name" onclick="cssManager.editClass('${className}')">${className}</span>
+                    <div class="css-class-actions">
+                        <button class="css-action-btn" onclick="cssManager.editClass('${className}')" title="Edit class">
+                            ✏️
+                        </button>
+                        <button class="css-action-btn remove" onclick="cssManager.removeClass('${className}')" title="Remove class">
+                            ❌
+                        </button>
+                    </div>
+                `;
+                container.appendChild(classItem);
+            }
+            
+            removeClassFromUI(className) {
+                const container = document.querySelector('.css-classes-container');
+                const classItems = container.querySelectorAll('.css-class-item');
+                
+                classItems.forEach(item => {
+                    const nameSpan = item.querySelector('.css-class-name');
+                    if (nameSpan && nameSpan.textContent === className) {
+                        item.remove();
+                    }
+                });
+            }
+            
+            updateClassList() {
+                // In a real implementation, this would refresh the class list from the backend
+                console.log('Updated class list:', Array.from(this.cssClasses.keys()));
+            }
+            
+            applyCssClass(className, cssText) {
+                // In a real implementation, this would update the actual stylesheet
+                // For demo purposes, we'll just log it
+                console.log(`Applied CSS class .${className}:`, cssText);
+            }
+            
+            showNotification(message, type = 'success') {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${type === 'success' ? '#10b981' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
+                    color: white;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: 500;
+                    z-index: 3000;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    transform: translateX(400px);
+                    transition: transform 0.3s ease;
+                `;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                // Animate in
+                setTimeout(() => notification.style.transform = 'translateX(0)', 100);
+                
+                // Remove after delay
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(400px)';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+        }
+        
+        class ComponentLibrary {
+            constructor() {
+                this.components = new Map();
+                this.draggedElement = null;
+                this.dragPreview = null;
+                this.selectedComponent = null;
+                this.componentCounter = 0;
+                
+                this.loadManifest();
+                this.initializeDragAndDrop();
+                this.initializeCanvas();
+            }
+            
+            loadManifest() {
+                // Simulated component manifest loading
+                const manifest = [
+                    {
+                        type: 'button',
+                        name: 'Button',
+                        icon: '📘',
+                        template: '<button class="rx-button">{{content}}</button>',
+                        defaultProps: { content: 'Click me', variant: 'primary', size: 'medium' }
+                    },
+                    {
+                        type: 'input',
+                        name: 'Input',
+                        icon: '📝',
+                        template: '<input class="rx-input" placeholder="{{placeholder}}" />',
+                        defaultProps: { placeholder: 'Enter text...', type: 'text' }
+                    },
+                    {
+                        type: 'container',
+                        name: 'Container',
+                        icon: '🧱',
+                        template: '<div class="rx-container"></div>',
+                        defaultProps: { width: 240, height: 160 }
+                    },
+                    {
+                        type: 'line',
+                        name: 'Line',
+                        icon: '📏',
+                        template: '<div class="rx-line"></div>',
+                        defaultProps: { stroke: '#111827', thickness: 2 }
+                    }
+                ];
+                
+                manifest.forEach(comp => {
+                    this.components.set(comp.type, comp);
+                });
+            }
+            
+            initializeDragAndDrop() {
+                const componentItems = document.querySelectorAll('.component-item');
+                
+                componentItems.forEach(item => {
+                    item.addEventListener('dragstart', (e) => {
+                        this.draggedElement = e.target;
+                        const componentType = e.target.dataset.type;
+                        e.dataTransfer.setData('text/plain', componentType);
+                        
+                        // Create drag preview
+                        this.createDragPreview(e, componentType);
+                    });
+                    
+                    item.addEventListener('dragend', () => {
+                        this.removeDragPreview();
+                        this.draggedElement = null;
+                    });
+                });
+            }
+            
+            initializeCanvas() {
+                const canvas = document.querySelector('.canvas-content');
+                const dropIndicator = document.querySelector('.drop-indicator');
+                
+                canvas.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    
+                    // Show drop indicator
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    dropIndicator.style.left = (Math.floor(x / 20) * 20) + 'px';
+                    dropIndicator.style.top = (Math.floor(y / 20) * 20) + 'px';
+                    dropIndicator.style.width = '120px';
+                    dropIndicator.style.height = '40px';
+                    dropIndicator.classList.add('active');
+                });
+                
+                canvas.addEventListener('dragleave', () => {
+                    dropIndicator.classList.remove('active');
+                });
+                
+                canvas.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropIndicator.classList.remove('active');
+                    
+                    const componentType = e.dataTransfer.getData('text/plain');
+                    const rect = canvas.getBoundingClientRect();
+                    const x = Math.floor((e.clientX - rect.left) / 20) * 20;
+                    const y = Math.floor((e.clientY - rect.top) / 20) * 20;
+                    
+                    this.createComponentInstance(componentType, x, y);
+                });
+            }
+            
+            createDragPreview(e, componentType) {
+                const component = this.components.get(componentType);
+                
+                this.dragPreview = document.createElement('div');
+                this.dragPreview.className = 'drag-preview';
+                this.dragPreview.innerHTML = `
+                    <span style="font-size: 18px; margin-right: 8px;">${component.icon}</span>
+                    <span>${component.name}</span>
+                `;
+                
+                document.body.appendChild(this.dragPreview);
+                
+                const updatePreview = (e) => {
+                    if (this.dragPreview) {
+                        this.dragPreview.style.left = (e.clientX + 10) + 'px';
+                        this.dragPreview.style.top = (e.clientY + 10) + 'px';
+                    }
+                };
+                
+                document.addEventListener('dragover', updatePreview);
+            }
+            
+            removeDragPreview() {
+                if (this.dragPreview) {
+                    this.dragPreview.remove();
+                    this.dragPreview = null;
+                }
+            }
+            
+            createComponentInstance(type, x, y) {
+                const component = this.components.get(type);
+                const instanceId = `${type}_${++this.componentCounter}`;
+                
+                const element = document.createElement('div');
+                element.className = 'dropped-component';
+                element.id = instanceId;
+                element.style.left = x + 'px';
+                element.style.top = y + 'px';
+                element.innerHTML = `
+                    <span style="margin-right: 8px;">${component.icon}</span>
+                    <span>${component.name} ${this.componentCounter}</span>
+                `;
+                
+                // Make draggable within canvas
+                this.makeDraggable(element);
+                
+                // Add click handler for selection
+                element.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.selectComponent(element, type);
+                });
+                
+                document.querySelector('.canvas-content').appendChild(element);
+                this.updateComponentCount();
+                
+                // Auto-select new component
+                setTimeout(() => this.selectComponent(element, type), 100);
+            }
+            
+            makeDraggable(element) {
+                let isDragging = false;
+                let startX, startY, startLeft, startTop;
+                
+                element.addEventListener('mousedown', (e) => {
+                    if (e.target === element || element.contains(e.target)) {
+                        isDragging = true;
+                        startX = e.clientX;
+                        startY = e.clientY;
+                        startLeft = parseInt(element.style.left);
+                        startTop = parseInt(element.style.top);
+                        element.style.zIndex = 1000;
+                    }
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        const deltaX = e.clientX - startX;
+                        const deltaY = e.clientY - startY;
+                        
+                        element.style.left = Math.max(0, startLeft + deltaX) + 'px';
+                        element.style.top = Math.max(0, startTop + deltaY) + 'px';
+                    }
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        element.style.zIndex = 'auto';
+                    }
+                });
+            }
+            
+            selectComponent(element, type) {
+                // Clear previous selection
+                document.querySelectorAll('.dropped-component.selected')
+                    .forEach(el => el.classList.remove('selected'));
+                
+                // Select new component
+                element.classList.add('selected');
+                this.selectedComponent = { element, type };
+                
+                this.showProperties(type);
+                this.updateSelectionInfo(element.id);
+            }
+            
+            showProperties(type) {
+                const panel = document.getElementById('controlPanelContent');
+                const elementInfo = document.getElementById('elementInfo');
+                const elementType = document.getElementById('elementType');
+                const elementId = document.getElementById('elementId');
+                const component = this.components.get(type);
+                
+                // Show element info
+                elementInfo.style.display = 'flex';
+                elementType.textContent = component.name;
+                elementId.textContent = `#${this.selectedComponent.element.id}`;
+                
+                // Generate properties panel based on component type
+                let propertiesHTML = '';
+                
+                switch(type) {
+                    case 'button':
+                        propertiesHTML = `
+                            <div class="property-section">
+                                <div class="property-section-title">📝 Content</div>
+                                <div class="property-grid">
+                                    <div class="property-item full-width">
+                                        <label class="property-label">Button Text</label>
+                                        <input class="property-input" type="text" value="Click me" placeholder="Button text">
+                                    </div>
+                                    <div class="property-item">
+                                        <label class="property-label">Variant</label>
+                                        <select class="property-select">
+                                            <option value="primary">Primary</option>
+                                            <option value="secondary">Secondary</option>
+                                            <option value="danger">Danger</option>
+                                        </select>
+                                    </div>
+                                    <div class="property-item">
+                                        <label class="property-label">Size</label>
+                                        <select class="property-select">
+                                            <option value="small">Small</option>
+                                            <option value="medium" selected>Medium</option>
+                                            <option value="large">Large</option>
+                                        </select>
+                                    </div>
+                                    <div class="property-checkbox">
+                                        <input type="checkbox" id="disabled">
+                                        <label for="disabled">Disabled</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="property-section">
+                                <div class="property-section-title">📐 Layout</div>
+                                <div class="property-grid">
+                                    <div class="property-row">
+                                        <div class="property-item">
+                                            <label class="property-label">X Position</label>
+                                            <input class="property-input" type="number" value="${parseInt(this.selectedComponent.element.style.left)}">
+                                        </div>
+                                        <div class="property-item">
+                                            <label class="property-label">Y Position</label>
+                                            <input class="property-input" type="number" value="${parseInt(this.selectedComponent.element.style.top)}">
+                                        </div>
+                                    </div>
+                                    <div class="property-row">
+                                        <div class="property-item">
+                                            <label class="property-label">Width</label>
+                                            <input class="property-input" type="number" value="120">
+                                        </div>
+                                        <div class="property-item">
+                                            <label class="property-label">Height</label>
+                                            <input class="property-input" type="number" value="40">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="property-section">
+                                <div class="property-section-title">🎨 Styling</div>
+                                <div class="property-grid">
+                                    <div class="property-item">
+                                        <label class="property-label">Background Color</label>
+                                        <div class="property-color">
+                                            <div class="color-swatch" style="background: #3b82f6;"></div>
+                                            <input class="property-input" type="text" value="#3b82f6" style="flex: 1;">
+                                        </div>
+                                    </div>
+                                    <div class="property-item">
+                                        <label class="property-label">Text Color</label>
+                                        <div class="property-color">
+                                            <div class="color-swatch" style="background: #ffffff;"></div>
+                                            <input class="property-input" type="text" value="#ffffff" style="flex: 1;">
+                                        </div>
+                                    </div>
+                                    <div class="property-row">
+                                        <div class="property-item">
+                                            <label class="property-label">Border Radius</label>
+                                            <input class="property-input" type="number" value="6">
+                                        </div>
+                                        <div class="property-item">
+                                            <label class="property-label">Font Size</label>
+                                            <input class="property-input" type="number" value="14">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'input':
+                        propertiesHTML = `
+                            <div class="property-section">
+                                <div class="property-section-title">📝 Content</div>
+                                <div class="property-grid">
+                                    <div class="property-item full-width">
+                                        <label class="property-label">Placeholder Text</label>
+                                        <input class="property-input" type="text" value="Enter text..." placeholder="Placeholder text">
+                                    </div>
+                                    <div class="property-item">
+                                        <label class="property-label">Input Type</label>
+                                        <select class="property-select">
+                                            <option value="text" selected>Text</option>
+                                            <option value="email">Email</option>
+                                            <option value="password">Password</option>
+                                            <option value="number">Number</option>
+                                        </select>
+                                    </div>
+                                    <div class="property-item">
+                                        <label class="property-label">Variant</label>
+                                        <select class="property-select">
+                                            <option value="default" selected>Default</option>
+                                            <option value="error">Error</option>
+                                            <option value="success">Success</option>
+                                        </select>
+                                    </div>
+                                    <div class="property-checkbox">
+                                        <input type="checkbox" id="required">
+                                        <label for="required">Required</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="property-section">
+                                <div class="property-section-title">📐 Layout</div>
+                                <div class="property-grid">
+                                    <div class="property-row">
+                                        <div class="property-item">
+                                            <label class="property-label">X Position</label>
+                                            <input class="property-input" type="number" value="${parseInt(this.selectedComponent.element.style.left)}">
+                                        </div>
+                                        <div class="property-item">
+                                            <label class="property-label">Y Position</label>
+                                            <input class="property-input" type="number" value="${parseInt(this.selectedComponent.element.style.top)}">
+                                        </div>
+                                    </div>
+                                    <div class="property-row">
+                                        <div class="property-item">
+                                            <label class="property-label">Width</label>
+                                            <input class="property-input" type="number" value="200">
+                                        </div>
+                                        <div class="property-item">
+                                            <label class="property-label">Height</label>
+                                            <input class="property-input" type="number" value="40">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'container':
+                        propertiesHTML = `
+                            <div class="property-section">
+                                <div class="property-section-title">📐 Layout</div>
+                                <div class="property-grid">
+                                    <div class="property-row">
+                                        <div class="property-item">
+                                            <label class="property-label">X Position</label>
+                                            <input class="property-input" type="number" value="${parseInt(this.selectedComponent.element.style.left)}">
+                                        </div>
+                                        <div class="property-item">
+                                            <label class="property-label">Y Position</label>
+                                            <input class="property-input" type="number" value="${parseInt(this.selectedComponent.element.style.top)}">
+                                        </div>
+                                    </div>
+                                    <div class="property-row">
+                                        <div class="property-item">
+                                            <label class="property-label">Width</label>
+                                            <input class="property-input" type="number" value="320">
+                                        </div>
+                                        <div class="property-item">
+                                            <label class="property-label">Height</label>
+                                            <input class="property-input" type="number" value="220">
+                                        </div>
+                                    </div>
+                                    <div class="property-checkbox">
+                                        <input type="checkbox" id="allowChildren" checked>
+                                        <label for="allowChildren">Allow Child Elements</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="property-section">
+                                <div class="property-section-title">🎨 Styling</div>
+                                <div class="property-grid">
+                                    <div class="property-item">
+                                        <label class="property-label">Background</label>
+                                        <div class="property-color">
+                                            <div class="color-swatch" style="background: #fafafa;"></div>
+                                            <input class="property-input" type="text" value="#fafafa" style="flex: 1;">
+                                        </div>
+                                    </div>
+                                    <div class="property-item">
+                                        <label class="property-label">Border Color</label>
+                                        <div class="property-color">
+                                            <div class="color-swatch" style="background: #9ca3af;"></div>
+                                            <input class="property-input" type="text" value="#9ca3af" style="flex: 1;">
+                                        </div>
+                                    </div>
+                                    <div class="property-item">
+                                        <label class="property-label">Border Radius</label>
+                                        <input class="property-input" type="number" value="8">
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'line':
+                        propertiesHTML = `
+                            <div class="property-section">
+                                <div class="property-section-title">📐 Layout</div>
+                                <div class="property-grid">
+                                    <div class="property-row">
+                                        <div class="property-item">
+                                            <label class="property-label">X Position</label>
+                                            <input class="property-input" type="number" value="${parseInt(this.selectedComponent.element.style.left)}">
+                                        </div>
+                                        <div class="property-item">
+                                            <label class="property-label">Y Position</label>
+                                            <input class="property-input" type="number" value="${parseInt(this.selectedComponent.element.style.top)}">
+                                        </div>
+                                    </div>
+                                    <div class="property-row">
+                                        <div class="property-item">
+                                            <label class="property-label">Length</label>
+                                            <input class="property-input" type="number" value="120">
+                                        </div>
+                                        <div class="property-item">
+                                            <label class="property-label">Thickness</label>
+                                            <input class="property-input" type="number" value="2">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="property-section">
+                                <div class="property-section-title">🎨 Styling</div>
+                                <div class="property-grid">
+                                    <div class="property-item">
+                                        <label class="property-label">Stroke Color</label>
+                                        <div class="property-color">
+                                            <div class="color-swatch" style="background: #111827;"></div>
+                                            <input class="property-input" type="text" value="#111827" style="flex: 1;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                }
+                
+                // Add action buttons
+                propertiesHTML += `
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="componentLibrary.duplicateComponent()">
+                            📋 Duplicate
+                        </button>
+                        <button class="action-btn" onclick="componentLibrary.copyComponent()">
+                            📄 Copy
+                        </button>
+                        <button class="action-btn danger" onclick="componentLibrary.deleteComponent()">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                `;
+                
+                panel.innerHTML = propertiesHTML;
+            }
+            
+            duplicateComponent() {
+                if (this.selectedComponent) {
+                    const { element, type } = this.selectedComponent;
+                    const currentX = parseInt(element.style.left);
+                    const currentY = parseInt(element.style.top);
+                    this.createComponentInstance(type, currentX + 20, currentY + 20);
+                }
+            }
+            
+            copyComponent() {
+                if (this.selectedComponent) {
+                    // Simulate copy to clipboard
+                    console.log('Component copied to clipboard');
+                }
+            }
+            
+            deleteComponent() {
+                if (this.selectedComponent) {
+                    this.selectedComponent.element.remove();
+                    this.selectedComponent = null;
+                    this.hideProperties();
+                    this.updateComponentCount();
+                    this.updateSelectionInfo();
+                }
+            }
+            
+            hideProperties() {
+                const panel = document.getElementById('controlPanelContent');
+                const elementInfo = document.getElementById('elementInfo');
+                
+                elementInfo.style.display = 'none';
+                panel.innerHTML = `
+                    <div class="no-selection">
+                        <div class="no-selection-icon">🎯</div>
+                        <h4>No Element Selected</h4>
+                        <p>Click on a component in the canvas to edit its properties and styling options.</p>
+                    </div>
+                `;
+            }
+            
+            updateComponentCount() {
+                const count = document.querySelectorAll('.dropped-component').length;
+                document.getElementById('componentCount').textContent = count;
+            }
+            
+            updateSelectionInfo(id) {
+                document.getElementById('selectionInfo').textContent = id || 'None';
+            }
+        }
+        
+        // Click outside to deselect
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropped-component') && !e.target.closest('.control-panel')) {
+                document.querySelectorAll('.dropped-component.selected')
+                    .forEach(el => el.classList.remove('selected'));
+                if (componentLibrary.selectedComponent) {
+                    componentLibrary.selectedComponent = null;
+                    componentLibrary.hideProperties();
+                    componentLibrary.updateSelectionInfo();
+                }
+            }
+        });
+        
+        // Canvas controls
+        document.querySelectorAll('.canvas-control[data-mode]').forEach(control => {
+            control.addEventListener('click', () => {
+                document.querySelectorAll('.canvas-control[data-mode]').forEach(c => c.classList.remove('active'));
+                control.classList.add('active');
+            });
+        });
+        
+        // Zoom controls
+        document.querySelectorAll('.zoom-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const zoomLevel = document.querySelector('.zoom-level');
+                const currentZoom = parseInt(zoomLevel.textContent);
+                const zoomDir = e.target.dataset.zoom;
+                
+                let newZoom = zoomDir === 'in' ? currentZoom + 10 : currentZoom - 10;
+                newZoom = Math.max(25, Math.min(200, newZoom));
+                
+                zoomLevel.textContent = newZoom + '%';
+                document.querySelector('.canvas-content').style.transform = `scale(${newZoom / 100})`;
+            });
+        });
+        
+        // Initialize the application
+        const componentLibrary = new ComponentLibrary();
+        const cssManager = new CSSManager();
+        window.componentLibrary = componentLibrary;
+        window.cssManager = cssManager;
+    </script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<svg width="1000" height="700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- CSS for theme awareness -->
+    <style>
+      <![CDATA[
+      /* Light theme (default) */
+      .bg-primary { fill: #ffffff; }
+      .bg-secondary { fill: #f8fafc; }
+      .text-primary { fill: #0f172a; }
+      .text-secondary { fill: #334155; }
+      .text-muted { fill: #64748b; }
+      .border-light { stroke: #e2e8f0; }
+      .grid-light { stroke: #f1f5f9; }
+      .shadow-light { flood-color: #000000; flood-opacity: 0.15; }
+      
+      /* Problem indicators */
+      .danger-bg { fill: #fef2f2; stroke: #dc2626; }
+      .danger-text { fill: #dc2626; }
+      .warning-bg { fill: #fffbeb; stroke: #d97706; }
+      .warning-text { fill: #d97706; }
+      .messy-bg { fill: #f3f4f6; stroke: #6b7280; }
+      .messy-text { fill: #374151; }
+      
+      /* File type colors */
+      .jsx-bg { fill: #e0f2fe; stroke: #0369a1; }
+      .jsx-text { fill: #0c4a6e; }
+      .js-bg { fill: #fef3c7; stroke: #d97706; }
+      .js-text { fill: #92400e; }
+      .css-bg { fill: #f0f9ff; stroke: #0284c7; }
+      .css-text { fill: #0c4a6e; }
+      .api-bg { fill: #ecfdf5; stroke: #059669; }
+      .api-text { fill: #064e3b; }
+      
+      /* Dark theme */
+      @media (prefers-color-scheme: dark) {
+        .bg-primary { fill: #0f172a; }
+        .bg-secondary { fill: #1e293b; }
+        .text-primary { fill: #f1f5f9; }
+        .text-secondary { fill: #cbd5e1; }
+        .text-muted { fill: #94a3b8; }
+        .border-light { stroke: #334155; }
+        .grid-light { stroke: #1e293b; }
+        .shadow-light { flood-color: #000000; flood-opacity: 0.3; }
+        
+        /* Dark mode problem indicators */
+        .danger-bg { fill: #450a0a; stroke: #dc2626; }
+        .danger-text { fill: #fca5a5; }
+        .warning-bg { fill: #451a03; stroke: #d97706; }
+        .warning-text { fill: #fbbf24; }
+        .messy-bg { fill: #1f2937; stroke: #6b7280; }
+        .messy-text { fill: #d1d5db; }
+        
+        /* Dark file type colors */
+        .jsx-bg { fill: #0c4a6e; stroke: #0ea5e9; }
+        .jsx-text { fill: #bae6fd; }
+        .js-bg { fill: #92400e; stroke: #f59e0b; }
+        .js-text { fill: #fcd34d; }
+        .css-bg { fill: #0c4a6e; stroke: #06b6d4; }
+        .css-text { fill: #a5f3fc; }
+        .api-bg { fill: #064e3b; stroke: #10b981; }
+        .api-text { fill: #86efac; }
+      }
+      
+      /* Animations */
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+      
+      .pulse { animation: pulse 2s infinite; }
+      
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-2px); }
+        75% { transform: translateX(2px); }
+      }
+      
+      .shake { animation: shake 0.5s infinite; }
+      ]]>
+    </style>
+    
+    <!-- Background pattern -->
+    <pattern id="gridPattern" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" class="grid-light" stroke-width="0.5" opacity="0.3"/>
+    </pattern>
+    
+    <!-- Messy connection pattern -->
+    <pattern id="messyPattern" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="5" cy="5" r="1" class="danger-text" opacity="0.2"/>
+    </pattern>
+    
+    <!-- Shadow filter -->
+    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" class="shadow-light"/>
+    </filter>
+    
+    <!-- Danger glow -->
+    <filter id="dangerGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Arrow markers -->
+    <marker id="messyness" markerWidth="8" markerHeight="8" 
+            refX="6" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L8,4 z" class="danger-text"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1000" height="700" class="bg-primary"/>
+  <rect width="1000" height="700" fill="url(#gridPattern)"/>
+  
+  <!-- Title -->
+  <text x="500" y="40" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="28" font-weight="700" class="text-primary">
+    📁 Messy Codebase Architecture
+  </text>
+  <text x="500" y="65" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="14" class="text-muted" font-style="italic">
+    "It works on my machine!" - Famous last words
+  </text>
+  
+  <!-- Main src/ folder -->
+  <rect x="50" y="100" width="900" height="480" rx="15" class="messy-bg" 
+        stroke-width="3" filter="url(#dropShadow)" fill="url(#messyPattern)"/>
+  
+  <text x="70" y="130" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="18" font-weight="700" class="text-primary">
+    📁 src/
+  </text>
+  
+  <!-- Components folder -->
+  <rect x="100" y="150" width="380" height="320" rx="10" class="danger-bg" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="120" y="180" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="16" font-weight="700" class="danger-text">
+    📁 components/ ⚠️ DANGER ZONE
+  </text>
+  
+  <!-- UserDashboard.jsx - The Monster -->
+  <rect x="120" y="200" width="340" height="80" rx="8" class="danger-bg shake" 
+        stroke-width="2" filter="url(#dangerGlow)"/>
+  
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="130" y="220" font-size="14" font-weight="700" class="jsx-text">
+      📄 UserDashboard.jsx
+    </text>
+    <text x="130" y="240" font-size="12" class="danger-text">
+      🔥 150+ lines, does EVERYTHING
+    </text>
+    <text x="130" y="255" font-size="11" class="text-secondary">
+      • Fetches data • Renders UI • Handles state
+    </text>
+    <text x="130" y="270" font-size="11" class="text-secondary">
+      • Business logic • API calls • Validation
+    </text>
+  </g>
+  
+  <!-- PostList.jsx -->
+  <rect x="120" y="290" width="340" height="50" rx="8" class="warning-bg" 
+        stroke-width="2"/>
+  
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="130" y="310" font-size="14" font-weight="700" class="jsx-text">
+      📄 PostList.jsx
+    </text>
+    <text x="130" y="325" font-size="12" class="warning-text">
+      ⚠️ Also fetches data directly (no separation)
+    </text>
+  </g>
+  
+  <!-- Header.jsx -->
+  <rect x="120" y="350" width="340" height="50" rx="8" class="warning-bg" 
+        stroke-width="2"/>
+  
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="130" y="370" font-size="14" font-weight="700" class="jsx-text">
+      📄 Header.jsx
+    </text>
+    <text x="130" y="385" font-size="12" class="warning-text">
+      🌐 Has its own API calls (why?!)
+    </text>
+  </g>
+  
+  <!-- utils.js -->
+  <rect x="120" y="410" width="340" height="50" rx="8" class="messy-bg" 
+        stroke-width="2"/>
+  
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="130" y="430" font-size="14" font-weight="700" class="js-text">
+      📄 utils.js
+    </text>
+    <text x="130" y="445" font-size="12" class="messy-text">
+      🗂️ Random helper functions (junk drawer)
+    </text>
+  </g>
+  
+  <!-- API folder -->
+  <rect x="520" y="150" width="200" height="120" rx="10" class="api-bg" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="540" y="180" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="16" font-weight="700" class="api-text">
+    📁 api/
+  </text>
+  
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="550" y="210" font-size="14" font-weight="700" class="api-text">
+      📄 endpoints.js
+    </text>
+    <text x="550" y="225" font-size="11" class="warning-text">
+      🔗 Hard-coded URLs
+    </text>
+    <text x="550" y="240" font-size="11" class="warning-text">
+      everywhere (no config)
+    </text>
+    <text x="550" y="250" font-size="10" class="text-muted">
+      localhost:3000/api/...
+    </text>
+  </g>
+  
+  <!-- Styles folder -->
+  <rect x="750" y="150" width="180" height="120" rx="10" class="css-bg" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="770" y="180" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="16" font-weight="700" class="css-text">
+    📁 styles/
+  </text>
+  
+  <rect x="770" y="190" width="140" height="70" rx="6" class="messy-bg" 
+        stroke-width="1"/>
+  
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="780" y="210" font-size="14" font-weight="700" class="css-text">
+      📄 main.css
+    </text>
+    <text x="780" y="225" font-size="11" class="messy-text">
+      🌐 Global styles
+    </text>
+    <text x="780" y="240" font-size="11" class="messy-text">
+      no organization
+    </text>
+    <text x="780" y="250" font-size="10" class="text-muted">
+      8000+ lines of chaos
+    </text>
+  </g>
+  
+  <!-- App.js - Another problem -->
+  <rect x="520" y="290" width="410" height="80" rx="10" class="danger-bg pulse" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <g font-family="'JetBrains Mono', 'Fira Code', monospace">
+    <text x="540" y="315" font-size="16" font-weight="700" class="js-text">
+      📄 App.js
+    </text>
+    <text x="540" y="335" font-size="14" class="danger-text">
+      🏢 More business logic here too (why not?)
+    </text>
+    <text x="540" y="350" font-size="11" class="text-secondary">
+      Authentication, routing, state management, data fetching...
+    </text>
+  </g>
+  
+  <!-- Messy connection lines showing tight coupling -->
+  <g id="messyConnections" stroke-width="2" stroke-dasharray="5,3" opacity="0.7">
+    <!-- Everything connected to everything -->
+    <path d="M 300 240 Q 400 200 520 200" class="danger-text" marker-end="url(#messyness)"/>
+    <path d="M 300 315 Q 400 280 540 320" class="danger-text" marker-end="url(#messyness)"/>
+    <path d="M 300 370 Q 450 300 620 210" class="warning-text" marker-end="url(#messyness)"/>
+    <path d="M 620 240 Q 680 280 750 320" class="warning-text" marker-end="url(#messyness)"/>
+    <path d="M 460 430 Q 500 380 540 350" class="messy-text" marker-end="url(#messyness)"/>
+  </g>
+  
+  <!-- Problem indicators -->
+  <g font-family="'Segoe UI', system-ui, sans-serif">
+    <!-- Violation badges -->
+    <rect x="100" y="490" width="200" height="30" rx="15" class="danger-bg" stroke-width="2"/>
+    <text x="110" y="510" font-size="12" font-weight="700" class="danger-text">
+      🚫 Single Responsibility: VIOLATED
+    </text>
+    
+    <rect x="320" y="490" width="180" height="30" rx="15" class="warning-bg" stroke-width="2"/>
+    <text x="330" y="510" font-size="12" font-weight="700" class="warning-text">
+      ⚠️ DRY Principle: IGNORED
+    </text>
+    
+    <rect x="520" y="490" width="200" height="30" rx="15" class="messy-bg" stroke-width="2"/>
+    <text x="530" y="510" font-size="12" font-weight="700" class="messy-text">
+      📈 Maintainability: -1000%
+    </text>
+    
+    <rect x="740" y="490" width="180" height="30" rx="15" class="danger-bg" stroke-width="2"/>
+    <text x="750" y="510" font-size="12" font-weight="700" class="danger-text">
+      🐛 Bug Magnet: ACTIVE
+    </text>
+  </g>
+  
+  <!-- Bottom legend/problems -->
+  <rect x="50" y="600" width="900" height="80" rx="12" class="bg-secondary border-light" 
+        stroke-width="1" filter="url(#dropShadow)"/>
+  
+  <text x="500" y="630" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="16" font-weight="700" class="text-primary">
+    🔥 Problems with this Architecture
+  </text>
+  
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="12" class="text-secondary">
+    <text x="70" y="650">• Everything is tightly coupled • No separation of concerns • Hard to test</text>
+    <text x="70" y="665">• No reusability • Duplicate code everywhere • Configuration scattered • Performance nightmares</text>
+  </g>
+</svg>

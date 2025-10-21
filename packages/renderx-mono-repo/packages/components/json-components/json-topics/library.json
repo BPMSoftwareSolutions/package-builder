@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "topics": {
+    "library.load.requested": {
+      "routes": [
+        {
+          "pluginId": "LibraryPlugin",
+          "sequenceId": "library-load-symphony"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "onComponentsLoaded": { "type": "object" }
+        }
+      },
+      "visibility": "public",
+      "notes": "Library load requested; routes to library load sequence."
+    },
+    "library.component.drag.start.requested": {
+      "routes": [
+        {
+          "pluginId": "LibraryComponentPlugin",
+          "sequenceId": "library-component-drag-symphony"
+        }
+      ],
+      "payloadSchema": { "type": "object" },
+      "visibility": "public",
+      "notes": "Local catalog: route drag.start to library-component drag symphony"
+    },
+    "library.component.drop.requested": {
+      "routes": [
+        {
+          "pluginId": "LibraryComponentPlugin",
+          "sequenceId": "library-component-drop-symphony"
+        }
+      ],
+      "payloadSchema": { "type": "object" },
+      "visibility": "public",
+      "notes": "Local catalog: route drop to library-component drop symphony"
+    }
+  },
+  "definitions": {}
+}

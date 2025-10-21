@@ -1,0 +1,10 @@
+{
+  "plugins": [
+    {
+      "id": "example.plugin",
+      "baseUrl": "http://localhost:6001",
+      "manifestPath": "/test/manifest.json",
+      "driverPath": "/test/driver.html"
+    }
+  ]
+}

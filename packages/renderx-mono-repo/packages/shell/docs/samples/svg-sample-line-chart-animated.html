@@ -1,0 +1,33 @@
+<!-- SVG Line Chart with simple marker animation -->
+<svg viewBox="0 0 300 120" width="100%" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="300" height="120" fill="#ffffff" rx="8" />
+  <text x="14" y="18" font-size="12" font-weight="600" fill="#334155">
+    Latency (ms)
+  </text>
+  <!-- Trend path -->
+  <polyline
+    points="15,80 55,70 95,74 135,60 175,58 215,48 255,52 295,40"
+    fill="none"
+    stroke="url(#lineGrad)"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <!-- Animated moving dot along path (approximate via animateTransform) -->
+  <circle cx="15" cy="80" r="5" fill="#6366f1">
+    <animateTransform
+      attributeName="transform"
+      attributeType="XML"
+      type="translate"
+      values="0 0;40 -10;80 -6;120 -20;160 -22;200 -32;240 -28;280 -40"
+      dur="4s"
+      repeatCount="indefinite"
+    />
+  </circle>
+</svg>

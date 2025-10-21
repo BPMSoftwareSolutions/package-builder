@@ -1,0 +1,222 @@
+<svg width="900" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- CSS for theme awareness -->
+    <style>
+      <![CDATA[
+      /* Light theme (default) */
+      .bg-primary { fill: #ffffff; }
+      .bg-secondary { fill: #f8fafc; }
+      .text-primary { fill: #0f172a; }
+      .text-secondary { fill: #334155; }
+      .text-muted { fill: #64748b; }
+      .border-light { stroke: #e2e8f0; }
+      
+      /* Wild West theme colors */
+      .saloon-bg { fill: #8b4513; stroke: #654321; }
+      .wanted-bg { fill: #fef3c7; stroke: #d97706; }
+      .danger-bg { fill: #fef2f2; stroke: #dc2626; }
+      .danger-text { fill: #dc2626; }
+      .warning-text { fill: #d97706; }
+      .sheriff-text { fill: #059669; }
+      .outlaw-text { fill: #b91c1c; }
+      .dust-bg { fill: #f3e8dc; }
+      
+      /* Dark theme */
+      @media (prefers-color-scheme: dark) {
+        .bg-primary { fill: #0f172a; }
+        .bg-secondary { fill: #1e293b; }
+        .text-primary { fill: #f1f5f9; }
+        .text-secondary { fill: #cbd5e1; }
+        .text-muted { fill: #94a3b8; }
+        .border-light { stroke: #334155; }
+        
+        /* Dark Wild West theme */
+        .saloon-bg { fill: #451a03; stroke: #78350f; }
+        .wanted-bg { fill: #451a03; stroke: #d97706; }
+        .danger-bg { fill: #450a0a; stroke: #dc2626; }
+        .danger-text { fill: #fca5a5; }
+        .warning-text { fill: #fbbf24; }
+        .sheriff-text { fill: #6ee7b7; }
+        .outlaw-text { fill: #f87171; }
+        .dust-bg { fill: #292524; }
+      }
+      
+      /* Animations */
+      @keyframes tumblweed {
+        0% { transform: translateX(-50px) rotate(0deg); }
+        100% { transform: translateX(950px) rotate(360deg); }
+      }
+      
+      .tumblweed { animation: tumblweed 15s linear infinite; }
+      
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-3px); }
+        75% { transform: translateX(3px); }
+      }
+      
+      .unstable { animation: shake 0.8s infinite; }
+      
+      @keyframes flicker {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+      }
+      
+      .flicker { animation: flicker 1.5s infinite; }
+      ]]>
+    </style>
+    
+    <!-- Desert background pattern -->
+    <pattern id="desert" width="40" height="40" patternUnits="userSpaceOnUse">
+      <rect width="40" height="40" class="dust-bg"/>
+      <circle cx="5" cy="5" r="1" class="warning-text" opacity="0.3"/>
+      <circle cx="25" cy="15" r="1.5" class="warning-text" opacity="0.2"/>
+      <circle cx="35" cy="30" r="1" class="warning-text" opacity="0.3"/>
+    </pattern>
+    
+    <!-- Shadow filter -->
+    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="3" dy="6" stdDeviation="4" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+    
+    <!-- Wanted poster aging filter -->
+    <filter id="aged" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="0.5" result="blur"/>
+      <feColorMatrix type="matrix" values="1.1 0.1 0 0 0.1  0.1 0.9 0.1 0 0.1  0 0.1 0.8 0 0.2  0 0 0 1 0" result="sepia"/>
+    </filter>
+  </defs>
+  
+  <!-- Desert background -->
+  <rect width="900" height="600" fill="url(#desert)"/>
+  
+  <!-- Sky gradient -->
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87ceeb;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#f4a460;stop-opacity:0.1"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="200" fill="url(#skyGradient)"/>
+  
+  <!-- Tumblweed (animated) -->
+  <g class="tumblweed">
+    <circle cx="0" cy="550" r="15" class="saloon-bg" opacity="0.6"/>
+    <path d="M -10 540 Q 0 530 10 540 Q 0 550 -10 540" class="saloon-bg" opacity="0.4"/>
+    <path d="M -5 545 L 5 545 M 0 540 L 0 550" stroke="#8b4513" stroke-width="1" opacity="0.6"/>
+  </g>
+  
+  <!-- Main title with Western style -->
+  <text x="450" y="50" text-anchor="middle" font-family="serif" 
+        font-size="32" font-weight="bold" class="outlaw-text" filter="url(#dropShadow)">
+    🤠 WILD WEST COMPONENT 🤠
+  </text>
+  <text x="450" y="75" text-anchor="middle" font-family="serif" 
+        font-size="16" class="text-muted" font-style="italic">
+    "There's a new sheriff in town... and it's doing EVERYTHING wrong"
+  </text>
+  
+  <!-- Wanted poster style component -->
+  <rect x="150" y="100" width="600" height="420" rx="10" class="wanted-bg" 
+        stroke-width="4" filter="url(#aged)" filter="url(#dropShadow)"/>
+  
+  <!-- Wanted poster header -->
+  <rect x="170" y="120" width="560" height="60" class="danger-bg" stroke-width="2"/>
+  <text x="450" y="140" text-anchor="middle" font-family="serif" 
+        font-size="24" font-weight="bold" class="danger-text">
+    ⚠️ WANTED: DEAD OR REFACTORED ⚠️
+  </text>
+  <text x="450" y="165" text-anchor="middle" font-family="'JetBrains Mono', monospace" 
+        font-size="20" font-weight="bold" class="text-primary">
+    UserDashboard.jsx
+  </text>
+  
+  <!-- Component description -->
+  <text x="180" y="200" font-family="serif" font-size="14" font-weight="bold" class="outlaw-text">
+    CRIMES AGAINST CODE:
+  </text>
+  
+  <!-- Crime list with Western flair -->
+  <g font-family="'JetBrains Mono', monospace" font-size="12">
+    <!-- useEffect crimes -->
+    <rect x="180" y="210" width="540" height="45" class="danger-bg unstable" stroke-width="1"/>
+    <text x="190" y="225" font-weight="bold" class="danger-text">💀 useEffect #1:</text>
+    <text x="190" y="240" class="text-secondary">fetch user + DOM manipulation + localStorage</text>
+    <text x="190" y="250" class="text-muted" font-size="10">"Three crimes in one hook!"</text>
+    
+    <rect x="180" y="260" width="540" height="45" class="danger-bg unstable" stroke-width="1"/>
+    <text x="190" y="275" font-weight="bold" class="danger-text">💀 useEffect #2:</text>
+    <text x="190" y="290" class="text-secondary">fetch posts + business logic + theme change</text>
+    <text x="190" y="300" class="text-muted" font-size="10">"Side effects gone rogue!"</text>
+    
+    <rect x="180" y="310" width="540" height="45" class="danger-bg unstable" stroke-width="1"/>
+    <text x="190" y="325" font-weight="bold" class="danger-text">💀 useEffect #3:</text>
+    <text x="190" y="340" class="text-secondary">direct DOM styling + sidebar manipulation</text>
+    <text x="190" y="350" class="text-muted" font-size="10">"React? What React?"</text>
+    
+    <!-- Handler crime -->
+    <rect x="180" y="360" width="540" height="45" class="warning-text" fill="rgba(217, 119, 6, 0.1)" stroke-width="1"/>
+    <text x="190" y="375" font-weight="bold" class="warning-text">🔫 handleDeletePost:</text>
+    <text x="190" y="390" class="text-secondary">API call + state + business rules + UX</text>
+    <text x="190" y="400" class="text-muted" font-size="10">"One function to rule them all"</text>
+    
+    <!-- Render crime -->
+    <rect x="180" y="410" width="540" height="45" class="outlaw-text" fill="rgba(185, 28, 28, 0.1)" stroke-width="1"/>
+    <text x="190" y="425" font-weight="bold" class="outlaw-text">🎭 render:</text>
+    <text x="190" y="440" class="text-secondary">JSX mixed with inline logic</text>
+    <text x="190" y="450" class="text-muted" font-size="10">"Spaghetti code at its finest"</text>
+  </g>
+  
+  <!-- Reward section -->
+  <rect x="170" y="465" width="560" height="40" class="sheriff-text" fill="rgba(5, 150, 105, 0.1)" stroke-width="2"/>
+  <text x="450" y="482" text-anchor="middle" font-family="serif" 
+        font-size="16" font-weight="bold" class="sheriff-text">
+    💰 REWARD: Clean Architecture & Maintainable Code 💰
+  </text>
+  
+  <!-- Sheriff's assessment -->
+  <text x="450" y="540" text-anchor="middle" font-family="serif" 
+        font-size="14" font-weight="bold" class="text-primary">
+    ⭐ SHERIFF'S ASSESSMENT ⭐
+  </text>
+  
+  <!-- Problems list styled as Western charges -->
+  <g font-family="serif" font-size="13" class="danger-text">
+    <text x="200" y="560">🚫 UNTESTABLE</text>
+    <text x="350" y="560">⚡ UNPREDICTABLE</text>
+    <text x="550" y="560">🔧 UNMAINTAINABLE</text>
+  </g>
+  
+  <text x="450" y="580" text-anchor="middle" font-family="serif" 
+        font-size="12" class="text-muted" font-style="italic">
+    "Last seen causing bugs in production. Approach with extreme caution."
+  </text>
+  
+  <!-- Western decorative elements -->
+  <!-- Cactus on the left -->
+  <g transform="translate(50, 400)">
+    <rect x="0" y="0" width="8" height="60" rx="4" fill="#228B22"/>
+    <rect x="-10" y="15" width="15" height="6" rx="3" fill="#228B22"/>
+    <rect x="8" y="30" width="12" height="6" rx="3" fill="#228B22"/>
+    <circle cx="2" cy="10" r="1" fill="#FFD700"/>
+    <circle cx="6" cy="25" r="1" fill="#FFD700"/>
+  </g>
+  
+  <!-- Cactus on the right -->
+  <g transform="translate(830, 380)">
+    <rect x="0" y="0" width="10" height="80" rx="5" fill="#228B22"/>
+    <rect x="-8" y="20" width="12" height="8" rx="4" fill="#228B22"/>
+    <rect x="10" y="35" width="10" height="8" rx="4" fill="#228B22"/>
+    <circle cx="3" cy="15" r="1" fill="#FFD700"/>
+    <circle cx="7" cy="40" r="1" fill="#FFD700"/>
+  </g>
+  
+  <!-- Sun in corner -->
+  <circle cx="100" cy="80" r="25" fill="#FFD700" opacity="0.8"/>
+  <g stroke="#FFD700" stroke-width="2" opacity="0.6">
+    <line x1="75" y1="55" x2="85" y2="65"/>
+    <line x1="125" y1="55" x2="115" y2="65"/>
+    <line x1="100" y1="30" x2="100" y2="40"/>
+    <line x1="140" y1="80" x2="130" y2="80"/>
+    <line x1="60" y1="80" x2="70" y2="80"/>
+  </g>
+</svg>

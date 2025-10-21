@@ -1,0 +1,286 @@
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- CSS for theme awareness -->
+    <style>
+      <![CDATA[
+      /* Light theme (default) */
+      .bg-primary { fill: #ffffff; }
+      .bg-secondary { fill: #f8fafc; }
+      .text-primary { fill: #0f172a; }
+      .text-secondary { fill: #334155; }
+      .text-muted { fill: #64748b; }
+      .border-light { stroke: #e2e8f0; }
+      
+      /* Flow theme colors */
+      .manifest-bg { fill: #fef3c7; stroke: #d97706; }
+      .manifest-text { fill: #92400e; }
+      .loader-bg { fill: #e0f2fe; stroke: #0369a1; }
+      .loader-text { fill: #0c4a6e; }
+      .component-bg { fill: #ecfdf5; stroke: #059669; }
+      .component-text { fill: #064e3b; }
+      .config-bg { fill: #faf5ff; stroke: #7c3aed; }
+      .config-text { fill: #4c1d95; }
+      
+      /* Dark theme */
+      @media (prefers-color-scheme: dark) {
+        .bg-primary { fill: #0f172a; }
+        .bg-secondary { fill: #1e293b; }
+        .text-primary { fill: #f1f5f9; }
+        .text-secondary { fill: #cbd5e1; }
+        .text-muted { fill: #94a3b8; }
+        .border-light { stroke: #334155; }
+        
+        .manifest-bg { fill: #92400e; stroke: #f59e0b; }
+        .manifest-text { fill: #fcd34d; }
+        .loader-bg { fill: #0c4a6e; stroke: #0ea5e9; }
+        .loader-text { fill: #bae6fd; }
+        .component-bg { fill: #064e3b; stroke: #10b981; }
+        .component-text { fill: #bbf7d0; }
+        .config-bg { fill: #4c1d95; stroke: #8b5cf6; }
+        .config-text { fill: #ddd6fe; }
+      }
+      
+      /* Animations */
+      @keyframes flow {
+        0% { stroke-dashoffset: 20; }
+        100% { stroke-dashoffset: 0; }
+      }
+      
+      .flow-arrow { 
+        stroke-dasharray: 10, 5; 
+        animation: flow 2s linear infinite; 
+      }
+      
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+      }
+      
+      .pulse { animation: pulse 2s infinite; }
+      ]]>
+    </style>
+    
+    <!-- Background pattern -->
+    <pattern id="flowGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" class="border-light" stroke-width="0.3" opacity="0.3"/>
+    </pattern>
+    
+    <!-- Arrow markers -->
+    <marker id="flowArrow" markerWidth="10" markerHeight="10" 
+            refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" class="loader-text"/>
+    </marker>
+    
+    <!-- Shadow filter -->
+    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="800" class="bg-primary"/>
+  <rect width="1200" height="800" fill="url(#flowGrid)"/>
+  
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="24" font-weight="700" class="text-primary">
+    📋 Plugin Manifest → Dynamic Loading Flow
+  </text>
+  <text x="600" y="65" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="14" class="text-muted" font-style="italic">
+    "Single source of truth for all plugin configuration"
+  </text>
+  
+  <!-- Step 1: Plugin Manifest JSON -->
+  <rect x="50" y="100" width="500" height="200" rx="12" class="manifest-bg" 
+        stroke-width="3" filter="url(#dropShadow)"/>
+  
+  <text x="70" y="130" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="16" font-weight="700" class="manifest-text">
+    📄 plugin-manifest.json
+  </text>
+  <text x="70" y="150" font-family="'Segoe UI', sans-serif" 
+        font-size="12" class="text-muted">
+    Single source of truth
+  </text>
+  
+  <!-- JSON content -->
+  <rect x="70" y="160" width="460" height="120" rx="8" class="bg-secondary border-light" 
+        stroke-width="1"/>
+  
+  <g font-family="'JetBrains Mono', monospace" font-size="10">
+    <text x="80" y="180" class="manifest-text">{ "plugins": [</text>
+    <text x="90" y="195" class="text-primary">  { "id": "LibraryPlugin",</text>
+    <text x="90" y="210" class="loader-text">    "ui": {</text>
+    <text x="100" y="225" class="component-text">      "slot": "library",</text>
+    <text x="100" y="240" class="component-text">      "module": "/plugins/library/index.ts",</text>
+    <text x="100" y="255" class="component-text">      "export": "LibraryPanel"</text>
+    <text x="90" y="270" class="loader-text">    }</text>
+    <text x="80" y="285" class="manifest-text">  }</text>
+    <text x="80" y="300" class="manifest-text">] }</text>
+  </g>
+  
+  <!-- Arrow from manifest to PanelSlot -->
+  <path d="M 550 200 Q 650 150 750 200" stroke-width="4" class="loader-text flow-arrow" 
+        marker-end="url(#flowArrow)" fill="none"/>
+  
+  <!-- Step 2: PanelSlot.tsx -->
+  <rect x="650" y="100" width="500" height="250" rx="12" class="loader-bg" 
+        stroke-width="3" filter="url(#dropShadow)"/>
+  
+  <text x="670" y="130" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="16" font-weight="700" class="loader-text">
+    ⚙️ PanelSlot.tsx
+  </text>
+  <text x="670" y="150" font-family="'Segoe UI', sans-serif" 
+        font-size="12" class="text-muted">
+    Manifest-driven plugin loader
+  </text>
+  
+  <!-- Process steps -->
+  <rect x="670" y="160" width="460" height="25" rx="5" class="bg-secondary" stroke-width="1"/>
+  <text x="680" y="177" font-family="'Segoe UI', sans-serif" font-size="11" class="text-primary">
+    1. Read manifest
+  </text>
+  
+  <rect x="670" y="190" width="460" height="25" rx="5" class="bg-secondary" stroke-width="1"/>
+  <text x="680" y="207" font-family="'Segoe UI', sans-serif" font-size="11" class="text-primary">
+    2. Find plugin for slot="library"
+  </text>
+  
+  <rect x="670" y="220" width="460" height="25" rx="5" class="bg-secondary" stroke-width="1"/>
+  <text x="680" y="237" font-family="'JetBrains Mono', monospace" font-size="11" class="loader-text">
+    3. Dynamic import("/plugins/library/index.ts")
+  </text>
+  
+  <rect x="670" y="250" width="460" height="25" rx="5" class="bg-secondary" stroke-width="1"/>
+  <text x="680" y="267" font-family="'Segoe UI', sans-serif" font-size="11" class="component-text">
+    4. Mount LibraryPanel component
+  </text>
+  
+  <!-- Code snippet -->
+  <rect x="670" y="285" width="460" height="55" rx="8" class="bg-secondary border-light" 
+        stroke-width="1"/>
+  <g font-family="'JetBrains Mono', monospace" font-size="9">
+    <text x="680" y="300" class="text-secondary">const manifest = await manifestPromiseRef;</text>
+    <text x="680" y="315" class="text-secondary">const entry = manifest.plugins.find(p =></text>
+    <text x="680" y="330" class="loader-text">  p.ui?.slot === slot);</text>
+  </g>
+  
+  <!-- Arrow from PanelSlot to Component -->
+  <path d="M 900 350 Q 900 400 600 450" stroke-width="4" class="component-text flow-arrow" 
+        marker-end="url(#flowArrow)" fill="none"/>
+  
+  <!-- Step 3: Loaded Component -->
+  <rect x="350" y="400" width="500" height="180" rx="12" class="component-bg" 
+        stroke-width="3" filter="url(#dropShadow)"/>
+  
+  <text x="370" y="430" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="16" font-weight="700" class="component-text">
+    🎯 LibraryPanel Component
+  </text>
+  <text x="370" y="450" font-family="'Segoe UI', sans-serif" 
+        font-size="12" class="text-muted">
+    Dynamically loaded and mounted
+  </text>
+  
+  <!-- Component features -->
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="11" class="text-secondary">
+    <text x="380" y="475">✅ Pure UI component - no side effects</text>
+    <text x="380" y="495">✅ Uses conductor for orchestration</text>
+    <text x="380" y="515">✅ Follows plugin architecture patterns</text>
+    <text x="380" y="535">✅ Independently testable and deployable</text>
+    <text x="380" y="555">✅ Zero coupling to host application</text>
+  </g>
+  
+  <!-- Step 4: Configuration System -->
+  <rect x="50" y="350" width="250" height="230" rx="12" class="config-bg" 
+        stroke-width="3" filter="url(#dropShadow)"/>
+  
+  <text x="70" y="380" font-family="'JetBrains Mono', 'Fira Code', monospace" 
+        font-size="14" font-weight="700" class="config-text">
+    ⚙️ Control Panel Config
+  </text>
+  <text x="70" y="395" font-family="'Segoe UI', sans-serif" 
+        font-size="10" class="text-muted">
+    JSON-driven fields
+  </text>
+  
+  <rect x="70" y="405" width="210" height="160" rx="8" class="bg-secondary border-light" 
+        stroke-width="1"/>
+  
+  <g font-family="'JetBrains Mono', monospace" font-size="9">
+    <text x="80" y="420" class="config-text">{ "components": {</text>
+    <text x="90" y="435" class="text-primary">  "Button": {</text>
+    <text x="100" y="450" class="text-secondary">    "controlPanel": {</text>
+    <text x="110" y="465" class="component-text">      "fields": [</text>
+    <text x="120" y="480" class="text-secondary">        { "name": "text",</text>
+    <text x="120" y="495" class="text-secondary">          "type": "text",</text>
+    <text x="120" y="510" class="text-secondary">          "default": "Click me" }</text>
+    <text x="110" y="525" class="component-text">      ],</text>
+    <text x="110" y="540" class="manifest-text">      "cssClasses": {</text>
+    <text x="120" y="555" class="manifest-text">        "allowed": ["btn-large"]</text>
+    <text x="110" y="570" class="manifest-text">      }</text>
+    <text x="100" y="585" class="text-secondary">    }</text>
+    <text x="90" y="600" class="text-primary">  }</text>
+    <text x="80" y="615" class="config-text">} }</text>
+  </g>
+  
+  <!-- Arrow from config to component -->
+  <path d="M 300 480 Q 325 450 350 480" stroke-width="3" class="config-text" 
+        marker-end="url(#flowArrow)" fill="none" stroke-dasharray="5,5"/>
+  
+  <!-- Benefits box -->
+  <rect x="900" y="400" width="250" height="180" rx="12" class="bg-secondary border-light" 
+        stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <text x="920" y="430" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="14" font-weight="700" class="text-primary">
+    🎯 Key Benefits
+  </text>
+  
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="10" class="text-secondary">
+    <text x="930" y="450">• Self-documenting configuration</text>
+    <text x="930" y="465">• Easier code reviews</text>
+    <text x="930" y="480">• Safer AI-assisted edits</text>
+    <text x="930" y="495">• No hard-coded mappings</text>
+    <text x="930" y="510">• Dynamic plugin loading</text>
+    <text x="930" y="525">• Host remains unchanged</text>
+    <text x="930" y="540">• JSON validation possible</text>
+    <text x="930" y="555">• Configuration as code</text>
+  </g>
+  
+  <!-- Flow indicators -->
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="600">
+    <text x="300" y="90" class="manifest-text">1</text>
+    <text x="900" y="90" class="loader-text">2</text>
+    <text x="600" y="390" class="component-text">3</text>
+    <text x="175" y="340" class="config-text">4</text>
+  </g>
+  
+  <!-- Bottom summary -->
+  <rect x="50" y="620" width="1100" height="100" rx="12" class="bg-secondary border-light" 
+        stroke-width="1" filter="url(#dropShadow)"/>
+  
+  <text x="600" y="645" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" 
+        font-size="16" font-weight="700" class="text-primary">
+    🔄 Complete Flow: Configuration → Loading → Execution
+  </text>
+  
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="11">
+    <text x="70" y="670" class="text-secondary">
+      📋 <tspan class="manifest-text">Manifest</tspan> defines plugins →
+      ⚙️ <tspan class="loader-text">PanelSlot</tspan> loads dynamically →
+      🎯 <tspan class="component-text">Component</tspan> mounts independently →
+      ⚙️ <tspan class="config-text">Config</tspan> drives behavior
+    </text>
+    
+    <text x="70" y="690" class="text-muted" font-style="italic">
+      Result: Zero host code changes needed to add new plugins or modify existing ones
+    </text>
+    
+    <text x="70" y="705" class="text-muted">
+      Changes take effect immediately • No host rebuild required • True plugin independence
+    </text>
+  </g>
+</svg>

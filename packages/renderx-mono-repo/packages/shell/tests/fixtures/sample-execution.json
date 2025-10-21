@@ -1,0 +1,90 @@
+{
+  "sequenceId": "create-element",
+  "sequenceName": "Create Element",
+  "pluginId": "CanvasPlugin",
+  "requestId": "req-12345",
+  "movements": [
+    {
+      "name": "validate",
+      "beats": [
+        {
+          "number": 1,
+          "event": "validate.start",
+          "duration": 5,
+          "status": "success",
+          "timestamp": "2025-10-01T08:00:00.000Z"
+        },
+        {
+          "number": 2,
+          "event": "validate.check",
+          "duration": 3,
+          "status": "success",
+          "timestamp": "2025-10-01T08:00:00.005Z"
+        },
+        {
+          "number": 3,
+          "event": "validate.end",
+          "duration": 2,
+          "status": "success",
+          "timestamp": "2025-10-01T08:00:00.008Z"
+        }
+      ],
+      "duration": 10,
+      "status": "success"
+    },
+    {
+      "name": "create",
+      "beats": [
+        {
+          "number": 1,
+          "event": "create.start",
+          "duration": 15,
+          "status": "success",
+          "timestamp": "2025-10-01T08:00:00.010Z",
+          "dataBaton": {
+            "componentType": "rectangle",
+            "x": 100,
+            "y": 100,
+            "width": 200,
+            "height": 150
+          }
+        },
+        {
+          "number": 2,
+          "event": "create.render",
+          "duration": 20,
+          "status": "success",
+          "timestamp": "2025-10-01T08:00:00.025Z"
+        },
+        {
+          "number": 3,
+          "event": "create.end",
+          "duration": 5,
+          "status": "success",
+          "timestamp": "2025-10-01T08:00:00.045Z"
+        }
+      ],
+      "duration": 40,
+      "status": "success"
+    },
+    {
+      "name": "publish",
+      "beats": [
+        {
+          "number": 1,
+          "event": "publish.event",
+          "duration": 8,
+          "status": "success",
+          "timestamp": "2025-10-01T08:00:00.050Z"
+        }
+      ],
+      "duration": 8,
+      "status": "success"
+    }
+  ],
+  "totalDuration": 58,
+  "status": "success",
+  "startTime": "2025-10-01T08:00:00.000Z",
+  "endTime": "2025-10-01T08:00:00.058Z"
+}
+

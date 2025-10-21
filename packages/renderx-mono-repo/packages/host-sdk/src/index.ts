@@ -1,36 +1,33 @@
 /**
- * @renderx/host-sdk
- * Host application interfaces and plugin loading mechanisms
+ * @renderx/sdk
+ * Core interfaces and base classes for RenderX plugin development
  */
 
 /**
- * Plugin loader interface
+ * Base class for all RenderX plugins
  */
-export interface PluginLoader {
-  /**
-   * Load a plugin from manifest
-   */
-  loadPlugin(manifest: any): Promise<any>;
+export abstract class Plugin {
+  abstract name: string;
+  abstract version: string;
 
   /**
-   * Unload a plugin
+   * Initialize the plugin
    */
-  unloadPlugin(name: string): Promise<void>;
+  abstract initialize(): Promise<void>;
 
   /**
-   * Get loaded plugins
+   * Cleanup the plugin
    */
-  getLoadedPlugins(): string[];
+  abstract cleanup(): Promise<void>;
 }
 
 /**
- * Create a new plugin loader
+ * Plugin manifest interface
  */
-export function createPluginLoader(): PluginLoader {
-  return {
-    loadPlugin: async () => ({}),
-    unloadPlugin: async () => {},
-    getLoadedPlugins: () => []
-  };
+export interface PluginManifest {
+  name: string;
+  version: string;
+  description?: string;
+  exports?: string[];
 }
 

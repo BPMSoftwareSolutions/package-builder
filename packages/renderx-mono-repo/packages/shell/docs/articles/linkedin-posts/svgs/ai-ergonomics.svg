@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="300" viewBox="0 0 560 300" font-family="'Segoe UI', system-ui" text-anchor="middle" role="img" aria-label="Human and AI friendly repository structure animated diagram">
+  <defs>
+    <linearGradient id="gHuman" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffb74d"/>
+      <stop offset="100%" stop-color="#f57c00"/>
+    </linearGradient>
+    <linearGradient id="gRobot" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#eceff1"/>
+      <stop offset="100%" stop-color="#b0bec5"/>
+    </linearGradient>
+    <linearGradient id="gHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#bbdefb"/>
+      <stop offset="100%" stop-color="#64b5f6"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="c"/>
+      <feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style>
+      .title { fill:#1565c0; font-size:16px; font-weight:700; }
+      .human { fill:url(#gHuman); stroke:#ef6c00; stroke-width:2; }
+      .robot { fill:url(#gRobot); stroke:#546e7a; stroke-width:2; }
+      .eye { fill:#1976d2; }
+      .repo { fill:#f5f5f5; stroke:#607d8b; stroke-width:2; rx:10; }
+      .folder { fill:#fff; stroke:#90a4ae; stroke-width:1.5; rx:4; }
+      .folder-label { fill:#455a64; font-size:11px; font-weight:600; }
+      .highlight { fill:url(#gHighlight); stroke:#1565c0; stroke-width:1.5; rx:8; }
+      @media (prefers-color-scheme: dark) {
+        .repo { fill:#0d2533; stroke:#29485a; }
+        .folder { fill:#102b3a; stroke:#29485a; }
+        .folder-label { fill:#e0f2f1; }
+        .title { fill:#90caf9; }
+      }
+    </style>
+    <pattern id="bgGrid" width="26" height="26" patternUnits="userSpaceOnUse">
+      <path d="M26 0H0V26" stroke="#1c3950" stroke-width="1" opacity="0.45"/>
+    </pattern>
+  </defs>
+
+  <rect width="560" height="300" fill="#071720"/>
+  <rect width="560" height="300" fill="url(#bgGrid)"/>
+  <text x="280" y="30" class="title">Human + AI Friendly Repo</text>
+
+  <!-- Human -->
+  <g filter="url(#glow)">
+    <circle cx="100" cy="170" r="44" class="human">
+      <animate attributeName="r" values="44;48;44" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <text x="100" y="176" font-size="14" font-weight="600" fill="#fff">Dev</text>
+  </g>
+
+  <!-- Repo container -->
+  <g filter="url(#glow)">
+    <rect x="200" y="80" width="320" height="180" class="repo" />
+    <g>
+      <rect x="220" y="100" width="90" height="34" class="folder" />
+      <text x="265" y="122" class="folder-label">manifests</text>
+    </g>
+    <g>
+      <rect x="220" y="144" width="90" height="34" class="folder" />
+      <text x="265" y="166" class="folder-label">sequences</text>
+    </g>
+    <g>
+      <rect x="220" y="188" width="90" height="34" class="folder" />
+      <text x="265" y="210" class="folder-label">schemas</text>
+    </g>
+    <g>
+      <rect x="330" y="100" width="170" height="122" class="highlight" filter="url(#glow)" opacity="0.92">
+        <animate attributeName="opacity" values="0.55;0.92;0.55" dur="5s" repeatCount="indefinite"/>
+        <animate attributeName="x" values="330;334;330" dur="7s" repeatCount="indefinite"/>
+      </rect>
+      <text x="415" y="120" class="folder-label">component.mapper.json</text>
+      <text x="415" y="140" class="folder-label">topic.manifest.json</text>
+      <text x="415" y="160" class="folder-label">sequence.load.json</text>
+      <text x="415" y="180" class="folder-label">feature-flags.json</text>
+      <text x="415" y="200" class="folder-label">...</text>
+    </g>
+  </g>
+
+  <!-- Robot -->
+  <g filter="url(#glow)">
+    <rect x="100" y="120" width="110" height="110" class="robot" rx="14" />
+    <circle cx="130" cy="150" r="8" class="eye">
+      <animate attributeName="r" values="8;11;8" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="170" cy="150" r="8" class="eye">
+      <animate attributeName="r" values="8;11;8" dur="3s" repeatCount="indefinite" begin="1.2s"/>
+    </circle>
+    <rect x="125" y="168" width="50" height="10" fill="#455a64" rx="4" />
+  </g>
+
+  <desc>Animated diagram showing human developer and AI robot focusing on structured repository folders with a pulsing highlight panel of key JSON contracts.</desc>
+</svg>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manual Test: Import Flow CSS Injection for Variants</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f5f5f5;
+      }
+      .test-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      .test-title {
+        color: #333;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .test-description {
+        background: #e9ecef;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+      .success {
+        color: #28a745;
+        font-weight: bold;
+      }
+      .error {
+        color: #dc3545;
+        font-weight: bold;
+      }
+      #rx-canvas {
+        border: 2px dashed #ccc;
+        min-height: 400px;
+        position: relative;
+        background: #fafafa;
+        margin: 20px 0;
+      }
+      .controls {
+        margin: 20px 0;
+      }
+      .controls button {
+        margin: 5px;
+        padding: 8px 16px;
+        border: 1px solid #ccc;
+        background: #fff;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      \r .controls button:hover {
+        background: #f8f9fa;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1 class="test-title">
+        Manual Test: Import Flow CSS Injection for Variants
+      </h1>
+
+      <div class="test-description">
+        <h3>Test Purpose:</h3>
+        <p>
+          This test verifies that imported components with variant selectors
+          properly inject their template CSS, allowing variant updates to have
+          visual effects.
+        </p>
+
+        <h3>Expected Behavior:</h3>
+        <ul>
+          <li>
+            ✅ Imported button component should display with proper styling
+          </li>
+          <li>
+            ✅ Variant changes (primary/secondary/danger) should be visually
+            apparent
+          </li>
+          <li>
+            ✅ Size changes (small/medium/large) should be visually apparent
+          </li>
+          <li>✅ CSS should be injected into the page automatically</li>
+        </ul>
+      </div>
+
+      <div class="controls">
+        <button onclick="testImportFlow()">Test Import Flow</button>
+        <button onclick="testVariantChanges()">Test Variant Changes</button>
+        <button onclick="checkCssInjection()">Check CSS Injection</button>
+        <button onclick="clearCanvas()">Clear Canvas</button>
+      </div>
+
+      <div id="test-results"></div>
+      <div id="rx-canvas"></div>
+    </div>
+
+    <script type="module">
+      // Mock the import flow functionality for manual testing
+      let testResults = document.getElementById("test-results");
+      let canvas = document.getElementById("rx-canvas");
+      let testButton = null;
+
+      window.testImportFlow = async function () {
+        try {
+          // Simulate the import flow with a button component
+          const mockUiFile = {
+            version: "1.0.0",
+            metadata: { createdAt: new Date().toISOString() },
+            cssClasses: {},
+            components: [
+              {
+                id: "test-button-1",
+                type: "button",
+                template: {
+                  tag: "button",
+                  classRefs: [
+                    "rx-button",
+                    "rx-button--primary",
+                    "rx-button--medium",
+                  ],
+                  style: {},
+                },
+                layout: { x: 50, y: 50, width: 120, height: 40 },
+                content: {
+                  content: "Test Button",
+                  variant: "primary",
+                  size: "medium",
+                },
+              },
+            ],
+          };
+
+          // Simulate CSS injection (this would normally come from the component template)
+          const buttonCss = `.rx-button { 
+                    background-color: var(--bg-color, #007bff); 
+                    color: var(--text-color, #ffffff); 
+                    border: var(--border, none); 
+                    padding: var(--padding, 8px 16px); 
+                    border-radius: var(--border-radius, 4px); 
+                    cursor: pointer; 
+                    font-size: var(--font-size, 14px); 
+                    font-weight: 500; 
+                    transition: all 0.2s ease; 
+                    display: inline-flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                    text-decoration: none; 
+                    user-select: none; 
+                } 
+                .rx-button:hover:not(:disabled) { 
+                    background-color: var(--hover-bg, #0056b3); 
+                    transform: translateY(-1px); 
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.15); 
+                } 
+                .rx-button--primary { 
+                    --bg-color: #007bff; 
+                    --text-color: #ffffff; 
+                    --hover-bg: #0056b3; 
+                    --border: none; 
+                } 
+                .rx-button--secondary { 
+                    --bg-color: #6c757d; 
+                    --text-color: #ffffff; 
+                    --hover-bg: #545b62; 
+                    --border: none; 
+                } 
+                .rx-button--danger { 
+                    --bg-color: #dc3545; 
+                    --text-color: #ffffff; 
+                    --hover-bg: #c82333; 
+                    --border: none; 
+                } 
+                .rx-button--small { 
+                    --padding: 4px 8px; 
+                    --font-size: 12px; 
+                    --border-radius: 3px; 
+                } 
+                .rx-button--medium { 
+                    --padding: 8px 16px; 
+                    --font-size: 14px; 
+                    --border-radius: 4px; 
+                } 
+                .rx-button--large { 
+                    --padding: 12px 24px; 
+                    --font-size: 16px; 
+                    --border-radius: 6px; 
+                }`;
+
+          // Inject CSS
+          let styleEl = document.getElementById("rx-components-styles");
+          if (!styleEl) {
+            styleEl = document.createElement("style");
+            styleEl.id = "rx-components-styles";
+            document.head.appendChild(styleEl);
+          }
+          styleEl.textContent = buttonCss;
+
+          // Create the button element
+          testButton = document.createElement("button");
+          testButton.id = "test-button-1";
+          testButton.className =
+            "rx-button rx-button--primary rx-button--medium";
+          testButton.textContent = "Test Button";
+          testButton.style.position = "absolute";
+          testButton.style.left = "50px";
+          testButton.style.top = "50px";
+
+          canvas.appendChild(testButton);
+
+          testResults.innerHTML =
+            '<div class="success">✅ Import flow test completed successfully! Button created with CSS injection.</div>';
+        } catch (error) {
+          testResults.innerHTML = `<div class="error">❌ Import flow test failed: ${error.message}</div>`;
+        }
+      };
+
+      window.testVariantChanges = function () {
+        if (!testButton) {
+          testResults.innerHTML =
+            '<div class="error">❌ No test button found. Run "Test Import Flow" first.</div>';
+          return;
+        }
+
+        let step = 0;
+        const variants = [
+          { variant: "primary", size: "small", text: "Primary Small" },
+          { variant: "secondary", size: "medium", text: "Secondary Medium" },
+          { variant: "danger", size: "large", text: "Danger Large" },
+          { variant: "primary", size: "medium", text: "Back to Primary" },
+        ];
+
+        function nextVariant() {
+          if (step >= variants.length) {
+            testResults.innerHTML =
+              '<div class="success">✅ All variant changes completed successfully!</div>';
+            return;
+          }
+
+          const variant = variants[step];
+          testButton.className = `rx-button rx-button--${variant.variant} rx-button--${variant.size}`;
+          testButton.textContent = variant.text;
+
+          testResults.innerHTML = `<div class="success">✅ Applied variant: ${
+            variant.variant
+          } ${variant.size} (Step ${step + 1}/${variants.length})</div>`;
+          step++;
+
+          setTimeout(nextVariant, 1500);
+        }
+
+        nextVariant();
+      };
+
+      window.checkCssInjection = function () {
+        const styleEl = document.getElementById("rx-components-styles");
+        if (styleEl && styleEl.textContent.includes(".rx-button--primary")) {
+          testResults.innerHTML =
+            '<div class="success">✅ CSS injection verified! Template CSS is properly injected.</div>';
+        } else {
+          testResults.innerHTML =
+            '<div class="error">❌ CSS injection failed! Template CSS not found.</div>';
+        }
+      };
+
+      window.clearCanvas = function () {
+        canvas.innerHTML = "";
+        testButton = null;
+        testResults.innerHTML = "<div>Canvas cleared.</div>";
+      };
+    </script>
+  </body>
+</html>
