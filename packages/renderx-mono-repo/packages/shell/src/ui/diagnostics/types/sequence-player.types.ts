@@ -56,7 +56,7 @@ export interface ParsedExecution {
   /** Total duration of the entire execution in milliseconds */
   totalDuration: number;
   /** Overall status of the execution */
-  status: 'success' | 'error';
+  status: 'success' | 'error' | 'pending';
   /** Timestamp when execution started */
   startTime?: string;
   /** Timestamp when execution ended */

@@ -40,7 +40,7 @@ export async function loadInteractionManifestData(): Promise<any> {
 
     // Try to get detailed interaction data (legacy, can be removed if not needed)
     const detailedInteractions: any[] = [];
-    if (stats.totalInteractions > 0) {
+    if (stats.routeCount > 0) {
       try {
         const sampleInteractionIds = ['component.create', 'component.select', 'component.update'];
         for (const id of sampleInteractionIds) {

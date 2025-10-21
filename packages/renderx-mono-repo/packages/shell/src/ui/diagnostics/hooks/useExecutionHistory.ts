@@ -28,7 +28,7 @@ export function useExecutionHistory() {
    * Adds an execution to history
    */
   const addToHistory = useCallback((execution: LiveExecution) => {
-    const historyItem = convertToHistoryItem(execution);
+    const historyItem = convertToHistoryItem(execution, execution.sequenceName);
     
     setHistory(prev => {
       // Add to beginning of array (most recent first)

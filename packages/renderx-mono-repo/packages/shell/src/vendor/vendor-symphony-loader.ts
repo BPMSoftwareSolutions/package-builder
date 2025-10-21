@@ -5,8 +5,11 @@
 // Note: import.meta.glob keys are file system paths. We translate bare specifiers
 // into the corresponding node_modules/dist path and look them up here.
 
+// @ts-ignore - Vite-specific feature
 const cp = import.meta.glob('../../node_modules/@renderx-plugins/control-panel/dist/symphonies/**/*.js');
+// @ts-ignore - Vite-specific feature
 const cc = import.meta.glob('../../node_modules/@renderx-plugins/canvas-component/dist/symphonies/**/*.js');
+// @ts-ignore - Vite-specific feature
 const lc = import.meta.glob('../../node_modules/@renderx-plugins/library-component/dist/symphonies/**/*.js');
 
 function specToNodeModulesDistPath(spec: string): string | null {

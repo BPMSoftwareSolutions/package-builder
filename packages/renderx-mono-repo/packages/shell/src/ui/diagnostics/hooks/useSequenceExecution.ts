@@ -38,6 +38,7 @@ export function useSequenceExecution() {
       // Initialize live execution state
       const execution: LiveExecution = {
         sequenceId: sequence.sequenceId,
+        sequenceName: sequence.sequenceName,
         pluginId: sequence.pluginId,
         requestId,
         status: 'running',

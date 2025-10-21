@@ -6,10 +6,10 @@
  */
 
 import React from 'react';
-import type { ExecutionStats } from '../../types';
+import type { ExecutionStats as ExecutionStatsType } from '../../types';
 
-export interface ExecutionStatsProps {
-  stats: ExecutionStats;
+interface ExecutionStatsProps {
+  stats: ExecutionStatsType;
   onExport?: () => void;
 }
 

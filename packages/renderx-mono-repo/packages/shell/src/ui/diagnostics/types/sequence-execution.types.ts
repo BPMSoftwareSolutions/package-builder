@@ -49,6 +49,8 @@ export interface LiveBeat {
 export interface LiveExecution {
   /** Unique identifier for the sequence */
   sequenceId: string;
+  /** Human-readable name of the sequence */
+  sequenceName: string;
   /** Plugin that owns this sequence */
   pluginId: string;
   /** Unique request ID for this execution */
@@ -75,6 +77,8 @@ export interface LiveExecution {
  * Represents a historical execution record
  */
 export interface ExecutionHistoryItem {
+  /** Unique identifier for this history item */
+  id: string;
   /** Unique identifier for the sequence */
   sequenceId: string;
   /** Human-readable name of the sequence */
@@ -84,11 +88,11 @@ export interface ExecutionHistoryItem {
   /** Unique request ID for this execution */
   requestId: string;
   /** Overall status of the execution */
-  status: 'success' | 'error';
+  status: 'success' | 'error' | 'pending';
   /** Timestamp when execution started */
   startTime: string;
   /** Timestamp when execution ended */
-  endTime: string;
+  endTime?: string;
   /** Total duration in milliseconds */
   totalDuration: number;
   /** Number of beats executed */
@@ -111,6 +115,8 @@ export interface HistoryFilter {
   pluginId?: string;
   /** Filter by sequence ID */
   sequenceId?: string;
+  /** Search query for filtering */
+  searchQuery?: string;
 }
 
 /**
@@ -120,11 +126,11 @@ export interface HistoryStats {
   /** Total number of executions */
   total: number;
   /** Number of successful executions */
-  successCount: number;
+  success: number;
   /** Number of failed executions */
-  errorCount: number;
-  /** Success rate as a percentage */
-  successRate: number;
+  error: number;
+  /** Number of filtered executions */
+  filtered: number;
   /** Average execution duration in milliseconds */
   avgDuration: number;
 }

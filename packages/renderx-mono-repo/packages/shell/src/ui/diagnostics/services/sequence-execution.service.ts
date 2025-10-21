@@ -170,6 +170,7 @@ export function convertToHistoryItem(
       : 0);
 
   return {
+    id: execution.requestId,
     sequenceId: execution.sequenceId,
     sequenceName,
     pluginId: execution.pluginId,

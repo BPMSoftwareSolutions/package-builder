@@ -22,9 +22,13 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@renderx/*": ["packages/*/src"]
+      "@renderx/*": ["packages/*/src"],
+      "@renderx-plugins/*": ["packages/*/src"],
+      "@renderx-plugins/host-sdk": ["packages/host-sdk/src"],
+      "@renderx-plugins/host-sdk/*": ["packages/host-sdk/src/*"]
     }
   },
   "references": [

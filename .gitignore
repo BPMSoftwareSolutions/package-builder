@@ -153,3 +153,10 @@ tmp-integration-*/
 # Visual Studio
 .vs/
 /playwright-report
+
+*.d.ts
+*.d.js
+*.js.map
+*.ts.map
+*.d.ts.map
+*.d.js.map

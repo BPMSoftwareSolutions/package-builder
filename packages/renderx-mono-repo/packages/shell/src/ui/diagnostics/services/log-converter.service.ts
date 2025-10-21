@@ -19,6 +19,7 @@ interface SequenceContext {
   pluginId: string;
   requestId: string;
   startTime?: string;
+  endTime?: string;
   movements: Map<string, MovementContext>;
   currentMovement?: string;
 }
