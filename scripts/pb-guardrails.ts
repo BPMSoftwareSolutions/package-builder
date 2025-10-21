@@ -231,21 +231,21 @@ async function validateRepo(repoPath: string): Promise<ValidationResult[]> {
   try {
     const entries = await readdir(packagesDir, { withFileTypes: true });
     const packageDirs = entries
-      .filter(entry => entry.isDirectory())
+      .filter(entry => entry.isDirectory() && entry.name !== 'renderx-mono-repo')
       .map(entry => join(packagesDir, entry.name));
-    
+
     if (packageDirs.length === 0) {
       console.warn('⚠️  No packages found');
       return [];
     }
-    
+
     const results: ValidationResult[] = [];
-    
+
     for (const packagePath of packageDirs) {
       const result = await validatePackage(packagePath);
       results.push(result);
     }
-    
+
     return results;
   } catch (error: any) {
     console.error(`❌ Failed to read packages directory: ${error.message}`);
