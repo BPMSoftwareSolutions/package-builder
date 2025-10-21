@@ -1,0 +1,39 @@
+{
+  "name": "@renderx/conductor",
+  "version": "1.0.0",
+  "description": "RenderX Orchestration Engine - Coordinates plugin lifecycle and event management",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "renderx",
+    "conductor",
+    "orchestration",
+    "plugin-system"
+  ],
+  "author": "BPM Software Solutions",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0"
+  }
+}
+

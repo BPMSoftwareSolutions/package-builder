@@ -1,22 +1,36 @@
 /**
  * @renderx/shell
- * Thin wrapper shell for managing RenderX plugins
+ * RenderX Shell - Host application UI and plugin orchestration
  */
 
-// Export shell implementation
-export { Shell, createShell } from './shell.js';
+/**
+ * Shell application interface
+ */
+export interface Shell {
+  /**
+   * Initialize the shell
+   */
+  initialize(): Promise<void>;
 
-// Re-export contracts for convenience
-export type {
-  IPlugin,
-  IShell,
-  PluginId,
-  SequenceId,
-  PluginMetadata,
-  Sequence,
-  ShellEvent,
-  ShellEventListener,
-  ShellConfig,
-  ShellMetrics,
-} from '@renderx/contracts';
+  /**
+   * Render the shell
+   */
+  render(): void;
+
+  /**
+   * Cleanup the shell
+   */
+  cleanup(): Promise<void>;
+}
+
+/**
+ * Create a new shell instance
+ */
+export function createShell(): Shell {
+  return {
+    initialize: async () => {},
+    render: () => {},
+    cleanup: async () => {}
+  };
+}
 

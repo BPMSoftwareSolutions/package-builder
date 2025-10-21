@@ -1,41 +1,48 @@
-# RenderX Mono-Repo Code Owners
-# This file defines team ownership for different parts of the mono-repo
-# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+# RenderX Mono-Repo Code Ownership
 
 # Root configuration
 /pnpm-workspace.yaml @BPMSoftwareSolutions/architecture-team
 /tsconfig.json @BPMSoftwareSolutions/architecture-team
-/.eslintrc.json @BPMSoftwareSolutions/architecture-team
+/eslint.config.js @BPMSoftwareSolutions/architecture-team
 /turbo.json @BPMSoftwareSolutions/architecture-team
 /renderx-adf.json @BPMSoftwareSolutions/architecture-team
-/.gitignore @BPMSoftwareSolutions/architecture-team
-/package.json @BPMSoftwareSolutions/architecture-team
+/CODEOWNERS @BPMSoftwareSolutions/architecture-team
 
-# Conductor - Orchestration Team
+# Conductor (Orchestration Engine)
 /packages/conductor/ @BPMSoftwareSolutions/orchestration-team
 
-# SDK - SDK Team
+# SDK and Host SDK
 /packages/sdk/ @BPMSoftwareSolutions/sdk-team
-
-# Manifest Tools - SDK Team
+/packages/host-sdk/ @BPMSoftwareSolutions/sdk-team
 /packages/manifest-tools/ @BPMSoftwareSolutions/sdk-team
 
-# Shell - Shell Team
+# Shell (Host Application)
 /packages/shell/ @BPMSoftwareSolutions/shell-team
 
-# Plugins - Plugin Teams
-/packages/plugins/canvas/ @BPMSoftwareSolutions/canvas-team
-/packages/plugins/components/ @BPMSoftwareSolutions/components-team
-/packages/plugins/control-panel/ @BPMSoftwareSolutions/control-panel-team
-/packages/plugins/header/ @BPMSoftwareSolutions/header-team
-/packages/plugins/library/ @BPMSoftwareSolutions/library-team
-
-# Shared Contracts - Architecture Team
+# Shared Contracts
 /packages/contracts/ @BPMSoftwareSolutions/architecture-team
 
-# Tooling - Architecture Team
+# Tooling
 /packages/tooling/ @BPMSoftwareSolutions/architecture-team
 
-# GitHub Actions and CI/CD
-/.github/ @BPMSoftwareSolutions/architecture-team
+# Plugins - Canvas
+/packages/plugins/canvas/ @BPMSoftwareSolutions/canvas-team
+/packages/plugins/canvas-component/ @BPMSoftwareSolutions/canvas-team
+
+# Plugins - Components
+/packages/plugins/components/ @BPMSoftwareSolutions/components-team
+
+# Plugins - Control Panel
+/packages/plugins/control-panel/ @BPMSoftwareSolutions/control-panel-team
+
+# Plugins - Header
+/packages/plugins/header/ @BPMSoftwareSolutions/header-team
+
+# Plugins - Library
+/packages/plugins/library/ @BPMSoftwareSolutions/library-team
+/packages/plugins/library-component/ @BPMSoftwareSolutions/library-team
+
+# Documentation
+/docs/ @BPMSoftwareSolutions/architecture-team
+/scripts/ @BPMSoftwareSolutions/architecture-team
 

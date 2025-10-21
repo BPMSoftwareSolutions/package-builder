@@ -1,0 +1,39 @@
+{
+  "name": "@renderx/host-sdk",
+  "version": "1.0.0",
+  "description": "RenderX Host SDK - Host application interfaces and plugin loading mechanisms",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "renderx",
+    "host-sdk",
+    "plugin-loading",
+    "host-application"
+  ],
+  "author": "BPM Software Solutions",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0"
+  }
+}
+
