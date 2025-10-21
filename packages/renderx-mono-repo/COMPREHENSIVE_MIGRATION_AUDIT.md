@@ -16,6 +16,60 @@ The migration created a **library monorepo** but the original is a **full Vite-b
 
 ---
 
+## NPM PACKAGES & MIGRATION SOURCES
+
+### Core Packages (Migrated to Mono-Repo)
+
+| Package | Version | Original Repo | Status | Location |
+|---------|---------|---------------|--------|----------|
+| `@renderx/conductor` | 1.0.0 | N/A (new) | ✅ Migrated | `packages/conductor` |
+| `@renderx/contracts` | 1.0.0 | N/A (new) | ✅ Migrated | `packages/contracts` |
+| `@renderx/host-sdk` | 1.0.0 | `renderx-host-sdk` | ✅ Migrated | `packages/host-sdk` |
+| `@renderx/manifest-tools` | 1.0.0 | `renderx-plugin-manifest-tools` | ✅ Migrated | `packages/manifest-tools` |
+| `@renderx/sdk` | 1.0.0 | N/A (new) | ✅ Migrated | `packages/sdk` |
+| `@renderx/shell` | 1.0.0 | N/A (new) | ✅ Migrated | `packages/shell` |
+| `@renderx/tooling` | 1.0.0 | N/A (new) | ✅ Migrated | `packages/tooling` |
+
+### External Dependencies (Not Migrated - External Repos)
+
+| Package | Version | Original Repo | Status | Purpose |
+|---------|---------|---------------|--------|---------|
+| `musical-conductor` | 1.4.5 | `BPMSoftwareSolutions/MusicalConductor` | ⚠️ External | Orchestration engine |
+| `react` | 19.1.1 | N/A (npm) | ⚠️ External | UI framework |
+| `react-dom` | 19.1.1 | N/A (npm) | ⚠️ External | React DOM |
+| `lucide-react` | 0.544.0 | N/A (npm) | ⚠️ External | Icon library |
+| `gif.js.optimized` | 1.0.1 | N/A (npm) | ⚠️ External | GIF export |
+| `vite` | 7.1.3 | N/A (npm) | ⚠️ External | Build tool |
+| `@vitejs/plugin-react` | 5.0.3 | N/A (npm) | ⚠️ External | Vite React plugin |
+| `typescript` | 5.9.2 | N/A (npm) | ⚠️ External | Type checking |
+| `vitest` | 3.2.4 | N/A (npm) | ⚠️ External | Unit testing |
+| `cypress` | 15.2.0 | N/A (npm) | ⚠️ External | E2E testing |
+| `eslint` | 9.33.0 | N/A (npm) | ⚠️ External | Linting |
+
+### Plugin Packages (External - Not in Mono-Repo)
+
+| Package | Version | Original Repo | Status | Purpose |
+|---------|---------|---------------|--------|---------|
+| `@renderx-plugins/canvas` | 0.1.0-rc.4 | `renderx-plugin-canvas` | ❌ NOT MIGRATED | Canvas rendering |
+| `@renderx-plugins/canvas-component` | 0.1.0-rc.1 | `renderx-plugin-canvas-component` | ❌ NOT MIGRATED | Canvas interaction |
+| `@renderx-plugins/components` | 0.1.1 | `renderx-plugin-components` | ❌ NOT MIGRATED | Component catalog |
+| `@renderx-plugins/control-panel` | 0.1.0-rc.8 | `renderx-plugin-control-panel` | ❌ NOT MIGRATED | Control panel UI |
+| `@renderx-plugins/header` | 1.0.1 | `renderx-plugin-header` | ❌ NOT MIGRATED | Header UI |
+| `@renderx-plugins/library` | 1.0.5 | `renderx-plugin-library` | ❌ NOT MIGRATED | Library plugin |
+| `@renderx-plugins/library-component` | 0.1.0-rc.5 | `renderx-plugin-library-component` | ❌ NOT MIGRATED | Library component |
+| `@renderx-plugins/digital-assets` | 1.0.0 | `renderx-plugins-digital-assets` | ❌ NOT MIGRATED | Digital assets |
+
+### Host Application (Not Migrated)
+
+| Component | Original Repo | Status | Purpose |
+|-----------|---------------|--------|---------|
+| Host App Code | `renderx-plugins-demo` | ❌ NOT MIGRATED | Vite React host application |
+| Manifest Scripts | `renderx-plugins-demo` | ❌ NOT MIGRATED | Plugin manifest generation |
+| E2E Tests | `renderx-plugins-demo` | ❌ NOT MIGRATED | Cypress test suite |
+| JSON Catalogs | `renderx-plugins-demo` | ❌ NOT MIGRATED | Component/sequence definitions |
+
+---
+
 ## AUDIT CHECKLIST
 
 ### 1. BUILD SYSTEM & CONFIGURATION
@@ -201,6 +255,29 @@ The migration created a **library monorepo** but the original is a **full Vite-b
 4. **Test locally** with `npm run dev`
 5. **Verify plugins load** correctly
 6. **Run E2E tests** to confirm functionality
+
+---
+
+## GITHUB REPOSITORY REFERENCES
+
+### Core Repositories (Migrated to Mono-Repo)
+- **Host SDK**: https://github.com/BPMSoftwareSolutions/renderx-host-sdk
+- **Manifest Tools**: https://github.com/BPMSoftwareSolutions/renderx-plugin-manifest-tools
+
+### External Repositories (Not Migrated)
+- **Orchestration Engine**: https://github.com/BPMSoftwareSolutions/MusicalConductor
+- **Canvas Plugin**: https://github.com/BPMSoftwareSolutions/renderx-plugin-canvas
+- **Canvas Component**: https://github.com/BPMSoftwareSolutions/renderx-plugin-canvas-component
+- **Components Plugin**: https://github.com/BPMSoftwareSolutions/renderx-plugin-components
+- **Control Panel Plugin**: https://github.com/BPMSoftwareSolutions/renderx-plugin-control-panel
+- **Header Plugin**: https://github.com/BPMSoftwareSolutions/renderx-plugin-header
+- **Library Plugin**: https://github.com/BPMSoftwareSolutions/renderx-plugin-library
+- **Library Component**: https://github.com/BPMSoftwareSolutions/renderx-plugin-library-component
+- **Digital Assets**: https://github.com/BPMSoftwareSolutions/renderx-plugins-digital-assets
+
+### Host Application Repository (Source of Truth)
+- **RenderX Plugins Demo**: https://github.com/BPMSoftwareSolutions/renderx-plugins-demo
+  - Contains: Vite config, React app, manifest scripts, E2E tests, JSON catalogs
 
 ---
 
