@@ -1,0 +1,224 @@
+name: RenderX Mono-Repo CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'packages/renderx-mono-repo/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'packages/renderx-mono-repo/**'
+
+jobs:
+  lint_unit:
+    name: Lint & Unit Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      - name: Install dependencies
+        run: cd packages/renderx-mono-repo && pnpm install
+      
+      - name: Lint
+        run: cd packages/renderx-mono-repo && pnpm run lint
+      
+      - name: Type check
+        run: cd packages/renderx-mono-repo && pnpm run typecheck
+      
+      - name: Run unit tests
+        run: cd packages/renderx-mono-repo && pnpm run test
+      
+      - name: Build
+        run: cd packages/renderx-mono-repo && pnpm run build
+      
+      - name: Upload coverage
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/renderx-mono-repo/coverage/coverage-final.json
+          flags: renderx-mono-repo-unit
+          fail_ci_if_error: false
+
+  e2e_cypress:
+    name: E2E Tests (Cypress)
+    runs-on: ubuntu-latest
+    needs: lint_unit
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      - name: Install dependencies
+        run: cd packages/renderx-mono-repo && pnpm install
+      
+      - name: Build for E2E
+        run: cd packages/renderx-mono-repo && pnpm run build
+      
+      - name: Start dev server
+        run: cd packages/renderx-mono-repo && pnpm run dev &
+        env:
+          CI: true
+      
+      - name: Wait for server
+        run: |
+          for i in {1..30}; do
+            if curl -f http://localhost:4173 > /dev/null 2>&1; then
+              echo "Server is ready"
+              exit 0
+            fi
+            echo "Waiting for server... ($i/30)"
+            sleep 2
+          done
+          echo "Server failed to start"
+          exit 1
+      
+      - name: Run Cypress E2E tests
+        run: cd packages/renderx-mono-repo && pnpm run test:e2e
+        env:
+          CI: true
+      
+      - name: Upload E2E artifacts
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-artifacts
+          path: packages/renderx-mono-repo/cypress/artifacts
+          retention-days: 7
+      
+      - name: Upload E2E videos
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-videos
+          path: packages/renderx-mono-repo/cypress/videos
+          retention-days: 7
+
+  precheck:
+    name: CI Precheck
+    runs-on: ubuntu-latest
+    needs: lint_unit
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      - name: Install dependencies
+        run: cd packages/renderx-mono-repo && pnpm install
+      
+      - name: Run CI precheck
+        run: cd packages/renderx-mono-repo && node scripts/ci-precheck.js
+      
+      - name: Validate ADF
+        run: |
+          cd packages/renderx-mono-repo
+          if [ -f renderx-adf.json ]; then
+            echo "✅ renderx-adf.json exists"
+            cat renderx-adf.json | jq . > /dev/null && echo "✅ Valid JSON"
+          else
+            echo "❌ renderx-adf.json not found"
+            exit 1
+          fi
+
+  quality_gates:
+    name: Quality Gates
+    runs-on: ubuntu-latest
+    needs: [lint_unit, e2e_cypress, precheck]
+    if: always()
+    
+    steps:
+      - name: Check job statuses
+        run: |
+          if [ "${{ needs.lint_unit.result }}" != "success" ]; then
+            echo "❌ Lint & Unit Tests failed"
+            exit 1
+          fi
+          if [ "${{ needs.e2e_cypress.result }}" != "success" ]; then
+            echo "❌ E2E Tests failed"
+            exit 1
+          fi
+          if [ "${{ needs.precheck.result }}" != "success" ]; then
+            echo "❌ CI Precheck failed"
+            exit 1
+          fi
+          echo "✅ All quality gates passed"
+
