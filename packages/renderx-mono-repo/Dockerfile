@@ -78,6 +78,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 ENV NODE_ENV=production
 ENV LOG_DIR=/app/logs
 
-# Default command: start development server
-CMD ["pnpm", "run", "dev"]
+# Default command: build and keep container running
+CMD ["sh", "-c", "pnpm run build && tail -f /dev/null"]
 
