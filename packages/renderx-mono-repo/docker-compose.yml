@@ -47,7 +47,7 @@ services:
       - LOG_DIR=/app/logs
     networks:
       - renderx-network
-    command: sh -c "npm install && npm run build && npm run test:watch"
+    command: sh -c "npm install && npm run dev"
     restart: unless-stopped
 
   # Log aggregator (optional - for centralized logging)
