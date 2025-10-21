@@ -1,0 +1,96 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@nx/enforce-module-boundaries"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "@nx"
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "@nx/enforce-module-boundaries": [
+      "error",
+      {
+        "enforceBuildableLibDependency": true,
+        "allow": [],
+        "depConstraints": [
+          {
+            "sourceTag": "scope:conductor",
+            "onlyDependOnLibsWithTags": [
+              "scope:conductor",
+              "scope:contracts"
+            ]
+          },
+          {
+            "sourceTag": "scope:sdk",
+            "onlyDependOnLibsWithTags": [
+              "scope:sdk",
+              "scope:contracts"
+            ]
+          },
+          {
+            "sourceTag": "scope:shell",
+            "onlyDependOnLibsWithTags": [
+              "scope:shell",
+              "scope:conductor",
+              "scope:contracts"
+            ]
+          },
+          {
+            "sourceTag": "scope:plugin",
+            "onlyDependOnLibsWithTags": [
+              "scope:plugin",
+              "scope:conductor",
+              "scope:contracts"
+            ]
+          },
+          {
+            "sourceTag": "scope:contracts",
+            "onlyDependOnLibsWithTags": [
+              "scope:contracts"
+            ]
+          },
+          {
+            "sourceTag": "scope:tooling",
+            "onlyDependOnLibsWithTags": [
+              "scope:tooling",
+              "scope:contracts"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.ts",
+        "*.tsx"
+      ],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off"
+      }
+    }
+  ]
+}
+

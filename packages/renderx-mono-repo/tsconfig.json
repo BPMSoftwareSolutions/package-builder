@@ -1,0 +1,67 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Path mapping for workspace packages */
+    "baseUrl": ".",
+    "paths": {
+      "@renderx/conductor": ["packages/conductor/src/index.ts"],
+      "@renderx/conductor/*": ["packages/conductor/src/*"],
+      "@renderx/sdk": ["packages/sdk/src/index.ts"],
+      "@renderx/sdk/*": ["packages/sdk/src/*"],
+      "@renderx/manifest-tools": ["packages/manifest-tools/src/index.ts"],
+      "@renderx/manifest-tools/*": ["packages/manifest-tools/src/*"],
+      "@renderx/shell": ["packages/shell/src/index.ts"],
+      "@renderx/shell/*": ["packages/shell/src/*"],
+      "@renderx/plugins-canvas": ["packages/plugins/canvas/src/index.ts"],
+      "@renderx/plugins-canvas/*": ["packages/plugins/canvas/src/*"],
+      "@renderx/plugins-components": ["packages/plugins/components/src/index.ts"],
+      "@renderx/plugins-components/*": ["packages/plugins/components/src/*"],
+      "@renderx/plugins-control-panel": ["packages/plugins/control-panel/src/index.ts"],
+      "@renderx/plugins-control-panel/*": ["packages/plugins/control-panel/src/*"],
+      "@renderx/plugins-header": ["packages/plugins/header/src/index.ts"],
+      "@renderx/plugins-header/*": ["packages/plugins/header/src/*"],
+      "@renderx/plugins-library": ["packages/plugins/library/src/index.ts"],
+      "@renderx/plugins-library/*": ["packages/plugins/library/src/*"],
+      "@renderx/contracts": ["packages/contracts/src/index.ts"],
+      "@renderx/contracts/*": ["packages/contracts/src/*"],
+      "@renderx/tooling": ["packages/tooling/src/index.ts"],
+      "@renderx/tooling/*": ["packages/tooling/src/*"]
+    }
+  },
+  "include": [],
+  "references": [
+    { "path": "packages/conductor" },
+    { "path": "packages/sdk" },
+    { "path": "packages/manifest-tools" },
+    { "path": "packages/shell" },
+    { "path": "packages/plugins/canvas" },
+    { "path": "packages/plugins/components" },
+    { "path": "packages/plugins/control-panel" },
+    { "path": "packages/plugins/header" },
+    { "path": "packages/plugins/library" },
+    { "path": "packages/contracts" },
+    { "path": "packages/tooling" }
+  ]
+}
+

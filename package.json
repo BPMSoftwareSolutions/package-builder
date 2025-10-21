@@ -5,7 +5,8 @@
   "type": "module",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "!packages/renderx-mono-repo"
   ],
   "scripts": {
   "test": "echo 'No unit tests at root (packages are externalized)'",

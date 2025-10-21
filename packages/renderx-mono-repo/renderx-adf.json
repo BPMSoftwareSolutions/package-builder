@@ -1,0 +1,184 @@
+{
+  "version": "1.0.0",
+  "monoRepo": {
+    "root": "packages/",
+    "packageManager": "pnpm",
+    "buildSystem": "turbo",
+    "contexts": [
+      {
+        "id": "conductor",
+        "name": "Conductor",
+        "path": "packages/conductor",
+        "scope": "conductor",
+        "team": "orchestration-team",
+        "description": "Orchestration engine for RenderX plugin system",
+        "enforces": ["no-ui-deps"],
+        "exports": {
+          ".": "./dist/index.js",
+          "./types": "./dist/types.d.ts"
+        }
+      },
+      {
+        "id": "sdk",
+        "name": "SDK",
+        "path": "packages/sdk",
+        "scope": "sdk",
+        "team": "sdk-team",
+        "description": "Core SDK for RenderX plugin development",
+        "enforces": ["no-ui-deps"],
+        "exports": {
+          ".": "./dist/index.js",
+          "./types": "./dist/types.d.ts"
+        }
+      },
+      {
+        "id": "manifest-tools",
+        "name": "Manifest Tools",
+        "path": "packages/manifest-tools",
+        "scope": "sdk",
+        "team": "sdk-team",
+        "description": "Tools for managing RenderX manifest files",
+        "enforces": ["no-ui-deps"],
+        "exports": {
+          ".": "./dist/index.js"
+        }
+      },
+      {
+        "id": "shell",
+        "name": "Shell",
+        "path": "packages/shell",
+        "scope": "shell",
+        "team": "shell-team",
+        "description": "Shell application for hosting RenderX plugins",
+        "enforces": ["only-public-interfaces"],
+        "exports": {
+          ".": "./dist/index.js"
+        }
+      },
+      {
+        "id": "plugins",
+        "name": "Plugins",
+        "path": "packages/plugins",
+        "scope": "plugin",
+        "team": "plugin-teams",
+        "description": "Plugin packages for RenderX",
+        "enforces": ["no-shell-deps", "no-cross-plugin-deps"],
+        "subContexts": [
+          {
+            "id": "canvas",
+            "name": "Canvas Plugin",
+            "path": "packages/plugins/canvas",
+            "team": "canvas-team"
+          },
+          {
+            "id": "components",
+            "name": "Components Plugin",
+            "path": "packages/plugins/components",
+            "team": "components-team"
+          },
+          {
+            "id": "control-panel",
+            "name": "Control Panel Plugin",
+            "path": "packages/plugins/control-panel",
+            "team": "control-panel-team"
+          },
+          {
+            "id": "header",
+            "name": "Header Plugin",
+            "path": "packages/plugins/header",
+            "team": "header-team"
+          },
+          {
+            "id": "library",
+            "name": "Library Plugin",
+            "path": "packages/plugins/library",
+            "team": "library-team"
+          }
+        ]
+      },
+      {
+        "id": "contracts",
+        "name": "Contracts",
+        "path": "packages/contracts",
+        "scope": "contracts",
+        "team": "architecture-team",
+        "description": "Shared interfaces and contracts for RenderX",
+        "enforces": ["no-external-deps"],
+        "exports": {
+          ".": "./dist/index.js",
+          "./types": "./dist/types.d.ts"
+        }
+      },
+      {
+        "id": "tooling",
+        "name": "Tooling",
+        "path": "packages/tooling",
+        "scope": "tooling",
+        "team": "architecture-team",
+        "description": "Build tools and CLI utilities for RenderX",
+        "enforces": ["no-ui-deps"],
+        "exports": {
+          ".": "./dist/index.js"
+        }
+      }
+    ]
+  },
+  "rules": {
+    "dependencies": [
+      {
+        "from": "plugin-*",
+        "to": "shell",
+        "allowed": false,
+        "reason": "Plugins cannot depend on shell (only interfaces)"
+      },
+      {
+        "from": "plugin-*",
+        "to": "conductor",
+        "allowed": true,
+        "reason": "Plugins can depend on conductor"
+      },
+      {
+        "from": "plugin-*",
+        "to": "contracts",
+        "allowed": true,
+        "reason": "Plugins can depend on contracts"
+      },
+      {
+        "from": "shell",
+        "to": "conductor",
+        "allowed": true,
+        "reason": "Shell can depend on conductor"
+      },
+      {
+        "from": "shell",
+        "to": "contracts",
+        "allowed": true,
+        "reason": "Shell can depend on contracts"
+      },
+      {
+        "from": "sdk",
+        "to": "*",
+        "allowed": false,
+        "reason": "SDK cannot depend on UI packages"
+      },
+      {
+        "from": "*",
+        "to": "contracts",
+        "allowed": true,
+        "reason": "All packages can depend on contracts"
+      }
+    ],
+    "lint": {
+      "enforceModuleBoundaries": true,
+      "checkDeepImports": true,
+      "requirePublicAPI": true
+    }
+  },
+  "metrics": {
+    "contextBoundaryViolations": 0,
+    "buildGraphIntegrity": "pass",
+    "packageConsistency": "synced",
+    "workspaceValidation": "clean"
+  }
+}
+
