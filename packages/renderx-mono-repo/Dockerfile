@@ -21,7 +21,6 @@ COPY cypress.config.ts vitest.config.ts ./
 COPY src ./src
 COPY cypress ./cypress
 COPY docs ./docs
-COPY public ./public
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
@@ -61,10 +60,9 @@ COPY --from=builder /app/cypress.config.ts /app/vitest.config.ts ./
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/cypress ./cypress
 COPY --from=builder /app/docs ./docs
-COPY --from=builder /app/public ./public
 
-# Install production dependencies only
-RUN pnpm install --frozen-lockfile --prod
+# Install all dependencies (including dev for turbo and other tools)
+RUN pnpm install --frozen-lockfile
 
 # Expose ports
 # 5173: Development server
