@@ -46,18 +46,17 @@ The migration created a **library monorepo** but the original is a **full Vite-b
 | `cypress` | 15.2.0 | N/A (npm) | ⚠️ External | E2E testing |
 | `eslint` | 9.33.0 | N/A (npm) | ⚠️ External | Linting |
 
-### Plugin Packages (External - Not in Mono-Repo)
+### Plugin Packages (Migrated to Mono-Repo)
 
-| Package | Version | Original Repo | Status | Purpose |
-|---------|---------|---------------|--------|---------|
-| `@renderx-plugins/canvas` | 0.1.0-rc.4 | `renderx-plugin-canvas` | ❌ NOT MIGRATED | Canvas rendering |
-| `@renderx-plugins/canvas-component` | 0.1.0-rc.1 | `renderx-plugin-canvas-component` | ❌ NOT MIGRATED | Canvas interaction |
-| `@renderx-plugins/components` | 0.1.1 | `renderx-plugin-components` | ❌ NOT MIGRATED | Component catalog |
-| `@renderx-plugins/control-panel` | 0.1.0-rc.8 | `renderx-plugin-control-panel` | ❌ NOT MIGRATED | Control panel UI |
-| `@renderx-plugins/header` | 1.0.1 | `renderx-plugin-header` | ❌ NOT MIGRATED | Header UI |
-| `@renderx-plugins/library` | 1.0.5 | `renderx-plugin-library` | ❌ NOT MIGRATED | Library plugin |
-| `@renderx-plugins/library-component` | 0.1.0-rc.5 | `renderx-plugin-library-component` | ❌ NOT MIGRATED | Library component |
-| `@renderx-plugins/digital-assets` | 1.0.0 | `renderx-plugins-digital-assets` | ❌ NOT MIGRATED | Digital assets |
+| Package | Version | Original Repo | Status | Location |
+|---------|---------|---------------|--------|----------|
+| `@renderx/plugins-canvas` | 1.0.0 | `renderx-plugin-canvas` | ✅ Migrated | `packages/plugins/canvas` |
+| `@renderx/plugins-canvas-component` | 1.0.0 | `renderx-plugin-canvas-component` | ✅ Migrated | `packages/plugins/canvas-component` |
+| `@renderx/plugins-components` | 1.0.0 | `renderx-plugin-components` | ✅ Migrated | `packages/plugins/components` |
+| `@renderx/plugins-control-panel` | 1.0.0 | `renderx-plugin-control-panel` | ✅ Migrated | `packages/plugins/control-panel` |
+| `@renderx/plugins-header` | 1.0.0 | `renderx-plugin-header` | ✅ Migrated | `packages/plugins/header` |
+| `@renderx/plugins-library` | 1.0.0 | `renderx-plugin-library` | ✅ Migrated | `packages/plugins/library` |
+| `@renderx/plugins-library-component` | 1.0.0 | `renderx-plugin-library-component` | ✅ Migrated | `packages/plugins/library-component` |
 
 ### Host Application (Not Migrated)
 
