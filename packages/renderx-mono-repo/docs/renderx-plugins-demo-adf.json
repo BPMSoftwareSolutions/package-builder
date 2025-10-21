@@ -1,0 +1,812 @@
+{
+  "version": "1.0.0",
+  "name": "RenderX Plugins Demo",
+  "description": "A thin-client host application showcasing the RenderX plugin architecture with manifest-driven plugin loading orchestrated via the MusicalConductor engine",
+  "organization": "BPMSoftwareSolutions",
+  "repository": "renderx-plugins-demo",
+  "repositoryUrl": "https://github.com/BPMSoftwareSolutions/renderx-plugins-demo",
+  "license": "Apache-2.0",
+  "type": "application",
+  "status": "active",
+  "c4Model": {
+    "level": "container",
+    "containers": [
+      {
+        "id": "host-app",
+        "name": "RenderX Host Application",
+        "type": "web-application",
+        "description": "Thin-client React application that loads and orchestrates plugins via manifest-driven configuration",
+        "technology": "React 19, TypeScript, Vite",
+        "repository": "BPMSoftwareSolutions/renderx-plugins-demo",
+        "team": "Host Team",
+        "teamDescription": "Responsible for host application and plugin orchestration",
+        "responsibilities": [
+          "Plugin system initialization",
+          "Manifest-driven plugin loading",
+          "UI slot management",
+          "Orchestration coordination via MusicalConductor"
+        ],
+        "packages": [
+          {
+            "name": "renderx-plugins-demo",
+            "version": "0.1.0",
+            "status": "active"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.85,
+          "testCoverage": 0.78,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-system",
+        "name": "Plugin System",
+        "type": "library",
+        "description": "Core plugin infrastructure providing base interfaces, manifest schema, and utilities for RenderX-compatible plugins",
+        "technology": "TypeScript, Node.js",
+        "repositories": [
+          "BPMSoftwareSolutions/renderx-host-sdk",
+          "BPMSoftwareSolutions/renderx-plugin-manifest-tools"
+        ],
+        "team": "SDK Team",
+        "teamDescription": "Responsible for SDK development and plugin system infrastructure",
+        "responsibilities": [
+          "Plugin interface definitions",
+          "Manifest schema validation",
+          "Plugin lifecycle management",
+          "Component catalog discovery"
+        ],
+        "packages": [
+          {
+            "name": "@renderx-plugins/host-sdk",
+            "version": "1.0.5",
+            "status": "active"
+          },
+          {
+            "name": "@renderx-plugins/manifest-tools",
+            "version": "0.1.0",
+            "status": "active"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.88,
+          "testCoverage": 0.82,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "orchestration-engine",
+        "name": "MusicalConductor Orchestration Engine",
+        "type": "library",
+        "description": "Orchestration engine powering plugin coordination through symphonies, movements, and beats",
+        "technology": "TypeScript, Node.js",
+        "repository": "BPMSoftwareSolutions/MusicalConductor",
+        "team": "Conductor Team",
+        "teamDescription": "Responsible for orchestration engine and workflow coordination",
+        "responsibilities": [
+          "Plugin coordination",
+          "Workflow orchestration",
+          "Event management",
+          "State synchronization"
+        ],
+        "packages": [
+          {
+            "name": "musical-conductor",
+            "version": "1.4.5",
+            "status": "active"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.90,
+          "testCoverage": 0.85,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-canvas",
+        "name": "Canvas Plugin",
+        "type": "plugin",
+        "description": "Canvas rendering plugin for RenderX with interaction layer for drag, create, resize, select, update, and export operations",
+        "technology": "React, TypeScript",
+        "repositories": [
+          "BPMSoftwareSolutions/renderx-plugin-canvas",
+          "BPMSoftwareSolutions/renderx-plugin-canvas-component"
+        ],
+        "team": "Canvas Team",
+        "teamDescription": "Responsible for canvas plugin development and rendering",
+        "responsibilities": [
+          "Canvas rendering",
+          "Drawing operations",
+          "Canvas orchestration",
+          "Interaction handling (drag, create, resize, select, update, export)"
+        ],
+        "packages": [
+          {
+            "name": "@renderx-plugins/canvas",
+            "version": "0.1.0-rc.4",
+            "status": "release-candidate"
+          },
+          {
+            "name": "@renderx-plugins/canvas-component",
+            "version": "0.1.0-rc.1",
+            "status": "release-candidate"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.82,
+          "testCoverage": 0.75,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-control-panel",
+        "name": "Control Panel Plugin",
+        "type": "plugin",
+        "description": "Control panel plugin for RenderX providing dynamic property editing, CSS class management, and real-time component configuration",
+        "technology": "React, TypeScript",
+        "repository": "BPMSoftwareSolutions/renderx-plugin-control-panel",
+        "team": "Control Panel Team",
+        "teamDescription": "Responsible for control panel plugin development",
+        "responsibilities": [
+          "Control panel UI",
+          "Dynamic property editing",
+          "CSS class management",
+          "Real-time component configuration"
+        ],
+        "packages": [
+          {
+            "name": "@renderx-plugins/control-panel",
+            "version": "0.1.0-rc.8",
+            "status": "release-candidate"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.82,
+          "testCoverage": 0.75,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-header",
+        "name": "Header Plugin",
+        "type": "plugin",
+        "description": "Header plugin for RenderX providing customizable header UI components, theme toggling, and integration with the RenderX host application",
+        "technology": "React, TypeScript",
+        "repository": "BPMSoftwareSolutions/renderx-plugin-header",
+        "team": "Header Team",
+        "teamDescription": "Responsible for header plugin development",
+        "responsibilities": [
+          "Header rendering",
+          "Theme toggling",
+          "Header orchestration",
+          "Customizable header UI components"
+        ],
+        "packages": [
+          {
+            "name": "@renderx-plugins/header",
+            "version": "1.0.1",
+            "status": "active"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.82,
+          "testCoverage": 0.75,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-library",
+        "name": "Library Plugin",
+        "type": "plugin",
+        "description": "Library plugin for RenderX providing a portable, externalized component library with manifest-driven UI panel for discovering, previewing, and interacting with host-managed inventory of JSON components",
+        "technology": "React, TypeScript",
+        "repositories": [
+          "BPMSoftwareSolutions/renderx-plugin-library",
+          "BPMSoftwareSolutions/renderx-plugin-library-component"
+        ],
+        "team": "Library Team",
+        "teamDescription": "Responsible for library plugin development",
+        "responsibilities": [
+          "Library management",
+          "Library rendering",
+          "Library orchestration",
+          "Component discovery and preview"
+        ],
+        "packages": [
+          {
+            "name": "@renderx-plugins/library",
+            "version": "1.0.5",
+            "status": "active"
+          },
+          {
+            "name": "@renderx-plugins/library-component",
+            "version": "0.1.0-rc.5",
+            "status": "release-candidate"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.82,
+          "testCoverage": 0.75,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "ui-layer",
+        "name": "UI Layer",
+        "type": "ui-component-library",
+        "description": "React components organized in layered architecture (core, domain, ui, infrastructure, vendor)",
+        "technology": "React 19, TypeScript, CSS",
+        "repository": "BPMSoftwareSolutions/renderx-plugins-demo",
+        "team": "UX/UI Team",
+        "teamDescription": "Responsible for UI components and user experience",
+        "responsibilities": [
+          "Plugin panel rendering",
+          "Diagnostics UI",
+          "Tree explorer visualization",
+          "Layout management"
+        ],
+        "directories": [
+          "src/core",
+          "src/domain",
+          "src/ui",
+          "src/infrastructure",
+          "src/vendor"
+        ],
+        "metrics": {
+          "healthScore": 0.84,
+          "testCoverage": 0.80,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "artifact-system",
+        "name": "Artifact System",
+        "type": "build-system",
+        "description": "Manifest and artifact generation system for external plugin consumption and integrity verification",
+        "technology": "Node.js, Crypto",
+        "repository": "BPMSoftwareSolutions/renderx-plugins-demo",
+        "team": "DevOps Team",
+        "teamDescription": "Responsible for build systems and artifact management",
+        "responsibilities": [
+          "Manifest generation",
+          "Artifact bundling",
+          "Integrity verification",
+          "Signature management"
+        ],
+        "scripts": [
+          "scripts/build-artifacts.js",
+          "scripts/generate-interaction-manifest.js",
+          "scripts/generate-topics-manifest.js",
+          "scripts/generate-layout-manifest.js",
+          "scripts/sync-json-components.js",
+          "scripts/sync-json-sequences.js",
+          "scripts/sync-plugins.js"
+        ],
+        "metrics": {
+          "healthScore": 0.86,
+          "testCoverage": 0.79,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "plugin-components",
+        "name": "Components Plugin",
+        "type": "plugin",
+        "description": "JSON component definitions for RenderX-based hosts. Publishes a catalog of components (as JSON) that thin hosts can serve and plugins can consume without coupling",
+        "technology": "TypeScript, JSON",
+        "repository": "BPMSoftwareSolutions/renderx-plugin-components",
+        "team": "Components Team",
+        "teamDescription": "Responsible for component catalog and definitions",
+        "responsibilities": [
+          "Component catalog management",
+          "JSON component definitions",
+          "Component discovery",
+          "Component versioning"
+        ],
+        "packages": [
+          {
+            "name": "@renderx-plugins/components",
+            "version": "0.1.1",
+            "status": "active"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.80,
+          "testCoverage": 0.70,
+          "buildStatus": "success"
+        }
+      },
+      {
+        "id": "digital-assets",
+        "name": "Digital Assets",
+        "type": "asset-library",
+        "description": "Digital assets (SVGs, images, movies) for RenderX plugins and applications",
+        "technology": "SVG, Image formats, Video",
+        "repository": "BPMSoftwareSolutions/renderx-plugins-digital-assets",
+        "team": "Design Team",
+        "teamDescription": "Responsible for digital assets and design resources",
+        "responsibilities": [
+          "Asset management",
+          "SVG optimization",
+          "Image optimization",
+          "Asset versioning"
+        ],
+        "packages": [
+          {
+            "name": "@renderx-plugins/digital-assets",
+            "version": "1.0.0",
+            "status": "active"
+          }
+        ],
+        "metrics": {
+          "healthScore": 0.85,
+          "testCoverage": 0.0,
+          "buildStatus": "success"
+        }
+      }
+    ],
+    "relationships": [
+      {
+        "from": "host-app",
+        "to": "plugin-system",
+        "type": "depends_on",
+        "description": "Host application uses plugin system interfaces and SDK"
+      },
+      {
+        "from": "host-app",
+        "to": "orchestration-engine",
+        "type": "depends_on",
+        "description": "Host uses MusicalConductor for plugin orchestration"
+      },
+      {
+        "from": "host-app",
+        "to": "plugin-canvas",
+        "type": "loads",
+        "description": "Host loads and renders canvas plugin"
+      },
+      {
+        "from": "host-app",
+        "to": "plugin-components",
+        "type": "loads",
+        "description": "Host loads and renders components plugin"
+      },
+      {
+        "from": "host-app",
+        "to": "plugin-control-panel",
+        "type": "loads",
+        "description": "Host loads and renders control panel plugin"
+      },
+      {
+        "from": "host-app",
+        "to": "plugin-header",
+        "type": "loads",
+        "description": "Host loads and renders header plugin"
+      },
+      {
+        "from": "host-app",
+        "to": "plugin-library",
+        "type": "loads",
+        "description": "Host loads and renders library plugin"
+      },
+      {
+        "from": "host-app",
+        "to": "ui-layer",
+        "type": "uses",
+        "description": "Host renders UI components from UI layer"
+      },
+      {
+        "from": "plugin-canvas",
+        "to": "plugin-system",
+        "type": "implements",
+        "description": "Canvas plugin implements plugin system interfaces"
+      },
+      {
+        "from": "plugin-canvas",
+        "to": "orchestration-engine",
+        "type": "uses",
+        "description": "Canvas plugin uses orchestration engine for coordination"
+      },
+      {
+        "from": "plugin-components",
+        "to": "plugin-system",
+        "type": "implements",
+        "description": "Components plugin implements plugin system interfaces"
+      },
+      {
+        "from": "plugin-components",
+        "to": "orchestration-engine",
+        "type": "uses",
+        "description": "Components plugin uses orchestration engine for coordination"
+      },
+      {
+        "from": "plugin-control-panel",
+        "to": "plugin-system",
+        "type": "implements",
+        "description": "Control panel plugin implements plugin system interfaces"
+      },
+      {
+        "from": "plugin-control-panel",
+        "to": "orchestration-engine",
+        "type": "uses",
+        "description": "Control panel plugin uses orchestration engine for coordination"
+      },
+      {
+        "from": "plugin-header",
+        "to": "plugin-system",
+        "type": "implements",
+        "description": "Header plugin implements plugin system interfaces"
+      },
+      {
+        "from": "plugin-header",
+        "to": "orchestration-engine",
+        "type": "uses",
+        "description": "Header plugin uses orchestration engine for coordination"
+      },
+      {
+        "from": "plugin-library",
+        "to": "plugin-system",
+        "type": "implements",
+        "description": "Library plugin implements plugin system interfaces"
+      },
+      {
+        "from": "plugin-library",
+        "to": "orchestration-engine",
+        "type": "uses",
+        "description": "Library plugin uses orchestration engine for coordination"
+      },
+      {
+        "from": "artifact-system",
+        "to": "plugin-system",
+        "type": "generates",
+        "description": "Artifact system generates manifests for plugin discovery"
+      },
+      {
+        "from": "plugin-components",
+        "to": "plugin-system",
+        "type": "implements",
+        "description": "Components plugin implements plugin system interfaces"
+      },
+      {
+        "from": "plugin-components",
+        "to": "orchestration-engine",
+        "type": "uses",
+        "description": "Components plugin uses orchestration engine for coordination"
+      },
+      {
+        "from": "host-app",
+        "to": "plugin-components",
+        "type": "loads",
+        "description": "Host loads and serves component catalog"
+      },
+      {
+        "from": "plugin-library",
+        "to": "plugin-components",
+        "type": "uses",
+        "description": "Library plugin consumes component catalog"
+      },
+      {
+        "from": "host-app",
+        "to": "digital-assets",
+        "type": "uses",
+        "description": "Host application uses digital assets for UI rendering"
+      },
+      {
+        "from": "plugin-canvas",
+        "to": "digital-assets",
+        "type": "uses",
+        "description": "Canvas plugin uses digital assets"
+      },
+      {
+        "from": "plugin-header",
+        "to": "digital-assets",
+        "type": "uses",
+        "description": "Header plugin uses digital assets"
+      },
+      {
+        "from": "plugin-library",
+        "to": "digital-assets",
+        "type": "uses",
+        "description": "Library plugin uses digital assets"
+      }
+    ]
+  },
+  "layers": {
+    "presentation": {
+      "description": "React UI components and pages",
+      "path": "src/ui",
+      "technologies": ["React", "TypeScript", "CSS"]
+    },
+    "domain": {
+      "description": "Business logic and domain models",
+      "path": "src/domain",
+      "technologies": ["TypeScript"]
+    },
+    "core": {
+      "description": "Core utilities and helpers",
+      "path": "src/core",
+      "technologies": ["TypeScript"]
+    },
+    "infrastructure": {
+      "description": "External service integrations",
+      "path": "src/infrastructure",
+      "technologies": ["TypeScript", "Node.js"]
+    },
+    "vendor": {
+      "description": "Third-party integrations",
+      "path": "src/vendor",
+      "technologies": ["TypeScript"]
+    }
+  },
+  "dependencies": {
+    "runtime": [
+      {
+        "name": "@renderx-plugins/host-sdk",
+        "version": "1.0.5",
+        "type": "peer-dependency",
+        "purpose": "Plugin system SDK"
+      },
+      {
+        "name": "@renderx-plugins/manifest-tools",
+        "version": "0.1.0",
+        "type": "dependency",
+        "purpose": "Manifest schema validation and utilities"
+      },
+      {
+        "name": "@renderx-plugins/canvas",
+        "version": "0.1.0-rc.4",
+        "type": "dependency",
+        "purpose": "Canvas plugin"
+      },
+      {
+        "name": "@renderx-plugins/canvas-component",
+        "version": "0.1.0-rc.1",
+        "type": "dependency",
+        "purpose": "Canvas interaction layer"
+      },
+      {
+        "name": "@renderx-plugins/components",
+        "version": "0.1.1",
+        "type": "dependency",
+        "purpose": "Component catalog"
+      },
+      {
+        "name": "@renderx-plugins/control-panel",
+        "version": "0.1.0-rc.8",
+        "type": "dependency",
+        "purpose": "Control panel plugin"
+      },
+      {
+        "name": "@renderx-plugins/header",
+        "version": "1.0.1",
+        "type": "dependency",
+        "purpose": "Header plugin"
+      },
+      {
+        "name": "@renderx-plugins/library",
+        "version": "1.0.5",
+        "type": "dependency",
+        "purpose": "Library plugin"
+      },
+      {
+        "name": "@renderx-plugins/library-component",
+        "version": "0.1.0-rc.5",
+        "type": "dependency",
+        "purpose": "Library component plugin"
+      },
+      {
+        "name": "@renderx-plugins/digital-assets",
+        "version": "1.0.0",
+        "type": "dependency",
+        "purpose": "Digital assets library"
+      },
+      {
+        "name": "musical-conductor",
+        "version": "1.4.5",
+        "type": "dependency",
+        "purpose": "Orchestration engine"
+      },
+      {
+        "name": "react",
+        "version": "19.1.1",
+        "type": "dependency",
+        "purpose": "UI framework"
+      },
+      {
+        "name": "react-dom",
+        "version": "19.1.1",
+        "type": "dependency",
+        "purpose": "React DOM rendering"
+      },
+      {
+        "name": "lucide-react",
+        "version": "0.544.0",
+        "type": "dependency",
+        "purpose": "Icon library"
+      }
+    ],
+    "devDependencies": [
+      {
+        "name": "typescript",
+        "version": "5.9.2",
+        "type": "dev-dependency",
+        "purpose": "Type checking"
+      },
+      {
+        "name": "vite",
+        "version": "7.1.3",
+        "type": "dev-dependency",
+        "purpose": "Build tool"
+      },
+      {
+        "name": "vitest",
+        "version": "3.2.4",
+        "type": "dev-dependency",
+        "purpose": "Unit testing"
+      },
+      {
+        "name": "cypress",
+        "version": "15.2.0",
+        "type": "dev-dependency",
+        "purpose": "E2E testing"
+      },
+      {
+        "name": "eslint",
+        "version": "9.33.0",
+        "type": "dev-dependency",
+        "purpose": "Code linting"
+      }
+    ]
+  },
+  "features": [
+    {
+      "id": "manifest-driven-loading",
+      "name": "Manifest-Driven Plugin Loading",
+      "description": "Plugins are loaded and configured via JSON manifests",
+      "status": "active",
+      "phase": "production"
+    },
+    {
+      "id": "plugin-orchestration",
+      "name": "Plugin Orchestration",
+      "description": "MusicalConductor-powered coordination of plugin workflows",
+      "status": "active",
+      "phase": "production"
+    },
+    {
+      "id": "ui-slots",
+      "name": "UI Slot System",
+      "description": "Manifest-driven panel slots for UI extension",
+      "status": "active",
+      "phase": "production"
+    },
+    {
+      "id": "artifact-integrity",
+      "name": "Artifact Integrity Verification",
+      "description": "SHA-256 hashing and signature verification for artifacts",
+      "status": "active",
+      "phase": "beta"
+    },
+    {
+      "id": "external-plugin-mode",
+      "name": "External Plugin Artifact Mode",
+      "description": "Thin host can run without plugin source code",
+      "status": "active",
+      "phase": "beta"
+    },
+    {
+      "id": "diagnostics-panel",
+      "name": "Diagnostics Panel",
+      "description": "Plugin discovery and debugging UI",
+      "status": "active",
+      "phase": "production",
+      "refactoringPhase": 4
+    },
+    {
+      "id": "host-sdk",
+      "name": "Host SDK",
+      "description": "Public API for plugin authors",
+      "status": "active",
+      "phase": "release-candidate"
+    }
+  ],
+  "buildSystem": {
+    "type": "vite",
+    "scripts": {
+      "dev": "npm run pre:manifests && vite",
+      "build": "npm run pre:manifests && vite build",
+      "preview": "vite preview",
+      "test": "vitest run",
+      "test:watch": "vitest --watch",
+      "lint": "eslint .",
+      "e2e": "cypress run"
+    },
+    "artifacts": {
+      "integrity": "artifacts.integrity.json",
+      "manifests": [
+        "interaction-manifest.json",
+        "topics-manifest.json",
+        "layout-manifest.json",
+        "plugin-manifest.json"
+      ],
+      "catalogs": [
+        "json-components/",
+        "json-sequences/",
+        "json-interactions/",
+        "json-topics/"
+      ]
+    }
+  },
+  "testing": {
+    "unit": {
+      "framework": "vitest",
+      "coverage": "v8"
+    },
+    "e2e": {
+      "framework": "cypress",
+      "baseUrl": "http://localhost:5173"
+    },
+    "integration": {
+      "framework": "vitest",
+      "description": "Plugin loading and orchestration tests"
+    }
+  },
+  "refactoring": {
+    "active": true,
+    "zones": [
+      {
+        "name": "Diagnostics Module",
+        "issueId": 297,
+        "currentPhase": 4,
+        "targetPhase": 6,
+        "files": [
+          "src/ui/diagnostics/DiagnosticsPanel.tsx",
+          "src/ui/PluginTreeExplorer.tsx"
+        ],
+        "completed": [
+          "Phase 1: Type system centralization",
+          "Phase 2: Business logic extraction",
+          "Phase 3: Custom hooks extraction",
+          "Phase 4: Component extraction"
+        ],
+        "pending": [
+          "Phase 5: Tree explorer modularization",
+          "Phase 6: Testing & documentation"
+        ]
+      }
+    ]
+  },
+  "environmentVariables": [
+    {
+      "name": "HOST_ARTIFACTS_DIR",
+      "description": "Points host at pre-built artifacts directory",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "RENDERX_DISABLE_STARTUP_VALIDATION",
+      "description": "Skip plugin & manifest count summary",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "RENDERX_DISABLE_INTEGRITY",
+      "description": "Skip integrity verification",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "RENDERX_VALIDATION_STRICT",
+      "description": "Escalate validator warnings to errors",
+      "default": "0",
+      "required": false
+    }
+  ],
+  "metrics": {
+    "overallHealthScore": 0.85,
+    "averageTestCoverage": 0.80,
+    "buildStatus": "success",
+    "lastUpdated": "2025-10-20"
+  }
+}
+
