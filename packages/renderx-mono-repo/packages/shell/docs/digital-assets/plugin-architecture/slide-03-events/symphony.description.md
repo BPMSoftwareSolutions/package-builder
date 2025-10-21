@@ -1,1 +1,0 @@
-A conductor’s baton hovers above a musical staff composed of discrete steps: select, focus, act. Notes align into phrases that represent sequences. Warm golds and ambers convey choreography: the flow is orchestrated, not improvised, and every entrance has its moment.

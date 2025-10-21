@@ -1,1 +1,0 @@
-At center, a luminous hub radiates violet spokes to surrounding modules. Tiny packets pulse along the spokes, converging and fanning out with rhythm and intent. The hub feels authoritative yet lightweight—traffic flows smoothly, rules are respected, and pathways remain visible at a glance.

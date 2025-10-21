@@ -1,2 +1,0 @@
-/* Re-export UI styles at package entry so consumers get styles on bare import */
-@import './ui/ControlPanel.css';

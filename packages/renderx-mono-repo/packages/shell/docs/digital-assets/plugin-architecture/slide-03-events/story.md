@@ -1,1 +1,0 @@
-Phase 3 links plugin handlers to EventRouter topics. Use the replay cache to hydrate late subscribers, and drive Control Panel changes through selection-based symphonies rather than canvas.create side-effects.
