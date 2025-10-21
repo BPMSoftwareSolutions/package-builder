@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # Main RenderX application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: renderx-mono-repo
+    ports:
+      - "5173:5173"  # Development server
+      - "4173:4173"  # Preview server
+      - "3000:3000"  # Conductor service
+    volumes:
+      - ./logs:/app/logs
+      - ./packages:/app/packages
+      - ./src:/app/src
+      - ./cypress:/app/cypress
+      - ./docs:/app/docs
+      - ./scripts:/app/scripts
+    environment:
+      - NODE_ENV=development
+      - LOG_DIR=/app/logs
+      - DEBUG=renderx:*
+    networks:
+      - renderx-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    depends_on:
+      - conductor
+
+  # Conductor service (if running separately)
+  conductor:
+    image: node:20-alpine
+    container_name: renderx-conductor
+    working_dir: /app
+    volumes:
+      - ./packages/conductor:/app
+      - ./logs:/app/logs
+    environment:
+      - NODE_ENV=development
+      - LOG_DIR=/app/logs
+    networks:
+      - renderx-network
+    command: sh -c "npm install && npm run dev"
+    restart: unless-stopped
+
+  # Log aggregator (optional - for centralized logging)
+  logs:
+    image: alpine:latest
+    container_name: renderx-logs
+    volumes:
+      - ./logs:/logs
+    networks:
+      - renderx-network
+    command: tail -f /logs/*.log
+    restart: unless-stopped
+
+networks:
+  renderx-network:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local
+
