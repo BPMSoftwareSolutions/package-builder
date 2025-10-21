@@ -1,7 +1,7 @@
 {
-  "name": "@renderx/shell",
+  "name": "@renderx/plugins-library",
   "version": "1.0.0",
-  "description": "RenderX Shell - Host application UI and plugin orchestration",
+  "description": "RenderX Library Plugin - Asset library and resource management",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -23,23 +23,24 @@
   },
   "keywords": [
     "renderx",
-    "shell",
-    "host-application",
-    "ui"
+    "plugin",
+    "library",
+    "assets"
   ],
   "author": "BPM Software Solutions",
   "license": "Apache-2.0",
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@renderx/sdk": "^1.0.0",
+    "@renderx/conductor": "^1.0.0",
+    "react": "^19.0.0"
   },
   "devDependencies": {
+    "@renderx/conductor": "workspace:*",
+    "@renderx/sdk": "workspace:*",
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "typescript": "^5.9.0",
     "vitest": "^3.0.0"
   }

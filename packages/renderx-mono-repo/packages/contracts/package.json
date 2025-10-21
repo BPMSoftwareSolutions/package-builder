@@ -1,56 +1,39 @@
 {
   "name": "@renderx/contracts",
   "version": "1.0.0",
-  "description": "Shared interface definitions for RenderX plugin system",
+  "description": "RenderX Contracts - Shared interfaces and type definitions",
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./types": {
-      "import": "./dist/types.js",
       "types": "./dist/types.d.ts"
-    },
-    "./plugin": {
-      "import": "./dist/plugin.js",
-      "types": "./dist/plugin.d.ts"
-    },
-    "./shell": {
-      "import": "./dist/shell.js",
-      "types": "./dist/shell.d.ts"
     }
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage",
-    "lint": "eslint src --ext .ts",
-    "type-check": "tsc --noEmit"
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "clean": "rm -rf dist"
   },
   "keywords": [
     "renderx",
     "contracts",
     "interfaces",
-    "plugin-system"
+    "types"
   ],
   "author": "BPM Software Solutions",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "vitest": "^1.0.0",
-    "@vitest/coverage-v8": "^1.0.0",
-    "eslint": "^8.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0"
+    "eslint": "^9.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0"
   }
 }
 

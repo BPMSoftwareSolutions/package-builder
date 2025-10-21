@@ -1,46 +1,38 @@
 {
-  "$schema": "https://turbo.build/json-schema.json",
-  "globalDependencies": [
-    "**/.env",
-    "**/.env.local"
-  ],
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env", "**/.env.local"],
   "pipeline": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "build/**"
-      ],
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "build/**"],
       "cache": true
     },
     "lint": {
       "outputs": [],
-      "cache": false
+      "cache": true
     },
     "typecheck": {
       "outputs": [],
       "cache": true
     },
     "test": {
-      "outputs": [
-        "coverage/**"
-      ],
+      "outputs": ["coverage/**"],
       "cache": false
     },
-    "test:coverage": {
-      "outputs": [
-        "coverage/**"
-      ],
-      "cache": false
+    "test:watch": {
+      "cache": false,
+      "persistent": true
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
-    "clean": {
+    "artifacts:build:integrity": {
+      "outputs": [".artifacts/**"],
+      "cache": true
+    },
+    "artifacts:validate": {
+      "outputs": [],
       "cache": false
     }
   }

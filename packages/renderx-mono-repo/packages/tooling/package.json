@@ -1,9 +1,12 @@
 {
-  "name": "@renderx/shell",
+  "name": "@renderx/tooling",
   "version": "1.0.0",
-  "description": "RenderX Shell - Host application UI and plugin orchestration",
+  "description": "RenderX Tooling - Build tools and CLI utilities",
   "type": "module",
   "sideEffects": false,
+  "bin": {
+    "renderx": "./dist/cli.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -23,23 +26,15 @@
   },
   "keywords": [
     "renderx",
-    "shell",
-    "host-application",
-    "ui"
+    "tooling",
+    "build",
+    "cli"
   ],
   "author": "BPM Software Solutions",
   "license": "Apache-2.0",
-  "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "typescript": "^5.9.0",
     "vitest": "^3.0.0"
   }

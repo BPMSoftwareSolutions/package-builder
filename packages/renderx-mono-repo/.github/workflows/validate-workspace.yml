@@ -1,0 +1,107 @@
+name: Validate RenderX Mono-Repo Workspace
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'packages/renderx-mono-repo/**'
+      - '.github/workflows/validate-workspace.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'packages/renderx-mono-repo/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      - name: Install dependencies
+        run: cd packages/renderx-mono-repo && pnpm install
+      
+      - name: Lint
+        run: cd packages/renderx-mono-repo && pnpm run lint
+      
+      - name: Type check
+        run: cd packages/renderx-mono-repo && pnpm run typecheck
+      
+      - name: Run tests
+        run: cd packages/renderx-mono-repo && pnpm run test
+      
+      - name: Build
+        run: cd packages/renderx-mono-repo && pnpm run build
+      
+      - name: Validate ADF
+        run: |
+          cd packages/renderx-mono-repo
+          if [ -f renderx-adf.json ]; then
+            echo "✅ renderx-adf.json exists"
+            cat renderx-adf.json | jq . > /dev/null && echo "✅ Valid JSON"
+          else
+            echo "❌ renderx-adf.json not found"
+            exit 1
+          fi
+      
+      - name: Check workspace configuration
+        run: |
+          cd packages/renderx-mono-repo
+          if [ -f pnpm-workspace.yaml ]; then
+            echo "✅ pnpm-workspace.yaml exists"
+          else
+            echo "❌ pnpm-workspace.yaml not found"
+            exit 1
+          fi
+      
+      - name: Verify package structure
+        run: |
+          cd packages/renderx-mono-repo
+          echo "Checking package structure..."
+          
+          # Check for required directories
+          for dir in packages/conductor packages/sdk packages/manifest-tools packages/host-sdk packages/shell packages/contracts packages/tooling packages/plugins; do
+            if [ -d "$dir" ]; then
+              echo "✅ $dir exists"
+            else
+              echo "⚠️  $dir not yet created (expected during Phase 2)"
+            fi
+          done
+      
+      - name: Upload coverage
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/renderx-mono-repo/coverage/coverage-final.json
+          flags: renderx-mono-repo
+          fail_ci_if_error: false
+
