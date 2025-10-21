@@ -142,24 +142,30 @@ Violations: 0 | Warnings: 0
 **Status**: ✅ FIXED
 
 #### Problem
-The conductor service in docker-compose.yml was trying to run `npm run dev` but the conductor package doesn't have a `dev` script, causing container startup failure.
+The conductor package was missing a `dev` script, causing turbo to fail when running `turbo run dev --parallel` in the container.
 
 #### Solution
-Modified `docker-compose.yml` line 50 to use available scripts:
-```yaml
-# Before
-command: sh -c "npm install && npm run dev"
-
-# After
-command: sh -c "npm install && npm run build && npm run test:watch"
+Added `dev` script to `packages/conductor/package.json`:
+```json
+{
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",  // ← Added this
+    "lint": "eslint src",
+    ...
+  }
+}
 ```
+
+This allows turbo to run dev in all packages including conductor, which watches TypeScript files for changes.
 
 #### Commit
 ```
-fix: Fix conductor service command in docker-compose.yml
-- Change conductor service command from 'npm run dev' to 'npm run build && npm run test:watch'
-- The conductor package doesn't have a 'dev' script, only build and test:watch
-- This fixes the container startup failure
+fix: Add dev script to conductor package
+- Add 'dev' script to conductor package.json that runs 'tsc --watch'
+- This allows turbo to run dev in all packages including conductor
+- Revert docker-compose.yml to use 'npm run dev' since conductor now has the script
+- Fixes container startup failure when turbo tries to run dev in conductor
 ```
 
 ## Commits Made
@@ -167,6 +173,8 @@ fix: Fix conductor service command in docker-compose.yml
 1. **80c7e2e**: fix: Exclude renderx-mono-repo from guardrails validation
 2. **377635a**: fix: Fix TypeScript declaration generation in repo-dashboard
 3. **c359802**: fix: Fix conductor service command in docker-compose.yml
+4. **31eb94f**: docs: Update CI/CD fixes summary with conductor service fix
+5. **a2874af**: fix: Add dev script to conductor package
 
 ## Testing
 
